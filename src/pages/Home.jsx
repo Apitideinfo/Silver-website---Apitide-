@@ -42,8 +42,8 @@ import testimonial4 from '../assets/testimonial_4.png';
 import bannerTimelessSilver from '../assets/banner_timeless_elegance.png';
 import bannerElegantGold from '../assets/banner_elegant_gold.png';
 import bannerGoldSilver50 from '../assets/banner_pure_gold_silver_50.png';
-import bannerGold20 from '../assets/banner_gold_20.webp';
 import bannerStoreBanner from '../assets/banner_store_banner.png';
+import bannerPureSilverCollection from '../assets/banner_pure_silver_collection.png';
 
 // Process Icons
 import productSketch from '../assets/product_sketch.png';
@@ -924,6 +924,31 @@ export default function Home({
         </section>
 
         {/* ==========================================================
+          PURE SILVER JEWELRY COLLECTION BANNER (ABOVE RECOMMENDED FOR YOU)
+          ========================================================== */}
+        <section className="w-full bg-transparent overflow-hidden select-none text-center">
+          <div
+            onClick={() => {
+              triggerAudio('click');
+              if (typeof setMetalFilter === 'function') setMetalFilter('silver');
+              if (typeof setGenderFilter === 'function') setGenderFilter('all');
+              if (typeof setMaxPriceFilter === 'function') setMaxPriceFilter(100000000);
+              if (changeCategoryTab) changeCategoryTab('Silver', 'silver', 'all');
+              navigateTo('collections');
+            }}
+            className="w-full overflow-hidden relative group cursor-pointer shadow-md hover:shadow-xl transition-all duration-500 border-y border-solid border-[#E6DFD3] text-center"
+          >
+            <img
+              src={bannerPureSilverCollection}
+              alt="The Beauty of Pure Silver - Classic Designs for Every Occasion"
+              loading="lazy"
+              className="w-full h-auto block transition-transform duration-700 group-hover:scale-[1.01]"
+            />
+            <div className="absolute inset-0 bg-gradient-to-r from-transparent via-white/15 to-transparent -translate-x-full group-hover:translate-x-full transition-transform duration-1000 ease-out pointer-events-none" />
+          </div>
+        </section>
+
+        {/* ==========================================================
           TAILORED SELECTION RECOMMENDED FOR YOU
           ========================================================== */}
         <section className="py-12 bg-white border-b border-solid border-[#E6DFD3] relative overflow-hidden text-center">
@@ -1018,29 +1043,6 @@ export default function Home({
               </button>
             </div>
 
-          </div>
-        </section>
-
-        {/* MCPG Plain Gold Jewellery Offer Banner below Recommended for You */}
-        <section className="w-full bg-transparent pb-8 overflow-hidden select-none text-center">
-          <div
-            onClick={() => {
-              triggerAudio('click');
-              if (typeof setMetalFilter === 'function') setMetalFilter('gold');
-              if (typeof setGenderFilter === 'function') setGenderFilter('all');
-              if (typeof setMaxPriceFilter === 'function') setMaxPriceFilter(100000000);
-              if (changeCategoryTab) changeCategoryTab('Collections', 'gold', 'all');
-              navigateTo('collections');
-            }}
-            className="w-full overflow-hidden relative group cursor-pointer shadow-md hover:shadow-xl transition-all duration-500 border-y border-solid border-[#E6DFD3] text-center"
-          >
-            <img
-              src={bannerGold20}
-              alt="Up to 20% OFF on Making Charges on Plain Gold Jewellery"
-              loading="lazy"
-              className="w-full h-auto block transition-transform duration-700 group-hover:scale-[1.015]"
-            />
-            <div className="absolute inset-0 bg-gradient-to-r from-transparent via-white/15 to-transparent -translate-x-full group-hover:translate-x-full transition-transform duration-1000 ease-out pointer-events-none" />
           </div>
         </section>
 
