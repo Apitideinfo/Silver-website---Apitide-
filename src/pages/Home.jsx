@@ -25,6 +25,8 @@ import goldChainsImg from '../assets/gold_chains.png';
 import kadaImg from '../assets/kada.png';
 import silverPayalsImg from '../assets/silver_payals.png';
 import citrineFloralSet from '../assets/citrine_floral_set.png';
+import nathNosePinImg from '../assets/nath_nose_pin.png';
+import jhumkasImg from '../assets/jhumkas.png';
 import { INITIAL_CATEGORIES } from '../config/constants';
 
 
@@ -132,7 +134,8 @@ const promoBanners = [
 const getCategoryFallbackImage = (catNameOrId) => {
   const norm = String(catNameOrId || '').toLowerCase().replace(/\s+/g, '');
   if (norm.includes('bangle')) return kadaImg;
-  if (norm.includes('jhumka')) return '/images/heritage-jhumkas.jpg';
+  if (norm.includes('bracelet')) return diamondBracelet;
+  if (norm.includes('jhumka')) return jhumkasImg;
   if (norm.includes('earring')) return sapphireHeritageSet;
   if (norm.includes('kada')) return goldKada;
   if (norm.includes('necklace') || norm.includes('choker')) return necklacesImg;
@@ -140,6 +143,7 @@ const getCategoryFallbackImage = (catNameOrId) => {
   if (norm.includes('pendant') || norm.includes('locket')) return pendantsImg;
   if (norm.includes('ring')) return ringsImg;
   if (norm.includes('chain')) return goldChainsImg;
+  if (norm.includes('nath')) return nathNosePinImg;
   if (norm.includes('top') || norm.includes('stud') || norm.includes('nose')) return nosePinsImg;
   if (norm.includes('mangalsutra')) return mangalsutrasImg;
   if (norm.includes('coin') || norm.includes('bullion')) return goldCoinsImg;
@@ -147,7 +151,6 @@ const getCategoryFallbackImage = (catNameOrId) => {
   if (norm.includes('watch')) return watchJewelleryImg;
   if (norm.includes('men')) return mensJewelleryImg;
   if (norm.includes('kids') || norm.includes('child')) return kidsJewelleryImg;
-  if (norm.includes('bracelet')) return diamondBracelet;
   return ringsImg;
 };
 
@@ -456,7 +459,7 @@ export default function Home({
                               e.currentTarget.src = fallback;
                             }
                           }}
-                          className="w-[70%] h-[70%] object-contain object-center transition-transform duration-300 ease-out group-hover/item:scale-110 filter drop-shadow-[0_4px_10px_rgba(0,0,0,0.12)]"
+                          className="w-[70%] h-[70%] object-contain object-center transition-transform duration-300 ease-out group-hover/item:scale-110 filter drop-shadow-[0_4px_10px_rgba(0,0,0,0.12)] mix-blend-multiply"
                         />
                       </div>
 

@@ -105,6 +105,13 @@ export const INITIAL_CATEGORIES = Object.freeze([
     createdDate: '2026-01-01T00:00:00.000Z'
   },
   {
+    id: 'bracelets',
+    name: 'Bracelets',
+    desc: 'Sparkling diamond infinity bracelets and tennis chains in 925 sterling silver.',
+    img: '',
+    createdDate: '2026-01-01T00:00:00.000Z'
+  },
+  {
     id: 'earrings',
     name: 'Earrings',
     desc: 'Bespoke chandeliers, hoops, and designer drops adorned with fine gems.',
@@ -115,6 +122,20 @@ export const INITIAL_CATEGORIES = Object.freeze([
     id: 'jhumka',
     name: 'Jhumka',
     desc: 'Traditional royal heritage jhumkas with exquisite meenakari and bell drops.',
+    img: '',
+    createdDate: '2026-01-01T00:00:00.000Z'
+  },
+  {
+    id: 'nath-nose-pin',
+    name: 'Nath & Nose Pin',
+    desc: 'Traditional bridal naths with pearl chains and sparkling floral studs.',
+    img: '',
+    createdDate: '2026-01-01T00:00:00.000Z'
+  },
+  {
+    id: 'nose-pin',
+    name: 'Nose Pin',
+    desc: 'Delicate floral diamond nose studs and daily wear silver nose screws.',
     img: '',
     createdDate: '2026-01-01T00:00:00.000Z'
   },
