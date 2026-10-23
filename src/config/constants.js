@@ -98,52 +98,95 @@ export const ROUTES = Object.freeze({
 // ─── INITIAL BASELINE CATEGORIES ──────────────────────────────
 export const INITIAL_CATEGORIES = Object.freeze([
   {
-    id: 'solitaires',
-    name: 'Solitaires & Diamonds',
-    desc: 'Exquisite certified solitaires and brilliant cut diamonds set in hallmarked gold.',
-    img: 'https://images.unsplash.com/photo-1605100804763-247f67b3557e?q=80&w=800&auto=format&fit=crop',
+    id: 'bangles',
+    name: 'Bangles',
+    desc: 'Artisanal silver and gold filigree bangles crafted with timeless perfection.',
+    img: '',
     createdDate: '2026-01-01T00:00:00.000Z'
   },
   {
-    id: 'necklaces',
-    name: 'Royal Necklaces & Chokers',
-    desc: 'Grand heirloom bridal necklaces and polki jadau choker masterpieces.',
-    img: 'https://images.unsplash.com/photo-1599643478518-a784e5dc4c8f?q=80&w=800&auto=format&fit=crop',
+    id: 'earrings',
+    name: 'Earrings',
+    desc: 'Bespoke chandeliers, hoops, and designer drops adorned with fine gems.',
+    img: '',
     createdDate: '2026-01-01T00:00:00.000Z'
   },
   {
-    id: 'bangles-kadas',
-    name: 'Bangles & Kadas',
-    desc: 'Traditional royal chitai kadas and modern filigree gold bangles.',
-    img: 'https://images.unsplash.com/photo-1611591475879-da60a37392c0?q=80&w=800&auto=format&fit=crop',
+    id: 'jhumka',
+    name: 'Jhumka',
+    desc: 'Traditional royal heritage jhumkas with exquisite meenakari and bell drops.',
+    img: '',
+    createdDate: '2026-01-01T00:00:00.000Z'
+  },
+  {
+    id: 'kada',
+    name: 'Kada',
+    desc: 'Royal antique chitai kadas and solid silver & gold statement cuffs.',
+    img: '',
+    createdDate: '2026-01-01T00:00:00.000Z'
+  },
+  {
+    id: 'necklace',
+    name: 'Necklace',
+    desc: 'Grand heirloom bridal necklaces, polki jadau sets, and royal chokers.',
+    img: '',
+    createdDate: '2026-01-01T00:00:00.000Z'
+  },
+  {
+    id: 'payal',
+    name: 'Payal',
+    desc: 'Pure 925 sterling silver payals, bridal anklets, and delicate daily chains.',
+    img: '',
+    createdDate: '2026-01-01T00:00:00.000Z'
+  },
+  {
+    id: 'pendant-locket',
+    name: 'Pendant & Locket',
+    desc: 'Sacred deity lockets, solitaires, and vintage filigree everyday pendants.',
+    img: '',
     createdDate: '2026-01-01T00:00:00.000Z'
   },
   {
     id: 'rings',
-    name: 'Cocktail & Eternity Rings',
-    desc: 'Handcrafted engagement bands, sovereign rings, and daily wear elegance.',
-    img: 'https://images.unsplash.com/photo-1603561591411-07134e71a2a9?q=80&w=800&auto=format&fit=crop',
+    name: 'Rings',
+    desc: 'Handcrafted diamond solitaires, sovereign signets, and cocktail eternity bands.',
+    img: '',
     createdDate: '2026-01-01T00:00:00.000Z'
   },
   {
-    id: 'silver-pooja',
-    name: '925 Silver & Pooja Heirlooms',
-    desc: 'Hallmarked 925 sterling silver tableware, pooja thalis, payals, and gifting coins.',
-    img: 'https://images.unsplash.com/photo-1535632066927-ab7c9ab60908?q=80&w=800&auto=format&fit=crop',
+    id: 'silver-chain',
+    name: 'Silver Chain',
+    desc: 'Italian curb, rope, and box chains in 925 sterling silver and 22K gold.',
+    img: '',
     createdDate: '2026-01-01T00:00:00.000Z'
   },
   {
-    id: 'chains-mangalsutras',
-    name: 'Chains & Mangalsutras',
-    desc: 'Authentic 22K gold daily chains and sacred designer mangalsutra suites.',
-    img: 'https://images.unsplash.com/photo-1515562141207-7a88fb7ce338?q=80&w=800&auto=format&fit=crop',
+    id: 'tops-studs',
+    name: 'Tops & Studs',
+    desc: 'Sparkling diamond florals, solitaires, and minimalist daily studs.',
+    img: '',
+    createdDate: '2026-01-01T00:00:00.000Z'
+  },
+  {
+    id: 'mangalsutras',
+    name: 'Mangalsutras',
+    desc: 'Authentic 22K gold and silver designer sacred mangalsutra suites.',
+    img: '',
     createdDate: '2026-01-01T00:00:00.000Z'
   },
   {
     id: 'gold-coins',
-    name: 'Sovereign Bullion Coins',
+    name: 'Gold Coins',
     desc: '24K 999 certified Lakshmi & Ganesh gold bullion coins and silver bars.',
-    img: 'https://images.unsplash.com/photo-1573408301185-9146fe634ad0?q=80&w=800&auto=format&fit=crop',
+    img: '',
+    createdDate: '2026-01-01T00:00:00.000Z'
+  },
+  {
+    id: 'solitaires',
+    name: 'Solitaires',
+    desc: 'Exquisite certified solitaires and brilliant cut diamonds set in hallmarked gold.',
+    img: '',
     createdDate: '2026-01-01T00:00:00.000Z'
   }
 ]);
+

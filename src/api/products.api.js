@@ -30,12 +30,33 @@ const withTimeout = (promise, ms = 3500) => {
   ]);
 };
 
-// Broadcast local catalogue changes across tabs/components
+// Cross-tab broadcast channel for instant multi-tab sync without page refresh
+const syncChannel = (typeof window !== 'undefined' && 'BroadcastChannel' in window)
+  ? new BroadcastChannel('manish_store_sync')
+  : null;
+
+// Broadcast local catalogue changes across tabs/windows/components
 const broadcastCatalogChange = (type) => {
   if (typeof window !== 'undefined') {
+    // 1. Same-window custom event
     window.dispatchEvent(new CustomEvent('manish_catalog_updated', { detail: { type } }));
+
+    // 2. Cross-tab BroadcastChannel
+    try {
+      if (syncChannel) {
+        syncChannel.postMessage({ type, timestamp: Date.now() });
+      }
+    } catch (e) {
+      console.warn("BroadcastChannel error:", e);
+    }
+
+    // 3. StorageEvent trigger for all other tabs & windows
+    try {
+      localStorage.setItem('manish_sync_pulse', `${type}_${Date.now()}`);
+    } catch (e) {}
   }
 };
+
 
 export const productsApi = {
   // ─── CATEGORIES CRUD ──────────────────────────────────────────
@@ -70,13 +91,50 @@ export const productsApi = {
     }
     onUpdate(local);
 
-    // Also listen to local window updates
-    const handleLocalUpdate = () => {
+    // Cross-tab & local update handler
+    let lastJson = JSON.stringify(local);
+    const handleSync = () => {
       const updated = StorageService.get(LOCAL_STORAGE_KEYS.CATEGORIES, local);
-      onUpdate(updated);
+      const str = JSON.stringify(updated);
+      if (str !== lastJson) {
+        lastJson = str;
+        onUpdate(updated);
+      }
     };
+
+    let intervalId = null;
+    let channelHandler = null;
+    let storageHandler = null;
+    let focusHandler = null;
+
     if (typeof window !== 'undefined') {
-      window.addEventListener('manish_catalog_updated', handleLocalUpdate);
+      window.addEventListener('manish_catalog_updated', handleSync);
+      
+      // Native storage event across other tabs
+      storageHandler = (e) => {
+        if (!e.key || e.key === LOCAL_STORAGE_KEYS.CATEGORIES || e.key === 'manish_sync_pulse') {
+          handleSync();
+        }
+      };
+      window.addEventListener('storage', storageHandler);
+
+      // BroadcastChannel across tabs
+      if (syncChannel) {
+        channelHandler = (msg) => {
+          if (msg?.data?.type === 'categories' || msg?.data?.type === 'all') {
+            handleSync();
+          }
+        };
+        syncChannel.addEventListener('message', channelHandler);
+      }
+
+      // Tab focus / visibility
+      focusHandler = () => handleSync();
+      window.addEventListener('focus', focusHandler);
+      document.addEventListener('visibilitychange', focusHandler);
+
+      // 2.5s lightweight heartbeat check
+      intervalId = setInterval(handleSync, 2500);
     }
 
     // 2. Connect Firestore realtime listener
@@ -94,7 +152,6 @@ export const productsApi = {
         }, 
         (err) => {
           console.warn("Categories realtime subscription notice (operating offline-resilient):", err?.message);
-          // Never wipe out local data on connection error
           const safeData = StorageService.get(LOCAL_STORAGE_KEYS.CATEGORIES, local);
           onUpdate(safeData);
         }
@@ -105,7 +162,16 @@ export const productsApi = {
 
     return () => {
       if (typeof window !== 'undefined') {
-        window.removeEventListener('manish_catalog_updated', handleLocalUpdate);
+        window.removeEventListener('manish_catalog_updated', handleSync);
+        if (storageHandler) window.removeEventListener('storage', storageHandler);
+        if (focusHandler) {
+          window.removeEventListener('focus', focusHandler);
+          document.removeEventListener('visibilitychange', focusHandler);
+        }
+        if (intervalId) clearInterval(intervalId);
+      }
+      if (syncChannel && channelHandler) {
+        syncChannel.removeEventListener('message', channelHandler);
       }
       if (typeof unsubscribeFirestore === 'function') {
         unsubscribeFirestore();
@@ -223,12 +289,45 @@ export const productsApi = {
     const local = StorageService.get(LOCAL_STORAGE_KEYS.PRODUCTS, []);
     onUpdate(local);
 
-    const handleLocalUpdate = () => {
+    let lastJson = JSON.stringify(local);
+    const handleSync = () => {
       const updated = StorageService.get(LOCAL_STORAGE_KEYS.PRODUCTS, []);
-      onUpdate(updated);
+      const str = JSON.stringify(updated);
+      if (str !== lastJson) {
+        lastJson = str;
+        onUpdate(updated);
+      }
     };
+
+    let intervalId = null;
+    let channelHandler = null;
+    let storageHandler = null;
+    let focusHandler = null;
+
     if (typeof window !== 'undefined') {
-      window.addEventListener('manish_catalog_updated', handleLocalUpdate);
+      window.addEventListener('manish_catalog_updated', handleSync);
+
+      storageHandler = (e) => {
+        if (!e.key || e.key === LOCAL_STORAGE_KEYS.PRODUCTS || e.key === 'manish_sync_pulse') {
+          handleSync();
+        }
+      };
+      window.addEventListener('storage', storageHandler);
+
+      if (syncChannel) {
+        channelHandler = (msg) => {
+          if (msg?.data?.type === 'products' || msg?.data?.type === 'all') {
+            handleSync();
+          }
+        };
+        syncChannel.addEventListener('message', channelHandler);
+      }
+
+      focusHandler = () => handleSync();
+      window.addEventListener('focus', focusHandler);
+      document.addEventListener('visibilitychange', focusHandler);
+
+      intervalId = setInterval(handleSync, 2500);
     }
 
     // 2. Connect Firestore realtime listener
@@ -255,7 +354,16 @@ export const productsApi = {
 
     return () => {
       if (typeof window !== 'undefined') {
-        window.removeEventListener('manish_catalog_updated', handleLocalUpdate);
+        window.removeEventListener('manish_catalog_updated', handleSync);
+        if (storageHandler) window.removeEventListener('storage', storageHandler);
+        if (focusHandler) {
+          window.removeEventListener('focus', focusHandler);
+          document.removeEventListener('visibilitychange', focusHandler);
+        }
+        if (intervalId) clearInterval(intervalId);
+      }
+      if (syncChannel && channelHandler) {
+        syncChannel.removeEventListener('message', channelHandler);
       }
       if (typeof unsubscribeFirestore === 'function') {
         unsubscribeFirestore();
@@ -273,19 +381,21 @@ export const productsApi = {
       createdDate: productData.createdDate || new Date().toISOString()
     };
 
-    // 1. Optimistic Local Save
+    // 1. Instant Optimistic Local Save
     const existing = StorageService.get(LOCAL_STORAGE_KEYS.PRODUCTS, []);
     const updated = [payload, ...existing.filter(p => p.id !== prodId)];
     StorageService.set(LOCAL_STORAGE_KEYS.PRODUCTS, updated);
     broadcastCatalogChange('products');
 
-    // 2. Sync to Firestore with timeout guard
-    try {
-      const docRef = doc(db, PRODUCTS_COLLECTION, prodId);
-      await withTimeout(setDoc(docRef, payload, { merge: true }), 3500);
-    } catch (err) {
-      console.warn("Firestore product add skipped/timed out; safely stored locally:", err.message);
-    }
+    // 2. Background Firestore Sync (non-blocking)
+    (async () => {
+      try {
+        const docRef = doc(db, PRODUCTS_COLLECTION, prodId);
+        await withTimeout(setDoc(docRef, payload, { merge: true }), 2500);
+      } catch (err) {
+        console.warn("Firestore product add background sync notice:", err.message);
+      }
+    })();
 
     return payload;
   },
@@ -300,19 +410,21 @@ export const productsApi = {
       lastUpdated: new Date().toISOString()
     };
 
-    // 1. Optimistic Local Update
+    // 1. Instant Optimistic Local Update
     const existing = StorageService.get(LOCAL_STORAGE_KEYS.PRODUCTS, []);
     const updated = existing.map(p => (p.id === id || p.docId === id) ? { ...p, ...payload } : p);
     StorageService.set(LOCAL_STORAGE_KEYS.PRODUCTS, updated);
     broadcastCatalogChange('products');
 
-    // 2. Sync to Firestore with timeout guard
-    try {
-      const docRef = doc(db, PRODUCTS_COLLECTION, id);
-      await withTimeout(setDoc(docRef, payload, { merge: true }), 3500);
-    } catch (err) {
-      console.warn("Firestore product update skipped/timed out; stored locally:", err.message);
-    }
+    // 2. Background Firestore Sync (non-blocking)
+    (async () => {
+      try {
+        const docRef = doc(db, PRODUCTS_COLLECTION, id);
+        await withTimeout(setDoc(docRef, payload, { merge: true }), 2500);
+      } catch (err) {
+        console.warn("Firestore product update background sync notice:", err.message);
+      }
+    })();
 
     return payload;
   },
@@ -321,20 +433,23 @@ export const productsApi = {
   async deleteProduct(productId) {
     const id = String(productId);
 
-    // 1. Optimistic Local Delete
+    // 1. Instant Optimistic Local Delete
     const existing = StorageService.get(LOCAL_STORAGE_KEYS.PRODUCTS, []);
     const updated = existing.filter(p => p.id !== id && p.docId !== id);
     StorageService.set(LOCAL_STORAGE_KEYS.PRODUCTS, updated);
     broadcastCatalogChange('products');
 
-    // 2. Sync to Firestore with timeout guard
-    try {
-      const docRef = doc(db, PRODUCTS_COLLECTION, id);
-      await withTimeout(deleteDoc(docRef), 3500);
-    } catch (err) {
-      console.warn("Firestore product delete skipped/timed out; removed locally:", err.message);
-    }
+    // 2. Background Firestore Sync (non-blocking)
+    (async () => {
+      try {
+        const docRef = doc(db, PRODUCTS_COLLECTION, id);
+        await withTimeout(deleteDoc(docRef), 2500);
+      } catch (err) {
+        console.warn("Firestore product delete background sync notice:", err.message);
+      }
+    })();
 
     return id;
   }
 };
+

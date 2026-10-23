@@ -23,6 +23,10 @@ import goldKada from '../assets/gold_kada.png';
 import diamondBracelet from '../assets/diamond_bracelet.png';
 import goldChainsImg from '../assets/gold_chains.png';
 import kadaImg from '../assets/kada.png';
+import silverPayalsImg from '../assets/silver_payals.png';
+import citrineFloralSet from '../assets/citrine_floral_set.png';
+import { INITIAL_CATEGORIES } from '../config/constants';
+
 
 // Section Video / Image Assets
 import campaignDaintyDreams from '../assets/campaign_dainty_dreams.webp';
@@ -127,24 +131,26 @@ const promoBanners = [
 
 const getCategoryFallbackImage = (catNameOrId) => {
   const norm = String(catNameOrId || '').toLowerCase().replace(/\s+/g, '');
-  if (norm.includes('solitaire')) return solitariesImg;
+  if (norm.includes('bangle')) return kadaImg;
+  if (norm.includes('jhumka')) return '/images/heritage-jhumkas.jpg';
+  if (norm.includes('earring')) return sapphireHeritageSet;
+  if (norm.includes('kada')) return goldKada;
+  if (norm.includes('necklace') || norm.includes('choker')) return necklacesImg;
+  if (norm.includes('payal') || norm.includes('anklet')) return silverPayalsImg;
+  if (norm.includes('pendant') || norm.includes('locket')) return pendantsImg;
+  if (norm.includes('ring')) return ringsImg;
+  if (norm.includes('chain')) return goldChainsImg;
+  if (norm.includes('top') || norm.includes('stud') || norm.includes('nose')) return nosePinsImg;
+  if (norm.includes('mangalsutra')) return mangalsutrasImg;
+  if (norm.includes('coin') || norm.includes('bullion')) return goldCoinsImg;
+  if (norm.includes('solitaire') || norm.includes('diamond')) return solitariesImg;
   if (norm.includes('watch')) return watchJewelleryImg;
   if (norm.includes('men')) return mensJewelleryImg;
-  if (norm.includes('mangalsutra')) return mangalsutrasImg;
-  if (norm.includes('nose')) return nosePinsImg;
-  if (norm.includes('kids')) return kidsJewelleryImg;
-  if (norm.includes('coin')) return goldCoinsImg;
-  if (norm.includes('anklet')) return ankletsImg;
-  if (norm.includes('pendant')) return pendantsImg;
-  if (norm.includes('earring')) return sapphireHeritageSet;
-  if (norm.includes('ring')) return ringsImg;
-  if (norm.includes('necklace')) return necklacesImg;
-  if (norm.includes('bangle')) return goldKada;
+  if (norm.includes('kids') || norm.includes('child')) return kidsJewelleryImg;
   if (norm.includes('bracelet')) return diamondBracelet;
-  if (norm.includes('chain')) return goldChainsImg;
-  if (norm.includes('kada')) return kadaImg;
   return ringsImg;
 };
+
 
 export default function Home({
   navigateTo,
@@ -174,9 +180,62 @@ export default function Home({
   const [promoTouchEnd, setPromoTouchEnd] = useState(null);
   const promoAutoplayRef = useRef(null);
 
-  // Recommendations Carousel Scrolling Refs & Autoplay
+  // Combined dynamic categories with baseline reference set (all 10+ reference categories)
+  const displayCategories = React.useMemo(() => {
+    const list = (Array.isArray(categories) && categories.length > 0) ? [...categories] : [...INITIAL_CATEGORIES];
+    INITIAL_CATEGORIES.forEach((base) => {
+      const exists = list.some(c => 
+        (c.id && c.id.toLowerCase() === base.id.toLowerCase()) || 
+        (c.name && c.name.toLowerCase() === base.name.toLowerCase())
+      );
+      if (!exists) {
+        list.push(base);
+      }
+    });
+    return list;
+  }, [categories]);
+
+  // Recommendations Carousel Scrolling Refs & Continuous Smooth Auto-move
+  const categoryStripRef = useRef(null);
   const categoriesScrollRef = useRef(null);
   const categoriesAutoplayRef = useRef(null);
+  const [isCategoryHovered, setIsCategoryHovered] = useState(false);
+
+  // Smooth continuous right-to-left auto-scroll with seamless loop
+  useEffect(() => {
+    let animId;
+    let lastTime = performance.now();
+
+    const loop = (currentTime) => {
+      const delta = currentTime - lastTime;
+      lastTime = currentTime;
+
+      if (!isCategoryHovered && categoryStripRef.current) {
+        const el = categoryStripRef.current;
+        // Smoothly glide right-to-left by incrementing scrollLeft (~40px/s)
+        el.scrollLeft += delta * 0.04;
+
+        // Loop seamlessly when passing halfway
+        if (el.scrollWidth > el.clientWidth && el.scrollLeft >= el.scrollWidth / 2) {
+          el.scrollLeft -= el.scrollWidth / 2;
+        }
+      }
+      animId = requestAnimationFrame(loop);
+    };
+
+    animId = requestAnimationFrame(loop);
+    return () => cancelAnimationFrame(animId);
+  }, [isCategoryHovered]);
+
+  const scrollCategoryStrip = (direction) => {
+    if (categoryStripRef.current) {
+      const step = 320;
+      categoryStripRef.current.scrollBy({
+        left: direction === 'left' ? -step : step,
+        behavior: 'smooth'
+      });
+    }
+  };
 
   // Polaroid Testimonials Refs & Progress State
   const testimonialsRef = useRef(null);
@@ -185,14 +244,12 @@ export default function Home({
   const [polaroidScrollProgress, setPolaroidScrollProgress] = useState(0);
 
   // Story & Process States
+  const activeCategories = displayCategories;
   const [activeStoryTimeline, setActiveStoryTimeline] = useState(1952);
   const [timelineDirection, setTimelineDirection] = useState(1);
   const [activeProcessStep, setActiveProcessStep] = useState(0);
   const [processPaused, setProcessPaused] = useState(false);
   const [openFaqIndex, setOpenFaqIndex] = useState(null);
-
-  // Active categories setup — purely dynamic from database
-  const activeCategories = (categoriesLoaded && Array.isArray(categories)) ? categories : [];
 
   // Promo Banner Autoplay
   useEffect(() => {
@@ -207,7 +264,7 @@ export default function Home({
     };
   }, [promoIsPaused]);
 
-  // Recommendations Autoplay
+  // Lower Recommendations Autoplay (if needed)
   const startCategoriesAutoplay = () => {
     if (categoriesAutoplayRef.current) clearInterval(categoriesAutoplayRef.current);
     categoriesAutoplayRef.current = setInterval(() => {
@@ -239,6 +296,7 @@ export default function Home({
       if (categoriesAutoplayRef.current) clearInterval(categoriesAutoplayRef.current);
     };
   }, []);
+
 
   // Process Autoplay
   useEffect(() => {
@@ -378,69 +436,117 @@ export default function Home({
       <div className="bg-[#F8F5EC] text-[#202329] transition-colors duration-500 !mt-0">
 
         {/* ==========================================================
-          FEATURE 02: PREMIUM JEWELLERY CATEGORIES GRID (DYNAMIC ONLY)
+          FEATURE 02: RECOMMENDED FOR YOU (SINGLE LINE CIRCULAR GLASS STRIP)
           ========================================================== */}
-        {activeCategories.length > 0 && (
-          <div id="shop-by-category" className="w-full pt-0 pb-12 lg:pb-16 px-6 sm:px-12 select-none bg-[#F8F5EC] text-center">
-            <section className="max-w-[1836px] mx-auto">
-              {/* Unified Horizontal Scroll Categories */}
-              <div className="pt-6 pb-6 overflow-x-auto no-scrollbar scroll-smooth">
-                <div className="grid grid-flow-col grid-rows-2 gap-4 sm:gap-6 w-max select-none px-4 text-center">
-                  {activeCategories.map((cat, idx) => {
-                    const handleClick = () => {
-                      triggerAudio('click');
-                      const normName = String(cat.name || '').toLowerCase();
-                      if (cat.id === 'gold-coins' || normName.includes('coin')) {
-                        navigateTo('gold-coins');
-                      } else {
-                        changeCategoryTab(cat.name);
-                        navigateTo('collections');
-                      }
-                    };
-                    const rawCatImg = cat.img || getCategoryFallbackImage(cat.name || cat.id);
-                    const catImg = getOptimizedImageUrl(rawCatImg, { width: 300 });
+        <section id="shop-by-category" className="w-full pt-8 pb-10 sm:pt-12 sm:pb-14 select-none bg-[#F8F5EC] text-center relative">
+          <div className="max-w-[1836px] mx-auto px-4 sm:px-8">
+            {/* Title & Divider matching Reference Image */}
+            <div className="text-center mb-6 sm:mb-8">
+              <h2 className="text-2xl sm:text-3xl lg:text-4xl serif-luxury tracking-wide text-[#0A2240] font-normal">
+                Recommended for You
+              </h2>
+              <div className="w-16 h-[2.5px] bg-[#B38738] mx-auto mt-2.5 rounded-full" />
+            </div>
 
-                    return (
+            {/* Glass Effect Strip Container with Left/Right Navigation */}
+            <div 
+              className="relative w-full rounded-2xl overflow-hidden backdrop-blur-xl bg-white/70 border border-[#EADBCE]/70 shadow-[0_8px_32px_rgba(10,34,64,0.04)] py-6 sm:py-8 group"
+              onMouseEnter={() => setIsCategoryHovered(true)}
+              onMouseLeave={() => setIsCategoryHovered(false)}
+              onTouchStart={() => setIsCategoryHovered(true)}
+              onTouchEnd={() => setIsCategoryHovered(false)}
+            >
+              {/* Left Arrow Button */}
+              <button
+                onClick={() => {
+                  triggerAudio('click');
+                  scrollCategoryStrip('left');
+                }}
+                aria-label="Previous categories"
+                className="absolute left-2 sm:left-4 lg:left-6 top-1/2 -translate-y-1/2 z-30 w-10 h-10 sm:w-12 sm:h-12 rounded-full bg-white/95 backdrop-blur-md border border-[#E7DECE] shadow-[0_4px_16px_rgba(0,0,0,0.12)] flex items-center justify-center text-[#0A2240] hover:text-[#C9A14A] hover:bg-white hover:scale-105 active:scale-95 transition-all duration-200 cursor-pointer"
+              >
+                <svg className="w-5 h-5" fill="none" stroke="currentColor" strokeWidth="2.5" viewBox="0 0 24 24">
+                  <path strokeLinecap="round" strokeLinejoin="round" d="M15.75 19.5L8.25 12l7.5-7.5" />
+                </svg>
+              </button>
+
+              {/* Right Arrow Button */}
+              <button
+                onClick={() => {
+                  triggerAudio('click');
+                  scrollCategoryStrip('right');
+                }}
+                aria-label="Next categories"
+                className="absolute right-2 sm:right-4 lg:right-6 top-1/2 -translate-y-1/2 z-30 w-10 h-10 sm:w-12 sm:h-12 rounded-full bg-white/95 backdrop-blur-md border border-[#E7DECE] shadow-[0_4px_16px_rgba(0,0,0,0.12)] flex items-center justify-center text-[#0A2240] hover:text-[#C9A14A] hover:bg-white hover:scale-105 active:scale-95 transition-all duration-200 cursor-pointer"
+              >
+                <svg className="w-5 h-5" fill="none" stroke="currentColor" strokeWidth="2.5" viewBox="0 0 24 24">
+                  <path strokeLinecap="round" strokeLinejoin="round" d="M8.25 4.5l7.5 7.5-7.5 7.5" />
+                </svg>
+              </button>
+
+              {/* Single Horizontal Line Continuous Moving Track (Auto-Move Right-to-Left) */}
+              <div 
+                ref={categoryStripRef}
+                className="overflow-x-auto no-scrollbar scroll-smooth flex flex-row items-center gap-6 sm:gap-9 lg:gap-11 px-14 sm:px-20 select-none"
+                style={{ scrollbarWidth: 'none', msOverflowStyle: 'none' }}
+              >
+                {[...displayCategories, ...displayCategories].map((cat, idx) => {
+                  const handleClick = () => {
+                    triggerAudio('click');
+                    const normName = String(cat.name || '').toLowerCase();
+                    if (cat.id === 'gold-coins' || normName.includes('coin')) {
+                      navigateTo('gold-coins');
+                    } else {
+                      changeCategoryTab(cat.name);
+                      navigateTo('collections');
+                    }
+                  };
+
+                  const rawCatImg = cat.img || getCategoryFallbackImage(cat.name || cat.id);
+                  const catImg = getOptimizedImageUrl(rawCatImg, { width: 300 });
+
+                  return (
+                    <div
+                      key={`cat-strip-${idx}`}
+                      onClick={handleClick}
+                      className="flex flex-col items-center justify-center flex-shrink-0 group/item cursor-pointer text-center select-none"
+                    >
+                      {/* Circle Container with Reference Color #F7F4EB */}
                       <div
-                        key={idx}
-                        onClick={handleClick}
-                        className="w-[120px] sm:w-[170px] h-[160px] sm:h-[240px] bg-white border border-[rgba(0,0,0,0.04)] rounded-[20px] sm:rounded-[24px] shadow-[0_6px_18px_rgba(0,0,0,0.04)] flex flex-col items-center justify-between relative overflow-hidden hover:-translate-y-[3px] transition-all duration-[250ms] ease group cursor-pointer text-center"
+                        className="w-20 h-20 sm:w-24 sm:h-24 lg:w-28 lg:h-28 rounded-full flex items-center justify-center relative transition-all duration-300 ease-out group-hover/item:scale-105 group-hover/item:shadow-[0_8px_24px_rgba(201,161,74,0.22)]"
                         style={{
-                          paddingTop: '16px',
-                          paddingLeft: '12px',
-                          paddingRight: '12px',
-                          paddingBottom: '16px',
-                          boxSizing: 'border-box'
+                          backgroundColor: '#F7F4EB',
+                          border: '1px solid rgba(220, 208, 190, 0.75)',
+                          boxShadow: '0 4px 14px rgba(160, 140, 110, 0.12)'
                         }}
                       >
-                        <div className="w-full h-[85px] sm:h-[120px] flex items-center justify-center relative bg-transparent text-center">
-                          <img
-                            src={catImg}
-                            alt={cat.name}
-                            loading="lazy"
-                            decoding="async"
-                            onError={(e) => {
-                              const fallback = getCategoryFallbackImage(cat.name || cat.id);
-                              if (e.currentTarget.src !== fallback) {
-                                e.currentTarget.src = fallback;
-                              }
-                            }}
-                            className="w-[72%] h-[72%] object-contain object-center transition-transform duration-[250ms] ease-out group-hover:scale-[1.03] filter drop-shadow-[0_8px_12px_rgba(90,74,74,0.12)] mix-blend-multiply"
-                          />
-                        </div>
-                        <span
-                          className="text-center font-sans tracking-tight line-clamp-2 mt-auto text-[11px] sm:text-[13px] font-semibold text-[#3d2619] leading-snug select-none"
-                        >
-                          {cat.name}
-                        </span>
+                        <img
+                          src={catImg}
+                          alt={cat.name}
+                          loading="lazy"
+                          decoding="async"
+                          onError={(e) => {
+                            const fallback = getCategoryFallbackImage(cat.name || cat.id);
+                            if (e.currentTarget.src !== fallback) {
+                              e.currentTarget.src = fallback;
+                            }
+                          }}
+                          className="w-[66%] h-[66%] object-contain object-center transition-transform duration-300 ease-out group-hover/item:scale-110 filter drop-shadow-[0_4px_8px_rgba(90,74,74,0.12)] mix-blend-multiply"
+                        />
                       </div>
-                    );
-                  })}
-                </div>
+
+                      {/* Uppercase Category Label */}
+                      <span className="font-sans font-bold text-[10px] sm:text-[11px] lg:text-[12px] tracking-[0.14em] text-[#33383F] group-hover/item:text-[#C9A14A] uppercase text-center mt-3 select-none leading-tight transition-colors">
+                        {cat.name}
+                      </span>
+                    </div>
+                  );
+                })}
               </div>
-            </section>
+            </div>
           </div>
-        )}
+        </section>
+
 
         {/* CUSTOM DESIGN BUTTON */}
         <div className="w-full flex justify-center py-8 bg-[#F8F5EC]">
@@ -1006,7 +1112,7 @@ export default function Home({
                       className="flex flex-col items-center gap-3 cursor-pointer shrink-0 snap-center group text-center"
                     >
                       <div
-                        className="w-[90px] h-[90px] sm:w-[110px] sm:h-[110px] rounded-full overflow-hidden border border-solid flex items-center justify-center transition-transform duration-300 ease group-hover:scale-105 border-[#E6DFD3] bg-[#F8F5EC] shadow-[0_4px_12px_rgba(13,43,78,0.06)]"
+                        className="w-[90px] h-[90px] sm:w-[110px] sm:h-[110px] rounded-full overflow-hidden border border-solid flex items-center justify-center transition-all duration-300 ease group-hover:scale-105 border-[#EADBCE]/75 bg-[#F7F4EB] shadow-[0_4px_14px_rgba(160,140,110,0.12)] group-hover:shadow-[0_8px_24px_rgba(201,161,74,0.22)]"
                       >
                         <img
                           src={catImg}
