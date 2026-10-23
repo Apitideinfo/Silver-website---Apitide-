@@ -43,6 +43,7 @@ import bannerTimelessSilver from '../assets/banner_timeless_elegance.png';
 import bannerElegantGold from '../assets/banner_elegant_gold.png';
 import bannerGoldSilver50 from '../assets/banner_pure_gold_silver_50.png';
 import bannerGold20 from '../assets/banner_gold_20.webp';
+import bannerStoreBanner from '../assets/banner_store_banner.png';
 
 // Process Icons
 import productSketch from '../assets/product_sketch.png';
@@ -1499,6 +1500,27 @@ export default function Home({
               </div>
             ))}
           </div>
+        </section>
+
+        {/* ==========================================================
+          STORE BANNER (SHREE HARI) - EDGE TO EDGE SIDE BY SIDE
+          ========================================================== */}
+        <section className="w-full overflow-hidden pb-12 sm:pb-16 text-center">
+          <a
+            href="https://maps.app.goo.gl/SXN2DZ7UasRc7qFG6?g_st=aw"
+            target="_blank"
+            rel="noopener noreferrer"
+            onClick={() => triggerAudio('shimmer')}
+            className="block w-full overflow-hidden relative cursor-pointer shadow-md hover:shadow-xl transition-all duration-500 border-y border-solid border-[#E6DFD3] group"
+          >
+            <img
+              src={bannerStoreBanner}
+              alt="A trusted SHREE HARI ORNAMENTS AND COLLECTION CENTER - Fatehpur Modh Mau - Find This Store"
+              loading="lazy"
+              className="w-full h-auto block transition-transform duration-700 group-hover:scale-[1.01]"
+            />
+            <div className="absolute inset-0 bg-gradient-to-r from-transparent via-white/10 to-transparent -translate-x-full group-hover:translate-x-full transition-transform duration-1000 ease-out pointer-events-none" />
+          </a>
         </section>
 
         {/* Promise Grid */}

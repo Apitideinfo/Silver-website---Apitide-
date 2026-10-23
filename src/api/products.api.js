@@ -11,7 +11,7 @@ import {
   orderBy, 
   onSnapshot 
 } from '../firebase/firestore';
-import { FIRESTORE_COLLECTIONS } from '../config/constants';
+import { FIRESTORE_COLLECTIONS, INITIAL_CATEGORIES } from '../config/constants';
 import { StorageService } from '../services/StorageService';
 
 const PRODUCTS_COLLECTION = FIRESTORE_COLLECTIONS.PRODUCTS;
@@ -43,25 +43,36 @@ export const productsApi = {
   // Read: Fetch all categories
   async fetchAllCategories() {
     try {
-      const querySnapshot = await withTimeout(getDocs(collection(db, CATEGORIES_COLLECTION)), 3000);
-      const remote = querySnapshot.docs.map(d => ({ id: d.id, docId: d.id, ...d.data() }));
-      StorageService.set(LOCAL_STORAGE_KEYS.CATEGORIES, remote);
-      return remote;
+      const querySnapshot = await withTimeout(getDocs(collection(db, CATEGORIES_COLLECTION)), 2500);
+      if (!querySnapshot.empty) {
+        const remote = querySnapshot.docs.map(d => ({ id: d.id, docId: d.id, ...d.data() }));
+        StorageService.set(LOCAL_STORAGE_KEYS.CATEGORIES, remote);
+        return remote;
+      }
     } catch (e) {
       console.warn("Using local categories cache:", e.message);
-      return StorageService.get(LOCAL_STORAGE_KEYS.CATEGORIES, []);
     }
+    const cached = StorageService.get(LOCAL_STORAGE_KEYS.CATEGORIES, []);
+    if (!cached || cached.length === 0) {
+      StorageService.set(LOCAL_STORAGE_KEYS.CATEGORIES, INITIAL_CATEGORIES);
+      return INITIAL_CATEGORIES;
+    }
+    return cached;
   },
 
   // Read: Realtime subscription
   subscribeToCategories(onUpdate, onError) {
-    // 1. Immediately emit local cache so UI is instantaneous and never stuck
-    const local = StorageService.get(LOCAL_STORAGE_KEYS.CATEGORIES, []);
+    // 1. Immediately emit local cache or initial baseline
+    let local = StorageService.get(LOCAL_STORAGE_KEYS.CATEGORIES, []);
+    if (!local || local.length === 0) {
+      local = INITIAL_CATEGORIES;
+      StorageService.set(LOCAL_STORAGE_KEYS.CATEGORIES, INITIAL_CATEGORIES);
+    }
     onUpdate(local);
 
     // Also listen to local window updates
     const handleLocalUpdate = () => {
-      const updated = StorageService.get(LOCAL_STORAGE_KEYS.CATEGORIES, []);
+      const updated = StorageService.get(LOCAL_STORAGE_KEYS.CATEGORIES, local);
       onUpdate(updated);
     };
     if (typeof window !== 'undefined') {
@@ -75,15 +86,17 @@ export const productsApi = {
       unsubscribeFirestore = onSnapshot(
         q, 
         (snapshot) => {
-          if (!snapshot.empty) {
+          if (snapshot && !snapshot.empty) {
             const categories = snapshot.docs.map(d => ({ id: d.id, docId: d.id, ...d.data() }));
             StorageService.set(LOCAL_STORAGE_KEYS.CATEGORIES, categories);
             onUpdate(categories);
           }
         }, 
         (err) => {
-          console.warn("Categories realtime subscription warning (operating offline-resilient):", err?.message);
-          onError?.(err);
+          console.warn("Categories realtime subscription notice (operating offline-resilient):", err?.message);
+          // Never wipe out local data on connection error
+          const safeData = StorageService.get(LOCAL_STORAGE_KEYS.CATEGORIES, local);
+          onUpdate(safeData);
         }
       );
     } catch (err) {
@@ -102,7 +115,8 @@ export const productsApi = {
 
   // Create: Add category
   async addCategory(categoryData) {
-    const catId = (categoryData.id || `cat-${Date.now()}`).trim().toLowerCase();
+    const rawId = (categoryData.id || categoryData.name || '').toLowerCase().replace(/\s+/g, '-').replace(/[^a-z0-9-]/g, '');
+    const catId = (rawId || `cat-${Date.now()}`).trim();
     const payload = {
       ...categoryData,
       id: catId,
@@ -110,20 +124,22 @@ export const productsApi = {
       createdDate: categoryData.createdDate || new Date().toISOString()
     };
 
-    // 1. Optimistic Local Save
-    const existing = StorageService.get(LOCAL_STORAGE_KEYS.CATEGORIES, []);
-    const filtered = existing.filter(c => c.id !== catId);
+    // 1. Instant Optimistic Local Save
+    const existing = StorageService.get(LOCAL_STORAGE_KEYS.CATEGORIES, INITIAL_CATEGORIES);
+    const filtered = existing.filter(c => c.id !== catId && c.docId !== catId);
     const updated = [payload, ...filtered];
     StorageService.set(LOCAL_STORAGE_KEYS.CATEGORIES, updated);
     broadcastCatalogChange('categories');
 
-    // 2. Sync to Firestore with timeout guard
-    try {
-      const docRef = doc(db, CATEGORIES_COLLECTION, catId);
-      await withTimeout(setDoc(docRef, payload, { merge: true }), 3500);
-    } catch (err) {
-      console.warn("Firestore write skipped/timed out; category safely stored locally:", err.message);
-    }
+    // 2. Background Firestore write (non-blocking)
+    (async () => {
+      try {
+        const docRef = doc(db, CATEGORIES_COLLECTION, catId);
+        await withTimeout(setDoc(docRef, payload, { merge: true }), 2000);
+      } catch (err) {
+        console.warn("Background Firestore sync skipped/offline; category safely stored:", err.message);
+      }
+    })();
 
     return payload;
   },
@@ -143,19 +159,21 @@ export const productsApi = {
       lastUpdated: new Date().toISOString()
     };
 
-    // 1. Optimistic Local Update
-    const existing = StorageService.get(LOCAL_STORAGE_KEYS.CATEGORIES, []);
-    const updated = existing.map(c => c.id === id ? { ...c, ...payload } : c);
+    // 1. Instant Optimistic Local Update
+    const existing = StorageService.get(LOCAL_STORAGE_KEYS.CATEGORIES, INITIAL_CATEGORIES);
+    const updated = existing.map(c => (c.id === id || c.docId === id) ? { ...c, ...payload } : c);
     StorageService.set(LOCAL_STORAGE_KEYS.CATEGORIES, updated);
     broadcastCatalogChange('categories');
 
-    // 2. Sync to Firestore with timeout guard
-    try {
-      const docRef = doc(db, CATEGORIES_COLLECTION, id);
-      await withTimeout(setDoc(docRef, payload, { merge: true }), 3500);
-    } catch (err) {
-      console.warn("Firestore update skipped/timed out; stored locally:", err.message);
-    }
+    // 2. Background Firestore sync (non-blocking)
+    (async () => {
+      try {
+        const docRef = doc(db, CATEGORIES_COLLECTION, id);
+        await withTimeout(setDoc(docRef, payload, { merge: true }), 2000);
+      } catch (err) {
+        console.warn("Background Firestore update skipped/offline; stored locally:", err.message);
+      }
+    })();
 
     return payload;
   },
@@ -164,19 +182,21 @@ export const productsApi = {
   async deleteCategory(categoryId) {
     const id = String(categoryId).trim().toLowerCase();
 
-    // 1. Optimistic Local Delete
-    const existing = StorageService.get(LOCAL_STORAGE_KEYS.CATEGORIES, []);
+    // 1. Instant Optimistic Local Delete
+    const existing = StorageService.get(LOCAL_STORAGE_KEYS.CATEGORIES, INITIAL_CATEGORIES);
     const updated = existing.filter(c => c.id !== id && c.docId !== id);
     StorageService.set(LOCAL_STORAGE_KEYS.CATEGORIES, updated);
     broadcastCatalogChange('categories');
 
-    // 2. Sync to Firestore with timeout guard
-    try {
-      const docRef = doc(db, CATEGORIES_COLLECTION, id);
-      await withTimeout(deleteDoc(docRef), 3500);
-    } catch (err) {
-      console.warn("Firestore delete skipped/timed out; removed locally:", err.message);
-    }
+    // 2. Background Firestore sync (non-blocking)
+    (async () => {
+      try {
+        const docRef = doc(db, CATEGORIES_COLLECTION, id);
+        await withTimeout(deleteDoc(docRef), 2000);
+      } catch (err) {
+        console.warn("Background Firestore delete skipped/offline; removed locally:", err.message);
+      }
+    })();
 
     return id;
   },

@@ -25,9 +25,10 @@ import Modal from '../components/Modal';
 import BookingForm from '../forms/BookingForm';
 import { getOptimizedImageUrl } from '../utils/imageOptimizer';
 
-// Asset Imports
-import banner1 from '../assets/banner_1.png';
-import banner2 from '../assets/banner_2.webp';
+// Asset Imports - High-Resolution Promotional Banners
+import bannerTimelessSilver from '../assets/banner_timeless_elegance.png';
+import bannerElegantGold from '../assets/banner_elegant_gold.png';
+import bannerGoldSilver50 from '../assets/banner_pure_gold_silver_50.png';
 
 // Product fallback image assets
 import solitariesImg from '../assets/solitaries.png';
@@ -68,21 +69,22 @@ const getProductFallbackImage = (prod) => {
   return ringsImg;
 };
 
-function BannerCarousel({ banners }) {
+function BannerCarousel({ banners, onBannerClick }) {
   const [active, setActive] = useState(0);
   const [paused, setPaused] = useState(false);
   const len = banners.length;
   useEffect(() => {
     if (paused || len < 2) return;
-    const t = setInterval(() => setActive(p => (p + 1) % len), 3500);
+    const t = setInterval(() => setActive(p => (p + 1) % len), 4000);
     return () => clearInterval(t);
   }, [paused, len]);
   return (
     <div
-      className="relative w-full overflow-hidden select-none"
+      className="relative w-full overflow-hidden select-none cursor-pointer group"
       style={{ aspectRatio: '2400/778' }}
       onMouseEnter={() => setPaused(true)}
       onMouseLeave={() => setPaused(false)}
+      onClick={() => onBannerClick?.(active)}
     >
       {banners.map((src, i) => (
         <img
@@ -96,16 +98,29 @@ function BannerCarousel({ banners }) {
       ))}
       {/* Prev */}
       <button
-        onClick={() => setActive(p => (p - 1 + len) % len)}
+        onClick={(e) => { e.stopPropagation(); setActive(p => (p - 1 + len) % len); }}
         className="absolute left-1.5 sm:left-3 top-1/2 -translate-y-1/2 z-10 w-6 h-6 sm:w-9 sm:h-9 rounded-full bg-black/25 hover:bg-black/50 text-white text-sm sm:text-xl flex items-center justify-center backdrop-blur-sm cursor-pointer focus:outline-none transition-all border-none"
         aria-label="Previous"
       >&#8249;</button>
       {/* Next */}
       <button
-        onClick={() => setActive(p => (p + 1) % len)}
+        onClick={(e) => { e.stopPropagation(); setActive(p => (p + 1) % len); }}
         className="absolute right-1.5 sm:right-3 top-1/2 -translate-y-1/2 z-10 w-6 h-6 sm:w-9 sm:h-9 rounded-full bg-black/25 hover:bg-black/50 text-white text-sm sm:text-xl flex items-center justify-center backdrop-blur-sm cursor-pointer focus:outline-none transition-all border-none"
         aria-label="Next"
       >&#8250;</button>
+      {/* Indicator dots */}
+      <div className="absolute bottom-2 sm:bottom-4 left-1/2 -translate-x-1/2 z-10 flex items-center gap-1.5 sm:gap-2">
+        {banners.map((_, i) => (
+          <button
+            key={i}
+            onClick={(e) => { e.stopPropagation(); setActive(i); }}
+            className={`w-2 h-2 sm:w-2.5 sm:h-2.5 rounded-full transition-all duration-300 border-none p-0 cursor-pointer ${
+              active === i ? 'bg-white w-5 sm:w-7 shadow-md' : 'bg-white/50 hover:bg-white/80'
+            }`}
+            aria-label={`Slide ${i + 1}`}
+          />
+        ))}
+      </div>
     </div>
   );
 }
@@ -1274,7 +1289,22 @@ export default function Collections({
       <div className={`transition-colors duration-500 min-h-screen pb-32 sm:pb-20 ${isCatalogDark ? 'bg-[#F2EDE4] text-[#0D2B4E]' : 'bg-[#F8F5EC] text-[#0D2B4E]'}`}>
 
         {/* Full-width Banner Carousel */}
-        <BannerCarousel banners={[banner1, banner2]} />
+        <BannerCarousel 
+          banners={[bannerTimelessSilver, bannerElegantGold, bannerGoldSilver50]} 
+          onBannerClick={(idx) => {
+            triggerAudio('click');
+            if (idx === 0) {
+              changeCategoryTab('Silver');
+              handleSetMetalFilter('silver');
+            } else if (idx === 1) {
+              changeCategoryTab('Collections');
+              handleSetMetalFilter('gold');
+            } else {
+              changeCategoryTab('Collections');
+              handleSetMetalFilter('all');
+            }
+          }}
+        />
 
         <div className="max-w-[1600px] mx-auto px-3 sm:px-8 lg:px-12 space-y-4 sm:space-y-8 animate-slide-up pt-4 sm:pt-8">
 

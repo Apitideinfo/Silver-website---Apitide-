@@ -26,6 +26,8 @@ import royalBride from '../assets/royal_indian_bride.png';
 import luxuryShowroom from '../assets/luxury_showroom.png';
 import kadaImg from '../assets/gold_kada.png';
 import solitaireImg from '../assets/solitaries.png';
+import bannerSecondStore from '../assets/banner_second_store_mau.png';
+import bannerStoreBanner from '../assets/banner_store_banner.png';
 
 export default function AboutUs({ navigateTo, triggerAudio: triggerAudioProp }) {
   const triggerAudio = (type = 'click') => {
@@ -454,6 +456,22 @@ export default function AboutUs({ navigateTo, triggerAudio: triggerAudioProp }) 
         </div>
       </section>
 
+      {/* ========================================================
+          OUR SECOND STORE: RANIPUR MAU SHOWCASE
+          ======================================================== */}
+      <section className="pb-16 px-6 sm:px-12 max-w-[1340px] mx-auto">
+        <div className="relative overflow-hidden rounded-3xl border border-solid border-[#E6DFD3] shadow-xl group hover:shadow-2xl transition-all duration-500 bg-[#091B2B]">
+          <img 
+            src={bannerSecondStore} 
+            alt="Our Second Store Now in Ranipur Mau - Rishu Jewellers & Shivangi Garments Collection" 
+            loading="lazy"
+            decoding="async"
+            className="w-full h-auto block transition-transform duration-700 group-hover:scale-[1.015]"
+          />
+          <div className="absolute inset-0 bg-gradient-to-r from-transparent via-white/10 to-transparent -translate-x-full group-hover:translate-x-full transition-transform duration-1000 ease-out pointer-events-none" />
+        </div>
+      </section>
+
 
       {/* ========================================================
           SECTION 06: FREQUENTLY ASKED QUESTIONS (FAQ)
@@ -495,6 +513,28 @@ export default function AboutUs({ navigateTo, triggerAudio: triggerAudioProp }) 
             );
           })}
         </div>
+      </section>
+
+      {/* ========================================================
+          STORE BANNER (SHREE HARI) - EDGE TO EDGE SIDE BY SIDE
+          ======================================================== */}
+      <section className="w-full pb-16 text-center overflow-hidden">
+        <a
+          href="https://maps.app.goo.gl/SXN2DZ7UasRc7qFG6?g_st=aw"
+          target="_blank"
+          rel="noopener noreferrer"
+          onClick={() => triggerAudio('shimmer')}
+          className="block w-full overflow-hidden relative cursor-pointer shadow-md hover:shadow-xl transition-all duration-500 border-y border-solid border-[#E6DFD3] group"
+        >
+          <img
+            src={bannerStoreBanner}
+            alt="A trusted SHREE HARI ORNAMENTS AND COLLECTION CENTER - Fatehpur Modh Mau - Find This Store"
+            loading="lazy"
+            decoding="async"
+            className="w-full h-auto block transition-transform duration-700 group-hover:scale-[1.01]"
+          />
+          <div className="absolute inset-0 bg-gradient-to-r from-transparent via-white/10 to-transparent -translate-x-full group-hover:translate-x-full transition-transform duration-1000 ease-out pointer-events-none" />
+        </a>
       </section>
 
 

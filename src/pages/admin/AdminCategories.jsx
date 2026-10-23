@@ -2,6 +2,8 @@ import React, { useState } from 'react';
 import { db } from '../../firebase';
 import { productsApi } from '../../api/products.api';
 import { ImageUploadService } from '../../services/ImageUploadService';
+import { StorageService } from '../../services/StorageService';
+import { INITIAL_CATEGORIES } from '../../config/constants';
 import { getOptimizedImageUrl } from '../../utils/imageOptimizer';
 import { 
   Trash2, 
@@ -18,9 +20,40 @@ import {
 import { doc, deleteDoc } from 'firebase/firestore';
 
 export default function AdminCategories({
-  categories = [],
+  categories: propCategories = [],
   setAdminNotification
 }) {
+  // Synchronized Reactive Categories State
+  const [categories, setCategories] = useState(() => {
+    const cached = StorageService.get('manish_categories_store', []);
+    if (Array.isArray(cached) && cached.length > 0) return cached;
+    if (Array.isArray(propCategories) && propCategories.length > 0) return propCategories;
+    return INITIAL_CATEGORIES;
+  });
+
+  useEffect(() => {
+    if (Array.isArray(propCategories) && propCategories.length > 0) {
+      setCategories(propCategories);
+    }
+  }, [propCategories]);
+
+  useEffect(() => {
+    const handleSync = () => {
+      const cached = StorageService.get('manish_categories_store', []);
+      if (Array.isArray(cached) && cached.length > 0) {
+        setCategories(cached);
+      }
+    };
+    if (typeof window !== 'undefined') {
+      window.addEventListener('manish_catalog_updated', handleSync);
+    }
+    return () => {
+      if (typeof window !== 'undefined') {
+        window.removeEventListener('manish_catalog_updated', handleSync);
+      }
+    };
+  }, []);
+
   // Create / Form State
   const [newCatName, setNewCatName] = useState('');
   const [newCatId, setNewCatId] = useState('');
@@ -76,23 +109,32 @@ export default function AdminCategories({
   // Save new category
   const handleAddCategory = async (e) => {
     e.preventDefault();
-    if (!newCatName.trim() || !newCatId.trim()) {
+    const trimmedName = newCatName.trim();
+    if (!trimmedName) {
       if (typeof setAdminNotification === 'function') {
-        setAdminNotification({ message: 'Category name and slug code are required.', type: 'error' });
+        setAdminNotification({ message: 'Category name is required.', type: 'error' });
       }
       return;
     }
 
+    const rawSlug = newCatId.trim() || trimmedName.toLowerCase().replace(/\s+/g, '-').replace(/[^a-z0-9-]/g, '') || `cat-${Date.now()}`;
+    const finalSlug = rawSlug.toLowerCase();
+
     setSubmitting(true);
     try {
       const payload = {
-        id: newCatId.trim().toLowerCase(),
-        name: newCatName.trim(),
+        id: finalSlug,
+        docId: finalSlug,
+        name: trimmedName,
         desc: newCatDesc.trim(),
         img: newCatImg.trim(),
         createdDate: new Date().toISOString()
       };
 
+      // 1. Instant local reactive state update
+      setCategories(prev => [payload, ...prev.filter(c => c.id !== finalSlug && c.docId !== finalSlug)]);
+
+      // 2. Call products API
       await productsApi.addCategory(payload);
       
       setNewCatName('');
@@ -157,6 +199,7 @@ export default function AdminCategories({
   const handleDeleteCategory = async (catDocId, catName) => {
     if (window.confirm(`Are you sure you want to remove "${catName || catDocId}" from published categories?`)) {
       try {
+        setCategories(prev => prev.filter(c => c.id !== catDocId && c.docId !== catDocId));
         await productsApi.deleteCategory(catDocId);
         if (typeof setAdminNotification === 'function') {
           setAdminNotification({ message: 'Category removed.', type: 'success' });

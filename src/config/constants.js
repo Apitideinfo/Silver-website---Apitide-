@@ -94,3 +94,56 @@ export const ROUTES = Object.freeze({
   PRIVACY: 'privacy-policy',
   ADMIN: 'admin',
 });
+
+// ─── INITIAL BASELINE CATEGORIES ──────────────────────────────
+export const INITIAL_CATEGORIES = Object.freeze([
+  {
+    id: 'solitaires',
+    name: 'Solitaires & Diamonds',
+    desc: 'Exquisite certified solitaires and brilliant cut diamonds set in hallmarked gold.',
+    img: 'https://images.unsplash.com/photo-1605100804763-247f67b3557e?q=80&w=800&auto=format&fit=crop',
+    createdDate: '2026-01-01T00:00:00.000Z'
+  },
+  {
+    id: 'necklaces',
+    name: 'Royal Necklaces & Chokers',
+    desc: 'Grand heirloom bridal necklaces and polki jadau choker masterpieces.',
+    img: 'https://images.unsplash.com/photo-1599643478518-a784e5dc4c8f?q=80&w=800&auto=format&fit=crop',
+    createdDate: '2026-01-01T00:00:00.000Z'
+  },
+  {
+    id: 'bangles-kadas',
+    name: 'Bangles & Kadas',
+    desc: 'Traditional royal chitai kadas and modern filigree gold bangles.',
+    img: 'https://images.unsplash.com/photo-1611591475879-da60a37392c0?q=80&w=800&auto=format&fit=crop',
+    createdDate: '2026-01-01T00:00:00.000Z'
+  },
+  {
+    id: 'rings',
+    name: 'Cocktail & Eternity Rings',
+    desc: 'Handcrafted engagement bands, sovereign rings, and daily wear elegance.',
+    img: 'https://images.unsplash.com/photo-1603561591411-07134e71a2a9?q=80&w=800&auto=format&fit=crop',
+    createdDate: '2026-01-01T00:00:00.000Z'
+  },
+  {
+    id: 'silver-pooja',
+    name: '925 Silver & Pooja Heirlooms',
+    desc: 'Hallmarked 925 sterling silver tableware, pooja thalis, payals, and gifting coins.',
+    img: 'https://images.unsplash.com/photo-1535632066927-ab7c9ab60908?q=80&w=800&auto=format&fit=crop',
+    createdDate: '2026-01-01T00:00:00.000Z'
+  },
+  {
+    id: 'chains-mangalsutras',
+    name: 'Chains & Mangalsutras',
+    desc: 'Authentic 22K gold daily chains and sacred designer mangalsutra suites.',
+    img: 'https://images.unsplash.com/photo-1515562141207-7a88fb7ce338?q=80&w=800&auto=format&fit=crop',
+    createdDate: '2026-01-01T00:00:00.000Z'
+  },
+  {
+    id: 'gold-coins',
+    name: 'Sovereign Bullion Coins',
+    desc: '24K 999 certified Lakshmi & Ganesh gold bullion coins and silver bars.',
+    img: 'https://images.unsplash.com/photo-1573408301185-9146fe634ad0?q=80&w=800&auto=format&fit=crop',
+    createdDate: '2026-01-01T00:00:00.000Z'
+  }
+]);

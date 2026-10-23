@@ -1,46 +1,69 @@
 import React, { createContext, useState, useEffect } from 'react';
 import { productsApi } from '../api/products.api';
+import { StorageService } from '../services/StorageService';
+import { INITIAL_CATEGORIES } from '../config/constants';
 
 export const ProductContext = createContext();
 
 export function ProductProvider({ children }) {
-  const [products, setProducts] = useState([]);
-  const [categories, setCategories] = useState([]);
-  const [loading, setLoading] = useState(true);
-  const [categoriesLoaded, setCategoriesLoaded] = useState(false);
+  const [products, setProducts] = useState(() => {
+    return StorageService.get('manish_products_store', []);
+  });
+  const [categories, setCategories] = useState(() => {
+    const cached = StorageService.get('manish_categories_store', []);
+    return (Array.isArray(cached) && cached.length > 0) ? cached : INITIAL_CATEGORIES;
+  });
+  const [loading, setLoading] = useState(false);
+  const [categoriesLoaded, setCategoriesLoaded] = useState(true);
 
   useEffect(() => {
-    // Safety guard: ensure loading never gets stuck
-    const safetyTimer = setTimeout(() => {
-      setLoading(false);
-      setCategoriesLoaded(true);
-    }, 600);
+    // 1. Listen for catalog update events
+    const handleCatalogUpdate = () => {
+      const updatedCats = StorageService.get('manish_categories_store', []);
+      if (Array.isArray(updatedCats) && updatedCats.length > 0) {
+        setCategories(updatedCats);
+      }
+      const updatedProds = StorageService.get('manish_products_store', []);
+      if (Array.isArray(updatedProds) && updatedProds.length > 0) {
+        setProducts(updatedProds);
+      }
+    };
+    if (typeof window !== 'undefined') {
+      window.addEventListener('manish_catalog_updated', handleCatalogUpdate);
+    }
+
+    // 2. Subscribe to products
     const unsubscribeProducts = productsApi.subscribeToProducts(
       (data) => {
-        setProducts(Array.isArray(data) ? data : []);
+        if (Array.isArray(data) && data.length > 0) {
+          setProducts(data);
+        }
         setLoading(false);
       },
       (err) => {
-        console.warn("Products sync warning:", err);
-        setProducts([]);
+        console.warn("Products sync notice:", err);
         setLoading(false);
       }
     );
 
-    // Live listener for isolated categories collection — purely dynamic from database
+    // 3. Subscribe to categories
     const unsubscribeCategories = productsApi.subscribeToCategories(
       (data) => {
-        setCategories(Array.isArray(data) ? data : []);
+        if (Array.isArray(data) && data.length > 0) {
+          setCategories(data);
+        }
         setCategoriesLoaded(true);
       },
       (err) => {
-        console.warn("Categories subscription error:", err);
-        setCategories([]);
+        console.warn("Categories sync notice:", err);
         setCategoriesLoaded(true);
       }
     );
 
     return () => {
+      if (typeof window !== 'undefined') {
+        window.removeEventListener('manish_catalog_updated', handleCatalogUpdate);
+      }
       unsubscribeProducts();
       unsubscribeCategories();
     };
