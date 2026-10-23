@@ -401,7 +401,7 @@ export default function Home({
         {/* ==========================================================
           FEATURE 02: SHOP BY CATEGORIES (SEAMLESS FLUID MARQUEE STRIP)
           ========================================================== */}
-        <section id="shop-by-category" className="w-full pt-8 pb-10 sm:pt-12 sm:pb-14 select-none bg-[#F8F5EC] text-center relative overflow-hidden">
+        <section id="shop-by-category" className="w-full pt-8 pb-10 sm:pt-12 sm:pb-12 select-none bg-white text-center relative overflow-hidden border-b border-[#EFEAE1]">
           <div className="max-w-[1836px] mx-auto px-4 sm:px-8">
             {/* Title & Divider matching Reference Image */}
             <div className="text-center mb-6 sm:mb-8">
@@ -436,13 +436,13 @@ export default function Home({
                       onClick={handleClick}
                       className="flex flex-col items-center justify-center flex-shrink-0 group/item cursor-pointer text-center select-none"
                     >
-                      {/* Circle Container with EXACT Same Background (#F8F5EC) as Section */}
+                      {/* Circle Container with EXACT Same Background (#FFFFFF) as Image & Section */}
                       <div
                         className="w-20 h-20 sm:w-24 sm:h-24 lg:w-28 lg:h-28 rounded-full flex items-center justify-center relative transition-all duration-300 ease-out group-hover/item:scale-105 group-hover/item:border-[#C9A14A] group-hover/item:shadow-[0_8px_24px_rgba(201,161,74,0.22)]"
                         style={{
-                          backgroundColor: '#F8F5EC',
-                          border: '1.5px solid rgba(200, 180, 150, 0.60)',
-                          boxShadow: '0 4px 14px rgba(160, 140, 110, 0.12)'
+                          backgroundColor: '#FFFFFF',
+                          border: '1.5px solid rgba(220, 210, 195, 0.70)',
+                          boxShadow: '0 4px 16px rgba(0, 0, 0, 0.05)'
                         }}
                       >
                         <img
@@ -469,32 +469,30 @@ export default function Home({
                 })}
               </div>
             </div>
+
+            {/* CUSTOM DESIGN BUTTON */}
+            <div className="w-full flex justify-center mt-7 sm:mt-9">
+              <button
+                onClick={() => { triggerAudio('shimmer'); setCustomDesignOpen(true); }}
+                id="custom-design-cta"
+                className="group relative inline-flex items-center gap-3 px-8 py-3.5 rounded-full font-sans font-bold text-[13px] tracking-[0.15em] uppercase text-white overflow-hidden cursor-pointer select-none transition-all duration-300 hover:scale-105 hover:shadow-[0_8px_30px_rgba(180,120,20,0.45)] active:scale-95 border-none font-bold"
+                style={{
+                  background: 'linear-gradient(135deg, #C8960C 0%, #E8B84B 40%, #A07820 100%)',
+                  boxShadow: '0 4px 18px rgba(180,120,20,0.30)',
+                }}
+              >
+                <span className="absolute inset-0 bg-gradient-to-r from-transparent via-white/20 to-transparent -translate-x-full group-hover:translate-x-full transition-transform duration-700 ease-out pointer-events-none" />
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8" className="w-5 h-5 shrink-0">
+                  <path strokeLinecap="round" strokeLinejoin="round" d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z" />
+                </svg>
+                Custom Design
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" className="w-4 h-4 shrink-0 transition-transform duration-300 group-hover:translate-x-1">
+                  <path strokeLinecap="round" strokeLinejoin="round" d="M9 5l7 7-7 7" />
+                </svg>
+              </button>
+            </div>
           </div>
         </section>
-
-
-
-        {/* CUSTOM DESIGN BUTTON */}
-        <div className="w-full flex justify-center py-8 bg-[#F8F5EC]">
-          <button
-            onClick={() => { triggerAudio('shimmer'); setCustomDesignOpen(true); }}
-            id="custom-design-cta"
-            className="group relative inline-flex items-center gap-3 px-8 py-3.5 rounded-full font-sans font-bold text-[13px] tracking-[0.15em] uppercase text-white overflow-hidden cursor-pointer select-none transition-all duration-300 hover:scale-105 hover:shadow-[0_8px_30px_rgba(180,120,20,0.45)] active:scale-95 border-none font-bold"
-            style={{
-              background: 'linear-gradient(135deg, #C8960C 0%, #E8B84B 40%, #A07820 100%)',
-              boxShadow: '0 4px 18px rgba(180,120,20,0.30)',
-            }}
-          >
-            <span className="absolute inset-0 bg-gradient-to-r from-transparent via-white/20 to-transparent -translate-x-full group-hover:translate-x-full transition-transform duration-700 ease-out pointer-events-none" />
-            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8" className="w-5 h-5 shrink-0">
-              <path strokeLinecap="round" strokeLinejoin="round" d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z" />
-            </svg>
-            Custom Design
-            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" className="w-4 h-4 shrink-0 transition-transform duration-300 group-hover:translate-x-1">
-              <path strokeLinecap="round" strokeLinejoin="round" d="M9 5l7 7-7 7" />
-            </svg>
-          </button>
-        </div>
 
         {/* ==========================================================
           PROMOTIONAL CAROUSEL
