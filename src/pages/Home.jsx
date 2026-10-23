@@ -184,8 +184,8 @@ export default function Home({
   const displayCategories = React.useMemo(() => {
     const list = (Array.isArray(categories) && categories.length > 0) ? [...categories] : [...INITIAL_CATEGORIES];
     INITIAL_CATEGORIES.forEach((base) => {
-      const exists = list.some(c => 
-        (c.id && c.id.toLowerCase() === base.id.toLowerCase()) || 
+      const exists = list.some(c =>
+        (c.id && c.id.toLowerCase() === base.id.toLowerCase()) ||
         (c.name && c.name.toLowerCase() === base.name.toLowerCase())
       );
       if (!exists) {
@@ -195,47 +195,10 @@ export default function Home({
     return list;
   }, [categories]);
 
-  // Recommendations Carousel Scrolling Refs & Continuous Smooth Auto-move
-  const categoryStripRef = useRef(null);
+  // Lower Recommendations Carousel Scrolling Refs & Autoplay
   const categoriesScrollRef = useRef(null);
   const categoriesAutoplayRef = useRef(null);
-  const [isCategoryHovered, setIsCategoryHovered] = useState(false);
 
-  // Smooth continuous right-to-left auto-scroll with seamless loop
-  useEffect(() => {
-    let animId;
-    let lastTime = performance.now();
-
-    const loop = (currentTime) => {
-      const delta = currentTime - lastTime;
-      lastTime = currentTime;
-
-      if (!isCategoryHovered && categoryStripRef.current) {
-        const el = categoryStripRef.current;
-        // Smoothly glide right-to-left by incrementing scrollLeft (~40px/s)
-        el.scrollLeft += delta * 0.04;
-
-        // Loop seamlessly when passing halfway
-        if (el.scrollWidth > el.clientWidth && el.scrollLeft >= el.scrollWidth / 2) {
-          el.scrollLeft -= el.scrollWidth / 2;
-        }
-      }
-      animId = requestAnimationFrame(loop);
-    };
-
-    animId = requestAnimationFrame(loop);
-    return () => cancelAnimationFrame(animId);
-  }, [isCategoryHovered]);
-
-  const scrollCategoryStrip = (direction) => {
-    if (categoryStripRef.current) {
-      const step = 320;
-      categoryStripRef.current.scrollBy({
-        left: direction === 'left' ? -step : step,
-        behavior: 'smooth'
-      });
-    }
-  };
 
   // Polaroid Testimonials Refs & Progress State
   const testimonialsRef = useRef(null);
@@ -413,7 +376,7 @@ export default function Home({
 
   return (
     <div className={`pb-0 transition-colors duration-500 ${isCatalogDark ? "text-[#FCFAFF]" : "text-[#202329]"}`}>
-      
+
       {/* ==========================================================
         SECTION 01: EDGE-TO-EDGE RAJASTHANI WELCOME HERO BANNER
         ========================================================== */}
@@ -436,60 +399,22 @@ export default function Home({
       <div className="bg-[#F8F5EC] text-[#202329] transition-colors duration-500 !mt-0">
 
         {/* ==========================================================
-          FEATURE 02: RECOMMENDED FOR YOU (SINGLE LINE CIRCULAR GLASS STRIP)
+          FEATURE 02: SHOP BY CATEGORIES (SEAMLESS FLUID MARQUEE STRIP)
           ========================================================== */}
-        <section id="shop-by-category" className="w-full pt-8 pb-10 sm:pt-12 sm:pb-14 select-none bg-[#F8F5EC] text-center relative">
+        <section id="shop-by-category" className="w-full pt-8 pb-10 sm:pt-12 sm:pb-14 select-none bg-[#F8F5EC] text-center relative overflow-hidden">
           <div className="max-w-[1836px] mx-auto px-4 sm:px-8">
             {/* Title & Divider matching Reference Image */}
             <div className="text-center mb-6 sm:mb-8">
               <h2 className="text-2xl sm:text-3xl lg:text-4xl serif-luxury tracking-wide text-[#0A2240] font-normal">
-                Recommended for You
+                Shop by categories
               </h2>
               <div className="w-16 h-[2.5px] bg-[#B38738] mx-auto mt-2.5 rounded-full" />
             </div>
 
-            {/* Glass Effect Strip Container with Left/Right Navigation */}
-            <div 
-              className="relative w-full rounded-2xl overflow-hidden backdrop-blur-xl bg-white/70 border border-[#EADBCE]/70 shadow-[0_8px_32px_rgba(10,34,64,0.04)] py-6 sm:py-8 group"
-              onMouseEnter={() => setIsCategoryHovered(true)}
-              onMouseLeave={() => setIsCategoryHovered(false)}
-              onTouchStart={() => setIsCategoryHovered(true)}
-              onTouchEnd={() => setIsCategoryHovered(false)}
-            >
-              {/* Left Arrow Button */}
-              <button
-                onClick={() => {
-                  triggerAudio('click');
-                  scrollCategoryStrip('left');
-                }}
-                aria-label="Previous categories"
-                className="absolute left-2 sm:left-4 lg:left-6 top-1/2 -translate-y-1/2 z-30 w-10 h-10 sm:w-12 sm:h-12 rounded-full bg-white/95 backdrop-blur-md border border-[#E7DECE] shadow-[0_4px_16px_rgba(0,0,0,0.12)] flex items-center justify-center text-[#0A2240] hover:text-[#C9A14A] hover:bg-white hover:scale-105 active:scale-95 transition-all duration-200 cursor-pointer"
-              >
-                <svg className="w-5 h-5" fill="none" stroke="currentColor" strokeWidth="2.5" viewBox="0 0 24 24">
-                  <path strokeLinecap="round" strokeLinejoin="round" d="M15.75 19.5L8.25 12l7.5-7.5" />
-                </svg>
-              </button>
-
-              {/* Right Arrow Button */}
-              <button
-                onClick={() => {
-                  triggerAudio('click');
-                  scrollCategoryStrip('right');
-                }}
-                aria-label="Next categories"
-                className="absolute right-2 sm:right-4 lg:right-6 top-1/2 -translate-y-1/2 z-30 w-10 h-10 sm:w-12 sm:h-12 rounded-full bg-white/95 backdrop-blur-md border border-[#E7DECE] shadow-[0_4px_16px_rgba(0,0,0,0.12)] flex items-center justify-center text-[#0A2240] hover:text-[#C9A14A] hover:bg-white hover:scale-105 active:scale-95 transition-all duration-200 cursor-pointer"
-              >
-                <svg className="w-5 h-5" fill="none" stroke="currentColor" strokeWidth="2.5" viewBox="0 0 24 24">
-                  <path strokeLinecap="round" strokeLinejoin="round" d="M8.25 4.5l7.5 7.5-7.5 7.5" />
-                </svg>
-              </button>
-
-              {/* Single Horizontal Line Continuous Moving Track (Auto-Move Right-to-Left) */}
-              <div 
-                ref={categoryStripRef}
-                className="overflow-x-auto no-scrollbar scroll-smooth flex flex-row items-center gap-6 sm:gap-9 lg:gap-11 px-14 sm:px-20 select-none"
-                style={{ scrollbarWidth: 'none', msOverflowStyle: 'none' }}
-              >
+            {/* Seamless Full-Width Fluid Marquee Container (No toggles, unified background) */}
+            <div className="relative w-full overflow-hidden py-4 select-none">
+              {/* Hardware-accelerated 60/120fps CSS Marquee (Pause on Hover) */}
+              <div className="animate-marquee-smooth flex flex-row items-center gap-7 sm:gap-10 lg:gap-12 py-2 select-none">
                 {[...displayCategories, ...displayCategories].map((cat, idx) => {
                   const handleClick = () => {
                     triggerAudio('click');
@@ -511,12 +436,12 @@ export default function Home({
                       onClick={handleClick}
                       className="flex flex-col items-center justify-center flex-shrink-0 group/item cursor-pointer text-center select-none"
                     >
-                      {/* Circle Container with Reference Color #F7F4EB */}
+                      {/* Circle Container with EXACT Same Background (#F8F5EC) as Section */}
                       <div
-                        className="w-20 h-20 sm:w-24 sm:h-24 lg:w-28 lg:h-28 rounded-full flex items-center justify-center relative transition-all duration-300 ease-out group-hover/item:scale-105 group-hover/item:shadow-[0_8px_24px_rgba(201,161,74,0.22)]"
+                        className="w-20 h-20 sm:w-24 sm:h-24 lg:w-28 lg:h-28 rounded-full flex items-center justify-center relative transition-all duration-300 ease-out group-hover/item:scale-105 group-hover/item:border-[#C9A14A] group-hover/item:shadow-[0_8px_24px_rgba(201,161,74,0.22)]"
                         style={{
-                          backgroundColor: '#F7F4EB',
-                          border: '1px solid rgba(220, 208, 190, 0.75)',
+                          backgroundColor: '#F8F5EC',
+                          border: '1.5px solid rgba(200, 180, 150, 0.60)',
                           boxShadow: '0 4px 14px rgba(160, 140, 110, 0.12)'
                         }}
                       >
@@ -531,7 +456,7 @@ export default function Home({
                               e.currentTarget.src = fallback;
                             }
                           }}
-                          className="w-[66%] h-[66%] object-contain object-center transition-transform duration-300 ease-out group-hover/item:scale-110 filter drop-shadow-[0_4px_8px_rgba(90,74,74,0.12)] mix-blend-multiply"
+                          className="w-[70%] h-[70%] object-contain object-center transition-transform duration-300 ease-out group-hover/item:scale-110 filter drop-shadow-[0_4px_10px_rgba(0,0,0,0.12)]"
                         />
                       </div>
 
@@ -546,6 +471,7 @@ export default function Home({
             </div>
           </div>
         </section>
+
 
 
         {/* CUSTOM DESIGN BUTTON */}
@@ -765,7 +691,7 @@ export default function Home({
         <section className="py-20 bg-[#F8F5EC] overflow-hidden text-center">
           <div className="max-w-[1836px] mx-auto px-6 sm:px-12 lg:px-16 text-center">
             <div className="grid grid-cols-1 lg:grid-cols-12 gap-12 items-stretch text-center">
-              
+
               <motion.div
                 initial={{ opacity: 0, x: -120 }}
                 whileInView={{ opacity: 1, x: 0 }}
@@ -819,7 +745,7 @@ export default function Home({
         <section className="py-20 bg-white overflow-hidden text-center">
           <div className="max-w-[1836px] mx-auto px-6 sm:px-12 lg:px-16 text-center">
             <div className="grid grid-cols-1 lg:grid-cols-12 gap-12 items-stretch text-center">
-              
+
               <motion.div
                 initial={{ opacity: 0, y: 50 }}
                 whileInView={{ opacity: 1, y: 0 }}
@@ -1059,7 +985,7 @@ export default function Home({
           ========================================================== */}
         <section className="py-12 bg-white border-b border-solid border-[#E6DFD3] relative overflow-hidden text-center">
           <div className="w-full px-4 md:px-12 space-y-10 relative group/sect text-center">
-            
+
             <div className="text-center space-y-3">
               <span className="text-[10px] uppercase tracking-[0.35em] text-[#6B4B2E] font-bold font-sans">TAILORED SELECTION</span>
               <h2 className="serif-luxury text-3xl sm:text-5xl font-semibold text-[#0D2B4E]">Recommended for You</h2>
@@ -1155,13 +1081,13 @@ export default function Home({
         {/* ==========================================================
           CRAFTSMANSHIP JOURNEY OUR PROCESS
           ========================================================== */}
-        <section 
+        <section
           onMouseEnter={() => setProcessPaused(true)}
           onMouseLeave={() => setProcessPaused(false)}
           className="bg-white py-20 px-6 sm:px-12 select-none border-b border-solid border-gray-100 overflow-hidden text-left"
         >
           <div className="max-w-[1836px] mx-auto relative px-4 text-left">
-            
+
             <div className="text-center md:text-left mb-12 space-y-4">
               <span className="text-[10px] sm:text-xs uppercase tracking-[0.35em] text-[#6B4B2E] font-bold font-sans block">
                 Craftsmanship Journey
@@ -1174,12 +1100,12 @@ export default function Home({
             {/* Progress line */}
             <div className="flex items-center justify-between max-w-5xl mx-auto mb-20 relative px-4 select-none">
               <div className="absolute top-1/2 -translate-y-1/2 left-[24px] right-[24px] h-[2px] bg-[#E6DFD3] z-0">
-                <div 
+                <div
                   className="h-full bg-[#6B4B2E] transition-all duration-500 ease-out origin-left"
                   style={{ width: `${(activeProcessStep / 5) * 100}%` }}
                 />
               </div>
-              
+
               {processStepsData.map((step, idx) => {
                 const isActive = activeProcessStep === idx;
                 return (
@@ -1191,16 +1117,14 @@ export default function Home({
                     }}
                     className="relative z-10 flex flex-col items-center group focus:outline-none cursor-pointer border-none bg-transparent"
                   >
-                    <div className={`w-12 h-12 rounded-full border-2 flex items-center justify-center font-bold text-sm transition-all duration-300 ${
-                      isActive
+                    <div className={`w-12 h-12 rounded-full border-2 flex items-center justify-center font-bold text-sm transition-all duration-300 ${isActive
                         ? 'bg-[#6B4B2E] border-[#6B4B2E] text-white shadow-[0_0_15px_rgba(107,75,46,0.35)] scale-110'
                         : 'bg-white border-[#E6DFD3] text-gray-500 hover:border-[#6B4B2E] hover:text-[#6B4B2E] border-solid'
-                    }`}>
+                      }`}>
                       {step.num}
                     </div>
-                    <span className={`absolute top-14 text-[10px] font-bold tracking-wider uppercase whitespace-nowrap transition-all duration-300 hidden md:block ${
-                      isActive ? 'text-[#6B4B2E] opacity-100 translate-y-0' : 'text-gray-400 opacity-0 -translate-y-1 group-hover:opacity-100 group-hover:translate-y-0'
-                    }`}>
+                    <span className={`absolute top-14 text-[10px] font-bold tracking-wider uppercase whitespace-nowrap transition-all duration-300 hidden md:block ${isActive ? 'text-[#6B4B2E] opacity-100 translate-y-0' : 'text-gray-400 opacity-0 -translate-y-1 group-hover:opacity-100 group-hover:translate-y-0'
+                      }`}>
                       {step.title}
                     </span>
                   </button>
@@ -1235,7 +1159,7 @@ export default function Home({
                   <span className="text-[10px] sm:text-xs uppercase tracking-[0.25em] text-[#6B4B2E] font-bold font-sans">
                     Step {processStepsData[activeProcessStep].num} of 06
                   </span>
-                  <h3 
+                  <h3
                     key={`title-${activeProcessStep}`}
                     className="text-3xl sm:text-4xl font-semibold text-[#0D2B4E] tracking-tight serif-luxury animate-fadeSlideIn"
                   >
@@ -1244,7 +1168,7 @@ export default function Home({
                   <div className="w-12 h-1 bg-[#6B4B2E] rounded-full" />
                 </div>
 
-                <p 
+                <p
                   key={`desc-${activeProcessStep}`}
                   className="text-[#657989] text-sm sm:text-base leading-relaxed font-sans font-normal relative z-10 max-w-lg animate-fadeSlideIn [animation-delay:150ms]"
                 >
@@ -1638,7 +1562,7 @@ export default function Home({
               <h3 className="font-serif text-[#031838] text-[28px] sm:text-[36px] lg:text-[44px] font-normal tracking-[0.01em] leading-tight m-0">MANISH &amp; CO</h3>
               <h2 className="font-serif text-[#031838] text-[56px] sm:text-[72px] lg:text-[84px] font-extrabold tracking-[0.02em] leading-none mt-1 sm:mt-2 mb-0">Promise</h2>
             </div>
-            
+
             <div className="w-full lg:w-1/2 grid grid-cols-3 gap-y-10 sm:gap-y-12 gap-x-4 sm:gap-x-8 md:gap-x-12 justify-items-center text-center">
               <div className="flex flex-col items-center max-w-[120px] text-center">
                 <div className="w-20 h-20 sm:w-24 sm:h-24 md:w-28 md:h-28 rounded-full bg-[#031838] text-white flex flex-col justify-center items-center shadow-md hover:scale-105 transition-transform duration-300">
@@ -1649,49 +1573,49 @@ export default function Home({
               </div>
               <div className="flex flex-col items-center max-w-[120px] text-center">
                 <div className="w-20 h-20 sm:w-24 sm:h-24 md:w-28 md:h-28 rounded-full bg-[#031838] text-white flex flex-col justify-center items-center shadow-md hover:scale-105 transition-transform duration-300">
-                  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.2" className="w-8 h-8 sm:w-10 sm:h-10"><circle cx="12" cy="12" r="10"/><path d="M9 12l2 2 4-4" strokeLinecap="round" strokeLinejoin="round"/></svg>
+                  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.2" className="w-8 h-8 sm:w-10 sm:h-10"><circle cx="12" cy="12" r="10" /><path d="M9 12l2 2 4-4" strokeLinecap="round" strokeLinejoin="round" /></svg>
                 </div>
                 <p className="text-[9px] sm:text-[11px] text-[#2c3e50] font-sans font-medium tracking-wide text-center mt-3 leading-snug">100% Certified Jewellery</p>
               </div>
               <div className="flex flex-col items-center max-w-[120px] text-center">
                 <div className="w-20 h-20 sm:w-24 sm:h-24 md:w-28 md:h-28 rounded-full bg-[#031838] text-white flex flex-col justify-center items-center shadow-md hover:scale-105 transition-transform duration-300">
-                  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.2" className="w-8 h-8 sm:w-10 sm:h-10"><path d="M21.5 2v6h-6M21.34 15.57a10 10 0 1 1-.57-8.38l5.67-5.67" strokeLinecap="round" strokeLinejoin="round"/></svg>
+                  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.2" className="w-8 h-8 sm:w-10 sm:h-10"><path d="M21.5 2v6h-6M21.34 15.57a10 10 0 1 1-.57-8.38l5.67-5.67" strokeLinecap="round" strokeLinejoin="round" /></svg>
                 </div>
                 <p className="text-[9px] sm:text-[11px] text-[#2c3e50] font-sans font-medium tracking-wide text-center mt-3 leading-snug">Lifetime Exchange &amp; Buyback</p>
               </div>
               <div className="flex flex-col items-center max-w-[120px] text-center">
                 <div className="w-20 h-20 sm:w-24 sm:h-24 md:w-28 md:h-28 rounded-full bg-[#031838] text-white flex flex-col justify-center items-center shadow-md hover:scale-105 transition-transform duration-300">
-                  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.2" className="w-8 h-8 sm:w-10 sm:h-10"><rect x="3" y="11" width="18" height="11" rx="2" ry="2"/><path d="M7 11V7a5 5 0 0 1 10 0v4"/></svg>
+                  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.2" className="w-8 h-8 sm:w-10 sm:h-10"><rect x="3" y="11" width="18" height="11" rx="2" ry="2" /><path d="M7 11V7a5 5 0 0 1 10 0v4" /></svg>
                 </div>
                 <p className="text-[9px] sm:text-[11px] text-[#2c3e50] font-sans font-medium tracking-wide text-center mt-3 leading-snug">Guaranteed Purity &amp; Value</p>
               </div>
               <div className="flex flex-col items-center max-w-[120px] text-center">
                 <div className="w-20 h-20 sm:w-24 sm:h-24 md:w-28 md:h-28 rounded-full bg-[#031838] text-white flex flex-col justify-center items-center shadow-md hover:scale-105 transition-transform duration-300">
-                  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.2" className="w-8 h-8 sm:w-10 sm:h-10"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65" strokeLinecap="round" strokeLinejoin="round"/></svg>
+                  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.2" className="w-8 h-8 sm:w-10 sm:h-10"><circle cx="11" cy="11" r="8" /><line x1="21" y1="21" x2="16.65" y2="16.65" strokeLinecap="round" strokeLinejoin="round" /></svg>
                 </div>
                 <p className="text-[9px] sm:text-[11px] text-[#2c3e50] font-sans font-medium tracking-wide text-center mt-3 leading-snug">100% Transparency</p>
               </div>
               <div className="flex flex-col items-center max-w-[120px] text-center">
                 <div className="w-20 h-20 sm:w-24 sm:h-24 md:w-28 md:h-28 rounded-full bg-[#031838] text-white flex flex-col justify-center items-center shadow-md hover:scale-105 transition-transform duration-300">
-                  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.2" className="w-8 h-8 sm:w-10 sm:h-10"><rect x="1" y="3" width="15" height="13"/><polygon points="16 8 20 8 23 11 23 16 16 16 16 8"/><circle cx="5.5" cy="18.5" r="2.5"/><circle cx="18.5" cy="18.5" r="2.5"/></svg>
+                  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.2" className="w-8 h-8 sm:w-10 sm:h-10"><rect x="1" y="3" width="15" height="13" /><polygon points="16 8 20 8 23 11 23 16 16 16 16 8" /><circle cx="5.5" cy="18.5" r="2.5" /><circle cx="18.5" cy="18.5" r="2.5" /></svg>
                 </div>
                 <p className="text-[9px] sm:text-[11px] text-[#2c3e50] font-sans font-medium tracking-wide text-center mt-3 leading-snug">Free Shipping</p>
               </div>
               <div className="flex flex-col items-center max-w-[120px] text-center">
                 <div className="w-20 h-20 sm:w-24 sm:h-24 md:w-28 md:h-28 rounded-full bg-[#031838] text-white flex flex-col justify-center items-center shadow-md hover:scale-105 transition-transform duration-300">
-                  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.2" className="w-8 h-8 sm:w-10 sm:h-10"><path d="M12 2L2 7l10 5 10-5-10-5zM2 17l10 5 10-5M2 12l10 5 10-5" strokeLinecap="round" strokeLinejoin="round"/></svg>
+                  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.2" className="w-8 h-8 sm:w-10 sm:h-10"><path d="M12 2L2 7l10 5 10-5-10-5zM2 17l10 5 10-5M2 12l10 5 10-5" strokeLinecap="round" strokeLinejoin="round" /></svg>
                 </div>
                 <p className="text-[9px] sm:text-[11px] text-[#2c3e50] font-sans font-medium tracking-wide text-center mt-3 leading-snug">Authentic Rajputi Ornaments</p>
               </div>
               <div className="flex flex-col items-center max-w-[120px] text-center">
                 <div className="w-20 h-20 sm:w-24 sm:h-24 md:w-28 md:h-28 rounded-full bg-[#031838] text-white flex flex-col justify-center items-center shadow-md hover:scale-105 transition-transform duration-300">
-                  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.2" className="w-8 h-8 sm:w-10 sm:h-10"><polygon points="23 7 16 12 23 17 23 7" strokeLinecap="round" strokeLinejoin="round"/><rect x="1" y="5" width="15" height="14" rx="2" ry="2"/></svg>
+                  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.2" className="w-8 h-8 sm:w-10 sm:h-10"><polygon points="23 7 16 12 23 17 23 7" strokeLinecap="round" strokeLinejoin="round" /><rect x="1" y="5" width="15" height="14" rx="2" ry="2" /></svg>
                 </div>
                 <p className="text-[9px] sm:text-[11px] text-[#2c3e50] font-sans font-medium tracking-wide text-center mt-3 leading-snug">Personalised Video Consultations</p>
               </div>
               <div className="flex flex-col items-center max-w-[120px] text-center">
                 <div className="w-20 h-20 sm:w-24 sm:h-24 md:w-28 md:h-28 rounded-full bg-[#031838] text-white flex flex-col justify-center items-center shadow-md hover:scale-105 transition-transform duration-300">
-                  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.2" className="w-8 h-8 sm:w-10 sm:h-10"><path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z" strokeLinecap="round" strokeLinejoin="round"/></svg>
+                  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.2" className="w-8 h-8 sm:w-10 sm:h-10"><path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z" strokeLinecap="round" strokeLinejoin="round" /></svg>
                 </div>
                 <p className="text-[9px] sm:text-[11px] text-[#2c3e50] font-sans font-medium tracking-wide text-center mt-3 leading-snug">BIS 916 Hallmarked Gold</p>
               </div>
@@ -1707,9 +1631,9 @@ export default function Home({
         title="Create Custom Design"
         size="md"
       >
-        <BookingForm 
-          type="custom_design" 
-          onSuccess={() => setCustomDesignOpen(false)} 
+        <BookingForm
+          type="custom_design"
+          onSuccess={() => setCustomDesignOpen(false)}
         />
       </Modal>
 
@@ -1720,9 +1644,9 @@ export default function Home({
         title="Book Live Video Consultation"
         size="md"
       >
-        <BookingForm 
-          type="consultation" 
-          onSuccess={() => setConsultationModal(false)} 
+        <BookingForm
+          type="consultation"
+          onSuccess={() => setConsultationModal(false)}
         />
       </Modal>
     </div>
