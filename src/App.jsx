@@ -242,20 +242,32 @@ function AppContent() {
         const urlParams = new URLSearchParams(window.location.search);
         const path = window.location.pathname.replace(/^\/|\/$/g, '');
         if (urlParams.get('page') === 'admin' || path === 'admin') return false;
-        return !sessionStorage.getItem('mco_splash_shown');
+        // Always show on reload / entry for maximum luxury immersion
+        return true;
       }
     } catch {
       // ignore
     }
-    return false;
+    return true;
   });
 
   useEffect(() => {
+    if (typeof window !== 'undefined') {
+      window.replaySplash = () => setInitialSplash(true);
+      const handleReplayEvent = () => setInitialSplash(true);
+      window.addEventListener('mco:replay-splash', handleReplayEvent);
+      return () => {
+        window.removeEventListener('mco:replay-splash', handleReplayEvent);
+      };
+    }
+  }, []);
+
+  useEffect(() => {
     if (!initialSplash) return;
+    // Safety fallback timer: auto dismiss if Loader did not self-dismiss after 5.5s
     const timer = setTimeout(() => {
       setInitialSplash(false);
-      try { sessionStorage.setItem('mco_splash_shown', '1'); } catch {}
-    }, 850);
+    }, 5500);
     return () => clearTimeout(timer);
   }, [initialSplash]);
 
@@ -308,11 +320,6 @@ function AppContent() {
     if (meta) meta.setAttribute('content', desc);
   }, [currentPage, detailProduct]);
 
-  // Luxury Splash Screen only on initial entrance, never blocks admin or gets stuck
-  if (initialSplash && currentPage !== 'admin') {
-    return <Loader onDismiss={() => setInitialSplash(false)} />;
-  }
-
   // Render Admin View directly (Admin handles its own internal layout wraps)
   if (currentPage === 'admin') {
     return (
@@ -326,6 +333,10 @@ function AppContent() {
 
   return (
     <ErrorBoundary>
+      {/* Client's Luxury Midnight & Bronze Splash Screen Overlay */}
+      {initialSplash && (
+        <Loader onDismiss={() => setInitialSplash(false)} />
+      )}
       <MainLayout
         currentPage={currentPage}
         navigateTo={navigateTo}

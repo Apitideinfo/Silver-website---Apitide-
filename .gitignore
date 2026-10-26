@@ -7,3 +7,4 @@ dist/
 *serviceAccountKey*.json
 _backup_original/
 .vscode/
+.vercel

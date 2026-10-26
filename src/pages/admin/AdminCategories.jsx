@@ -15,9 +15,20 @@ import {
   RefreshCw, 
   Search,
   Sparkles,
-  Layers
+  Layers,
+  Tag,
+  Coins,
+  RotateCcw,
+  Eye,
+  EyeOff
 } from 'lucide-react';
 import { doc, deleteDoc } from 'firebase/firestore';
+import { 
+  priceCategoryService, 
+  COLOR_OPTIONS, 
+  getColorStyles, 
+  DEFAULT_PRICE_CATEGORIES 
+} from '../../services/priceCategoryService';
 
 export default function AdminCategories({
   categories: propCategories = [],
@@ -70,6 +81,118 @@ export default function AdminCategories({
   const [editCatImg, setEditCatImg] = useState('');
   const [editCatImgProgress, setEditCatImgProgress] = useState('');
   const [isUpdating, setIsUpdating] = useState(false);
+
+  // Sub-tab: 'categories' vs 'price-tiers'
+  const [activeSubTab, setActiveSubTab] = useState('categories');
+  const [priceTiers, setPriceTiers] = useState(() => priceCategoryService.getStoredCategories());
+  
+  // Price tier form state
+  const [editingTierId, setEditingTierId] = useState(null);
+  const [tierPrice, setTierPrice] = useState(299);
+  const [tierTitle, setTierTitle] = useState('Under ₹299');
+  const [tierColor, setTierColor] = useState('red');
+  const [tierActive, setTierActive] = useState(true);
+
+  // Sync price tiers when updated externally
+  useEffect(() => {
+    const handlePriceSync = () => {
+      setPriceTiers(priceCategoryService.getStoredCategories());
+    };
+    if (typeof window !== 'undefined') {
+      window.addEventListener('manish_price_categories_updated', handlePriceSync);
+    }
+    return () => {
+      if (typeof window !== 'undefined') {
+        window.removeEventListener('manish_price_categories_updated', handlePriceSync);
+      }
+    };
+  }, []);
+
+  const handleSavePriceTier = async (e) => {
+    e.preventDefault();
+    const priceNum = Number(tierPrice);
+    if (!priceNum || priceNum <= 0) {
+      if (typeof setAdminNotification === 'function') {
+        setAdminNotification({ message: 'Please enter a valid price amount.', type: 'error' });
+      }
+      return;
+    }
+
+    let updatedList;
+    if (editingTierId) {
+      updatedList = priceTiers.map(t => t.id === editingTierId ? {
+        ...t,
+        price: priceNum,
+        title: tierTitle.trim() || `Under ₹${priceNum}`,
+        color: tierColor,
+        active: tierActive
+      } : t);
+      setEditingTierId(null);
+    } else {
+      const newId = `tier-${priceNum}-${Date.now().toString().slice(-4)}`;
+      const newTier = {
+        id: newId,
+        price: priceNum,
+        title: tierTitle.trim() || `Under ₹${priceNum}`,
+        color: tierColor,
+        active: tierActive
+      };
+      updatedList = [...priceTiers, newTier];
+    }
+
+    // Sort ascending by price
+    updatedList.sort((a, b) => a.price - b.price);
+    setPriceTiers(updatedList);
+    await priceCategoryService.saveCategories(updatedList);
+
+    // Reset inputs
+    setTierPrice(299);
+    setTierTitle('Under ₹299');
+    setTierColor('red');
+    setTierActive(true);
+
+    if (typeof setAdminNotification === 'function') {
+      setAdminNotification({ 
+        message: editingTierId ? '✓ Price category updated live on Homepage!' : '✓ New price category published to Homepage!', 
+        type: 'success' 
+      });
+    }
+  };
+
+  const handleStartEditPriceTier = (tier) => {
+    setEditingTierId(tier.id);
+    setTierPrice(tier.price);
+    setTierTitle(tier.title);
+    setTierColor(tier.color || 'red');
+    setTierActive(tier.active !== false);
+  };
+
+  const handleDeletePriceTier = async (id, title) => {
+    if (window.confirm(`Delete price tier "${title}" from the homepage?`)) {
+      const updatedList = priceTiers.filter(t => t.id !== id);
+      setPriceTiers(updatedList);
+      await priceCategoryService.saveCategories(updatedList);
+      if (typeof setAdminNotification === 'function') {
+        setAdminNotification({ message: 'Price category removed.', type: 'success' });
+      }
+    }
+  };
+
+  const handleTogglePriceTier = async (id) => {
+    const updatedList = priceTiers.map(t => t.id === id ? { ...t, active: !t.active } : t);
+    setPriceTiers(updatedList);
+    await priceCategoryService.saveCategories(updatedList);
+  };
+
+  const handleResetPriceTiers = async () => {
+    if (window.confirm('Reset all price categories to default recommended tiers (Under ₹199, ₹229, ₹299, ₹499, ₹799, ₹999)?')) {
+      setPriceTiers(DEFAULT_PRICE_CATEGORIES);
+      await priceCategoryService.saveCategories(DEFAULT_PRICE_CATEGORIES);
+      if (typeof setAdminNotification === 'function') {
+        setAdminNotification({ message: '✓ Reset to recommended price categories!', type: 'success' });
+      }
+    }
+  };
 
   // Search Filter
   const [categorySearch, setCategorySearch] = useState('');
@@ -222,6 +345,322 @@ export default function AdminCategories({
   return (
     <div className="space-y-6 text-[#1A1A1A] dark:text-zinc-100 font-sans text-left w-full overflow-x-hidden">
       
+      {/* Sub-Tab Navigation Bar */}
+      <div className="flex flex-wrap items-center justify-between gap-3 bg-white dark:bg-[#15151A] p-2 sm:p-2.5 rounded-2xl border border-zinc-200 dark:border-zinc-800 shadow-xs">
+        <div className="flex items-center gap-2">
+          <button
+            type="button"
+            onClick={() => setActiveSubTab('categories')}
+            className={`inline-flex items-center gap-2 px-4 py-2.5 rounded-xl text-xs font-bold transition-all cursor-pointer ${
+              activeSubTab === 'categories'
+                ? 'bg-[#15151A] text-white dark:bg-white dark:text-zinc-900 shadow-sm'
+                : 'text-zinc-500 hover:text-zinc-800 hover:bg-zinc-100 dark:hover:bg-zinc-800'
+            }`}
+          >
+            <Layers className="w-4 h-4 text-[#C8A646]" />
+            <span>Jewellery Categories</span>
+            <span className="text-[10px] px-2 py-0.5 rounded-full bg-zinc-200/60 dark:bg-zinc-700 text-zinc-700 dark:text-zinc-300">
+              {categories.length}
+            </span>
+          </button>
+
+          <button
+            type="button"
+            onClick={() => setActiveSubTab('price-tiers')}
+            className={`inline-flex items-center gap-2 px-4 py-2.5 rounded-xl text-xs font-bold transition-all cursor-pointer ${
+              activeSubTab === 'price-tiers'
+                ? 'bg-[#15151A] text-white dark:bg-white dark:text-zinc-900 shadow-sm'
+                : 'text-zinc-500 hover:text-zinc-800 hover:bg-zinc-100 dark:hover:bg-zinc-800'
+            }`}
+          >
+            <Sparkles className="w-4 h-4 text-[#D53F8C]" />
+            <span>Shop by Budget (Gol Categories)</span>
+            <span className="text-[10px] px-2 py-0.5 rounded-full bg-rose-100 dark:bg-rose-900/40 text-rose-700 dark:text-rose-300 font-bold">
+              {priceTiers.length}
+            </span>
+          </button>
+        </div>
+
+        {activeSubTab === 'price-tiers' && (
+          <button
+            type="button"
+            onClick={handleResetPriceTiers}
+            className="inline-flex items-center gap-1.5 px-3 py-1.5 text-[11px] font-semibold text-zinc-500 hover:text-zinc-800 dark:text-zinc-400 dark:hover:text-white transition-colors cursor-pointer"
+          >
+            <RotateCcw className="w-3.5 h-3.5" />
+            <span>Reset Recommended Tiers</span>
+          </button>
+        )}
+      </div>
+
+      {/* =========================================================
+        VIEW 1: SHOP BY BUDGET (GOL CATEGORIES) MANAGEMENT
+        ========================================================= */}
+      {activeSubTab === 'price-tiers' && (
+        <div className="space-y-6">
+          
+          {/* Top Info Banner */}
+          <div className="bg-gradient-to-r from-amber-500/10 via-rose-500/10 to-indigo-500/10 border border-amber-500/20 rounded-2xl p-5 sm:p-6 text-left">
+            <h3 className="text-base font-bold text-zinc-900 dark:text-zinc-100 flex items-center gap-2">
+              <Coins className="w-5 h-5 text-amber-500" />
+              Homepage "Shop by Category" Price Tiers (Gol Categories)
+            </h3>
+            <p className="text-xs text-zinc-500 dark:text-zinc-400 mt-1 max-w-2xl leading-relaxed">
+              Manage the round, colorful price categories (Under ₹199, ₹229, ₹299, etc.) displayed in the "Shop by Category" marquee on the homepage. Changes save and sync live immediately.
+            </p>
+          </div>
+
+          <div className="grid grid-cols-1 lg:grid-cols-12 gap-6 items-start">
+            
+            {/* Left: Create / Edit Price Tier Form */}
+            <div className="lg:col-span-5 bg-white dark:bg-[#15151A] border border-solid border-zinc-200 dark:border-zinc-800 rounded-2xl p-6 space-y-5 shadow-xs">
+              <div className="border-b border-zinc-100 dark:border-zinc-850 pb-3 flex items-center justify-between">
+                <div>
+                  <h4 className="text-sm font-black uppercase tracking-wider text-zinc-900 dark:text-[#E6C687] flex items-center gap-2">
+                    <Tag className="w-4 h-4 text-[#C8A646]" />
+                    {editingTierId ? 'Edit Price Category' : 'Add New Price Category'}
+                  </h4>
+                  <span className="text-[10px] text-zinc-400 font-semibold">
+                    Set rate, custom title and circular color theme.
+                  </span>
+                </div>
+                {editingTierId && (
+                  <button
+                    type="button"
+                    onClick={() => {
+                      setEditingTierId(null);
+                      setTierPrice(299);
+                      setTierTitle('Under ₹299');
+                      setTierColor('red');
+                    }}
+                    className="text-[10px] font-bold text-red-500 hover:underline"
+                  >
+                    Cancel Edit
+                  </button>
+                )}
+              </div>
+
+              <form onSubmit={handleSavePriceTier} className="space-y-4">
+                
+                {/* Price Input */}
+                <div className="space-y-1.5">
+                  <label htmlFor="tier-price" className="text-[10px] uppercase tracking-wider text-zinc-500 font-bold block">
+                    Price Ceiling (₹) <span className="text-red-500">*</span>
+                  </label>
+                  <div className="relative">
+                    <span className="absolute left-3.5 top-1/2 -translate-y-1/2 text-zinc-400 font-bold text-sm">₹</span>
+                    <input
+                      id="tier-price"
+                      type="number"
+                      required
+                      min="1"
+                      step="1"
+                      placeholder="e.g. 299"
+                      value={tierPrice}
+                      onChange={(e) => {
+                        const val = e.target.value;
+                        setTierPrice(val);
+                        if (!editingTierId || tierTitle.startsWith('Under ₹')) {
+                          setTierTitle(`Under ₹${val}`);
+                        }
+                      }}
+                      className="w-full h-10 pl-8 pr-4 bg-zinc-50 dark:bg-zinc-900 border border-zinc-200 dark:border-zinc-750 rounded-xl text-sm font-bold focus:outline-none focus:border-zinc-900 font-mono"
+                    />
+                  </div>
+                </div>
+
+                {/* Display Title */}
+                <div className="space-y-1.5">
+                  <label htmlFor="tier-title" className="text-[10px] uppercase tracking-wider text-zinc-500 font-bold block">
+                    Category Title <span className="text-red-500">*</span>
+                  </label>
+                  <input
+                    id="tier-title"
+                    type="text"
+                    required
+                    placeholder="e.g. Under ₹299"
+                    value={tierTitle}
+                    onChange={(e) => setTierTitle(e.target.value)}
+                    className="w-full h-10 px-4 bg-zinc-50 dark:bg-zinc-900 border border-zinc-200 dark:border-zinc-750 rounded-xl text-xs font-semibold focus:outline-none focus:border-zinc-900"
+                  />
+                </div>
+
+                {/* Color Palette Selector */}
+                <div className="space-y-2">
+                  <label className="text-[10px] uppercase tracking-wider text-zinc-500 font-bold block">
+                    Gol (Round) Color Theme
+                  </label>
+                  <div className="grid grid-cols-3 gap-2">
+                    {COLOR_OPTIONS.map((col) => {
+                      const isSelected = tierColor === col.id;
+                      return (
+                        <button
+                          key={col.id}
+                          type="button"
+                          onClick={() => setTierColor(col.id)}
+                          className={`p-2.5 rounded-xl border flex items-center gap-2 transition-all cursor-pointer text-left ${
+                            isSelected
+                              ? 'border-zinc-900 dark:border-white ring-2 ring-zinc-900/10 bg-zinc-50 dark:bg-zinc-800'
+                              : 'border-zinc-200 dark:border-zinc-800 hover:border-zinc-400'
+                          }`}
+                        >
+                          <span className={`w-4 h-4 rounded-full ${col.dot} shrink-0 shadow-xs`} />
+                          <span className="text-[11px] font-bold text-zinc-800 dark:text-zinc-200 truncate">
+                            {col.name}
+                          </span>
+                        </button>
+                      );
+                    })}
+                  </div>
+                </div>
+
+                {/* Active Checkbox */}
+                <div className="flex items-center gap-2 pt-1">
+                  <input
+                    id="tier-active"
+                    type="checkbox"
+                    checked={tierActive}
+                    onChange={(e) => setTierActive(e.target.checked)}
+                    className="w-4 h-4 text-emerald-600 rounded cursor-pointer"
+                  />
+                  <label htmlFor="tier-active" className="text-xs font-semibold text-zinc-700 dark:text-zinc-300 cursor-pointer">
+                    Show in homepage marquee
+                  </label>
+                </div>
+
+                {/* Live Gol Preview */}
+                <div className="pt-2 border-t border-zinc-100 dark:border-zinc-850">
+                  <span className="text-[9px] uppercase tracking-wider text-zinc-400 font-bold block mb-2">
+                    Live Gol Preview
+                  </span>
+                  <div className="bg-[#FDFBF7] p-4 rounded-xl flex items-center justify-center border border-[#EAE3D9]">
+                    {(() => {
+                      const style = getColorStyles(tierColor);
+                      return (
+                        <div className={`w-[110px] h-[110px] rounded-full bg-gradient-to-br ${style.gradient} ${style.shadow} ${style.border} border-2 flex flex-col items-center justify-center p-2 text-white relative shadow-lg`}>
+                          <span className="text-[8.5px] font-sans font-bold tracking-[0.2em] uppercase text-white/90 leading-none mb-0.5">
+                            UNDER
+                          </span>
+                          <span 
+                            className="text-2xl font-bold text-white leading-none tracking-tight drop-shadow-md"
+                            style={{ fontFamily: "'Cormorant Garamond', 'Playfair Display', Georgia, serif" }}
+                          >
+                            ₹{tierPrice || 0}
+                          </span>
+                          <span className="inline-flex items-center gap-1 text-[8px] font-sans font-bold uppercase text-white bg-black/25 px-2 py-0.5 rounded-full mt-1 border border-white/20">
+                            <span>Shop</span>
+                            <span>→</span>
+                          </span>
+                        </div>
+                      );
+                    })()}
+                  </div>
+                </div>
+
+                {/* Submit Button */}
+                <button
+                  type="submit"
+                  className="w-full py-3 bg-[#785B3C] hover:bg-[#8F6D48] text-white font-sans text-xs font-bold uppercase tracking-[0.16em] rounded-xl transition-all shadow-sm cursor-pointer flex items-center justify-center gap-2"
+                >
+                  <Check className="w-4 h-4" />
+                  <span>{editingTierId ? 'Update Price Category' : 'Publish Price Category'}</span>
+                </button>
+
+              </form>
+            </div>
+
+            {/* Right: Active Tiers Grid */}
+            <div className="lg:col-span-7 space-y-4">
+              <div className="flex items-center justify-between pb-2 border-b border-zinc-200 dark:border-zinc-800">
+                <span className="text-xs font-bold uppercase tracking-wider text-zinc-500">
+                  Active Price Categories ({priceTiers.length})
+                </span>
+                <span className="text-[11px] text-zinc-400 font-medium">
+                  Sorted by lowest to highest price
+                </span>
+              </div>
+
+              <div className="grid grid-cols-1 sm:grid-cols-2 gap-3.5">
+                {priceTiers.map((tier) => {
+                  const style = getColorStyles(tier.color);
+                  const isBeingEdited = editingTierId === tier.id;
+                  return (
+                    <div
+                      key={tier.id}
+                      className={`bg-white dark:bg-[#15151A] border rounded-2xl p-4 flex items-center justify-between gap-3 shadow-xs transition-all ${
+                        isBeingEdited 
+                          ? 'border-[#C8A646] ring-2 ring-[#C8A646]/20' 
+                          : 'border-zinc-200 dark:border-zinc-800'
+                      }`}
+                    >
+                      <div className="flex items-center gap-3 min-w-0">
+                        {/* Mini Gol Circle */}
+                        <div className={`w-12 h-12 rounded-full bg-gradient-to-br ${style.gradient} ${style.border} border shrink-0 flex flex-col items-center justify-center text-white shadow-sm`}>
+                          <span className="text-[7px] font-bold tracking-wider leading-none">₹</span>
+                          <span className="text-xs font-bold font-serif leading-none">{tier.price}</span>
+                        </div>
+
+                        <div className="min-w-0">
+                          <h5 className="text-xs font-bold text-zinc-900 dark:text-zinc-100 truncate">
+                            {tier.title}
+                          </h5>
+                          <div className="flex items-center gap-2 mt-0.5">
+                            <span className="text-[10px] text-zinc-400 font-medium capitalize">
+                              {tier.color || 'red'}
+                            </span>
+                            <span className="text-zinc-300">•</span>
+                            <span className={`text-[9.5px] font-bold ${tier.active !== false ? 'text-emerald-600' : 'text-zinc-400'}`}>
+                              {tier.active !== false ? 'Active' : 'Hidden'}
+                            </span>
+                          </div>
+                        </div>
+                      </div>
+
+                      {/* Action Buttons */}
+                      <div className="flex items-center gap-1 shrink-0">
+                        <button
+                          type="button"
+                          onClick={() => handleTogglePriceTier(tier.id)}
+                          title={tier.active !== false ? 'Hide from homepage' : 'Show on homepage'}
+                          className="p-1.5 rounded-lg text-zinc-400 hover:text-zinc-700 hover:bg-zinc-100 dark:hover:bg-zinc-800 transition-colors"
+                        >
+                          {tier.active !== false ? <Eye className="w-3.5 h-3.5 text-emerald-600" /> : <EyeOff className="w-3.5 h-3.5 text-zinc-400" />}
+                        </button>
+                        
+                        <button
+                          type="button"
+                          onClick={() => handleStartEditPriceTier(tier)}
+                          title="Edit price category"
+                          className="p-1.5 rounded-lg text-zinc-400 hover:text-[#C8A646] hover:bg-amber-50 dark:hover:bg-amber-900/20 transition-colors"
+                        >
+                          <Edit3 className="w-3.5 h-3.5" />
+                        </button>
+
+                        <button
+                          type="button"
+                          onClick={() => handleDeletePriceTier(tier.id, tier.title)}
+                          title="Delete price category"
+                          className="p-1.5 rounded-lg text-zinc-400 hover:text-red-600 hover:bg-red-50 dark:hover:bg-red-900/20 transition-colors"
+                        >
+                          <Trash2 className="w-3.5 h-3.5" />
+                        </button>
+                      </div>
+
+                    </div>
+                  );
+                })}
+              </div>
+            </div>
+
+          </div>
+        </div>
+      )}
+
+      {/* =========================================================
+        VIEW 2: EXISTING JEWELLERY CATEGORIES
+        ========================================================= */}
+      {activeSubTab === 'categories' && (
+      <>
       {/* Category Creation Card */}
       <div className="bg-white dark:bg-[#15151A] border border-solid border-zinc-200 dark:border-zinc-800 rounded-2xl p-6 sm:p-8 space-y-6 shadow-xs">
         <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3 border-b border-solid border-zinc-100 dark:border-zinc-850 pb-4">
@@ -566,6 +1005,8 @@ export default function AdminCategories({
 
           </div>
         </div>
+      )}
+      </>
       )}
 
     </div>

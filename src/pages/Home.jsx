@@ -5,6 +5,7 @@ import { useRates } from '../hooks/useRates';
 import Modal from '../components/Modal';
 import BookingForm from '../forms/BookingForm';
 import { getOptimizedImageUrl } from '../utils/imageOptimizer';
+import { ShieldCheck, Gem, Truck, Package, ArrowRight } from 'lucide-react';
 
 // Category Image Fallbacks
 import solitariesImg from '../assets/solitaries.png';
@@ -28,15 +29,19 @@ import citrineFloralSet from '../assets/citrine_floral_set.png';
 import nathNosePinImg from '../assets/nath_nose_pin.png';
 import jhumkasImg from '../assets/jhumkas.png';
 import { INITIAL_CATEGORIES } from '../config/constants';
+import { priceCategoryService, getColorStyles } from '../services/priceCategoryService';
 
 
-// Section Video / Image Assets
-import campaignDaintyDreams from '../assets/campaign_dainty_dreams.webp';
-import campaignRawReverie from '../assets/campaign_raw_reverie.webp';
-import campaignClayWhispers from '../assets/campaign_clay_whispers.webp';
-import giftingLayeredNecklaces from '../assets/gifting_layered_necklaces.png';
-import giftingCovetedStyles from '../assets/gifting_coveted_styles.png';
-import giftingHrMan from '../assets/gifting_hr_man.png';
+// Editorial Collection Showcase (01 For Her, 02 For Him, 03 Little Treasures)
+import herRings from '../assets/editorial/her_rings.png';
+import herBracelets from '../assets/editorial/her_bracelets.png';
+import herAnklets from '../assets/editorial/her_anklets.png';
+import himRings from '../assets/editorial/him_rings.png';
+import himChains from '../assets/editorial/him_chains.png';
+import himBracelets from '../assets/editorial/him_bracelets.png';
+import kidsRings from '../assets/editorial/kids_rings.png';
+import kidsChains from '../assets/editorial/kids_chains.png';
+import kidsBracelets from '../assets/editorial/kids_bracelets.png';
 
 // Testimonial Images
 import testimonial1 from '../assets/testimonial_1.png';
@@ -44,92 +49,48 @@ import testimonial2 from '../assets/testimonial_2.png';
 import testimonial3 from '../assets/testimonial_3.png';
 import testimonial4 from '../assets/testimonial_4.png';
 
-// Banners
-import bannerTimelessSilver from '../assets/banner_timeless_elegance.png';
-import bannerElegantGold from '../assets/banner_elegant_gold.png';
-import bannerGoldSilver50 from '../assets/banner_pure_gold_silver_50.png';
+// Banners & Collections
+import midnightSapphireHero from '../assets/midnight_sapphire_hero.png';
+import midnightSapphireHeroWebp from '../assets/midnight_sapphire_hero.webp';
+import colRings from '../assets/col_rings.png';
+import colBracelets from '../assets/col_bracelets.png';
+import colPendants from '../assets/col_pendants.png';
+import colChains from '../assets/col_chains.png';
+import bannerBuiltOnPurity from '../assets/built_on_purity_925_fine_silver.png';
+import bannerCraftsmanshipJourney from '../assets/craftsmanship_in_every_silver_detail.png';
 import bannerStoreBanner from '../assets/banner_store_banner.png';
 import bannerPureSilverCollection from '../assets/banner_pure_silver_collection.png';
 
-// Process Icons
-import productSketch from '../assets/product_sketch.png';
-import processCasting from '../assets/process_casting.png';
-import processSetting from '../assets/process_setting.png';
-import processPolishing from '../assets/process_polishing.png';
-import processQuality from '../assets/process_quality.png';
-import processPackaging from '../assets/process_packaging.png';
+// Clean Transparent Category Images
+import cleanBangles from '../assets/clean_categories/bangles.png';
+import cleanBracelets from '../assets/clean_categories/bracelets.png';
+import cleanEarrings from '../assets/clean_categories/earrings.png';
+import cleanJhumka from '../assets/clean_categories/jhumka.png';
+import cleanKada from '../assets/clean_categories/kada.png';
+import cleanNathNosePin from '../assets/clean_categories/nath_nose_pin.png';
+import cleanNecklace from '../assets/clean_categories/necklace.png';
+import cleanNosePin from '../assets/clean_categories/nose_pin.png';
+import cleanPayal from '../assets/clean_categories/payal.png';
+import cleanPendantLocket from '../assets/clean_categories/pendant_locket.png';
+import cleanRings from '../assets/clean_categories/rings.png';
+import cleanSilverChain from '../assets/clean_categories/silver_chain.png';
 
-const processStepsData = [
-  {
-    num: "01",
-    title: "Design Consultation",
-    desc: "Our design experts translate your vision into initial concepts, sketches, and detailed engineering requirements.",
-    img: productSketch,
-    fallback: "https://images.unsplash.com/photo-1515562141207-7a88fb7ce338?q=80&w=1200&auto=format&fit=crop"
-  },
-  {
-    num: "02",
-    title: "Modeling & Casting",
-    desc: "We bring designs to life with precise 3D CAD modeling and cast the raw form in precious 22K/18K gold bullion.",
-    img: processCasting,
-    fallback: "https://images.unsplash.com/photo-1573408301185-9146fe634ad0?q=80&w=1200&auto=format&fit=crop"
-  },
-  {
-    num: "03",
-    title: "Stone Setting",
-    desc: "Master setters delicately select and embed each certified diamond, polki, or gemstone with flawless precision.",
-    img: processSetting,
-    fallback: "https://images.unsplash.com/photo-1605100804763-247f67b3557e?q=80&w=1200&auto=format&fit=crop"
-  },
-  {
-    num: "04",
-    title: "Filing & Polishing",
-    desc: "Raw cast parts are meticulously hand-filed and polished to bring out the metal's high-shine royal luster.",
-    img: processPolishing,
-    fallback: "https://images.unsplash.com/photo-1535632066927-ab7c9ab60908?q=80&w=1200&auto=format&fit=crop"
-  },
-  {
-    num: "05",
-    title: "Quality Inspection",
-    desc: "Every ornament undergoes rigorous laser testing and micro-inspections to guarantee absolute structural integrity.",
-    img: processQuality,
-    fallback: "https://images.unsplash.com/photo-1599643478518-a784e5dc4c8f?q=80&w=1200&auto=format&fit=crop"
-  },
-  {
-    num: "06",
-    title: "Final Delivery",
-    desc: "Packaged in premium, signature velvet jewellery caskets, ready for safe transit or physical showroom pick-up.",
-    img: processPackaging,
-    fallback: "https://images.unsplash.com/photo-1549465220-1a8b9238cd48?q=80&w=1200&auto=format&fit=crop"
-  }
+const cleanCategoryList = [
+  { id: 'rings', name: 'Rings', tab: 'Rings', img: cleanRings },
+  { id: 'bracelets', name: 'Bracelets', tab: 'Bracelets', img: cleanBracelets },
+  { id: 'earrings', name: 'Earrings', tab: 'Earrings', img: cleanEarrings },
+  { id: 'necklaces', name: 'Necklaces', tab: 'Necklaces', img: cleanNecklace },
+  { id: 'pendants', name: 'Pendants', tab: 'Pendants', img: cleanPendantLocket },
+  { id: 'bangles', name: 'Bangles', tab: 'Bangles', img: cleanBangles },
+  { id: 'kada', name: 'Kadas', tab: 'Bangles', img: cleanKada },
+  { id: 'silver-chain', name: 'Chains', tab: 'Necklaces', img: cleanSilverChain },
+  { id: 'payal', name: 'Payals & Anklets', tab: 'Silver', img: cleanPayal },
+  { id: 'jhumka', name: 'Jhumkas', tab: 'Earrings', img: cleanJhumka },
+  { id: 'nose-pin', name: 'Nose Pins', tab: 'Collections', img: cleanNosePin },
+  { id: 'nath-nose-pin', name: 'Nath & Studs', tab: 'Collections', img: cleanNathNosePin },
 ];
 
-const promoBanners = [
-  {
-    id: 1,
-    img: bannerTimelessSilver,
-    alt: "Timeless Elegance in Pure Silver",
-    link: "collections",
-    tab: "Silver",
-    metal: "silver"
-  },
-  {
-    id: 2,
-    img: bannerElegantGold,
-    alt: "Elegant Gold Jewelry Sale Banner",
-    link: "collections",
-    tab: "Collections",
-    metal: "gold"
-  },
-  {
-    id: 3,
-    img: bannerGoldSilver50,
-    alt: "Pure Gold & Silver: Up to 50% Off",
-    link: "collections",
-    tab: "Collections",
-    metal: "all"
-  }
-];
+
 
 const getCategoryFallbackImage = (catNameOrId) => {
   const norm = String(catNameOrId || '').toLowerCase().replace(/\s+/g, '');
@@ -176,12 +137,24 @@ export default function Home({
   const [consultationModal, setConsultationModal] = useState(false);
   const [customDesignOpen, setCustomDesignOpen] = useState(false);
 
-  // Autoplay Slider States
-  const [currentPromoSlide, setCurrentPromoSlide] = useState(0);
-  const [promoIsPaused, setPromoIsPaused] = useState(false);
-  const [promoTouchStart, setPromoTouchStart] = useState(null);
-  const [promoTouchEnd, setPromoTouchEnd] = useState(null);
-  const promoAutoplayRef = useRef(null);
+  // Dynamic Price / Budget Categories ("Gol Categories" - Under 199, Under 229, Under 299 etc.)
+  const [priceCategories, setPriceCategories] = useState(() => priceCategoryService.getStoredCategories());
+
+  useEffect(() => {
+    priceCategoryService.fetchRemoteCategories().then((res) => {
+      if (res && res.length > 0) setPriceCategories(res);
+    });
+
+    const handlePriceCategoriesUpdate = () => {
+      setPriceCategories(priceCategoryService.getStoredCategories());
+    };
+
+    window.addEventListener('manish_price_categories_updated', handlePriceCategoriesUpdate);
+    return () => {
+      window.removeEventListener('manish_price_categories_updated', handlePriceCategoriesUpdate);
+    };
+  }, []);
+
 
   // Combined dynamic categories with baseline reference set (all 10+ reference categories)
   const displayCategories = React.useMemo(() => {
@@ -213,22 +186,8 @@ export default function Home({
   const activeCategories = displayCategories;
   const [activeStoryTimeline, setActiveStoryTimeline] = useState(1952);
   const [timelineDirection, setTimelineDirection] = useState(1);
-  const [activeProcessStep, setActiveProcessStep] = useState(0);
-  const [processPaused, setProcessPaused] = useState(false);
   const [openFaqIndex, setOpenFaqIndex] = useState(null);
 
-  // Promo Banner Autoplay
-  useEffect(() => {
-    if (promoAutoplayRef.current) clearInterval(promoAutoplayRef.current);
-    if (!promoIsPaused) {
-      promoAutoplayRef.current = setInterval(() => {
-        setCurrentPromoSlide((prev) => (prev + 1) % promoBanners.length);
-      }, 5000);
-    }
-    return () => {
-      if (promoAutoplayRef.current) clearInterval(promoAutoplayRef.current);
-    };
-  }, [promoIsPaused]);
 
   // Lower Recommendations Autoplay (if needed)
   const startCategoriesAutoplay = () => {
@@ -264,49 +223,7 @@ export default function Home({
   }, []);
 
 
-  // Process Autoplay
-  useEffect(() => {
-    if (processPaused) return;
-    const interval = setInterval(() => {
-      setActiveProcessStep((prev) => (prev + 1) % 6);
-    }, 4500);
-    return () => clearInterval(interval);
-  }, [processPaused]);
 
-  // Touch handlers for Promo carousel
-  const handlePromoTouchStart = (e) => {
-    setPromoTouchStart(e.targetTouches[0].clientX);
-  };
-
-  const handlePromoTouchMove = (e) => {
-    setPromoTouchEnd(e.targetTouches[0].clientX);
-  };
-
-  const handlePromoTouchEnd = () => {
-    if (!promoTouchStart || !promoTouchEnd) return;
-    const distance = promoTouchStart - promoTouchEnd;
-    const isLeftSwipe = distance > 50;
-    const isRightSwipe = distance < -50;
-    if (isLeftSwipe) {
-      triggerAudio('click');
-      setCurrentPromoSlide((prev) => (prev + 1) % promoBanners.length);
-    } else if (isRightSwipe) {
-      triggerAudio('click');
-      setCurrentPromoSlide((prev) => (prev - 1 + promoBanners.length) % promoBanners.length);
-    }
-    setPromoTouchStart(null);
-    setPromoTouchEnd(null);
-  };
-
-  const handlePromoKeyDown = (e) => {
-    if (e.key === 'ArrowLeft') {
-      triggerAudio('click');
-      setCurrentPromoSlide((prev) => (prev - 1 + promoBanners.length) % promoBanners.length);
-    } else if (e.key === 'ArrowRight') {
-      triggerAudio('click');
-      setCurrentPromoSlide((prev) => (prev + 1) % promoBanners.length);
-    }
-  };
 
   const handlePolaroidScroll = () => {
     if (polaroidScrollRef.current) {
@@ -381,17 +298,193 @@ export default function Home({
     <div className={`pb-0 transition-colors duration-500 ${isCatalogDark ? "text-[#FCFAFF]" : "text-[#202329]"}`}>
 
       {/* ==========================================================
-        SECTION 01: EDGE-TO-EDGE RAJASTHANI WELCOME HERO BANNER
+        SECTION 01: LUXURY HERO SECTION - MORE THAN JEWELLERY
+        (Production-Ready: High-Performance WebP + Framer Motion Stagger + Polished Typography & Trust Badges)
         ========================================================== */}
-      <section className="relative w-full overflow-hidden select-none bg-[#091B2B]">
-        <div className="w-full relative flex items-center justify-center">
-          <img
-            src="/images/rajasthani-welcome-namaste-cartoon.png"
-            alt="Rajasthani Welcome - Manish & Co"
-            className="w-full h-auto object-cover sm:object-contain max-h-[85vh] mx-auto block shadow-2xl"
-            loading="eager"
-            fetchPriority="high"
-          />
+      <section 
+        id="hero-section"
+        aria-label="Manish & Co Fine Jewellery Introduction" 
+        className="relative w-full min-h-[580px] sm:min-h-[640px] lg:min-h-[720px] xl:min-h-[760px] overflow-hidden select-none bg-[#050B14] flex items-center"
+      >
+        {/* Background Still Life Image with High-Performance <picture> */}
+        <div className="absolute inset-0 w-full h-full">
+          <picture className="w-full h-full block">
+            <source srcSet={midnightSapphireHeroWebp} type="image/webp" />
+            <img
+              src={midnightSapphireHero}
+              alt="MANISH & CO - 925 Fine Silver Jewellery"
+              className="w-full h-full object-cover object-right sm:object-center select-none pointer-events-none transition-transform duration-1000 ease-out will-change-transform"
+              loading="eager"
+              fetchPriority="high"
+              decoding="async"
+            />
+          </picture>
+          
+          {/* Desktop Left-to-Right Dark Gradient for Crisp Text Contrast */}
+          <div className="absolute inset-0 bg-gradient-to-r from-[#050B14] via-[#050B14]/85 to-transparent w-full md:w-[70%] lg:w-[62%] pointer-events-none" />
+          
+          {/* Mobile Bottom-up & Subtle Dark Vignette for 100% Mobile Readability */}
+          <div className="absolute inset-0 bg-gradient-to-t from-[#050B14] via-[#050B14]/60 to-transparent sm:hidden pointer-events-none" />
+          <div className="absolute inset-0 bg-[#050B14]/30 sm:bg-transparent pointer-events-none" />
+
+          {/* Luxury Ambient Shimmer Particles (Top Glint) */}
+          <div className="absolute top-1/4 left-1/4 w-96 h-96 bg-[#C5A880]/5 rounded-full blur-3xl pointer-events-none" />
+        </div>
+
+        {/* Hero Left Content Container with Framer-Motion Staggered Entrance */}
+        <div className="relative z-10 max-w-[1536px] w-full mx-auto px-6 sm:px-10 lg:px-14 py-14 sm:py-16 lg:py-20 flex flex-col justify-center">
+          <motion.div 
+            initial={{ opacity: 0, y: 30 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.9, ease: [0.16, 1, 0.3, 1] }}
+            className="max-w-[640px] text-left"
+          >
+            
+            {/* Eyebrow */}
+            <motion.div
+              initial={{ opacity: 0, y: 15 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ duration: 0.6, delay: 0.1 }}
+              className="flex items-center gap-2 mb-3 sm:mb-4"
+            >
+              <span className="text-[#C5A880] text-xs font-serif select-none">✦</span>
+              <span className="inline-block text-[#C5A880] text-xs sm:text-[13px] font-sans font-medium tracking-[0.28em] uppercase">
+                TIMELESS BY NATURE
+              </span>
+            </motion.div>
+
+            {/* Main Luxury Headline (Screenshot Exact Typography) */}
+            <motion.h1 
+              initial={{ opacity: 0, y: 20 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ duration: 0.8, delay: 0.2, ease: [0.16, 1, 0.3, 1] }}
+              className="text-4xl sm:text-6xl lg:text-[70px] xl:text-[78px] font-bold uppercase text-white leading-[1.03] tracking-[0.03em] drop-shadow-[0_4px_25px_rgba(0,0,0,0.9)]"
+              style={{ fontFamily: "'Cormorant Garamond', 'Playfair Display', Georgia, serif" }}
+            >
+              MORE THAN<br />
+              JEWELLERY
+            </motion.h1>
+
+            {/* Subtitle Description */}
+            <motion.p 
+              initial={{ opacity: 0, y: 15 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ duration: 0.7, delay: 0.35 }}
+              className="text-gray-300 text-xs sm:text-sm lg:text-[15px] font-sans font-medium tracking-[0.18em] uppercase mt-4 sm:mt-5 mb-7 sm:mb-9 leading-relaxed max-w-[460px]"
+            >
+              925 FINE SILVER JEWELLERY<br className="hidden sm:inline" /> FOR A MODERN YOU
+            </motion.p>
+
+            {/* Action Buttons Row */}
+            <motion.div 
+              initial={{ opacity: 0, y: 15 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ duration: 0.7, delay: 0.45 }}
+              className="flex flex-wrap items-center gap-4"
+            >
+              {/* Primary Bronze CTA */}
+              <button
+                onClick={() => {
+                  triggerAudio('click');
+                  changeCategoryTab?.('Collections');
+                  navigateTo('collections');
+                }}
+                aria-label="Explore 925 fine silver jewellery collections"
+                className="group relative inline-flex items-center gap-3 px-8 sm:px-10 py-3.5 sm:py-4 bg-[#8C6D46] hover:bg-[#A37B4D] active:scale-[0.98] text-white font-sans text-xs sm:text-sm font-semibold tracking-[0.2em] uppercase transition-all duration-300 shadow-[0_8px_25px_rgba(140,109,70,0.4)] hover:shadow-[0_12px_32px_rgba(140,109,70,0.6)] cursor-pointer rounded-[2px] overflow-hidden"
+              >
+                {/* Light Sweep Shimmer Sheen */}
+                <span className="absolute inset-0 w-full h-full bg-gradient-to-r from-transparent via-white/20 to-transparent -translate-x-full group-hover:translate-x-full transition-transform duration-1000 ease-out pointer-events-none" />
+                <span className="relative z-10">EXPLORE COLLECTIONS</span>
+                <span className="relative z-10 text-base font-light transition-transform duration-300 group-hover:translate-x-1.5">→</span>
+              </button>
+
+              {/* Secondary Clean Editorial Scroll Button */}
+              <button
+                onClick={() => {
+                  triggerAudio('click');
+                  const colElem = document.getElementById('our-collections');
+                  if (colElem) {
+                    colElem.scrollIntoView({ behavior: 'smooth' });
+                  } else {
+                    changeCategoryTab?.('Collections');
+                    navigateTo('collections');
+                  }
+                }}
+                aria-label="Scroll to discover collections"
+                className="hidden sm:inline-flex items-center gap-2 px-6 py-3.5 border border-white/20 hover:border-[#C5A880]/70 text-gray-300 hover:text-white font-sans text-xs sm:text-sm font-medium tracking-[0.16em] uppercase transition-all duration-300 hover:bg-white/[0.04] cursor-pointer rounded-[2px]"
+              >
+                <span>OUR CRAFT</span>
+                <span className="text-xs text-[#C5A880]">↓</span>
+              </button>
+            </motion.div>
+
+            {/* Value Proposition Trust Badges (Production Polish: Micro-cards, High-DPI icons, Glassmorphic Hover) */}
+            <motion.div 
+              initial={{ opacity: 0, y: 15 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ duration: 0.8, delay: 0.55 }}
+              className="grid grid-cols-2 sm:grid-cols-4 gap-3 sm:gap-4 pt-6 sm:pt-8 border-t border-white/10 mt-8 sm:mt-12"
+              role="list"
+              aria-label="Value propositions"
+            >
+              {/* Badge 1: 925 Pure Silver */}
+              <div 
+                role="listitem"
+                className="group/badge flex items-center gap-2.5 p-2 rounded transition-colors duration-300 hover:bg-white/[0.03]"
+              >
+                <div className="w-8 h-8 rounded-full bg-white/[0.04] flex items-center justify-center shrink-0 border border-white/5 group-hover/badge:border-[#C5A880]/30 transition-colors">
+                  <ShieldCheck className="w-4 h-4 sm:w-4.5 sm:h-4.5 text-[#C5A880] group-hover/badge:text-[#DFC6A4] transition-colors" strokeWidth={1.75} />
+                </div>
+                <div className="flex flex-col text-left">
+                  <span className="text-white text-xs sm:text-[13px] font-bold leading-tight font-sans tracking-wide">925</span>
+                  <span className="text-gray-400 group-hover/badge:text-gray-300 text-[10px] sm:text-[11px] leading-tight font-sans transition-colors">Pure Silver</span>
+                </div>
+              </div>
+
+              {/* Badge 2: Premium Craftsmanship */}
+              <div 
+                role="listitem"
+                className="group/badge flex items-center gap-2.5 p-2 rounded transition-colors duration-300 hover:bg-white/[0.03]"
+              >
+                <div className="w-8 h-8 rounded-full bg-white/[0.04] flex items-center justify-center shrink-0 border border-white/5 group-hover/badge:border-[#C5A880]/30 transition-colors">
+                  <Gem className="w-4 h-4 sm:w-4.5 sm:h-4.5 text-[#C5A880] group-hover/badge:text-[#DFC6A4] transition-colors" strokeWidth={1.75} />
+                </div>
+                <div className="flex flex-col text-left">
+                  <span className="text-white text-xs sm:text-[13px] font-bold leading-tight font-sans tracking-wide">Premium</span>
+                  <span className="text-gray-400 group-hover/badge:text-gray-300 text-[10px] sm:text-[11px] leading-tight font-sans transition-colors">Craftsmanship</span>
+                </div>
+              </div>
+
+              {/* Badge 3: Pan India Delivery */}
+              <div 
+                role="listitem"
+                className="group/badge flex items-center gap-2.5 p-2 rounded transition-colors duration-300 hover:bg-white/[0.03]"
+              >
+                <div className="w-8 h-8 rounded-full bg-white/[0.04] flex items-center justify-center shrink-0 border border-white/5 group-hover/badge:border-[#C5A880]/30 transition-colors">
+                  <Truck className="w-4 h-4 sm:w-4.5 sm:h-4.5 text-[#C5A880] group-hover/badge:text-[#DFC6A4] transition-colors" strokeWidth={1.75} />
+                </div>
+                <div className="flex flex-col text-left">
+                  <span className="text-white text-xs sm:text-[13px] font-bold leading-tight font-sans tracking-wide">Pan India</span>
+                  <span className="text-gray-400 group-hover/badge:text-gray-300 text-[10px] sm:text-[11px] leading-tight font-sans transition-colors">Delivery</span>
+                </div>
+              </div>
+
+              {/* Badge 4: Secure Packaging */}
+              <div 
+                role="listitem"
+                className="group/badge flex items-center gap-2.5 p-2 rounded transition-colors duration-300 hover:bg-white/[0.03]"
+              >
+                <div className="w-8 h-8 rounded-full bg-white/[0.04] flex items-center justify-center shrink-0 border border-white/5 group-hover/badge:border-[#C5A880]/30 transition-colors">
+                  <Package className="w-4 h-4 sm:w-4.5 sm:h-4.5 text-[#C5A880] group-hover/badge:text-[#DFC6A4] transition-colors" strokeWidth={1.75} />
+                </div>
+                <div className="flex flex-col text-left">
+                  <span className="text-white text-xs sm:text-[13px] font-bold leading-tight font-sans tracking-wide">Secure</span>
+                  <span className="text-gray-400 group-hover/badge:text-gray-300 text-[10px] sm:text-[11px] leading-tight font-sans transition-colors">Packaging</span>
+                </div>
+              </div>
+            </motion.div>
+
+          </motion.div>
         </div>
       </section>
 
@@ -402,286 +495,297 @@ export default function Home({
       <div className="bg-[#F8F5EC] text-[#202329] transition-colors duration-500 !mt-0">
 
         {/* ==========================================================
-          FEATURE 02: SHOP BY CATEGORIES (SEAMLESS FLUID MARQUEE STRIP)
+          FEATURE 02: OUR COLLECTIONS - CRAFTED FOR EVERY MOMENT
+          (Exact Reference Screenshot Design)
           ========================================================== */}
-        <section id="shop-by-category" className="w-full pt-8 pb-10 sm:pt-12 sm:pb-12 select-none bg-white text-center relative overflow-hidden border-b border-[#EFEAE1]">
-          <div className="max-w-[1836px] mx-auto px-4 sm:px-8">
-            {/* Title & Divider matching Reference Image */}
-            <div className="text-center mb-6 sm:mb-8">
-              <h2 className="text-2xl sm:text-3xl lg:text-4xl serif-luxury tracking-wide text-[#0A2240] font-normal">
-                Shop by categories
-              </h2>
-              <div className="w-16 h-[2.5px] bg-[#B38738] mx-auto mt-2.5 rounded-full" />
-            </div>
+        <section id="our-collections" className="w-full py-12 sm:py-16 lg:py-20 bg-[#F5ECE4] border-b border-[#E8DFD5] select-none">
+          <div className="max-w-[1536px] mx-auto px-6 sm:px-10 lg:px-14">
+            <div className="flex flex-col lg:flex-row items-center justify-between gap-10 lg:gap-14">
+              
+              {/* Left Column: Editorial Brand Headline */}
+              <div className="w-full lg:w-[32%] xl:w-[28%] shrink-0 text-left">
+                {/* Eyebrow */}
+                <span className="inline-block text-[#8C6D46] text-xs sm:text-[13px] font-sans font-semibold tracking-[0.28em] uppercase mb-3 sm:mb-4">
+                  OUR COLLECTIONS
+                </span>
 
-            {/* Seamless Full-Width Fluid Marquee Container (No toggles, unified background) */}
-            <div className="relative w-full overflow-hidden py-4 select-none">
-              {/* Hardware-accelerated 60/120fps CSS Marquee (Pause on Hover) */}
-              <div className="animate-marquee-smooth flex flex-row items-center gap-7 sm:gap-10 lg:gap-12 py-2 select-none">
-                {[...displayCategories, ...displayCategories].map((cat, idx) => {
-                  const handleClick = () => {
-                    triggerAudio('click');
-                    const normName = String(cat.name || '').toLowerCase();
-                    if (cat.id === 'gold-coins' || normName.includes('coin')) {
-                      navigateTo('gold-coins');
-                    } else {
-                      changeCategoryTab(cat.name);
-                      navigateTo('collections');
-                    }
-                  };
-
-                  const rawCatImg = cat.img || getCategoryFallbackImage(cat.name || cat.id);
-                  const catImg = getOptimizedImageUrl(rawCatImg, { width: 300 });
-
-                  return (
-                    <div
-                      key={`cat-strip-${idx}`}
-                      onClick={handleClick}
-                      className="flex flex-col items-center justify-center flex-shrink-0 group/item cursor-pointer text-center select-none"
-                    >
-                      {/* Circle Container with EXACT Same Background (#FFFFFF) as Image & Section */}
-                      <div
-                        className="w-20 h-20 sm:w-24 sm:h-24 lg:w-28 lg:h-28 rounded-full flex items-center justify-center relative transition-all duration-300 ease-out group-hover/item:scale-105 group-hover/item:border-[#C9A14A] group-hover/item:shadow-[0_8px_24px_rgba(201,161,74,0.22)]"
-                        style={{
-                          backgroundColor: '#FFFFFF',
-                          border: '1.5px solid rgba(220, 210, 195, 0.70)',
-                          boxShadow: '0 4px 16px rgba(0, 0, 0, 0.05)'
-                        }}
-                      >
-                        <img
-                          src={catImg}
-                          alt={cat.name}
-                          loading="lazy"
-                          decoding="async"
-                          onError={(e) => {
-                            const fallback = getCategoryFallbackImage(cat.name || cat.id);
-                            if (e.currentTarget.src !== fallback) {
-                              e.currentTarget.src = fallback;
-                            }
-                          }}
-                          className="w-[70%] h-[70%] object-contain object-center transition-transform duration-300 ease-out group-hover/item:scale-110 filter drop-shadow-[0_4px_10px_rgba(0,0,0,0.12)] mix-blend-multiply"
-                        />
-                      </div>
-
-                      {/* Uppercase Category Label */}
-                      <span className="font-sans font-bold text-[10px] sm:text-[11px] lg:text-[12px] tracking-[0.14em] text-[#33383F] group-hover/item:text-[#C9A14A] uppercase text-center mt-3 select-none leading-tight transition-colors">
-                        {cat.name}
-                      </span>
-                    </div>
-                  );
-                })}
-              </div>
-            </div>
-
-            {/* CUSTOM DESIGN BUTTON */}
-            <div className="w-full flex justify-center mt-7 sm:mt-9">
-              <button
-                onClick={() => { triggerAudio('shimmer'); setCustomDesignOpen(true); }}
-                id="custom-design-cta"
-                className="group relative inline-flex items-center gap-3 px-8 py-3.5 rounded-full font-sans font-bold text-[13px] tracking-[0.15em] uppercase text-white overflow-hidden cursor-pointer select-none transition-all duration-300 hover:scale-105 hover:shadow-[0_8px_30px_rgba(180,120,20,0.45)] active:scale-95 border-none font-bold"
-                style={{
-                  background: 'linear-gradient(135deg, #C8960C 0%, #E8B84B 40%, #A07820 100%)',
-                  boxShadow: '0 4px 18px rgba(180,120,20,0.30)',
-                }}
-              >
-                <span className="absolute inset-0 bg-gradient-to-r from-transparent via-white/20 to-transparent -translate-x-full group-hover:translate-x-full transition-transform duration-700 ease-out pointer-events-none" />
-                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8" className="w-5 h-5 shrink-0">
-                  <path strokeLinecap="round" strokeLinejoin="round" d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z" />
-                </svg>
-                Custom Design
-                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" className="w-4 h-4 shrink-0 transition-transform duration-300 group-hover:translate-x-1">
-                  <path strokeLinecap="round" strokeLinejoin="round" d="M9 5l7 7-7 7" />
-                </svg>
-              </button>
-            </div>
-          </div>
-        </section>
-
-        {/* ==========================================================
-          PROMOTIONAL CAROUSEL
-          ========================================================== */}
-        <section className="w-full bg-[#F8F5F0] py-6 sm:py-16 flex flex-col items-center justify-center overflow-hidden">
-          <div
-            className="w-full aspect-[2400/778] overflow-hidden bg-white relative group select-none outline-none shadow-sm"
-            tabIndex={0}
-            onKeyDown={handlePromoKeyDown}
-            onTouchStart={handlePromoTouchStart}
-            onTouchMove={handlePromoTouchMove}
-            onTouchEnd={handlePromoTouchEnd}
-            onMouseEnter={() => setPromoIsPaused(true)}
-            onMouseLeave={() => setPromoIsPaused(false)}
-          >
-            <div className="absolute inset-0 w-full h-full overflow-hidden cursor-pointer">
-              <AnimatePresence initial={false}>
-                <motion.div
-                  key={currentPromoSlide}
-                  initial={{ opacity: 0 }}
-                  animate={{ opacity: 1 }}
-                  exit={{ opacity: 0 }}
-                  transition={{
-                    opacity: { duration: 0.6, ease: "easeInOut" }
-                  }}
-                  onClick={() => {
-                    triggerAudio('click');
-                    const banner = promoBanners[currentPromoSlide];
-                    if (banner.tab) {
-                      changeCategoryTab(banner.tab, banner.metal || 'all', 'all');
-                    }
-                    if (banner.metal && typeof setMetalFilter === 'function') {
-                      setMetalFilter(banner.metal);
-                    }
-                    navigateTo(banner.link || 'collections');
-                  }}
-                  className="absolute inset-0 w-full h-full text-left group cursor-pointer"
+                {/* Main Serif Headline */}
+                <h2 
+                  className="text-3xl sm:text-4xl lg:text-[44px] xl:text-[48px] font-bold text-[#1A1817] leading-[1.08] mb-4 sm:mb-5"
+                  style={{ fontFamily: "'Cormorant Garamond', 'Playfair Display', Georgia, serif" }}
                 >
-                  <img
-                    src={promoBanners[currentPromoSlide].img}
-                    alt={promoBanners[currentPromoSlide].alt}
-                    loading="lazy"
-                    className="w-full h-full object-cover object-center select-none pointer-events-none"
-                  />
+                  Crafted for<br />
+                  Every Moment
+                </h2>
 
-                  {/* Call-to-action button overlay */}
-                  <div className="absolute bottom-2 left-2 sm:bottom-8 sm:left-8 lg:bottom-12 lg:left-12 z-30 pointer-events-none">
-                    <button
-                      className="px-2.5 py-1 sm:px-6 sm:py-3 lg:px-8 lg:py-3.5 bg-[#C9A14A] hover:bg-[#b08836] text-white font-sans text-[9px] sm:text-xs lg:text-sm font-extrabold uppercase tracking-widest rounded-full transition-all duration-300 transform group-hover:scale-105 shadow-md border-none font-bold"
-                    >
-                      View Offer
-                    </button>
-                  </div>
-                </motion.div>
-              </AnimatePresence>
-            </div>
-          </div>
+                {/* Subtitle Paragraph */}
+                <p className="text-[#5A5550] text-sm sm:text-[14.5px] font-sans font-normal leading-relaxed mb-7 sm:mb-8 max-w-[340px]">
+                  Explore our finely crafted 925 silver jewellery designed for everyday elegance and lasting value.
+                </p>
 
-          {/* Navigation Controls */}
-          <div className="w-full max-w-[600px] mx-auto flex items-center justify-between mt-3 sm:mt-6 px-6 select-none">
-            <button
-              onClick={() => {
-                triggerAudio('click');
-                setCurrentPromoSlide((prev) => (prev - 1 + promoBanners.length) % promoBanners.length);
-              }}
-              className="w-8 h-8 sm:w-10 sm:h-10 rounded-full border border-solid border-[#C9A14A]/30 hover:border-[#C9A14A] hover:bg-white text-[#C9A14A] flex items-center justify-center transition-all duration-300 active:scale-95 cursor-pointer bg-transparent"
-            >
-              <svg className="w-4 h-4 sm:w-5 sm:h-5" fill="none" stroke="currentColor" strokeWidth="2.5" viewBox="0 0 24 24">
-                <path strokeLinecap="round" strokeLinejoin="round" d="M15.75 19.5L8.25 12l7.5-7.5" />
-              </svg>
-            </button>
-
-            <div className="flex space-x-2 sm:space-x-3 items-center">
-              {promoBanners.map((_, idx) => (
-                <button
-                  key={`promo-dot-${idx}`}
-                  onClick={() => {
-                    triggerAudio('click');
-                    setCurrentPromoSlide(idx);
-                  }}
-                  className={`h-1.5 sm:h-2 rounded-full transition-all duration-300 border-none cursor-pointer ${currentPromoSlide === idx ? "w-6 sm:w-8 bg-[#C9A14A]" : "w-1.5 sm:w-2 bg-[#C9A14A]/30 hover:bg-[#C9A14A]/60"}`}
-                />
-              ))}
-            </div>
-
-            <button
-              onClick={() => {
-                triggerAudio('click');
-                setCurrentPromoSlide((prev) => (prev + 1) % promoBanners.length);
-              }}
-              className="w-8 h-8 sm:w-10 sm:h-10 rounded-full border border-solid border-[#C9A14A]/30 hover:border-[#C9A14A] hover:bg-white text-[#C9A14A] flex items-center justify-center transition-all duration-300 active:scale-95 cursor-pointer bg-transparent"
-            >
-              <svg className="w-4 h-4 sm:w-5 sm:h-5" fill="none" stroke="currentColor" strokeWidth="2.5" viewBox="0 0 24 24">
-                <path strokeLinecap="round" strokeLinejoin="round" d="M8.25 4.5l7.5 7.5-7.5 7.5" />
-              </svg>
-            </button>
-          </div>
-        </section>
-
-        {/* ==========================================================
-          LATEST CAMPAIGN COLLECTIONS
-          ========================================================== */}
-        <section className="py-16 bg-[#FDFBF7] text-[#0A2240] text-center select-none">
-          <div className="max-w-7xl mx-auto px-6 space-y-12">
-            <h2 className="text-center text-2xl sm:text-3xl lg:text-4xl serif-luxury tracking-wider text-[#0A2240]">
-              Browse Latest Jewellery Collections
-            </h2>
-
-            <div className="grid grid-cols-1 md:grid-cols-3 gap-6 items-end text-center">
-              {/* Dainty Dreams Card */}
-              <div
-                onClick={() => {
-                  triggerAudio('click');
-                  if (setGenderFilter) setGenderFilter('women');
-                  if (changeCategoryTab) changeCategoryTab('Rings');
-                  navigateTo('collections');
-                }}
-                className="relative group overflow-hidden rounded-2xl shadow-md hover:shadow-xl transition-all duration-500 cursor-pointer aspect-[4/3] text-center"
-              >
-                <img
-                  src={campaignDaintyDreams}
-                  alt="Dainty Dreams Collection"
-                  className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-700 ease-out"
-                  loading="lazy"
-                />
-              </div>
-
-              {/* Raw Reverie Card */}
-              <div
-                onClick={() => {
-                  triggerAudio('click');
-                  if (setMetalFilter) setMetalFilter('gold');
-                  if (changeCategoryTab) changeCategoryTab('Necklace');
-                  navigateTo('collections');
-                }}
-                className="relative group overflow-hidden rounded-2xl shadow-md hover:shadow-xl transition-all duration-500 cursor-pointer aspect-[4/3] transform md:-translate-y-6 text-center"
-              >
-                <img
-                  src={campaignRawReverie}
-                  alt="Raw Reverie Collection"
-                  className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-700 ease-out"
-                  loading="lazy"
-                />
-              </div>
-
-              {/* Clay Whispers Card -> Redirects to Diamond Jewellery */}
-              <div
-                onClick={() => {
-                  triggerAudio('click');
-                  if (typeof setMetalFilter === 'function') setMetalFilter('all');
-                  if (changeCategoryTab) changeCategoryTab('Diamond');
-                  navigateTo('collections');
-                }}
-                className="relative group overflow-hidden rounded-2xl shadow-md hover:shadow-xl transition-all duration-500 cursor-pointer aspect-[4/3] text-center"
-              >
-                <img
-                  src={campaignClayWhispers}
-                  alt="Clay Whispers Collection"
-                  className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-700 ease-out"
-                  loading="lazy"
-                />
-
-                <div className="absolute inset-0 flex flex-col justify-center items-end p-8 bg-gradient-to-l from-black/40 via-transparent to-transparent select-none pointer-events-none">
-                  <div className="text-right space-y-1">
-                    <span className="block text-[28px] sm:text-[32px] lg:text-[40px] serif-luxury text-[#E6C687] leading-none tracking-[0.2em] font-serif font-light drop-shadow-lg">
-                      CLAY
-                    </span>
-                    <span className="block text-[24px] sm:text-[28px] lg:text-[34px] serif-luxury text-[#E6C687] leading-none tracking-[0.15em] font-serif font-light drop-shadow-lg">
-                      WHISPERS
-                    </span>
-                  </div>
+                {/* Solid Bronze CTA Button */}
+                <div>
+                  <button
+                    onClick={() => {
+                      triggerAudio('click');
+                      changeCategoryTab?.('Collections');
+                      navigateTo('collections');
+                    }}
+                    className="inline-flex items-center gap-2.5 px-8 py-3.5 bg-[#785B3C] hover:bg-[#8F6D48] active:scale-95 text-white font-sans text-xs sm:text-[12.5px] font-semibold tracking-[0.2em] uppercase transition-all duration-300 shadow-[0_4px_16px_rgba(120,91,60,0.25)] cursor-pointer rounded-none"
+                  >
+                    <span>SHOP ALL</span>
+                    <span className="text-sm font-light">→</span>
+                  </button>
                 </div>
               </div>
-            </div>
 
-            <div className="flex justify-center">
-              <button
-                onClick={() => {
-                  triggerAudio('click');
-                  changeCategoryTab('Collections');
-                  navigateTo('collections');
-                }}
-                className="px-8 py-3.5 bg-[#0D2B4E] hover:bg-[#091B2B] text-[#F8F5EC] font-sans text-xs sm:text-sm font-bold uppercase tracking-widest rounded-full transition-all duration-300 transform hover:scale-105 border border-solid border-[#B09A82]/40 shadow-md active:scale-95 cursor-pointer"
-              >
-                Browse all Collections
-              </button>
+              {/* Right Column: 4 Collection Category Cards */}
+              <div className="w-full lg:flex-1 grid grid-cols-2 md:grid-cols-4 gap-4 sm:gap-5 lg:gap-6">
+                
+                {/* Card 1: RINGS */}
+                <div
+                  onClick={() => {
+                    triggerAudio('click');
+                    changeCategoryTab?.('Rings');
+                    navigateTo('collections');
+                  }}
+                  className="group cursor-pointer flex flex-col items-center text-center select-none"
+                >
+                  <div className="w-full aspect-[148/169] overflow-hidden bg-black/5 shadow-sm relative">
+                    <img
+                      src={colRings}
+                      alt="RINGS - MANISH & CO"
+                      className="w-full h-full object-cover transition-transform duration-700 ease-out group-hover:scale-105"
+                      loading="lazy"
+                    />
+                    <div className="absolute inset-0 bg-black/0 group-hover:bg-black/10 transition-colors duration-300" />
+                  </div>
+                  <h3 className="font-sans font-semibold text-xs sm:text-[13px] tracking-[0.22em] uppercase text-[#1A1817] mt-3 group-hover:text-[#8C6D46] transition-colors">
+                    RINGS
+                  </h3>
+                  <span className="text-[11px] sm:text-xs text-[#6F6862] group-hover:text-[#8C6D46] group-hover:translate-x-0.5 transition-all inline-flex items-center gap-1 mt-0.5 font-normal">
+                    <span>Shop Now</span>
+                    <span className="text-xs">→</span>
+                  </span>
+                </div>
+
+                {/* Card 2: BRACELETS */}
+                <div
+                  onClick={() => {
+                    triggerAudio('click');
+                    changeCategoryTab?.('Bracelets');
+                    navigateTo('collections');
+                  }}
+                  className="group cursor-pointer flex flex-col items-center text-center select-none"
+                >
+                  <div className="w-full aspect-[148/169] overflow-hidden bg-black/5 shadow-sm relative">
+                    <img
+                      src={colBracelets}
+                      alt="BRACELETS - MANISH & CO"
+                      className="w-full h-full object-cover transition-transform duration-700 ease-out group-hover:scale-105"
+                      loading="lazy"
+                    />
+                    <div className="absolute inset-0 bg-black/0 group-hover:bg-black/10 transition-colors duration-300" />
+                  </div>
+                  <h3 className="font-sans font-semibold text-xs sm:text-[13px] tracking-[0.22em] uppercase text-[#1A1817] mt-3 group-hover:text-[#8C6D46] transition-colors">
+                    BRACELETS
+                  </h3>
+                  <span className="text-[11px] sm:text-xs text-[#6F6862] group-hover:text-[#8C6D46] group-hover:translate-x-0.5 transition-all inline-flex items-center gap-1 mt-0.5 font-normal">
+                    <span>Shop Now</span>
+                    <span className="text-xs">→</span>
+                  </span>
+                </div>
+
+                {/* Card 3: PENDANTS */}
+                <div
+                  onClick={() => {
+                    triggerAudio('click');
+                    changeCategoryTab?.('Pendants');
+                    navigateTo('collections');
+                  }}
+                  className="group cursor-pointer flex flex-col items-center text-center select-none"
+                >
+                  <div className="w-full aspect-[148/169] overflow-hidden bg-black/5 shadow-sm relative">
+                    <img
+                      src={colPendants}
+                      alt="PENDANTS - MANISH & CO"
+                      className="w-full h-full object-cover transition-transform duration-700 ease-out group-hover:scale-105"
+                      loading="lazy"
+                    />
+                    <div className="absolute inset-0 bg-black/0 group-hover:bg-black/10 transition-colors duration-300" />
+                  </div>
+                  <h3 className="font-sans font-semibold text-xs sm:text-[13px] tracking-[0.22em] uppercase text-[#1A1817] mt-3 group-hover:text-[#8C6D46] transition-colors">
+                    PENDANTS
+                  </h3>
+                  <span className="text-[11px] sm:text-xs text-[#6F6862] group-hover:text-[#8C6D46] group-hover:translate-x-0.5 transition-all inline-flex items-center gap-1 mt-0.5 font-normal">
+                    <span>Shop Now</span>
+                    <span className="text-xs">→</span>
+                  </span>
+                </div>
+
+                {/* Card 4: CHAINS */}
+                <div
+                  onClick={() => {
+                    triggerAudio('click');
+                    changeCategoryTab?.('Chains');
+                    navigateTo('collections');
+                  }}
+                  className="group cursor-pointer flex flex-col items-center text-center select-none"
+                >
+                  <div className="w-full aspect-[148/169] overflow-hidden bg-black/5 shadow-sm relative">
+                    <img
+                      src={colChains}
+                      alt="CHAINS - MANISH & CO"
+                      className="w-full h-full object-cover transition-transform duration-700 ease-out group-hover:scale-105"
+                      loading="lazy"
+                    />
+                    <div className="absolute inset-0 bg-black/0 group-hover:bg-black/10 transition-colors duration-300" />
+                  </div>
+                  <h3 className="font-sans font-semibold text-xs sm:text-[13px] tracking-[0.22em] uppercase text-[#1A1817] mt-3 group-hover:text-[#8C6D46] transition-colors">
+                    CHAINS
+                  </h3>
+                  <span className="text-[11px] sm:text-xs text-[#6F6862] group-hover:text-[#8C6D46] group-hover:translate-x-0.5 transition-all inline-flex items-center gap-1 mt-0.5 font-normal">
+                    <span>Shop Now</span>
+                    <span className="text-xs">→</span>
+                  </span>
+                </div>
+
+              </div>
+
+            </div>
+          </div>
+        </section>
+
+        {/* ==========================================================
+          FEATURE 03: BUILT ON PURITY — WHY 925 FINE SILVER?
+          (Edge-by-Edge Full-Bleed Banner)
+          ========================================================== */}
+        <section 
+          id="built-on-purity" 
+          className="w-full relative overflow-hidden select-none bg-[#050B14] cursor-pointer group border-b border-white/10"
+          onClick={() => {
+            triggerAudio('click');
+            changeCategoryTab?.('Silver', 'silver', 'all');
+            if (typeof setMetalFilter === 'function') setMetalFilter('silver');
+            navigateTo('collections');
+          }}
+        >
+          <img
+            src={bannerBuiltOnPurity}
+            alt="Built on Purity - Why 925 Fine Silver? MANISH & CO Fine Jewellery"
+            className="w-full h-auto min-h-[190px] sm:min-h-0 object-cover object-center block transition-transform duration-700 ease-out group-hover:scale-[1.008]"
+            loading="lazy"
+          />
+          {/* Subtle luxury ambient hover sheen */}
+          <div className="absolute inset-0 bg-white/0 group-hover:bg-white/[0.025] transition-colors duration-300 pointer-events-none" />
+        </section>
+
+        {/* ==========================================================
+          FEATURE 04: SHOP BY CATEGORY / BUDGET STORE (GOL PRICE TIERS)
+          ========================================================== */}
+        <section 
+          id="shop-by-category-marquee" 
+          className="w-full py-12 sm:py-16 bg-[#FDFBF7] border-b border-[#EAE3D9] overflow-hidden select-none"
+        >
+          <div className="max-w-[1536px] mx-auto px-6 sm:px-10 lg:px-14">
+            <div className="flex flex-col lg:flex-row items-center gap-8 lg:gap-14 relative">
+              
+              {/* LEFT COLUMN: Editorial "Shop by Category" */}
+              <div className="w-full lg:w-[320px] xl:w-[350px] shrink-0 text-left z-20 bg-[#FDFBF7] py-2">
+                <span className="inline-block text-[#8C6D46] text-xs sm:text-[13px] font-sans font-semibold tracking-[0.25em] uppercase mb-2.5">
+                  AFFORDABLE PURITY
+                </span>
+                
+                <h2 
+                  className="text-3xl sm:text-4xl lg:text-[44px] font-bold text-[#1A1817] leading-[1.08] mb-3.5"
+                  style={{ fontFamily: "'Cormorant Garamond', 'Playfair Display', Georgia, serif" }}
+                >
+                  Shop by<br />Category
+                </h2>
+
+                <p className="text-[#6F6862] text-xs sm:text-sm font-sans leading-relaxed mb-6 max-w-[300px]">
+                  Explore all certified 925 fine silver designs by price. Handcrafted jewellery designed to shine within your everyday budget.
+                </p>
+
+                <div>
+                  <button
+                    onClick={() => {
+                      triggerAudio('click');
+                      if (typeof setMaxPriceFilter === 'function') setMaxPriceFilter(100000000);
+                      changeCategoryTab?.('Collections');
+                      navigateTo('collections');
+                    }}
+                    className="inline-flex items-center gap-2 px-7 py-3.5 bg-[#785B3C] hover:bg-[#8F6D48] active:scale-95 text-white font-sans text-xs sm:text-[12.5px] font-semibold tracking-[0.2em] uppercase transition-all duration-300 shadow-[0_4px_16px_rgba(120,91,60,0.25)] cursor-pointer rounded-none"
+                  >
+                    <span>VIEW ALL DEALS</span>
+                    <span className="text-sm font-light">→</span>
+                  </button>
+                </div>
+              </div>
+
+              {/* RIGHT COLUMN: Continuous Moving Marquee of Vibrant Gol (Round) Price Categories */}
+              <div className="w-full lg:flex-1 relative overflow-hidden py-4">
+                {/* Left & Right gradient fades for smooth fade-in/fade-out */}
+                <div className="absolute left-0 top-0 bottom-0 w-8 sm:w-16 bg-gradient-to-r from-[#FDFBF7] to-transparent z-10 pointer-events-none" />
+                <div className="absolute right-0 top-0 bottom-0 w-8 sm:w-16 bg-gradient-to-l from-[#FDFBF7] to-transparent z-10 pointer-events-none" />
+
+                {/* Moving Marquee Strip of Gol Categories */}
+                <div className="animate-marquee-smooth flex flex-row items-center gap-6 sm:gap-8 lg:gap-10 select-none py-3">
+                  {[...priceCategories.filter(t => t.active !== false), ...priceCategories.filter(t => t.active !== false)].map((tier, idx) => {
+                    const style = getColorStyles(tier.color);
+                    return (
+                      <div
+                        key={`price-tier-${tier.id}-${idx}`}
+                        onClick={() => {
+                          triggerAudio('click');
+                          if (typeof setMaxPriceFilter === 'function') setMaxPriceFilter(tier.price);
+                          if (typeof setGenderFilter === 'function') setGenderFilter('all');
+                          if (typeof setMetalFilter === 'function') setMetalFilter('all');
+                          changeCategoryTab?.('Collections');
+                          navigateTo('collections');
+                        }}
+                        className="group/item cursor-pointer flex flex-col items-center text-center shrink-0 w-[120px] sm:w-[136px] lg:w-[146px] transition-all duration-300"
+                      >
+                        {/* Vibrant Round "Gol" Badge */}
+                        <div className={`w-[110px] h-[110px] sm:w-[124px] sm:h-[124px] lg:w-[136px] lg:h-[136px] rounded-full bg-gradient-to-br ${style.gradient} ${style.shadow} ${style.border} border-2 flex flex-col items-center justify-center p-3 relative overflow-hidden transition-all duration-300 group-hover/item:scale-108 group-hover/item:ring-4 ${style.ring} group-hover/item:shadow-2xl`}>
+                          
+                          {/* Ambient Sparkle / Sheen Accent */}
+                          <div className="absolute inset-0 bg-white/0 group-hover/item:bg-white/10 transition-colors duration-300 pointer-events-none" />
+                          <div className="absolute -top-6 -right-6 w-16 h-16 bg-white/20 rounded-full blur-sm pointer-events-none" />
+
+                          {/* Top "UNDER" Eyebrow */}
+                          <span className="font-sans font-bold text-[9px] sm:text-[10px] tracking-[0.22em] uppercase text-white/90 drop-shadow-sm leading-none mb-1">
+                            UNDER
+                          </span>
+
+                          {/* Bold Price Amount */}
+                          <span 
+                            className="text-2xl sm:text-[28px] lg:text-[30px] font-bold text-white leading-none tracking-tight drop-shadow-md"
+                            style={{ fontFamily: "'Cormorant Garamond', 'Playfair Display', Georgia, serif" }}
+                          >
+                            ₹{tier.price}
+                          </span>
+
+                          {/* Bottom Action Pill */}
+                          <span className="inline-flex items-center gap-1 text-[8.5px] sm:text-[9.5px] font-sans font-bold tracking-wider uppercase text-white bg-black/25 px-2 py-0.5 rounded-full mt-1.5 border border-white/20 shadow-xs group-hover/item:bg-black/35 transition-colors">
+                            <span>Shop</span>
+                            <span className="text-[10px] transition-transform duration-200 group-hover/item:translate-x-0.5">→</span>
+                          </span>
+                        </div>
+
+                        {/* Title Underneath */}
+                        <span className="font-sans font-semibold text-[11px] sm:text-xs tracking-[0.14em] uppercase text-[#1A1817] group-hover/item:text-[#8C6D46] transition-colors mt-3 line-clamp-1">
+                          {tier.title || `Under ₹${tier.price}`}
+                        </span>
+                        <span className="text-[10px] text-[#8C6D46] tracking-wider uppercase font-semibold mt-0.5 opacity-0 group-hover/item:opacity-100 transition-opacity">
+                          View Items →
+                        </span>
+                      </div>
+                    );
+                  })}
+                </div>
+              </div>
+
             </div>
           </div>
         </section>
@@ -741,243 +845,401 @@ export default function Home({
         </section>
 
         {/* ==========================================================
-          GIFTING GUIDE
+          EDITORIAL SHOWCASE 01: WOMEN'S JEWELLERY (FOR HER)
+          (Exact Reference Screenshot Design)
           ========================================================== */}
-        <section className="py-20 bg-white overflow-hidden text-center">
-          <div className="max-w-[1836px] mx-auto px-6 sm:px-12 lg:px-16 text-center">
-            <div className="grid grid-cols-1 lg:grid-cols-12 gap-12 items-stretch text-center">
-
-              <motion.div
-                initial={{ opacity: 0, y: 50 }}
-                whileInView={{ opacity: 1, y: 0 }}
-                viewport={{ once: true, margin: "-100px" }}
-                transition={{ duration: 0.8, ease: "easeOut" }}
-                className="lg:col-span-7 flex flex-col justify-between space-y-6 lg:space-y-0 text-center"
-              >
-                <div className="grid grid-cols-1 md:grid-cols-3 gap-6 h-full text-center">
-                  {/* Card 1: Layered Necklaces */}
-                  <div
-                    onClick={() => {
-                      triggerAudio('click');
-                      if (typeof setMetalFilter === 'function') setMetalFilter('all');
-                      if (typeof setGenderFilter === 'function') setGenderFilter('women');
-                      if (typeof setMaxPriceFilter === 'function') setMaxPriceFilter(100000000);
-                      if (changeCategoryTab) changeCategoryTab('Necklaces', 'all', 'women');
-                      navigateTo('collections');
-                    }}
-                    className="bg-white rounded-3xl p-5 flex flex-col justify-between shadow-sm border border-solid border-[#E6DFD3] hover:border-[#B09A82]/60 hover:-translate-y-1.5 hover:shadow-md transition-all duration-300 group text-left cursor-pointer select-none"
+        <section id="for-her" className="w-full py-12 sm:py-16 bg-[#F5ECE4] border-b border-[#E8DFD5] select-none">
+          <div className="max-w-[1536px] mx-auto px-6 sm:px-10 lg:px-14">
+            
+            {/* Editorial Header */}
+            <div className="mb-6 sm:mb-8 text-left">
+              <span className="inline-block text-[#8C6D46] text-xs sm:text-[13px] font-sans font-semibold tracking-[0.28em] uppercase mb-1.5">
+                01 / FOR HER
+              </span>
+              <div className="flex items-center justify-between gap-4">
+                <div className="flex items-center gap-6 flex-1 min-w-0">
+                  <h2 
+                    className="text-3xl sm:text-4xl lg:text-[46px] font-bold text-[#1A1817] leading-tight shrink-0"
+                    style={{ fontFamily: "'Cormorant Garamond', 'Playfair Display', Georgia, serif" }}
                   >
-                    <div className="bg-[#F8F5EC] rounded-2xl aspect-square flex items-center justify-center p-4 shadow-inner relative overflow-hidden text-center">
-                      <img
-                        src={giftingLayeredNecklaces}
-                        alt="Layered Necklaces"
-                        className="w-[85%] h-[85%] object-contain group-hover:scale-105 transition-transform duration-500 mix-blend-multiply"
-                      />
-                    </div>
-                    <div className="mt-5 text-left">
-                      <h4 className="serif-luxury text-lg font-bold text-[#0D2B4E] border-b border-solid border-[#0D2B4E]/15 pb-1 inline-block">
-                        Layered Necklaces
-                      </h4>
-                      <p className="text-[11.5px] text-[#657989] font-sans mt-2 leading-relaxed font-light">
-                        Elevate your style with chic layered necklaces in hallmark pure 925 silver.
-                      </p>
-                    </div>
-                  </div>
-
-                  {/* Card 2: Coveted Styles */}
-                  <div
-                    onClick={() => {
-                      triggerAudio('click');
-                      if (typeof setMetalFilter === 'function') setMetalFilter('all');
-                      if (typeof setGenderFilter === 'function') setGenderFilter('all');
-                      if (typeof setMaxPriceFilter === 'function') setMaxPriceFilter(100000000);
-                      if (changeCategoryTab) changeCategoryTab('Collections', 'all', 'all');
-                      navigateTo('collections');
-                    }}
-                    className="bg-white rounded-3xl p-5 flex flex-col justify-between shadow-sm border border-solid border-[#E6DFD3] hover:border-[#B09A82]/60 hover:-translate-y-1.5 hover:shadow-md transition-all duration-300 group text-left cursor-pointer select-none"
-                  >
-                    <div className="bg-[#F8F5EC] rounded-2xl aspect-square flex items-center justify-center p-4 shadow-inner relative overflow-hidden text-center">
-                      <img
-                        src={giftingCovetedStyles}
-                        alt="Coveted Styles"
-                        className="w-[85%] h-[85%] object-contain group-hover:scale-105 transition-transform duration-500 mix-blend-multiply"
-                      />
-                    </div>
-                    <div className="mt-5 text-left">
-                      <h4 className="serif-luxury text-lg font-bold text-[#0D2B4E] border-b border-solid border-[#0D2B4E]/15 pb-1 inline-block">
-                        Coveted Styles
-                      </h4>
-                      <p className="text-[11.5px] text-[#657989] font-sans mt-2 leading-relaxed font-light">
-                        A curated selection of MANISH &amp; CO's most coveted jewels.
-                      </p>
-                    </div>
-                  </div>
-
-                  {/* Card 3: MANISH & CO Men */}
-                  <div
-                    onClick={() => {
-                      triggerAudio('click');
-                      if (typeof setMetalFilter === 'function') setMetalFilter('all');
-                      if (typeof setGenderFilter === 'function') setGenderFilter('men');
-                      if (typeof setMaxPriceFilter === 'function') setMaxPriceFilter(100000000);
-                      if (changeCategoryTab) changeCategoryTab('Collections', 'all', 'men');
-                      navigateTo('collections');
-                    }}
-                    className="bg-white rounded-3xl p-5 flex flex-col justify-between shadow-sm border border-solid border-[#E6DFD3] hover:border-[#B09A82]/60 hover:-translate-y-1.5 hover:shadow-md transition-all duration-300 group text-left cursor-pointer select-none"
-                  >
-                    <div className="bg-[#F8F5EC] rounded-2xl aspect-square flex items-center justify-center p-4 shadow-inner relative overflow-hidden text-center">
-                      <img
-                        src={giftingHrMan}
-                        alt="MANISH & CO Men"
-                        className="w-[85%] h-[85%] object-contain group-hover:scale-105 transition-transform duration-500 mix-blend-multiply"
-                      />
-                    </div>
-                    <div className="mt-5 text-left">
-                      <h4 className="serif-luxury text-lg font-bold text-[#0D2B4E] border-b border-solid border-[#0D2B4E]/15 pb-1 inline-block">
-                        MANISH &amp; CO Men
-                      </h4>
-                      <p className="text-[11.5px] text-[#657989] font-sans mt-2 leading-relaxed font-light">
-                        Signature silver kadas, rings, and chains to enhance refined masculine style.
-                      </p>
-                    </div>
-                  </div>
+                    Women's Jewellery
+                  </h2>
+                  <div className="hidden sm:block h-[1px] bg-[#D6CABE] flex-1 max-w-[260px] lg:max-w-[340px]" />
                 </div>
-              </motion.div>
-
-              {/* Right Part: Luxury Navy & Taupe Gift Box Card */}
-              <motion.div
-                initial={{ opacity: 0, x: 100 }}
-                whileInView={{ opacity: 1, x: 0 }}
-                viewport={{ once: true, margin: "-100px" }}
-                transition={{ duration: 0.8, ease: "easeOut" }}
-                className="lg:col-span-5 relative text-center"
-              >
-                {/* Floating Stars */}
-                <div className="absolute inset-0 pointer-events-none select-none z-20">
-                  <div className="absolute -top-3 -left-3 text-[#B09A82] text-lg animate-pulse">✦</div>
-                  <div className="absolute top-1/4 -left-4 text-[#B09A82]/60 text-sm">✨</div>
-                  <div className="absolute bottom-6 -left-3 text-[#B09A82] text-base">✦</div>
-                  <div className="absolute -bottom-3 left-1/4 text-[#B09A82]/70 text-lg">✨</div>
-                  <div className="absolute -top-4 -right-2 text-[#B09A82] text-base animate-pulse">✦</div>
-                  <div className="absolute top-1/3 -right-4 text-[#B09A82]/60 text-sm">✨</div>
-                  <div className="absolute bottom-12 -right-3 text-[#B09A82] text-base opacity-75">✦</div>
-                  <div className="absolute -bottom-3 right-1/6 text-[#B09A82]/70 text-lg">✨</div>
-                </div>
-
-                <div className="w-full h-full bg-gradient-to-br from-[#0D2B4E] via-[#091B2B] to-[#0D2B4E] rounded-3xl p-6 sm:p-8 flex flex-col justify-between relative shadow-2xl overflow-hidden border border-solid border-[#B09A82]/30 text-center">
-                  <div className="absolute inset-2 border-[1.5px] border-dashed border-[#B09A82]/30 rounded-2xl pointer-events-none z-10" />
-
-                  <div className="text-center pt-4 pb-6 z-20">
-                    <span className="serif-luxury text-[#B09A82] text-lg sm:text-xl md:text-2xl font-light tracking-wide block uppercase">
-                      Curated Signature
-                    </span>
-                    <h3 className="serif-luxury text-[#F8F5EC] text-5xl sm:text-6xl lg:text-7xl font-bold tracking-wider mt-1 mb-2 relative inline-block">
-                      G
-                      <span className="relative inline-block text-[#B09A82]">
-                        ı
-                        <span className="absolute -top-3 left-1/2 -translate-x-1/2 text-sm sm:text-base text-[#B09A82]">✦</span>
-                      </span>
-                      ft
-                    </h3>
-                    <span className="serif-luxury text-[#B2BAC1] text-lg sm:text-xl font-light tracking-wide block">
-                      for your loved ones in signature linen &amp; wax seal box
-                    </span>
-                  </div>
-
-                  {/* Guided Gifting Price Boxes */}
-                  <div className="grid grid-cols-3 gap-3 sm:gap-4 pb-4 z-20 relative">
-                    {/* Box 1 */}
-                    <button
-                      onClick={() => {
-                        triggerAudio('shimmer');
-                        if (typeof setMetalFilter === 'function') setMetalFilter('all');
-                        if (typeof setGenderFilter === 'function') setGenderFilter('all');
-                        if (changeCategoryTab) changeCategoryTab('Collections');
-                        if (setMaxPriceFilter) setMaxPriceFilter(10000);
-                        navigateTo('collections');
-                      }}
-                      className="bg-[#F8F5EC] rounded-b-xl rounded-t-sm pt-6 pb-4 flex flex-col items-center justify-center relative shadow-lg hover:-translate-y-1 hover:shadow-xl transition-all duration-300 group cursor-pointer border border-solid border-[#B09A82]/20"
-                    >
-                      <svg className="w-8 h-8 absolute -top-4 text-[#6B4B2E] fill-current drop-shadow-[0_2px_4px_rgba(0,0,0,0.15)] group-hover:scale-105 transition-transform" viewBox="0 0 24 24">
-                        <path d="M12,12 C9,7 6,7 6,10 C6,13 9,13 12,12 Z" />
-                        <path d="M12,12 C15,7 18,7 18,10 C18,13 15,13 12,12 Z" />
-                      </svg>
-                      <div className="absolute top-2 w-[106%] h-2.5 bg-[#F8F5EC] rounded-sm border-b border-solid border-[#B09A82]/30 shadow-sm" />
-                      <span className="text-[9px] uppercase tracking-wider text-[#657989] font-bold font-sans">Under</span>
-                      <span className="serif-luxury text-lg sm:text-2xl font-black text-[#0D2B4E] leading-none mt-1 font-bold">10k</span>
-                    </button>
-
-                    {/* Box 2 */}
-                    <button
-                      onClick={() => {
-                        triggerAudio('shimmer');
-                        if (typeof setMetalFilter === 'function') setMetalFilter('all');
-                        if (typeof setGenderFilter === 'function') setGenderFilter('all');
-                        if (changeCategoryTab) changeCategoryTab('Collections');
-                        if (setMaxPriceFilter) setMaxPriceFilter(30000);
-                        navigateTo('collections');
-                      }}
-                      className="bg-[#F8F5EC] rounded-b-xl rounded-t-sm pt-6 pb-4 flex flex-col items-center justify-center relative shadow-lg hover:-translate-y-1 hover:shadow-xl transition-all duration-300 group cursor-pointer border border-solid border-[#B09A82]/20"
-                    >
-                      <svg className="w-8 h-8 absolute -top-4 text-[#6B4B2E] fill-current drop-shadow-[0_2px_4px_rgba(0,0,0,0.15)] group-hover:scale-105 transition-transform" viewBox="0 0 24 24">
-                        <path d="M12,12 C9,7 6,7 6,10 C6,13 9,13 12,12 Z" />
-                        <path d="M12,12 C15,7 18,7 18,10 C18,13 15,13 12,12 Z" />
-                      </svg>
-                      <div className="absolute top-2 w-[106%] h-2.5 bg-[#F8F5EC] rounded-sm border-b border-solid border-[#B09A82]/30 shadow-sm" />
-                      <span className="text-[9px] uppercase tracking-wider text-[#657989] font-bold font-sans">Under</span>
-                      <span className="serif-luxury text-lg sm:text-2xl font-black text-[#0D2B4E] leading-none mt-1 font-bold">30k</span>
-                    </button>
-
-                    {/* Box 3 */}
-                    <button
-                      onClick={() => {
-                        triggerAudio('shimmer');
-                        if (typeof setMetalFilter === 'function') setMetalFilter('all');
-                        if (typeof setGenderFilter === 'function') setGenderFilter('all');
-                        if (changeCategoryTab) changeCategoryTab('Collections');
-                        if (setMaxPriceFilter) setMaxPriceFilter(50000);
-                        navigateTo('collections');
-                      }}
-                      className="bg-[#F8F5EC] rounded-b-xl rounded-t-sm pt-6 pb-4 flex flex-col items-center justify-center relative shadow-lg hover:-translate-y-1 hover:shadow-xl transition-all duration-300 group cursor-pointer border border-solid border-[#B09A82]/20"
-                    >
-                      <svg className="w-8 h-8 absolute -top-4 text-[#6B4B2E] fill-current drop-shadow-[0_2px_4px_rgba(0,0,0,0.15)] group-hover:scale-105 transition-transform" viewBox="0 0 24 24">
-                        <path d="M12,12 C9,7 6,7 6,10 C6,13 9,13 12,12 Z" />
-                        <path d="M12,12 C15,7 18,7 18,10 C18,13 15,13 12,12 Z" />
-                      </svg>
-                      <div className="absolute top-2 w-[106%] h-2.5 bg-[#F8F5EC] rounded-sm border-b border-solid border-[#B09A82]/30 shadow-sm" />
-                      <span className="text-[9px] uppercase tracking-wider text-[#657989] font-bold font-sans">Under</span>
-                      <span className="serif-luxury text-lg sm:text-2xl font-black text-[#0D2B4E] leading-none mt-1 font-bold">50k</span>
-                    </button>
-                  </div>
-                </div>
-              </motion.div>
-
+                <button
+                  onClick={() => {
+                    triggerAudio('click');
+                    if (typeof setGenderFilter === 'function') setGenderFilter('women');
+                    changeCategoryTab?.('Collections', 'all', 'women');
+                    navigateTo('collections');
+                  }}
+                  className="text-[#1A1817] hover:text-[#8C6D46] font-sans text-xs sm:text-[13px] font-semibold tracking-[0.16em] uppercase inline-flex items-center gap-1.5 transition-colors cursor-pointer group shrink-0"
+                >
+                  <span>View All</span>
+                  <span className="text-sm font-light transition-transform duration-300 group-hover:translate-x-1">→</span>
+                </button>
+              </div>
+              <p className="text-[#6F6862] text-xs sm:text-sm font-sans mt-2 font-normal">
+                Elegant pieces for everyday beauty and special moments.
+              </p>
             </div>
+
+            {/* 3 Showcase Cards */}
+            <div className="grid grid-cols-1 md:grid-cols-3 gap-5 sm:gap-6 lg:gap-7">
+              {/* Card 1: Rings */}
+              <div
+                onClick={() => {
+                  triggerAudio('click');
+                  if (typeof setGenderFilter === 'function') setGenderFilter('women');
+                  changeCategoryTab?.('Rings', 'all', 'women');
+                  navigateTo('collections');
+                }}
+                className="group cursor-pointer flex flex-col overflow-hidden bg-[#111111] shadow-[0_4px_20px_rgba(0,0,0,0.06)] hover:shadow-[0_12px_32px_rgba(0,0,0,0.18)] transition-all duration-500 rounded-none"
+              >
+                <div className="w-full aspect-[16/10] overflow-hidden bg-[#ECE4DC] relative">
+                  <img
+                    src={herRings}
+                    alt="Women's Rings - MANISH & CO"
+                    className="w-full h-full object-cover transition-transform duration-700 ease-out group-hover:scale-105"
+                    loading="lazy"
+                  />
+                  <div className="absolute inset-0 bg-black/0 group-hover:bg-black/10 transition-colors duration-300 pointer-events-none" />
+                </div>
+                <div className="bg-[#111111] px-5 py-3.5 sm:py-4 flex items-center justify-between text-white border-t border-white/5">
+                  <span className="font-serif text-base sm:text-[17px] tracking-wide text-white/95 font-medium group-hover:text-[#D5C0A5] transition-colors">
+                    Rings
+                  </span>
+                  <span className="text-sm sm:text-base font-light text-white/80 transition-transform duration-300 group-hover:translate-x-1.5 group-hover:text-[#D5C0A5]">
+                    →
+                  </span>
+                </div>
+              </div>
+
+              {/* Card 2: Bracelets */}
+              <div
+                onClick={() => {
+                  triggerAudio('click');
+                  if (typeof setGenderFilter === 'function') setGenderFilter('women');
+                  changeCategoryTab?.('Bracelets', 'all', 'women');
+                  navigateTo('collections');
+                }}
+                className="group cursor-pointer flex flex-col overflow-hidden bg-[#111111] shadow-[0_4px_20px_rgba(0,0,0,0.06)] hover:shadow-[0_12px_32px_rgba(0,0,0,0.18)] transition-all duration-500 rounded-none"
+              >
+                <div className="w-full aspect-[16/10] overflow-hidden bg-[#ECE4DC] relative">
+                  <img
+                    src={herBracelets}
+                    alt="Women's Bracelets - MANISH & CO"
+                    className="w-full h-full object-cover transition-transform duration-700 ease-out group-hover:scale-105"
+                    loading="lazy"
+                  />
+                  <div className="absolute inset-0 bg-black/0 group-hover:bg-black/10 transition-colors duration-300 pointer-events-none" />
+                </div>
+                <div className="bg-[#111111] px-5 py-3.5 sm:py-4 flex items-center justify-between text-white border-t border-white/5">
+                  <span className="font-serif text-base sm:text-[17px] tracking-wide text-white/95 font-medium group-hover:text-[#D5C0A5] transition-colors">
+                    Bracelets
+                  </span>
+                  <span className="text-sm sm:text-base font-light text-white/80 transition-transform duration-300 group-hover:translate-x-1.5 group-hover:text-[#D5C0A5]">
+                    →
+                  </span>
+                </div>
+              </div>
+
+              {/* Card 3: Anklets */}
+              <div
+                onClick={() => {
+                  triggerAudio('click');
+                  if (typeof setGenderFilter === 'function') setGenderFilter('women');
+                  changeCategoryTab?.('Payal', 'all', 'women');
+                  navigateTo('collections');
+                }}
+                className="group cursor-pointer flex flex-col overflow-hidden bg-[#111111] shadow-[0_4px_20px_rgba(0,0,0,0.06)] hover:shadow-[0_12px_32px_rgba(0,0,0,0.18)] transition-all duration-500 rounded-none"
+              >
+                <div className="w-full aspect-[16/10] overflow-hidden bg-[#ECE4DC] relative">
+                  <img
+                    src={herAnklets}
+                    alt="Women's Anklets - MANISH & CO"
+                    className="w-full h-full object-cover transition-transform duration-700 ease-out group-hover:scale-105"
+                    loading="lazy"
+                  />
+                  <div className="absolute inset-0 bg-black/0 group-hover:bg-black/10 transition-colors duration-300 pointer-events-none" />
+                </div>
+                <div className="bg-[#111111] px-5 py-3.5 sm:py-4 flex items-center justify-between text-white border-t border-white/5">
+                  <span className="font-serif text-base sm:text-[17px] tracking-wide text-white/95 font-medium group-hover:text-[#D5C0A5] transition-colors">
+                    Anklets
+                  </span>
+                  <span className="text-sm sm:text-base font-light text-white/80 transition-transform duration-300 group-hover:translate-x-1.5 group-hover:text-[#D5C0A5]">
+                    →
+                  </span>
+                </div>
+              </div>
+            </div>
+
           </div>
         </section>
 
         {/* ==========================================================
-          PURE SILVER JEWELRY COLLECTION BANNER (ABOVE RECOMMENDED FOR YOU)
+          EDITORIAL SHOWCASE 02: MEN'S JEWELLERY (FOR HIM)
+          (Exact Reference Screenshot Design)
           ========================================================== */}
-        <section className="w-full bg-transparent overflow-hidden select-none text-center">
-          <div
-            onClick={() => {
-              triggerAudio('click');
-              if (typeof setMetalFilter === 'function') setMetalFilter('silver');
-              if (typeof setGenderFilter === 'function') setGenderFilter('all');
-              if (typeof setMaxPriceFilter === 'function') setMaxPriceFilter(100000000);
-              if (changeCategoryTab) changeCategoryTab('Silver', 'silver', 'all');
-              navigateTo('collections');
-            }}
-            className="w-full overflow-hidden relative group cursor-pointer shadow-md hover:shadow-xl transition-all duration-500 border-y border-solid border-[#E6DFD3] text-center"
-          >
-            <img
-              src={bannerPureSilverCollection}
-              alt="The Beauty of Pure Silver - Classic Designs for Every Occasion"
-              loading="lazy"
-              className="w-full h-auto block transition-transform duration-700 group-hover:scale-[1.01]"
-            />
-            <div className="absolute inset-0 bg-gradient-to-r from-transparent via-white/15 to-transparent -translate-x-full group-hover:translate-x-full transition-transform duration-1000 ease-out pointer-events-none" />
+        <section id="for-him" className="w-full py-12 sm:py-16 bg-[#F5ECE4] border-b border-[#E8DFD5] select-none">
+          <div className="max-w-[1536px] mx-auto px-6 sm:px-10 lg:px-14">
+            
+            {/* Editorial Header */}
+            <div className="mb-6 sm:mb-8 text-left">
+              <span className="inline-block text-[#8C6D46] text-xs sm:text-[13px] font-sans font-semibold tracking-[0.28em] uppercase mb-1.5">
+                02 / FOR HIM
+              </span>
+              <div className="flex items-center justify-between gap-4">
+                <div className="flex items-center gap-6 flex-1 min-w-0">
+                  <h2 
+                    className="text-3xl sm:text-4xl lg:text-[46px] font-bold text-[#1A1817] leading-tight shrink-0"
+                    style={{ fontFamily: "'Cormorant Garamond', 'Playfair Display', Georgia, serif" }}
+                  >
+                    Men's Jewellery
+                  </h2>
+                  <div className="hidden sm:block h-[1px] bg-[#D6CABE] flex-1 max-w-[260px] lg:max-w-[340px]" />
+                </div>
+                <button
+                  onClick={() => {
+                    triggerAudio('click');
+                    if (typeof setGenderFilter === 'function') setGenderFilter('men');
+                    changeCategoryTab?.('Collections', 'all', 'men');
+                    navigateTo('collections');
+                  }}
+                  className="text-[#1A1817] hover:text-[#8C6D46] font-sans text-xs sm:text-[13px] font-semibold tracking-[0.16em] uppercase inline-flex items-center gap-1.5 transition-colors cursor-pointer group shrink-0"
+                >
+                  <span>View All</span>
+                  <span className="text-sm font-light transition-transform duration-300 group-hover:translate-x-1">→</span>
+                </button>
+              </div>
+              <p className="text-[#6F6862] text-xs sm:text-sm font-sans mt-2 font-normal">
+                Bold designs for a confident you.
+              </p>
+            </div>
+
+            {/* 3 Showcase Cards */}
+            <div className="grid grid-cols-1 md:grid-cols-3 gap-5 sm:gap-6 lg:gap-7">
+              {/* Card 1: Rings */}
+              <div
+                onClick={() => {
+                  triggerAudio('click');
+                  if (typeof setGenderFilter === 'function') setGenderFilter('men');
+                  changeCategoryTab?.('Rings', 'all', 'men');
+                  navigateTo('collections');
+                }}
+                className="group cursor-pointer flex flex-col overflow-hidden bg-[#111111] shadow-[0_4px_20px_rgba(0,0,0,0.06)] hover:shadow-[0_12px_32px_rgba(0,0,0,0.18)] transition-all duration-500 rounded-none"
+              >
+                <div className="w-full aspect-[16/10] overflow-hidden bg-[#ECE4DC] relative">
+                  <img
+                    src={himRings}
+                    alt="Men's Rings - MANISH & CO"
+                    className="w-full h-full object-cover transition-transform duration-700 ease-out group-hover:scale-105"
+                    loading="lazy"
+                  />
+                  <div className="absolute inset-0 bg-black/0 group-hover:bg-black/10 transition-colors duration-300 pointer-events-none" />
+                </div>
+                <div className="bg-[#111111] px-5 py-3.5 sm:py-4 flex items-center justify-between text-white border-t border-white/5">
+                  <span className="font-serif text-base sm:text-[17px] tracking-wide text-white/95 font-medium group-hover:text-[#D5C0A5] transition-colors">
+                    Rings
+                  </span>
+                  <span className="text-sm sm:text-base font-light text-white/80 transition-transform duration-300 group-hover:translate-x-1.5 group-hover:text-[#D5C0A5]">
+                    →
+                  </span>
+                </div>
+              </div>
+
+              {/* Card 2: Chains */}
+              <div
+                onClick={() => {
+                  triggerAudio('click');
+                  if (typeof setGenderFilter === 'function') setGenderFilter('men');
+                  changeCategoryTab?.('Chains', 'all', 'men');
+                  navigateTo('collections');
+                }}
+                className="group cursor-pointer flex flex-col overflow-hidden bg-[#111111] shadow-[0_4px_20px_rgba(0,0,0,0.06)] hover:shadow-[0_12px_32px_rgba(0,0,0,0.18)] transition-all duration-500 rounded-none"
+              >
+                <div className="w-full aspect-[16/10] overflow-hidden bg-[#ECE4DC] relative">
+                  <img
+                    src={himChains}
+                    alt="Men's Chains - MANISH & CO"
+                    className="w-full h-full object-cover transition-transform duration-700 ease-out group-hover:scale-105"
+                    loading="lazy"
+                  />
+                  <div className="absolute inset-0 bg-black/0 group-hover:bg-black/10 transition-colors duration-300 pointer-events-none" />
+                </div>
+                <div className="bg-[#111111] px-5 py-3.5 sm:py-4 flex items-center justify-between text-white border-t border-white/5">
+                  <span className="font-serif text-base sm:text-[17px] tracking-wide text-white/95 font-medium group-hover:text-[#D5C0A5] transition-colors">
+                    Chains
+                  </span>
+                  <span className="text-sm sm:text-base font-light text-white/80 transition-transform duration-300 group-hover:translate-x-1.5 group-hover:text-[#D5C0A5]">
+                    →
+                  </span>
+                </div>
+              </div>
+
+              {/* Card 3: Bracelets */}
+              <div
+                onClick={() => {
+                  triggerAudio('click');
+                  if (typeof setGenderFilter === 'function') setGenderFilter('men');
+                  changeCategoryTab?.('Bracelets', 'all', 'men');
+                  navigateTo('collections');
+                }}
+                className="group cursor-pointer flex flex-col overflow-hidden bg-[#111111] shadow-[0_4px_20px_rgba(0,0,0,0.06)] hover:shadow-[0_12px_32px_rgba(0,0,0,0.18)] transition-all duration-500 rounded-none"
+              >
+                <div className="w-full aspect-[16/10] overflow-hidden bg-[#ECE4DC] relative">
+                  <img
+                    src={himBracelets}
+                    alt="Men's Bracelets - MANISH & CO"
+                    className="w-full h-full object-cover transition-transform duration-700 ease-out group-hover:scale-105"
+                    loading="lazy"
+                  />
+                  <div className="absolute inset-0 bg-black/0 group-hover:bg-black/10 transition-colors duration-300 pointer-events-none" />
+                </div>
+                <div className="bg-[#111111] px-5 py-3.5 sm:py-4 flex items-center justify-between text-white border-t border-white/5">
+                  <span className="font-serif text-base sm:text-[17px] tracking-wide text-white/95 font-medium group-hover:text-[#D5C0A5] transition-colors">
+                    Bracelets
+                  </span>
+                  <span className="text-sm sm:text-base font-light text-white/80 transition-transform duration-300 group-hover:translate-x-1.5 group-hover:text-[#D5C0A5]">
+                    →
+                  </span>
+                </div>
+              </div>
+            </div>
+
+          </div>
+        </section>
+
+        {/* ==========================================================
+          EDITORIAL SHOWCASE 03: KIDS' COLLECTION (LITTLE TREASURES)
+          (Exact Reference Screenshot Design)
+          ========================================================== */}
+        <section id="kids-collection" className="w-full py-12 sm:py-16 bg-[#F5ECE4] border-b border-[#E8DFD5] select-none">
+          <div className="max-w-[1536px] mx-auto px-6 sm:px-10 lg:px-14">
+            
+            {/* Editorial Header */}
+            <div className="mb-6 sm:mb-8 text-left">
+              <span className="inline-block text-[#8C6D46] text-xs sm:text-[13px] font-sans font-semibold tracking-[0.28em] uppercase mb-1.5">
+                03 / LITTLE TREASURES
+              </span>
+              <div className="flex items-center justify-between gap-4">
+                <div className="flex items-center gap-6 flex-1 min-w-0">
+                  <h2 
+                    className="text-3xl sm:text-4xl lg:text-[46px] font-bold text-[#1A1817] leading-tight shrink-0"
+                    style={{ fontFamily: "'Cormorant Garamond', 'Playfair Display', Georgia, serif" }}
+                  >
+                    Kids' Collection
+                  </h2>
+                  <div className="hidden sm:block h-[1px] bg-[#D6CABE] flex-1 max-w-[260px] lg:max-w-[340px]" />
+                </div>
+                <button
+                  onClick={() => {
+                    triggerAudio('click');
+                    if (typeof setGenderFilter === 'function') setGenderFilter('kids');
+                    changeCategoryTab?.('Collections', 'all', 'kids');
+                    navigateTo('collections');
+                  }}
+                  className="text-[#1A1817] hover:text-[#8C6D46] font-sans text-xs sm:text-[13px] font-semibold tracking-[0.16em] uppercase inline-flex items-center gap-1.5 transition-colors cursor-pointer group shrink-0"
+                >
+                  <span>View All</span>
+                  <span className="text-sm font-light transition-transform duration-300 group-hover:translate-x-1">→</span>
+                </button>
+              </div>
+              <p className="text-[#6F6862] text-xs sm:text-sm font-sans mt-2 font-normal">
+                Thoughtful little keepsakes for precious moments.
+              </p>
+            </div>
+
+            {/* 3 Showcase Cards */}
+            <div className="grid grid-cols-1 md:grid-cols-3 gap-5 sm:gap-6 lg:gap-7">
+              {/* Card 1: Rings */}
+              <div
+                onClick={() => {
+                  triggerAudio('click');
+                  if (typeof setGenderFilter === 'function') setGenderFilter('kids');
+                  changeCategoryTab?.('Rings', 'all', 'kids');
+                  navigateTo('collections');
+                }}
+                className="group cursor-pointer flex flex-col overflow-hidden bg-[#111111] shadow-[0_4px_20px_rgba(0,0,0,0.06)] hover:shadow-[0_12px_32px_rgba(0,0,0,0.18)] transition-all duration-500 rounded-none"
+              >
+                <div className="w-full aspect-[16/10] overflow-hidden bg-[#ECE4DC] relative">
+                  <img
+                    src={kidsRings}
+                    alt="Kids' Rings - MANISH & CO"
+                    className="w-full h-full object-cover transition-transform duration-700 ease-out group-hover:scale-105"
+                    loading="lazy"
+                  />
+                  <div className="absolute inset-0 bg-black/0 group-hover:bg-black/10 transition-colors duration-300 pointer-events-none" />
+                </div>
+                <div className="bg-[#111111] px-5 py-3.5 sm:py-4 flex items-center justify-between text-white border-t border-white/5">
+                  <span className="font-serif text-base sm:text-[17px] tracking-wide text-white/95 font-medium group-hover:text-[#D5C0A5] transition-colors">
+                    Rings
+                  </span>
+                  <span className="text-sm sm:text-base font-light text-white/80 transition-transform duration-300 group-hover:translate-x-1.5 group-hover:text-[#D5C0A5]">
+                    →
+                  </span>
+                </div>
+              </div>
+
+              {/* Card 2: Chains */}
+              <div
+                onClick={() => {
+                  triggerAudio('click');
+                  if (typeof setGenderFilter === 'function') setGenderFilter('kids');
+                  changeCategoryTab?.('Chains', 'all', 'kids');
+                  navigateTo('collections');
+                }}
+                className="group cursor-pointer flex flex-col overflow-hidden bg-[#111111] shadow-[0_4px_20px_rgba(0,0,0,0.06)] hover:shadow-[0_12px_32px_rgba(0,0,0,0.18)] transition-all duration-500 rounded-none"
+              >
+                <div className="w-full aspect-[16/10] overflow-hidden bg-[#ECE4DC] relative">
+                  <img
+                    src={kidsChains}
+                    alt="Kids' Chains - MANISH & CO"
+                    className="w-full h-full object-cover transition-transform duration-700 ease-out group-hover:scale-105"
+                    loading="lazy"
+                  />
+                  <div className="absolute inset-0 bg-black/0 group-hover:bg-black/10 transition-colors duration-300 pointer-events-none" />
+                </div>
+                <div className="bg-[#111111] px-5 py-3.5 sm:py-4 flex items-center justify-between text-white border-t border-white/5">
+                  <span className="font-serif text-base sm:text-[17px] tracking-wide text-white/95 font-medium group-hover:text-[#D5C0A5] transition-colors">
+                    Chains
+                  </span>
+                  <span className="text-sm sm:text-base font-light text-white/80 transition-transform duration-300 group-hover:translate-x-1.5 group-hover:text-[#D5C0A5]">
+                    →
+                  </span>
+                </div>
+              </div>
+
+              {/* Card 3: Bracelets */}
+              <div
+                onClick={() => {
+                  triggerAudio('click');
+                  if (typeof setGenderFilter === 'function') setGenderFilter('kids');
+                  changeCategoryTab?.('Bracelets', 'all', 'kids');
+                  navigateTo('collections');
+                }}
+                className="group cursor-pointer flex flex-col overflow-hidden bg-[#111111] shadow-[0_4px_20px_rgba(0,0,0,0.06)] hover:shadow-[0_12px_32px_rgba(0,0,0,0.18)] transition-all duration-500 rounded-none"
+              >
+                <div className="w-full aspect-[16/10] overflow-hidden bg-[#ECE4DC] relative">
+                  <img
+                    src={kidsBracelets}
+                    alt="Kids' Bracelets - MANISH & CO"
+                    className="w-full h-full object-cover transition-transform duration-700 ease-out group-hover:scale-105"
+                    loading="lazy"
+                  />
+                  <div className="absolute inset-0 bg-black/0 group-hover:bg-black/10 transition-colors duration-300 pointer-events-none" />
+                </div>
+                <div className="bg-[#111111] px-5 py-3.5 sm:py-4 flex items-center justify-between text-white border-t border-white/5">
+                  <span className="font-serif text-base sm:text-[17px] tracking-wide text-white/95 font-medium group-hover:text-[#D5C0A5] transition-colors">
+                    Bracelets
+                  </span>
+                  <span className="text-sm sm:text-base font-light text-white/80 transition-transform duration-300 group-hover:translate-x-1.5 group-hover:text-[#D5C0A5]">
+                    →
+                  </span>
+                </div>
+              </div>
+            </div>
+
           </div>
         </section>
 
@@ -1080,132 +1342,25 @@ export default function Home({
         </section>
 
         {/* ==========================================================
-          CRAFTSMANSHIP JOURNEY OUR PROCESS
+          CRAFTSMANSHIP JOURNEY — BEAUTY IS IN THE DETAILS (925 SILVER)
+          (Edge-by-Edge Full-Bleed Banner)
           ========================================================== */}
-        <section
-          onMouseEnter={() => setProcessPaused(true)}
-          onMouseLeave={() => setProcessPaused(false)}
-          className="bg-white py-20 px-6 sm:px-12 select-none border-b border-solid border-gray-100 overflow-hidden text-left"
+        <section 
+          id="craftsmanship-journey-banner" 
+          className="w-full relative overflow-hidden select-none bg-[#050B14] cursor-pointer group border-y border-white/10"
+          onClick={() => {
+            triggerAudio('click');
+            navigateTo('heritage');
+          }}
         >
-          <div className="max-w-[1836px] mx-auto relative px-4 text-left">
-
-            <div className="text-center md:text-left mb-12 space-y-4">
-              <span className="text-[10px] sm:text-xs uppercase tracking-[0.35em] text-[#6B4B2E] font-bold font-sans block">
-                Craftsmanship Journey
-              </span>
-              <h2 className="text-4xl md:text-5xl font-semibold text-[#0D2B4E] tracking-tight serif-luxury">
-                Our Artisanal Process
-              </h2>
-            </div>
-
-            {/* Progress line */}
-            <div className="flex items-center justify-between max-w-5xl mx-auto mb-20 relative px-4 select-none">
-              <div className="absolute top-1/2 -translate-y-1/2 left-[24px] right-[24px] h-[2px] bg-[#E6DFD3] z-0">
-                <div
-                  className="h-full bg-[#6B4B2E] transition-all duration-500 ease-out origin-left"
-                  style={{ width: `${(activeProcessStep / 5) * 100}%` }}
-                />
-              </div>
-
-              {processStepsData.map((step, idx) => {
-                const isActive = activeProcessStep === idx;
-                return (
-                  <button
-                    key={step.num}
-                    onClick={() => {
-                      triggerAudio('click');
-                      setActiveProcessStep(idx);
-                    }}
-                    className="relative z-10 flex flex-col items-center group focus:outline-none cursor-pointer border-none bg-transparent"
-                  >
-                    <div className={`w-12 h-12 rounded-full border-2 flex items-center justify-center font-bold text-sm transition-all duration-300 ${isActive
-                        ? 'bg-[#6B4B2E] border-[#6B4B2E] text-white shadow-[0_0_15px_rgba(107,75,46,0.35)] scale-110'
-                        : 'bg-white border-[#E6DFD3] text-gray-500 hover:border-[#6B4B2E] hover:text-[#6B4B2E] border-solid'
-                      }`}>
-                      {step.num}
-                    </div>
-                    <span className={`absolute top-14 text-[10px] font-bold tracking-wider uppercase whitespace-nowrap transition-all duration-300 hidden md:block ${isActive ? 'text-[#6B4B2E] opacity-100 translate-y-0' : 'text-gray-400 opacity-0 -translate-y-1 group-hover:opacity-100 group-hover:translate-y-0'
-                      }`}>
-                      {step.title}
-                    </span>
-                  </button>
-                );
-              })}
-            </div>
-
-            {/* Showcase Card */}
-            <div className="w-full bg-white border border-solid border-[#E6DFD3] rounded-[32px] overflow-hidden shadow-[0_30px_60px_rgba(13,43,78,0.04)] hover:shadow-[0_40px_80px_rgba(13,43,78,0.08)] transition-shadow duration-500 flex flex-col lg:flex-row relative">
-              <div className="w-full lg:w-[55%] relative aspect-[16/10] lg:aspect-auto lg:h-[550px] overflow-hidden bg-[#F8F5EC] shrink-0 text-center">
-                <div className="absolute inset-0 w-full h-full overflow-hidden">
-                  <img
-                    key={activeProcessStep}
-                    src={processStepsData[activeProcessStep]?.img || processStepsData[activeProcessStep]?.fallback}
-                    alt={processStepsData[activeProcessStep]?.title || "Our Process"}
-                    onError={(e) => {
-                      const fallback = processStepsData[activeProcessStep]?.fallback;
-                      if (fallback && e.currentTarget.src !== fallback) {
-                        e.currentTarget.src = fallback;
-                      }
-                    }}
-                    loading="eager"
-                    decoding="async"
-                    className="w-full h-full object-cover transition-transform duration-700 ease-out hover:scale-105"
-                  />
-                </div>
-                <div className="absolute inset-0 bg-gradient-to-t lg:bg-gradient-to-r from-[#091B2B]/40 via-transparent to-transparent pointer-events-none" />
-              </div>
-
-              <div className="w-full lg:w-[45%] p-8 sm:p-12 lg:p-16 flex flex-col justify-center text-left space-y-6 relative bg-white overflow-hidden">
-                <div className="relative z-10 space-y-3">
-                  <span className="text-[10px] sm:text-xs uppercase tracking-[0.25em] text-[#6B4B2E] font-bold font-sans">
-                    Step {processStepsData[activeProcessStep].num} of 06
-                  </span>
-                  <h3
-                    key={`title-${activeProcessStep}`}
-                    className="text-3xl sm:text-4xl font-semibold text-[#0D2B4E] tracking-tight serif-luxury animate-fadeSlideIn"
-                  >
-                    {processStepsData[activeProcessStep].title}
-                  </h3>
-                  <div className="w-12 h-1 bg-[#6B4B2E] rounded-full" />
-                </div>
-
-                <p
-                  key={`desc-${activeProcessStep}`}
-                  className="text-[#657989] text-sm sm:text-base leading-relaxed font-sans font-normal relative z-10 max-w-lg animate-fadeSlideIn [animation-delay:150ms]"
-                >
-                  {processStepsData[activeProcessStep].desc}
-                </p>
-
-                {/* Arrows */}
-                <div className="flex items-center space-x-4 pt-6 relative z-10">
-                  <button
-                    onClick={() => {
-                      triggerAudio('click');
-                      setActiveProcessStep((prev) => (prev - 1 + 6) % 6);
-                    }}
-                    className="w-12 h-12 rounded-full border border-solid border-[#E6DFD3] flex items-center justify-center text-[#0D2B4E] hover:bg-[#0D2B4E] hover:border-[#0D2B4E] hover:text-[#F8F5EC] transition-all duration-300 cursor-pointer shadow-sm bg-transparent"
-                    aria-label="Previous step"
-                  >
-                    <svg className="w-5 h-5 stroke-current fill-none stroke-2" viewBox="0 0 24 24">
-                      <path strokeLinecap="round" strokeLinejoin="round" d="M15 19l-7-7 7-7" />
-                    </svg>
-                  </button>
-                  <button
-                    onClick={() => {
-                      triggerAudio('click');
-                      setActiveProcessStep((prev) => (prev + 1) % 6);
-                    }}
-                    className="w-12 h-12 rounded-full border border-solid border-[#E6DFD3] flex items-center justify-center text-[#0D2B4E] hover:bg-[#0D2B4E] hover:border-[#0D2B4E] hover:text-[#F8F5EC] transition-all duration-300 cursor-pointer shadow-sm bg-transparent"
-                    aria-label="Next step"
-                  >
-                    <svg className="w-5 h-5 stroke-current fill-none stroke-2" viewBox="0 0 24 24">
-                      <path strokeLinecap="round" strokeLinejoin="round" d="M9 5l7 7-7 7" />
-                    </svg>
-                  </button>
-                </div>
-              </div>
-            </div>
-          </div>
+          <img
+            src={bannerCraftsmanshipJourney}
+            alt="The Jewellery Journey - Beauty Is in the Details - MANISH & CO Fine Jewellery"
+            className="w-full h-auto min-h-[190px] sm:min-h-0 object-cover object-center block transition-transform duration-700 ease-out group-hover:scale-[1.008]"
+            loading="lazy"
+          />
+          {/* Subtle luxury ambient hover sheen */}
+          <div className="absolute inset-0 bg-white/0 group-hover:bg-white/[0.025] transition-colors duration-300 pointer-events-none" />
         </section>
 
         {/* ==========================================================

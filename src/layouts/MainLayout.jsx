@@ -88,7 +88,7 @@ export default function MainLayout({
       )}
 
       {/* Main Content Area */}
-      <div className={currentPage === 'checkout' ? 'pt-0' : 'pt-[136px] sm:pt-[140px] lg:pt-[150px]'}>
+      <div className={currentPage === 'checkout' ? 'pt-0' : 'pt-20'}>
         {children}
       </div>
 
