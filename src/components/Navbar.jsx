@@ -19,6 +19,7 @@ import { useWishlist } from '../hooks/useWishlist';
 import { useRates } from '../hooks/useRates';
 import { useProducts } from '../hooks/useProducts';
 import { getOptimizedImageUrl } from '../utils/imageOptimizer';
+import brandLogo from '../assets/logo.png';
 
 export default function Navbar({
   currentPage,
@@ -106,23 +107,30 @@ export default function Navbar({
             triggerAudio('click');
             navigateTo('home');
           }}
-          className="flex flex-col items-start focus:outline-none cursor-pointer group text-left border-none bg-transparent"
+          className="flex items-center gap-3 focus:outline-none cursor-pointer group text-left border-none bg-transparent"
         >
-          <span 
-            className="font-serif text-[21px] sm:text-[25px] font-bold tracking-[0.18em] text-white uppercase leading-none drop-shadow-sm group-hover:text-[#E5C396] transition-colors"
-            style={{ fontFamily: "'Cormorant Garamond', 'Playfair Display', Georgia, serif" }}
-          >
-            MANISH &amp; CO
-          </span>
-          <div className="flex items-center gap-2 mt-1.5 w-full">
-            <span className="h-[1px] flex-1 bg-gradient-to-r from-transparent to-[#C5A880]/70" />
+          <img 
+            src={brandLogo} 
+            alt="M&CO Fine Jewellery" 
+            className="w-10 h-10 sm:w-11 sm:h-11 rounded-full object-contain bg-white shadow-[0_2px_12px_rgba(0,0,0,0.4)] border border-white/20 transition-transform duration-300 group-hover:scale-105 shrink-0"
+          />
+          <div className="flex flex-col items-start">
             <span 
-              className="font-serif text-[9px] sm:text-[10px] tracking-[0.28em] text-[#C5A880] uppercase font-semibold whitespace-nowrap"
+              className="font-serif text-[19px] sm:text-[23px] font-bold tracking-[0.18em] text-white uppercase leading-none drop-shadow-sm group-hover:text-[#E5C396] transition-colors"
               style={{ fontFamily: "'Cormorant Garamond', 'Playfair Display', Georgia, serif" }}
             >
-              FINE JEWELLERY
+              MANISH &amp; CO
             </span>
-            <span className="h-[1px] flex-1 bg-gradient-to-l from-transparent to-[#C5A880]/70" />
+            <div className="flex items-center gap-2 mt-1.5 w-full">
+              <span className="h-[1px] flex-1 bg-gradient-to-r from-transparent to-[#C5A880]/70" />
+              <span 
+                className="font-serif text-[8.5px] sm:text-[9.5px] tracking-[0.28em] text-[#C5A880] uppercase font-semibold whitespace-nowrap"
+                style={{ fontFamily: "'Cormorant Garamond', 'Playfair Display', Georgia, serif" }}
+              >
+                FINE JEWELLERY
+              </span>
+              <span className="h-[1px] flex-1 bg-gradient-to-l from-transparent to-[#C5A880]/70" />
+            </div>
           </div>
         </button>
 
