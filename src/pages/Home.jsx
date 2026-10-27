@@ -32,16 +32,19 @@ import { INITIAL_CATEGORIES } from '../config/constants';
 import { priceCategoryService, getColorStyles } from '../services/priceCategoryService';
 
 
-// Editorial Collection Showcase (01 For Her, 02 For Him, 03 Little Treasures)
-import herRings from '../assets/editorial/her_rings.png';
-import herBracelets from '../assets/editorial/her_bracelets.png';
-import herAnklets from '../assets/editorial/her_anklets.png';
-import himRings from '../assets/editorial/him_rings.png';
-import himChains from '../assets/editorial/him_chains.png';
-import himBracelets from '../assets/editorial/him_bracelets.png';
-import kidsRings from '../assets/editorial/kids_rings.png';
-import kidsChains from '../assets/editorial/kids_chains.png';
-import kidsBracelets from '../assets/editorial/kids_bracelets.png';
+// Editorial Collection Showcase (01 Men's, 02 Women's, 03 Kid's, 04 Gift's)
+import himRings from '../assets/editorial/him_rings.jpg';
+import himChains from '../assets/editorial/him_chains.jpg';
+import himBracelets from '../assets/editorial/him_bracelets.jpg';
+import herRings from '../assets/editorial/her_rings.jpg';
+import herBracelets from '../assets/editorial/her_bracelets.jpg';
+import herAnklets from '../assets/editorial/her_anklets.jpg';
+import kidsBracelets from '../assets/editorial/kids_bracelets.jpg';
+import kidsChains from '../assets/editorial/kids_chains.jpg';
+import kidsKadas from '../assets/editorial/kids_kadas.jpg';
+import giftsCoins from '../assets/editorial/gifts_coins.jpg';
+import giftsPooja from '../assets/editorial/gifts_pooja.jpg';
+import giftsKeepsakes from '../assets/editorial/gifts_keepsakes.jpg';
 
 // Testimonial Images
 import testimonial1 from '../assets/testimonial_1.png';
@@ -845,141 +848,7 @@ export default function Home({
         </section>
 
         {/* ==========================================================
-          EDITORIAL SHOWCASE 01: WOMEN'S JEWELLERY (FOR HER)
-          (Exact Reference Screenshot Design)
-          ========================================================== */}
-        <section id="for-her" className="w-full py-12 sm:py-16 bg-[#F5ECE4] border-b border-[#E8DFD5] select-none">
-          <div className="max-w-[1536px] mx-auto px-6 sm:px-10 lg:px-14">
-            
-            {/* Editorial Header */}
-            <div className="mb-6 sm:mb-8 text-left">
-              <span className="inline-block text-[#8C6D46] text-xs sm:text-[13px] font-sans font-semibold tracking-[0.28em] uppercase mb-1.5">
-                01 / FOR HER
-              </span>
-              <div className="flex items-center justify-between gap-4">
-                <div className="flex items-center gap-6 flex-1 min-w-0">
-                  <h2 
-                    className="text-3xl sm:text-4xl lg:text-[46px] font-bold text-[#1A1817] leading-tight shrink-0"
-                    style={{ fontFamily: "'Cormorant Garamond', 'Playfair Display', Georgia, serif" }}
-                  >
-                    Women's Jewellery
-                  </h2>
-                  <div className="hidden sm:block h-[1px] bg-[#D6CABE] flex-1 max-w-[260px] lg:max-w-[340px]" />
-                </div>
-                <button
-                  onClick={() => {
-                    triggerAudio('click');
-                    if (typeof setGenderFilter === 'function') setGenderFilter('women');
-                    changeCategoryTab?.('Collections', 'all', 'women');
-                    navigateTo('collections');
-                  }}
-                  className="text-[#1A1817] hover:text-[#8C6D46] font-sans text-xs sm:text-[13px] font-semibold tracking-[0.16em] uppercase inline-flex items-center gap-1.5 transition-colors cursor-pointer group shrink-0"
-                >
-                  <span>View All</span>
-                  <span className="text-sm font-light transition-transform duration-300 group-hover:translate-x-1">→</span>
-                </button>
-              </div>
-              <p className="text-[#6F6862] text-xs sm:text-sm font-sans mt-2 font-normal">
-                Elegant pieces for everyday beauty and special moments.
-              </p>
-            </div>
-
-            {/* 3 Showcase Cards */}
-            <div className="grid grid-cols-1 md:grid-cols-3 gap-5 sm:gap-6 lg:gap-7">
-              {/* Card 1: Rings */}
-              <div
-                onClick={() => {
-                  triggerAudio('click');
-                  if (typeof setGenderFilter === 'function') setGenderFilter('women');
-                  changeCategoryTab?.('Rings', 'all', 'women');
-                  navigateTo('collections');
-                }}
-                className="group cursor-pointer flex flex-col overflow-hidden bg-[#111111] shadow-[0_4px_20px_rgba(0,0,0,0.06)] hover:shadow-[0_12px_32px_rgba(0,0,0,0.18)] transition-all duration-500 rounded-none"
-              >
-                <div className="w-full aspect-[16/10] overflow-hidden bg-[#ECE4DC] relative">
-                  <img
-                    src={herRings}
-                    alt="Women's Rings - MANISH & CO"
-                    className="w-full h-full object-cover transition-transform duration-700 ease-out group-hover:scale-105"
-                    loading="lazy"
-                  />
-                  <div className="absolute inset-0 bg-black/0 group-hover:bg-black/10 transition-colors duration-300 pointer-events-none" />
-                </div>
-                <div className="bg-[#111111] px-5 py-3.5 sm:py-4 flex items-center justify-between text-white border-t border-white/5">
-                  <span className="font-serif text-base sm:text-[17px] tracking-wide text-white/95 font-medium group-hover:text-[#D5C0A5] transition-colors">
-                    Rings
-                  </span>
-                  <span className="text-sm sm:text-base font-light text-white/80 transition-transform duration-300 group-hover:translate-x-1.5 group-hover:text-[#D5C0A5]">
-                    →
-                  </span>
-                </div>
-              </div>
-
-              {/* Card 2: Bracelets */}
-              <div
-                onClick={() => {
-                  triggerAudio('click');
-                  if (typeof setGenderFilter === 'function') setGenderFilter('women');
-                  changeCategoryTab?.('Bracelets', 'all', 'women');
-                  navigateTo('collections');
-                }}
-                className="group cursor-pointer flex flex-col overflow-hidden bg-[#111111] shadow-[0_4px_20px_rgba(0,0,0,0.06)] hover:shadow-[0_12px_32px_rgba(0,0,0,0.18)] transition-all duration-500 rounded-none"
-              >
-                <div className="w-full aspect-[16/10] overflow-hidden bg-[#ECE4DC] relative">
-                  <img
-                    src={herBracelets}
-                    alt="Women's Bracelets - MANISH & CO"
-                    className="w-full h-full object-cover transition-transform duration-700 ease-out group-hover:scale-105"
-                    loading="lazy"
-                  />
-                  <div className="absolute inset-0 bg-black/0 group-hover:bg-black/10 transition-colors duration-300 pointer-events-none" />
-                </div>
-                <div className="bg-[#111111] px-5 py-3.5 sm:py-4 flex items-center justify-between text-white border-t border-white/5">
-                  <span className="font-serif text-base sm:text-[17px] tracking-wide text-white/95 font-medium group-hover:text-[#D5C0A5] transition-colors">
-                    Bracelets
-                  </span>
-                  <span className="text-sm sm:text-base font-light text-white/80 transition-transform duration-300 group-hover:translate-x-1.5 group-hover:text-[#D5C0A5]">
-                    →
-                  </span>
-                </div>
-              </div>
-
-              {/* Card 3: Anklets */}
-              <div
-                onClick={() => {
-                  triggerAudio('click');
-                  if (typeof setGenderFilter === 'function') setGenderFilter('women');
-                  changeCategoryTab?.('Payal', 'all', 'women');
-                  navigateTo('collections');
-                }}
-                className="group cursor-pointer flex flex-col overflow-hidden bg-[#111111] shadow-[0_4px_20px_rgba(0,0,0,0.06)] hover:shadow-[0_12px_32px_rgba(0,0,0,0.18)] transition-all duration-500 rounded-none"
-              >
-                <div className="w-full aspect-[16/10] overflow-hidden bg-[#ECE4DC] relative">
-                  <img
-                    src={herAnklets}
-                    alt="Women's Anklets - MANISH & CO"
-                    className="w-full h-full object-cover transition-transform duration-700 ease-out group-hover:scale-105"
-                    loading="lazy"
-                  />
-                  <div className="absolute inset-0 bg-black/0 group-hover:bg-black/10 transition-colors duration-300 pointer-events-none" />
-                </div>
-                <div className="bg-[#111111] px-5 py-3.5 sm:py-4 flex items-center justify-between text-white border-t border-white/5">
-                  <span className="font-serif text-base sm:text-[17px] tracking-wide text-white/95 font-medium group-hover:text-[#D5C0A5] transition-colors">
-                    Anklets
-                  </span>
-                  <span className="text-sm sm:text-base font-light text-white/80 transition-transform duration-300 group-hover:translate-x-1.5 group-hover:text-[#D5C0A5]">
-                    →
-                  </span>
-                </div>
-              </div>
-            </div>
-
-          </div>
-        </section>
-
-        {/* ==========================================================
-          EDITORIAL SHOWCASE 02: MEN'S JEWELLERY (FOR HIM)
-          (Exact Reference Screenshot Design)
+          EDITORIAL SHOWCASE 01: MEN'S JEWELLERY (FOR HIM)
           ========================================================== */}
         <section id="for-him" className="w-full py-12 sm:py-16 bg-[#F5ECE4] border-b border-[#E8DFD5] select-none">
           <div className="max-w-[1536px] mx-auto px-6 sm:px-10 lg:px-14">
@@ -987,7 +856,7 @@ export default function Home({
             {/* Editorial Header */}
             <div className="mb-6 sm:mb-8 text-left">
               <span className="inline-block text-[#8C6D46] text-xs sm:text-[13px] font-sans font-semibold tracking-[0.28em] uppercase mb-1.5">
-                02 / FOR HIM
+                01 / FOR HIM
               </span>
               <div className="flex items-center justify-between gap-4">
                 <div className="flex items-center gap-6 flex-1 min-w-0">
@@ -1013,7 +882,7 @@ export default function Home({
                 </button>
               </div>
               <p className="text-[#6F6862] text-xs sm:text-sm font-sans mt-2 font-normal">
-                Bold designs for a confident you.
+                Bold 925 sterling silver designs crafted for confidence and royal presence.
               </p>
             </div>
 
@@ -1033,7 +902,7 @@ export default function Home({
                   <img
                     src={himRings}
                     alt="Men's Rings - MANISH & CO"
-                    className="w-full h-full object-cover transition-transform duration-700 ease-out group-hover:scale-105"
+                    className="w-full h-full object-cover object-center transition-transform duration-700 ease-out group-hover:scale-105"
                     loading="lazy"
                   />
                   <div className="absolute inset-0 bg-black/0 group-hover:bg-black/10 transition-colors duration-300 pointer-events-none" />
@@ -1062,7 +931,7 @@ export default function Home({
                   <img
                     src={himChains}
                     alt="Men's Chains - MANISH & CO"
-                    className="w-full h-full object-cover transition-transform duration-700 ease-out group-hover:scale-105"
+                    className="w-full h-full object-cover object-center transition-transform duration-700 ease-out group-hover:scale-105"
                     loading="lazy"
                   />
                   <div className="absolute inset-0 bg-black/0 group-hover:bg-black/10 transition-colors duration-300 pointer-events-none" />
@@ -1077,7 +946,7 @@ export default function Home({
                 </div>
               </div>
 
-              {/* Card 3: Bracelets */}
+              {/* Card 3: Bracelets & Kadas */}
               <div
                 onClick={() => {
                   triggerAudio('click');
@@ -1090,8 +959,111 @@ export default function Home({
                 <div className="w-full aspect-[16/10] overflow-hidden bg-[#ECE4DC] relative">
                   <img
                     src={himBracelets}
-                    alt="Men's Bracelets - MANISH & CO"
-                    className="w-full h-full object-cover transition-transform duration-700 ease-out group-hover:scale-105"
+                    alt="Men's Bracelets & Kadas - MANISH & CO"
+                    className="w-full h-full object-cover object-center transition-transform duration-700 ease-out group-hover:scale-105"
+                    loading="lazy"
+                  />
+                  <div className="absolute inset-0 bg-black/0 group-hover:bg-black/10 transition-colors duration-300 pointer-events-none" />
+                </div>
+                <div className="bg-[#111111] px-5 py-3.5 sm:py-4 flex items-center justify-between text-white border-t border-white/5">
+                  <span className="font-serif text-base sm:text-[17px] tracking-wide text-white/95 font-medium group-hover:text-[#D5C0A5] transition-colors">
+                    Bracelets &amp; Kadas
+                  </span>
+                  <span className="text-sm sm:text-base font-light text-white/80 transition-transform duration-300 group-hover:translate-x-1.5 group-hover:text-[#D5C0A5]">
+                    →
+                  </span>
+                </div>
+              </div>
+            </div>
+
+          </div>
+        </section>
+
+        {/* ==========================================================
+          EDITORIAL SHOWCASE 02: WOMEN'S JEWELLERY (FOR HER)
+          ========================================================== */}
+        <section id="for-her" className="w-full py-12 sm:py-16 bg-[#F5ECE4] border-b border-[#E8DFD5] select-none">
+          <div className="max-w-[1536px] mx-auto px-6 sm:px-10 lg:px-14">
+            
+            {/* Editorial Header */}
+            <div className="mb-6 sm:mb-8 text-left">
+              <span className="inline-block text-[#8C6D46] text-xs sm:text-[13px] font-sans font-semibold tracking-[0.28em] uppercase mb-1.5">
+                02 / FOR HER
+              </span>
+              <div className="flex items-center justify-between gap-4">
+                <div className="flex items-center gap-6 flex-1 min-w-0">
+                  <h2 
+                    className="text-3xl sm:text-4xl lg:text-[46px] font-bold text-[#1A1817] leading-tight shrink-0"
+                    style={{ fontFamily: "'Cormorant Garamond', 'Playfair Display', Georgia, serif" }}
+                  >
+                    Women's Jewellery
+                  </h2>
+                  <div className="hidden sm:block h-[1px] bg-[#D6CABE] flex-1 max-w-[260px] lg:max-w-[340px]" />
+                </div>
+                <button
+                  onClick={() => {
+                    triggerAudio('click');
+                    if (typeof setGenderFilter === 'function') setGenderFilter('women');
+                    changeCategoryTab?.('Collections', 'all', 'women');
+                    navigateTo('collections');
+                  }}
+                  className="text-[#1A1817] hover:text-[#8C6D46] font-sans text-xs sm:text-[13px] font-semibold tracking-[0.16em] uppercase inline-flex items-center gap-1.5 transition-colors cursor-pointer group shrink-0"
+                >
+                  <span>View All</span>
+                  <span className="text-sm font-light transition-transform duration-300 group-hover:translate-x-1">→</span>
+                </button>
+              </div>
+              <p className="text-[#6F6862] text-xs sm:text-sm font-sans mt-2 font-normal">
+                Elegant 925 sterling silver pieces for everyday beauty and royal moments.
+              </p>
+            </div>
+
+            {/* 3 Showcase Cards */}
+            <div className="grid grid-cols-1 md:grid-cols-3 gap-5 sm:gap-6 lg:gap-7">
+              {/* Card 1: Rings */}
+              <div
+                onClick={() => {
+                  triggerAudio('click');
+                  if (typeof setGenderFilter === 'function') setGenderFilter('women');
+                  changeCategoryTab?.('Rings', 'all', 'women');
+                  navigateTo('collections');
+                }}
+                className="group cursor-pointer flex flex-col overflow-hidden bg-[#111111] shadow-[0_4px_20px_rgba(0,0,0,0.06)] hover:shadow-[0_12px_32px_rgba(0,0,0,0.18)] transition-all duration-500 rounded-none"
+              >
+                <div className="w-full aspect-[16/10] overflow-hidden bg-[#ECE4DC] relative">
+                  <img
+                    src={herRings}
+                    alt="Women's Rings - MANISH & CO"
+                    className="w-full h-full object-cover object-center transition-transform duration-700 ease-out group-hover:scale-105"
+                    loading="lazy"
+                  />
+                  <div className="absolute inset-0 bg-black/0 group-hover:bg-black/10 transition-colors duration-300 pointer-events-none" />
+                </div>
+                <div className="bg-[#111111] px-5 py-3.5 sm:py-4 flex items-center justify-between text-white border-t border-white/5">
+                  <span className="font-serif text-base sm:text-[17px] tracking-wide text-white/95 font-medium group-hover:text-[#D5C0A5] transition-colors">
+                    Rings
+                  </span>
+                  <span className="text-sm sm:text-base font-light text-white/80 transition-transform duration-300 group-hover:translate-x-1.5 group-hover:text-[#D5C0A5]">
+                    →
+                  </span>
+                </div>
+              </div>
+
+              {/* Card 2: Bracelets */}
+              <div
+                onClick={() => {
+                  triggerAudio('click');
+                  if (typeof setGenderFilter === 'function') setGenderFilter('women');
+                  changeCategoryTab?.('Bracelets', 'all', 'women');
+                  navigateTo('collections');
+                }}
+                className="group cursor-pointer flex flex-col overflow-hidden bg-[#111111] shadow-[0_4px_20px_rgba(0,0,0,0.06)] hover:shadow-[0_12px_32px_rgba(0,0,0,0.18)] transition-all duration-500 rounded-none"
+              >
+                <div className="w-full aspect-[16/10] overflow-hidden bg-[#ECE4DC] relative">
+                  <img
+                    src={herBracelets}
+                    alt="Women's Bracelets - MANISH & CO"
+                    className="w-full h-full object-cover object-center transition-transform duration-700 ease-out group-hover:scale-105"
                     loading="lazy"
                   />
                   <div className="absolute inset-0 bg-black/0 group-hover:bg-black/10 transition-colors duration-300 pointer-events-none" />
@@ -1105,14 +1077,42 @@ export default function Home({
                   </span>
                 </div>
               </div>
+
+              {/* Card 3: Anklets */}
+              <div
+                onClick={() => {
+                  triggerAudio('click');
+                  if (typeof setGenderFilter === 'function') setGenderFilter('women');
+                  changeCategoryTab?.('Payal', 'all', 'women');
+                  navigateTo('collections');
+                }}
+                className="group cursor-pointer flex flex-col overflow-hidden bg-[#111111] shadow-[0_4px_20px_rgba(0,0,0,0.06)] hover:shadow-[0_12px_32px_rgba(0,0,0,0.18)] transition-all duration-500 rounded-none"
+              >
+                <div className="w-full aspect-[16/10] overflow-hidden bg-[#ECE4DC] relative">
+                  <img
+                    src={herAnklets}
+                    alt="Women's Anklets & Payals - MANISH & CO"
+                    className="w-full h-full object-cover object-center transition-transform duration-700 ease-out group-hover:scale-105"
+                    loading="lazy"
+                  />
+                  <div className="absolute inset-0 bg-black/0 group-hover:bg-black/10 transition-colors duration-300 pointer-events-none" />
+                </div>
+                <div className="bg-[#111111] px-5 py-3.5 sm:py-4 flex items-center justify-between text-white border-t border-white/5">
+                  <span className="font-serif text-base sm:text-[17px] tracking-wide text-white/95 font-medium group-hover:text-[#D5C0A5] transition-colors">
+                    Anklets &amp; Payals
+                  </span>
+                  <span className="text-sm sm:text-base font-light text-white/80 transition-transform duration-300 group-hover:translate-x-1.5 group-hover:text-[#D5C0A5]">
+                    →
+                  </span>
+                </div>
+              </div>
             </div>
 
           </div>
         </section>
 
         {/* ==========================================================
-          EDITORIAL SHOWCASE 03: KIDS' COLLECTION (LITTLE TREASURES)
-          (Exact Reference Screenshot Design)
+          EDITORIAL SHOWCASE 03: KID'S JEWELLERY (LITTLE TREASURES)
           ========================================================== */}
         <section id="kids-collection" className="w-full py-12 sm:py-16 bg-[#F5ECE4] border-b border-[#E8DFD5] select-none">
           <div className="max-w-[1536px] mx-auto px-6 sm:px-10 lg:px-14">
@@ -1128,7 +1128,7 @@ export default function Home({
                     className="text-3xl sm:text-4xl lg:text-[46px] font-bold text-[#1A1817] leading-tight shrink-0"
                     style={{ fontFamily: "'Cormorant Garamond', 'Playfair Display', Georgia, serif" }}
                   >
-                    Kids' Collection
+                    Kid's Jewellery
                   </h2>
                   <div className="hidden sm:block h-[1px] bg-[#D6CABE] flex-1 max-w-[260px] lg:max-w-[340px]" />
                 </div>
@@ -1146,71 +1146,13 @@ export default function Home({
                 </button>
               </div>
               <p className="text-[#6F6862] text-xs sm:text-sm font-sans mt-2 font-normal">
-                Thoughtful little keepsakes for precious moments.
+                Pure, skin-friendly 925 silver keepsakes handcrafted for your little precious ones.
               </p>
             </div>
 
             {/* 3 Showcase Cards */}
             <div className="grid grid-cols-1 md:grid-cols-3 gap-5 sm:gap-6 lg:gap-7">
-              {/* Card 1: Rings */}
-              <div
-                onClick={() => {
-                  triggerAudio('click');
-                  if (typeof setGenderFilter === 'function') setGenderFilter('kids');
-                  changeCategoryTab?.('Rings', 'all', 'kids');
-                  navigateTo('collections');
-                }}
-                className="group cursor-pointer flex flex-col overflow-hidden bg-[#111111] shadow-[0_4px_20px_rgba(0,0,0,0.06)] hover:shadow-[0_12px_32px_rgba(0,0,0,0.18)] transition-all duration-500 rounded-none"
-              >
-                <div className="w-full aspect-[16/10] overflow-hidden bg-[#ECE4DC] relative">
-                  <img
-                    src={kidsRings}
-                    alt="Kids' Rings - MANISH & CO"
-                    className="w-full h-full object-cover transition-transform duration-700 ease-out group-hover:scale-105"
-                    loading="lazy"
-                  />
-                  <div className="absolute inset-0 bg-black/0 group-hover:bg-black/10 transition-colors duration-300 pointer-events-none" />
-                </div>
-                <div className="bg-[#111111] px-5 py-3.5 sm:py-4 flex items-center justify-between text-white border-t border-white/5">
-                  <span className="font-serif text-base sm:text-[17px] tracking-wide text-white/95 font-medium group-hover:text-[#D5C0A5] transition-colors">
-                    Rings
-                  </span>
-                  <span className="text-sm sm:text-base font-light text-white/80 transition-transform duration-300 group-hover:translate-x-1.5 group-hover:text-[#D5C0A5]">
-                    →
-                  </span>
-                </div>
-              </div>
-
-              {/* Card 2: Chains */}
-              <div
-                onClick={() => {
-                  triggerAudio('click');
-                  if (typeof setGenderFilter === 'function') setGenderFilter('kids');
-                  changeCategoryTab?.('Chains', 'all', 'kids');
-                  navigateTo('collections');
-                }}
-                className="group cursor-pointer flex flex-col overflow-hidden bg-[#111111] shadow-[0_4px_20px_rgba(0,0,0,0.06)] hover:shadow-[0_12px_32px_rgba(0,0,0,0.18)] transition-all duration-500 rounded-none"
-              >
-                <div className="w-full aspect-[16/10] overflow-hidden bg-[#ECE4DC] relative">
-                  <img
-                    src={kidsChains}
-                    alt="Kids' Chains - MANISH & CO"
-                    className="w-full h-full object-cover transition-transform duration-700 ease-out group-hover:scale-105"
-                    loading="lazy"
-                  />
-                  <div className="absolute inset-0 bg-black/0 group-hover:bg-black/10 transition-colors duration-300 pointer-events-none" />
-                </div>
-                <div className="bg-[#111111] px-5 py-3.5 sm:py-4 flex items-center justify-between text-white border-t border-white/5">
-                  <span className="font-serif text-base sm:text-[17px] tracking-wide text-white/95 font-medium group-hover:text-[#D5C0A5] transition-colors">
-                    Chains
-                  </span>
-                  <span className="text-sm sm:text-base font-light text-white/80 transition-transform duration-300 group-hover:translate-x-1.5 group-hover:text-[#D5C0A5]">
-                    →
-                  </span>
-                </div>
-              </div>
-
-              {/* Card 3: Bracelets */}
+              {/* Card 1: Nazariya & Bracelets */}
               <div
                 onClick={() => {
                   triggerAudio('click');
@@ -1223,15 +1165,199 @@ export default function Home({
                 <div className="w-full aspect-[16/10] overflow-hidden bg-[#ECE4DC] relative">
                   <img
                     src={kidsBracelets}
-                    alt="Kids' Bracelets - MANISH & CO"
-                    className="w-full h-full object-cover transition-transform duration-700 ease-out group-hover:scale-105"
+                    alt="Kids' Nazariya & Bracelets - MANISH & CO"
+                    className="w-full h-full object-cover object-center transition-transform duration-700 ease-out group-hover:scale-105"
                     loading="lazy"
                   />
                   <div className="absolute inset-0 bg-black/0 group-hover:bg-black/10 transition-colors duration-300 pointer-events-none" />
                 </div>
                 <div className="bg-[#111111] px-5 py-3.5 sm:py-4 flex items-center justify-between text-white border-t border-white/5">
                   <span className="font-serif text-base sm:text-[17px] tracking-wide text-white/95 font-medium group-hover:text-[#D5C0A5] transition-colors">
-                    Bracelets
+                    Nazariya &amp; Bracelets
+                  </span>
+                  <span className="text-sm sm:text-base font-light text-white/80 transition-transform duration-300 group-hover:translate-x-1.5 group-hover:text-[#D5C0A5]">
+                    →
+                  </span>
+                </div>
+              </div>
+
+              {/* Card 2: Chains & Pendants */}
+              <div
+                onClick={() => {
+                  triggerAudio('click');
+                  if (typeof setGenderFilter === 'function') setGenderFilter('kids');
+                  changeCategoryTab?.('Pendants', 'all', 'kids');
+                  navigateTo('collections');
+                }}
+                className="group cursor-pointer flex flex-col overflow-hidden bg-[#111111] shadow-[0_4px_20px_rgba(0,0,0,0.06)] hover:shadow-[0_12px_32px_rgba(0,0,0,0.18)] transition-all duration-500 rounded-none"
+              >
+                <div className="w-full aspect-[16/10] overflow-hidden bg-[#ECE4DC] relative">
+                  <img
+                    src={kidsChains}
+                    alt="Kids' Chains & Pendants - MANISH & CO"
+                    className="w-full h-full object-cover object-center transition-transform duration-700 ease-out group-hover:scale-105"
+                    loading="lazy"
+                  />
+                  <div className="absolute inset-0 bg-black/0 group-hover:bg-black/10 transition-colors duration-300 pointer-events-none" />
+                </div>
+                <div className="bg-[#111111] px-5 py-3.5 sm:py-4 flex items-center justify-between text-white border-t border-white/5">
+                  <span className="font-serif text-base sm:text-[17px] tracking-wide text-white/95 font-medium group-hover:text-[#D5C0A5] transition-colors">
+                    Chains &amp; Pendants
+                  </span>
+                  <span className="text-sm sm:text-base font-light text-white/80 transition-transform duration-300 group-hover:translate-x-1.5 group-hover:text-[#D5C0A5]">
+                    →
+                  </span>
+                </div>
+              </div>
+
+              {/* Card 3: Baby Kadas & Bangles */}
+              <div
+                onClick={() => {
+                  triggerAudio('click');
+                  if (typeof setGenderFilter === 'function') setGenderFilter('kids');
+                  changeCategoryTab?.('Bangles', 'all', 'kids');
+                  navigateTo('collections');
+                }}
+                className="group cursor-pointer flex flex-col overflow-hidden bg-[#111111] shadow-[0_4px_20px_rgba(0,0,0,0.06)] hover:shadow-[0_12px_32px_rgba(0,0,0,0.18)] transition-all duration-500 rounded-none"
+              >
+                <div className="w-full aspect-[16/10] overflow-hidden bg-[#ECE4DC] relative">
+                  <img
+                    src={kidsKadas}
+                    alt="Kids' Baby Kadas & Bangles - MANISH & CO"
+                    className="w-full h-full object-cover object-center transition-transform duration-700 ease-out group-hover:scale-105"
+                    loading="lazy"
+                  />
+                  <div className="absolute inset-0 bg-black/0 group-hover:bg-black/10 transition-colors duration-300 pointer-events-none" />
+                </div>
+                <div className="bg-[#111111] px-5 py-3.5 sm:py-4 flex items-center justify-between text-white border-t border-white/5">
+                  <span className="font-serif text-base sm:text-[17px] tracking-wide text-white/95 font-medium group-hover:text-[#D5C0A5] transition-colors">
+                    Baby Kadas &amp; Bangles
+                  </span>
+                  <span className="text-sm sm:text-base font-light text-white/80 transition-transform duration-300 group-hover:translate-x-1.5 group-hover:text-[#D5C0A5]">
+                    →
+                  </span>
+                </div>
+              </div>
+            </div>
+
+          </div>
+        </section>
+
+        {/* ==========================================================
+          EDITORIAL SHOWCASE 04: GIFT'S COLLECTION (SACRED CELEBRATIONS)
+          ========================================================== */}
+        <section id="gifts-collection" className="w-full py-12 sm:py-16 bg-[#F5ECE4] border-b border-[#E8DFD5] select-none">
+          <div className="max-w-[1536px] mx-auto px-6 sm:px-10 lg:px-14">
+            
+            {/* Editorial Header */}
+            <div className="mb-6 sm:mb-8 text-left">
+              <span className="inline-block text-[#8C6D46] text-xs sm:text-[13px] font-sans font-semibold tracking-[0.28em] uppercase mb-1.5">
+                04 / SACRED &amp; CELEBRATION
+              </span>
+              <div className="flex items-center justify-between gap-4">
+                <div className="flex items-center gap-6 flex-1 min-w-0">
+                  <h2 
+                    className="text-3xl sm:text-4xl lg:text-[46px] font-bold text-[#1A1817] leading-tight shrink-0"
+                    style={{ fontFamily: "'Cormorant Garamond', 'Playfair Display', Georgia, serif" }}
+                  >
+                    Gift's Collection
+                  </h2>
+                  <div className="hidden sm:block h-[1px] bg-[#D6CABE] flex-1 max-w-[260px] lg:max-w-[340px]" />
+                </div>
+                <button
+                  onClick={() => {
+                    triggerAudio('click');
+                    navigateTo('gold-coins');
+                  }}
+                  className="text-[#1A1817] hover:text-[#8C6D46] font-sans text-xs sm:text-[13px] font-semibold tracking-[0.16em] uppercase inline-flex items-center gap-1.5 transition-colors cursor-pointer group shrink-0"
+                >
+                  <span>View All</span>
+                  <span className="text-sm font-light transition-transform duration-300 group-hover:translate-x-1">→</span>
+                </button>
+              </div>
+              <p className="text-[#6F6862] text-xs sm:text-sm font-sans mt-2 font-normal">
+                Auspicious 999 fine silver coins, sacred pooja articles, and royal heirloom keepsakes.
+              </p>
+            </div>
+
+            {/* 3 Showcase Cards */}
+            <div className="grid grid-cols-1 md:grid-cols-3 gap-5 sm:gap-6 lg:gap-7">
+              {/* Card 1: Silver Coins & Bullion */}
+              <div
+                onClick={() => {
+                  triggerAudio('click');
+                  navigateTo('gold-coins');
+                }}
+                className="group cursor-pointer flex flex-col overflow-hidden bg-[#111111] shadow-[0_4px_20px_rgba(0,0,0,0.06)] hover:shadow-[0_12px_32px_rgba(0,0,0,0.18)] transition-all duration-500 rounded-none"
+              >
+                <div className="w-full aspect-[16/10] overflow-hidden bg-[#ECE4DC] relative">
+                  <img
+                    src={giftsCoins}
+                    alt="Pure Silver Coins & Bars - MANISH & CO"
+                    className="w-full h-full object-cover object-center transition-transform duration-700 ease-out group-hover:scale-105"
+                    loading="lazy"
+                  />
+                  <div className="absolute inset-0 bg-black/0 group-hover:bg-black/10 transition-colors duration-300 pointer-events-none" />
+                </div>
+                <div className="bg-[#111111] px-5 py-3.5 sm:py-4 flex items-center justify-between text-white border-t border-white/5">
+                  <span className="font-serif text-base sm:text-[17px] tracking-wide text-white/95 font-medium group-hover:text-[#D5C0A5] transition-colors">
+                    Silver Coins &amp; Bullion
+                  </span>
+                  <span className="text-sm sm:text-base font-light text-white/80 transition-transform duration-300 group-hover:translate-x-1.5 group-hover:text-[#D5C0A5]">
+                    →
+                  </span>
+                </div>
+              </div>
+
+              {/* Card 2: Pooja Silver Articles */}
+              <div
+                onClick={() => {
+                  triggerAudio('click');
+                  changeCategoryTab?.('Silver', 'all');
+                  navigateTo('collections');
+                }}
+                className="group cursor-pointer flex flex-col overflow-hidden bg-[#111111] shadow-[0_4px_20px_rgba(0,0,0,0.06)] hover:shadow-[0_12px_32px_rgba(0,0,0,0.18)] transition-all duration-500 rounded-none"
+              >
+                <div className="w-full aspect-[16/10] overflow-hidden bg-[#ECE4DC] relative">
+                  <img
+                    src={giftsPooja}
+                    alt="Pooja Silver Articles - MANISH & CO"
+                    className="w-full h-full object-cover object-center transition-transform duration-700 ease-out group-hover:scale-105"
+                    loading="lazy"
+                  />
+                  <div className="absolute inset-0 bg-black/0 group-hover:bg-black/10 transition-colors duration-300 pointer-events-none" />
+                </div>
+                <div className="bg-[#111111] px-5 py-3.5 sm:py-4 flex items-center justify-between text-white border-t border-white/5">
+                  <span className="font-serif text-base sm:text-[17px] tracking-wide text-white/95 font-medium group-hover:text-[#D5C0A5] transition-colors">
+                    Pooja Silver Articles
+                  </span>
+                  <span className="text-sm sm:text-base font-light text-white/80 transition-transform duration-300 group-hover:translate-x-1.5 group-hover:text-[#D5C0A5]">
+                    →
+                  </span>
+                </div>
+              </div>
+
+              {/* Card 3: Keepsakes & Heirlooms */}
+              <div
+                onClick={() => {
+                  triggerAudio('click');
+                  changeCategoryTab?.('Collections', 'all');
+                  navigateTo('collections');
+                }}
+                className="group cursor-pointer flex flex-col overflow-hidden bg-[#111111] shadow-[0_4px_20px_rgba(0,0,0,0.06)] hover:shadow-[0_12px_32px_rgba(0,0,0,0.18)] transition-all duration-500 rounded-none"
+              >
+                <div className="w-full aspect-[16/10] overflow-hidden bg-[#ECE4DC] relative">
+                  <img
+                    src={giftsKeepsakes}
+                    alt="Royal Keepsakes & Gifting - MANISH & CO"
+                    className="w-full h-full object-cover object-center transition-transform duration-700 ease-out group-hover:scale-105"
+                    loading="lazy"
+                  />
+                  <div className="absolute inset-0 bg-black/0 group-hover:bg-black/10 transition-colors duration-300 pointer-events-none" />
+                </div>
+                <div className="bg-[#111111] px-5 py-3.5 sm:py-4 flex items-center justify-between text-white border-t border-white/5">
+                  <span className="font-serif text-base sm:text-[17px] tracking-wide text-white/95 font-medium group-hover:text-[#D5C0A5] transition-colors">
+                    Keepsakes &amp; Heirlooms
                   </span>
                   <span className="text-sm sm:text-base font-light text-white/80 transition-transform duration-300 group-hover:translate-x-1.5 group-hover:text-[#D5C0A5]">
                     →
