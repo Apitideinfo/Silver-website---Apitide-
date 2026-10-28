@@ -23,6 +23,7 @@ import { BUSINESS } from '../config/constants';
 import hrLogo from '../assets/logo_new.png';
 import heritageBg from '../assets/heritage_palace_interior.png';
 import royalBride from '../assets/royal_indian_bride.png';
+import aboutHeritageModern from '../assets/about_heritage_modern.jpeg';
 import luxuryShowroom from '../assets/luxury_showroom.png';
 import kadaImg from '../assets/gold_kada.png';
 import solitaireImg from '../assets/solitaries.png';
@@ -159,11 +160,11 @@ export default function AboutUs({ navigateTo, triggerAudio: triggerAudioProp }) 
           <div className="relative mx-auto max-w-[480px] w-full">
             <div className="relative rounded-[28px] overflow-hidden border border-solid border-[#E6DFD3] shadow-2xl bg-white p-3">
               <img 
-                src={royalBride} 
-                alt="MANISH & CO Royal Heritage" 
+                src={aboutHeritageModern} 
+                alt="MANISH & CO - Where Heritage Silversmithing Meets Modern Elegance" 
                 loading="lazy"
                 decoding="async"
-                className="w-full h-[460px] object-cover rounded-[22px]" 
+                className="w-full h-[460px] object-cover object-top rounded-[22px]" 
               />
               <div className="absolute inset-0 bg-gradient-to-t from-black/60 via-transparent to-transparent rounded-[28px] pointer-events-none" />
               

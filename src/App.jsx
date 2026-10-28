@@ -39,62 +39,8 @@ const lazyWithRetry = (importFn, name = 'Component') =>
 
 const Admin = lazyWithRetry(() => import('./Admin'), 'Admin');
 
-// Web Audio API dynamic Sound Synth
-class LuxurySynth {
-  constructor() {
-    this.ctx = null;
-    this.muted = false;
-  }
-  init() {
-    if (!this.ctx) {
-      this.ctx = new (window.AudioContext || window.webkitAudioContext)();
-    }
-  }
-  playClick() {
-    if (this.muted) return;
-    this.init();
-    try {
-      const osc = this.ctx.createOscillator();
-      const gain = this.ctx.createGain();
-      osc.type = 'sine';
-      osc.frequency.setValueAtTime(987.77, this.ctx.currentTime); // Elegant B5 chime note
-      osc.frequency.exponentialRampToValueAtTime(1318.51, this.ctx.currentTime + 0.08); // slides to E6
-
-      gain.gain.setValueAtTime(0.015, this.ctx.currentTime);
-      gain.gain.exponentialRampToValueAtTime(0.0001, this.ctx.currentTime + 0.1);
-
-      osc.connect(gain);
-      gain.connect(this.ctx.destination);
-      osc.start();
-      osc.stop(this.ctx.currentTime + 0.1);
-    } catch {
-      // Audio context error ignored safely
-    }
-  }
-  playShimmer() {
-    if (this.muted) return;
-    this.init();
-    try {
-      const now = this.ctx.currentTime;
-      const gain = this.ctx.createGain();
-      gain.gain.setValueAtTime(0.006, now);
-      gain.gain.exponentialRampToValueAtTime(0.0001, now + 0.8);
-      gain.connect(this.ctx.destination);
-
-      const notes = [523.25, 659.25, 783.99, 1046.50, 1318.51]; // C major luxury arpeggio
-      notes.forEach((freq, idx) => {
-        const osc = this.ctx.createOscillator();
-        osc.type = 'sine';
-        osc.frequency.setValueAtTime(freq, now + idx * 0.06);
-        osc.connect(gain);
-        osc.start(now + idx * 0.06);
-        osc.stop(now + 0.8);
-      });
-    } catch {
-      // Audio context error ignored safely
-    }
-  }
-}
+// Audio disabled per client request
+const triggerAudio = () => {};
 
 import Home from './pages/Home';
 const Collections = lazyWithRetry(() => import('./pages/Collections'), 'Collections');
@@ -168,28 +114,9 @@ function AppContent() {
 
   const [detailProduct, setDetailProduct] = useState(null);
 
-  // LuxurySynth instance — singleton for this component lifecycle
-  const synth = React.useRef(new LuxurySynth()).current;
-
-  // Sound triggering helper — uses Web Audio API synth, no file imports needed
-  const triggerAudio = (type) => {
-    if (!soundEnabled) return;
-    try {
-      if (type === 'shimmer') {
-        synth.playShimmer();
-      } else {
-        synth.playClick();
-      }
-    } catch (e) {
-      // Audio context errors are non-fatal, silently ignored
-    }
-  };
-
-  const toggleSound = () => {
-    const nextVal = !soundEnabled;
-    setSoundEnabled(nextVal);
-    StorageService.set('hrj_sound_enabled', nextVal);
-  };
+  // Sound triggers disabled across application per client feedback
+  const triggerAudio = () => {};
+  const toggleSound = undefined;
 
   // Browser Routing coordinates
   const navigateTo = (page) => {

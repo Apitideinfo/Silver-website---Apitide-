@@ -6,8 +6,6 @@ import {
   Heart, 
   Menu, 
   X, 
-  Volume2, 
-  VolumeX,
   ChevronRight,
   ShieldCheck,
   Gem,
@@ -100,36 +98,35 @@ export default function Navbar({
       <div className="max-w-[1536px] mx-auto px-4 sm:px-6 lg:px-10 h-20 flex items-center justify-between">
         
         {/* ==========================================================
-            LEFT: BRAND LOGO WORDMARK (Reference Screenshot Design)
+            LEFT: BRAND LOGO WORDMARK (Screenshot Exact: White Subtitle, Single-Line Mobile)
             ========================================================== */}
         <button
           onClick={() => {
-            triggerAudio('click');
             navigateTo('home');
           }}
-          className="flex items-center gap-3 focus:outline-none cursor-pointer group text-left border-none bg-transparent"
+          className="flex items-center gap-2 sm:gap-3 focus:outline-none cursor-pointer group text-left border-none bg-transparent shrink-0"
         >
           <img 
             src={brandLogo} 
             alt="M&CO Fine Jewellery" 
-            className="w-10 h-10 sm:w-11 sm:h-11 rounded-full object-contain bg-white shadow-[0_2px_12px_rgba(0,0,0,0.4)] border border-white/20 transition-transform duration-300 group-hover:scale-105 shrink-0"
+            className="w-9 h-9 sm:w-11 sm:h-11 rounded-full object-contain bg-white shadow-[0_2px_12px_rgba(0,0,0,0.4)] border border-white/20 transition-transform duration-300 group-hover:scale-105 shrink-0"
           />
-          <div className="flex flex-col items-start">
+          <div className="flex flex-col items-start min-w-0">
             <span 
-              className="font-serif text-[19px] sm:text-[23px] font-bold tracking-[0.18em] text-white uppercase leading-none drop-shadow-sm group-hover:text-[#E5C396] transition-colors"
+              className="font-serif text-[17px] xs:text-[19px] sm:text-[23px] font-bold tracking-[0.16em] sm:tracking-[0.18em] text-white uppercase leading-none drop-shadow-sm group-hover:text-[#E5C396] transition-colors whitespace-nowrap"
               style={{ fontFamily: "'Cormorant Garamond', 'Playfair Display', Georgia, serif" }}
             >
               MANISH &amp; CO
             </span>
-            <div className="flex items-center gap-2 mt-1.5 w-full">
-              <span className="h-[1px] flex-1 bg-gradient-to-r from-transparent to-[#C5A880]/70" />
+            <div className="flex items-center gap-1.5 sm:gap-2 mt-1.5 w-full">
+              <span className="h-[1px] flex-1 bg-gradient-to-r from-transparent to-white/70" />
               <span 
-                className="font-serif text-[8.5px] sm:text-[9.5px] tracking-[0.28em] text-[#C5A880] uppercase font-semibold whitespace-nowrap"
+                className="font-serif text-[8px] sm:text-[9.5px] tracking-[0.24em] sm:tracking-[0.28em] text-white/90 uppercase font-semibold whitespace-nowrap"
                 style={{ fontFamily: "'Cormorant Garamond', 'Playfair Display', Georgia, serif" }}
               >
                 FINE JEWELLERY
               </span>
-              <span className="h-[1px] flex-1 bg-gradient-to-l from-transparent to-[#C5A880]/70" />
+              <span className="h-[1px] flex-1 bg-gradient-to-l from-transparent to-white/70" />
             </div>
           </div>
         </button>
@@ -219,24 +216,6 @@ export default function Navbar({
             RIGHT: ICONS (Search, User, Cart) + Mobile Hamburger
             ========================================================== */}
         <div className="flex items-center gap-3 sm:gap-4">
-          
-          {/* Sound Toggle (Discreet Luxury Feature) */}
-          {toggleSound && (
-            <button
-              onClick={() => {
-                toggleSound();
-                triggerAudio('click');
-              }}
-              title={soundEnabled ? "Mute luxury sound effects" : "Enable luxury sound effects"}
-              className="p-2 text-gray-300 hover:text-white transition-colors cursor-pointer focus:outline-none hidden sm:flex items-center justify-center rounded-full hover:bg-white/5"
-            >
-              {soundEnabled ? (
-                <Volume2 className="w-5 h-5" strokeWidth={1.75} />
-              ) : (
-                <VolumeX className="w-5 h-5 text-gray-500" strokeWidth={1.75} />
-              )}
-            </button>
-          )}
 
           {/* Search Trigger Icon */}
           <button
@@ -420,15 +399,7 @@ export default function Navbar({
 
           <div className="pt-3 border-t border-white/10 flex items-center justify-between text-xs text-gray-400">
             <span>925 Sterling Silver • BIS Hallmarked</span>
-            {toggleSound && (
-              <button 
-                onClick={toggleSound}
-                className="flex items-center gap-1.5 text-[#C5A880]"
-              >
-                {soundEnabled ? <Volume2 className="w-4 h-4" /> : <VolumeX className="w-4 h-4" />}
-                <span>{soundEnabled ? 'Sound On' : 'Sound Off'}</span>
-              </button>
-            )}
+            <span className="text-[#C5A880]">Authentic Luxury</span>
           </div>
         </div>
       )}

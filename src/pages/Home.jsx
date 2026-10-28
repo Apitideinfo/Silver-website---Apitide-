@@ -5,7 +5,7 @@ import { useRates } from '../hooks/useRates';
 import Modal from '../components/Modal';
 import BookingForm from '../forms/BookingForm';
 import { getOptimizedImageUrl } from '../utils/imageOptimizer';
-import { ShieldCheck, Gem, Truck, Package, ArrowRight } from 'lucide-react';
+import { ShieldCheck, Gem, Truck, Package, ArrowRight, Star, Sparkles, CheckCircle2, ChevronRight } from 'lucide-react';
 
 // Category Image Fallbacks
 import solitariesImg from '../assets/solitaries.png';
@@ -63,6 +63,9 @@ import bannerBuiltOnPurity from '../assets/built_on_purity_925_fine_silver.png';
 import bannerCraftsmanshipJourney from '../assets/craftsmanship_in_every_silver_detail.png';
 import bannerStoreBanner from '../assets/banner_store_banner.png';
 import bannerPureSilverCollection from '../assets/banner_pure_silver_collection.png';
+import madePersonalSketch from '../assets/made_personal_sketch.jpg';
+import gemsCollectionBanner from '../assets/gems_collection_banner.jpg';
+import goldPlatingBanner from '../assets/gold_plating_banner.jpg';
 
 // Clean Transparent Category Images
 import cleanBangles from '../assets/clean_categories/bangles.png';
@@ -343,37 +346,53 @@ export default function Home({
             className="max-w-[640px] text-left"
           >
             
+            {/* Animated Royal Welcome Badge (Client Feedback #5: Welcome Animation) */}
+            <motion.div
+              initial={{ opacity: 0, scale: 0.9, y: 15 }}
+              animate={{ opacity: 1, scale: 1, y: 0 }}
+              transition={{ duration: 0.8, ease: "easeOut" }}
+              className="inline-flex items-center gap-2.5 px-4 py-1.5 rounded-full bg-gradient-to-r from-[#C5A880]/25 via-[#C5A880]/10 to-transparent border border-[#C5A880]/40 backdrop-blur-md mb-4 sm:mb-5 shadow-[0_4px_20px_rgba(197,168,128,0.2)] group"
+            >
+              <Sparkles className="w-3.5 h-3.5 text-[#E5C396] animate-pulse" />
+              <span className="text-[10px] sm:text-[11px] font-sans font-bold tracking-[0.28em] text-[#E5C396] uppercase">
+                WELCOME TO MANISH &amp; CO
+              </span>
+              <span className="w-1.5 h-1.5 rounded-full bg-[#D4AF37] animate-ping" />
+            </motion.div>
+
             {/* Eyebrow */}
             <motion.div
               initial={{ opacity: 0, y: 15 }}
               animate={{ opacity: 1, y: 0 }}
-              transition={{ duration: 0.6, delay: 0.1 }}
+              transition={{ duration: 0.6, delay: 0.15 }}
               className="flex items-center gap-2 mb-3 sm:mb-4"
             >
               <span className="text-[#C5A880] text-xs font-serif select-none">✦</span>
-              <span className="inline-block text-[#C5A880] text-xs sm:text-[13px] font-sans font-medium tracking-[0.28em] uppercase">
-                TIMELESS BY NATURE
+              <span className="inline-block text-[#C5A880] text-xs sm:text-[13px] font-sans font-semibold tracking-[0.28em] uppercase">
+                TIMELESS BY NATURE • ESTD. 1952
               </span>
             </motion.div>
 
-            {/* Main Luxury Headline (Screenshot Exact Typography) */}
+            {/* Main Luxury Headline with Shimmering Gradient and Presence */}
             <motion.h1 
-              initial={{ opacity: 0, y: 20 }}
+              initial={{ opacity: 0, y: 25 }}
               animate={{ opacity: 1, y: 0 }}
-              transition={{ duration: 0.8, delay: 0.2, ease: [0.16, 1, 0.3, 1] }}
-              className="text-4xl sm:text-6xl lg:text-[70px] xl:text-[78px] font-bold uppercase text-white leading-[1.03] tracking-[0.03em] drop-shadow-[0_4px_25px_rgba(0,0,0,0.9)]"
+              transition={{ duration: 0.9, delay: 0.25, ease: [0.16, 1, 0.3, 1] }}
+              className="text-4xl sm:text-6xl lg:text-[72px] xl:text-[80px] font-bold uppercase text-white leading-[1.02] tracking-[0.03em] drop-shadow-[0_4px_30px_rgba(0,0,0,0.95)]"
               style={{ fontFamily: "'Cormorant Garamond', 'Playfair Display', Georgia, serif" }}
             >
               MORE THAN<br />
-              JEWELLERY
+              <span className="bg-gradient-to-r from-white via-[#F5E6D3] to-white bg-clip-text text-transparent">
+                JEWELLERY
+              </span>
             </motion.h1>
 
             {/* Subtitle Description */}
             <motion.p 
               initial={{ opacity: 0, y: 15 }}
               animate={{ opacity: 1, y: 0 }}
-              transition={{ duration: 0.7, delay: 0.35 }}
-              className="text-gray-300 text-xs sm:text-sm lg:text-[15px] font-sans font-medium tracking-[0.18em] uppercase mt-4 sm:mt-5 mb-7 sm:mb-9 leading-relaxed max-w-[460px]"
+              transition={{ duration: 0.7, delay: 0.38 }}
+              className="text-gray-200 text-xs sm:text-sm lg:text-[15px] font-sans font-medium tracking-[0.18em] uppercase mt-4 sm:mt-5 mb-7 sm:mb-9 leading-relaxed max-w-[480px]"
             >
               925 FINE SILVER JEWELLERY<br className="hidden sm:inline" /> FOR A MODERN YOU
             </motion.p>
@@ -656,6 +675,569 @@ export default function Home({
               </div>
 
             </div>
+          </div>
+        </section>
+
+        {/* ==========================================================
+          CLIENT FEEDBACK SECTION 1: BEST SELLERS (Feedback #6.1)
+          ========================================================== */}
+        <section id="best-sellers" className="w-full py-14 sm:py-20 bg-[#FDFBF7] border-b border-[#EAE3D9] select-none">
+          <div className="max-w-[1536px] mx-auto px-6 sm:px-10 lg:px-14">
+            
+            {/* Editorial Header */}
+            <div className="flex flex-col sm:flex-row items-start sm:items-end justify-between gap-4 mb-10 sm:mb-12">
+              <div className="text-left">
+                <span className="inline-block text-[#8C6D46] text-xs sm:text-[13px] font-sans font-semibold tracking-[0.28em] uppercase mb-2">
+                  CURATED PATRON FAVORITES
+                </span>
+                <h2 
+                  className="text-3xl sm:text-4xl lg:text-[46px] font-bold text-[#1A1817] leading-tight"
+                  style={{ fontFamily: "'Cormorant Garamond', 'Playfair Display', Georgia, serif" }}
+                >
+                  Best Sellers
+                </h2>
+                <p className="text-[#6F6862] text-xs sm:text-sm font-sans mt-2 max-w-xl font-normal">
+                  Our most cherished BIS hallmarked 925 sterling silver creations, celebrated by over 25,000 patrons across India.
+                </p>
+              </div>
+
+              <button
+                onClick={() => {
+                  changeCategoryTab?.('Collections');
+                  navigateTo('collections');
+                }}
+                className="text-[#1A1817] hover:text-[#8C6D46] font-sans text-xs sm:text-[13px] font-semibold tracking-[0.18em] uppercase inline-flex items-center gap-2 transition-colors cursor-pointer group shrink-0"
+              >
+                <span>Explore All Icons</span>
+                <span className="text-sm font-light transition-transform duration-300 group-hover:translate-x-1.5">→</span>
+              </button>
+            </div>
+
+            {/* 4 Best Seller Cards */}
+            <div className="grid grid-cols-2 lg:grid-cols-4 gap-4 sm:gap-6 lg:gap-7">
+              {[
+                {
+                  id: 'bs-sapphire-ring',
+                  title: 'Sapphire Solitaire Ring',
+                  cat: 'Rings',
+                  purity: '925 Silver',
+                  price: '₹1,899',
+                  rating: '4.9',
+                  reviews: '142',
+                  img: colRings,
+                  badge: 'MOST COVETED'
+                },
+                {
+                  id: 'bs-curb-bracelet',
+                  title: 'Royal Cuban Bracelet',
+                  cat: 'Bracelets',
+                  purity: '925 Silver',
+                  price: '₹1,499',
+                  rating: '5.0',
+                  reviews: '98',
+                  img: colBracelets,
+                  badge: 'TOP RATED'
+                },
+                {
+                  id: 'bs-compass-pendant',
+                  title: 'North Star Compass Pendant',
+                  cat: 'Pendants',
+                  purity: '925 Silver',
+                  price: '₹999',
+                  rating: '4.9',
+                  reviews: '215',
+                  img: colPendants,
+                  badge: 'BESTSELLER'
+                },
+                {
+                  id: 'bs-curb-chain',
+                  title: 'Miami Solid Curb Chain',
+                  cat: 'Chains',
+                  purity: '925 Silver',
+                  price: '₹1,999',
+                  rating: '4.8',
+                  reviews: '86',
+                  img: colChains,
+                  badge: 'ROYAL HEIRLOOM'
+                }
+              ].map((item) => (
+                <div
+                  key={item.id}
+                  onClick={() => {
+                    changeCategoryTab?.(item.cat);
+                    navigateTo('collections');
+                  }}
+                  className="group cursor-pointer flex flex-col bg-white border border-[#E8DFD5] hover:border-[#8C6D46]/60 shadow-[0_4px_16px_rgba(0,0,0,0.04)] hover:shadow-[0_12px_32px_rgba(140,109,70,0.18)] transition-all duration-500 overflow-hidden text-left"
+                >
+                  {/* Image Container with Badge */}
+                  <div className="w-full aspect-[4/5] overflow-hidden bg-[#FAF6F2] relative">
+                    <img 
+                      src={item.img} 
+                      alt={item.title}
+                      loading="lazy"
+                      className="w-full h-full object-cover transition-transform duration-700 ease-out group-hover:scale-106"
+                    />
+                    <div className="absolute inset-0 bg-black/0 group-hover:bg-black/5 transition-colors duration-300 pointer-events-none" />
+                    
+                    {/* Badge */}
+                    <span className="absolute top-2.5 left-2.5 bg-[#050B14]/90 backdrop-blur-xs text-[#E5C396] text-[8.5px] sm:text-[9.5px] font-sans font-bold tracking-[0.16em] uppercase px-2.5 py-1 rounded-[1px] border border-[#C5A880]/30 shadow-xs">
+                      {item.badge}
+                    </span>
+
+                    {/* Quick View Pill */}
+                    <div className="absolute bottom-3 inset-x-3 opacity-0 group-hover:opacity-100 transition-opacity duration-300">
+                      <div className="w-full py-2 bg-[#8C6D46] text-white text-[10px] sm:text-[11px] font-sans font-bold tracking-[0.18em] uppercase text-center shadow-lg">
+                        VIEW PIECE →
+                      </div>
+                    </div>
+                  </div>
+
+                  {/* Card Info */}
+                  <div className="p-3.5 sm:p-5 flex flex-col flex-1 justify-between bg-white">
+                    <div>
+                      <div className="flex items-center justify-between gap-1 text-[10px] sm:text-[11px] text-[#8C6D46] font-semibold tracking-wider uppercase mb-1">
+                        <span>{item.purity}</span>
+                        <span className="flex items-center gap-1 text-amber-600">
+                          <Star className="w-3 h-3 fill-amber-500 text-amber-500" />
+                          <span>{item.rating}</span>
+                        </span>
+                      </div>
+                      <h3 
+                        className="font-serif text-sm sm:text-base lg:text-[17px] font-bold text-[#1A1817] group-hover:text-[#8C6D46] transition-colors line-clamp-1"
+                        style={{ fontFamily: "'Cormorant Garamond', 'Playfair Display', Georgia, serif" }}
+                      >
+                        {item.title}
+                      </h3>
+                    </div>
+
+                    <div className="flex items-center justify-between mt-3 pt-2.5 border-t border-[#F0EAE1]">
+                      <span className="font-serif text-base sm:text-lg font-bold text-[#1A1817]">
+                        {item.price}
+                      </span>
+                      <span className="text-[10px] sm:text-[11px] font-sans tracking-wider uppercase text-gray-500 group-hover:text-[#8C6D46] transition-colors font-medium">
+                        Shop Now →
+                      </span>
+                    </div>
+                  </div>
+                </div>
+              ))}
+            </div>
+
+          </div>
+        </section>
+
+        {/* ==========================================================
+          CLIENT FEEDBACK SECTION 2: CUSTOM DESIGNS (Screenshot 2 Match)
+          "MADE PERSONAL: Your Idea. Your Jewellery."
+          ========================================================== */}
+        <section 
+          id="custom-designs-made-personal" 
+          className="w-full bg-[#050B14] py-14 sm:py-20 lg:py-24 border-b border-white/10 select-none relative overflow-hidden text-left"
+        >
+          {/* Subtle Golden Mandala Corner Watermark */}
+          <div className="absolute top-0 right-0 w-[420px] h-[420px] bg-[#C5A880]/5 rounded-full blur-[90px] pointer-events-none" />
+          <div className="absolute bottom-0 left-0 w-[300px] h-[300px] bg-[#C5A880]/5 rounded-full blur-[80px] pointer-events-none" />
+
+          <div className="max-w-[1536px] mx-auto px-6 sm:px-10 lg:px-14 relative z-10">
+            <div className="grid grid-cols-1 lg:grid-cols-12 gap-10 lg:gap-14 items-center">
+              
+              {/* Left Column: Editorial Headline & Actions (Screenshot 2 Exact) */}
+              <div className="lg:col-span-5 text-left">
+                {/* Eyebrow */}
+                <span className="inline-block text-[#C5A880] text-xs sm:text-[13px] font-sans font-semibold tracking-[0.28em] uppercase mb-3 sm:mb-4">
+                  MADE PERSONAL
+                </span>
+
+                {/* Main Headline */}
+                <h2 
+                  className="text-3xl sm:text-5xl lg:text-[56px] xl:text-[62px] font-bold text-white leading-[1.05] mb-4 sm:mb-6"
+                  style={{ fontFamily: "'Cormorant Garamond', 'Playfair Display', Georgia, serif" }}
+                >
+                  Your Idea.<br />
+                  Your Jewellery.
+                </h2>
+
+                {/* Subtitle Description */}
+                <p className="text-gray-300 text-xs sm:text-sm lg:text-[15px] font-sans font-normal leading-relaxed mb-8 sm:mb-10 max-w-[440px]">
+                  Create a custom piece or meet us for a personal appointment to bring your vision to life.
+                </p>
+
+                {/* Two Action Buttons (Screenshot 2 Exact Design) */}
+                <div className="flex flex-wrap items-center gap-4 sm:gap-5">
+                  {/* Button 1: CUSTOM DESIGNS -> (Outlined) */}
+                  <button
+                    onClick={() => {
+                      setCustomDesignOpen(true);
+                    }}
+                    className="inline-flex items-center gap-2.5 px-6 sm:px-8 py-3.5 sm:py-4 border border-[#B09A82] hover:border-white text-white font-sans text-xs sm:text-[13px] font-semibold tracking-[0.18em] uppercase transition-all duration-300 hover:bg-white/10 cursor-pointer rounded-none active:scale-95"
+                  >
+                    <span>CUSTOM DESIGNS</span>
+                    <span className="text-sm font-light">→</span>
+                  </button>
+
+                  {/* Button 2: BOOK AN APPOINTMENT -> (Filled Gold) */}
+                  <button
+                    onClick={() => {
+                      setConsultationModal(true);
+                    }}
+                    className="inline-flex items-center gap-2.5 px-6 sm:px-8 py-3.5 sm:py-4 bg-[#8C6D46] hover:bg-[#A37B4D] text-white font-sans text-xs sm:text-[13px] font-semibold tracking-[0.18em] uppercase transition-all duration-300 shadow-[0_8px_25px_rgba(140,109,70,0.4)] cursor-pointer rounded-none active:scale-95"
+                  >
+                    <span>BOOK AN APPOINTMENT</span>
+                    <span className="text-sm font-light">→</span>
+                  </button>
+                </div>
+              </div>
+
+              {/* Right Column: Atelier Sketch Workbench Photo (Screenshot 2 Exact) */}
+              <div className="lg:col-span-7">
+                <div className="relative rounded-[2px] overflow-hidden border border-white/15 shadow-[0_20px_50px_rgba(0,0,0,0.8)] group">
+                  <img 
+                    src={madePersonalSketch} 
+                    alt="Atelier Sketch Desk - Made Personal: Your Idea. Your Jewellery."
+                    className="w-full h-auto max-h-[500px] object-cover transition-transform duration-700 ease-out group-hover:scale-103"
+                    loading="lazy"
+                  />
+                  <div className="absolute inset-0 bg-gradient-to-t from-black/50 via-transparent to-transparent pointer-events-none" />
+                  
+                  {/* Floating Atelier Badge */}
+                  <div className="absolute bottom-4 left-4 right-4 sm:bottom-6 sm:left-6 sm:right-6 bg-[#050B14]/85 backdrop-blur-md p-3.5 sm:p-4 border border-white/15 flex items-center justify-between">
+                    <div>
+                      <span className="text-[10px] text-[#C5A880] uppercase tracking-[0.2em] font-semibold block">
+                        HANDCRAFTED BESPOKE ATELIER
+                      </span>
+                      <p className="text-xs sm:text-sm text-white font-serif font-medium mt-0.5">
+                        Master Silversmith Consultation • 3D CAD Mockup • BIS 925 Hallmark
+                      </p>
+                    </div>
+                    <span className="hidden sm:inline-block text-[#C5A880] text-lg font-serif">✦</span>
+                  </div>
+                </div>
+              </div>
+
+            </div>
+          </div>
+        </section>
+
+        {/* ==========================================================
+          CLIENT FEEDBACK SECTION 3: GOLD PLATING (Feedback #6.2)
+          ========================================================== */}
+        <section id="gold-plating-section" className="w-full py-14 sm:py-20 bg-[#F5ECE4] border-b border-[#E8DFD5] select-none text-left">
+          <div className="max-w-[1536px] mx-auto px-6 sm:px-10 lg:px-14">
+            
+            {/* Editorial Header */}
+            <div className="flex flex-col lg:flex-row items-start lg:items-end justify-between gap-6 mb-10 sm:mb-12">
+              <div>
+                <span className="inline-block text-[#8C6D46] text-xs sm:text-[13px] font-sans font-semibold tracking-[0.28em] uppercase mb-2">
+                  18K DUAL TONE ROYALTY
+                </span>
+                <h2 
+                  className="text-3xl sm:text-4xl lg:text-[46px] font-bold text-[#1A1817] leading-tight"
+                  style={{ fontFamily: "'Cormorant Garamond', 'Playfair Display', Georgia, serif" }}
+                >
+                  Gold Plating Collection
+                </h2>
+                <p className="text-[#6F6862] text-xs sm:text-sm font-sans mt-2 max-w-xl font-normal leading-relaxed">
+                  Rich 18K yellow gold layered seamlessly over solid 925 sterling silver. Anti-tarnish, skin-friendly, and designed for royal radiance.
+                </p>
+              </div>
+
+              <button
+                onClick={() => {
+                  changeCategoryTab?.('Collections');
+                  navigateTo('collections');
+                }}
+                className="inline-flex items-center gap-2.5 px-8 py-3.5 bg-[#785B3C] hover:bg-[#8F6D48] active:scale-95 text-white font-sans text-xs sm:text-[12.5px] font-semibold tracking-[0.2em] uppercase transition-all duration-300 shadow-[0_4px_16px_rgba(120,91,60,0.25)] cursor-pointer rounded-none"
+              >
+                <span>SHOP GOLD PLATED</span>
+                <span className="text-sm font-light">→</span>
+              </button>
+            </div>
+
+            {/* Showcase Visual: Large 16:9 Gold Plating Banner with 3 Feature Badges */}
+            <div className="relative rounded-[2px] overflow-hidden border border-[#D6CABE] shadow-xl group mb-8">
+              <img 
+                src={goldPlatingBanner} 
+                alt="18K Gold Plated 925 Sterling Silver Jewellery"
+                className="w-full h-auto max-h-[460px] object-cover transition-transform duration-700 ease-out group-hover:scale-102"
+                loading="lazy"
+              />
+              <div className="absolute inset-0 bg-gradient-to-t from-black/75 via-black/20 to-transparent pointer-events-none" />
+
+              <div className="absolute bottom-6 left-6 right-6 sm:bottom-8 sm:left-10 sm:right-10 flex flex-col sm:flex-row items-start sm:items-end justify-between gap-4 text-white">
+                <div>
+                  <span className="text-[#F5D77F] text-xs font-sans font-bold tracking-[0.25em] uppercase block mb-1">
+                    ✦ 18 KARAT YELLOW GOLD VERMEIL
+                  </span>
+                  <h3 
+                    className="font-serif text-2xl sm:text-3xl lg:text-4xl font-bold leading-tight drop-shadow-md"
+                    style={{ fontFamily: "'Cormorant Garamond', 'Playfair Display', Georgia, serif" }}
+                  >
+                    The Warmth of Gold. The Purity of Silver.
+                  </h3>
+                </div>
+                <div className="flex items-center gap-6 text-xs sm:text-sm font-sans tracking-wide text-white/90">
+                  <span>• 18K Micron Plating</span>
+                  <span>• 925 Core</span>
+                  <span>• Lifetime Buyback</span>
+                </div>
+              </div>
+            </div>
+
+          </div>
+        </section>
+
+        {/* ==========================================================
+          CLIENT FEEDBACK SECTION 4: GEMS COLLECTION (Feedback #10)
+          ========================================================== */}
+        <section id="gems-collection-section" className="w-full py-14 sm:py-20 bg-[#050B14] border-b border-white/10 select-none text-left text-white">
+          <div className="max-w-[1536px] mx-auto px-6 sm:px-10 lg:px-14">
+            
+            {/* Editorial Header */}
+            <div className="flex flex-col lg:flex-row items-start lg:items-end justify-between gap-6 mb-10 sm:mb-12">
+              <div>
+                <span className="inline-block text-[#C5A880] text-xs sm:text-[13px] font-sans font-semibold tracking-[0.28em] uppercase mb-2">
+                  PRECIOUS &amp; NATURAL STONES
+                </span>
+                <h2 
+                  className="text-3xl sm:text-4xl lg:text-[46px] font-bold text-white leading-tight"
+                  style={{ fontFamily: "'Cormorant Garamond', 'Playfair Display', Georgia, serif" }}
+                >
+                  Gems Collection
+                </h2>
+                <p className="text-gray-300 text-xs sm:text-sm font-sans mt-2 max-w-xl font-normal leading-relaxed">
+                  Certified Royal Blue Sapphires, Zambian Emeralds, Burmese Rubies, and Tanzanites hand-set in hallmarked 925 fine silver.
+                </p>
+              </div>
+
+              <button
+                onClick={() => {
+                  changeCategoryTab?.('Collections');
+                  navigateTo('collections');
+                }}
+                className="inline-flex items-center gap-2.5 px-8 py-3.5 bg-[#8C6D46] hover:bg-[#A37B4D] active:scale-95 text-white font-sans text-xs sm:text-[12.5px] font-semibold tracking-[0.2em] uppercase transition-all duration-300 shadow-[0_8px_25px_rgba(140,109,70,0.35)] cursor-pointer rounded-none"
+              >
+                <span>EXPLORE ALL GEMS</span>
+                <span className="text-sm font-light">→</span>
+              </button>
+            </div>
+
+            {/* Gems Showcase Banner with 4 Gem Types */}
+            <div className="relative rounded-[2px] overflow-hidden border border-white/15 shadow-2xl group mb-8">
+              <img 
+                src={gemsCollectionBanner} 
+                alt="Sapphire, Emerald, Ruby & Tanzanite 925 Silver Jewellery"
+                className="w-full h-auto max-h-[460px] object-cover transition-transform duration-700 ease-out group-hover:scale-102"
+                loading="lazy"
+              />
+              <div className="absolute inset-0 bg-gradient-to-t from-[#050B14]/85 via-transparent to-transparent pointer-events-none" />
+
+              <div className="absolute bottom-6 left-6 right-6 sm:bottom-8 sm:left-10 sm:right-10 flex flex-col sm:flex-row items-start sm:items-end justify-between gap-4">
+                <div>
+                  <span className="text-[#E5C396] text-xs font-sans font-bold tracking-[0.25em] uppercase block mb-1">
+                    ✦ CERTIFIED NATURAL GEMSTONES
+                  </span>
+                  <h3 
+                    className="font-serif text-2xl sm:text-3xl lg:text-4xl font-bold leading-tight drop-shadow-md text-white"
+                    style={{ fontFamily: "'Cormorant Garamond', 'Playfair Display', Georgia, serif" }}
+                  >
+                    Earth's Rarest Hues. Forged in Pure Silver.
+                  </h3>
+                </div>
+              </div>
+            </div>
+
+            {/* 4 Gemstone Cards */}
+            <div className="grid grid-cols-2 md:grid-cols-4 gap-4 sm:gap-6">
+              {[
+                { name: 'Royal Sapphire', stone: 'Neelam', desc: 'Symbol of wisdom, regal grace & focus' },
+                { name: 'Zambian Emerald', stone: 'Panna', desc: 'Lush green harmony & prosperous clarity' },
+                { name: 'Burmese Ruby', stone: 'Manik', desc: 'Fiery passion, courage & noble power' },
+                { name: 'Royal Tanzanite', stone: 'Tanzanite', desc: 'Rare deep indigo African treasure' }
+              ].map((gem, idx) => (
+                <div 
+                  key={idx}
+                  onClick={() => {
+                    changeCategoryTab?.('Collections');
+                    navigateTo('collections');
+                  }}
+                  className="p-4 sm:p-5 bg-white/5 border border-white/10 hover:border-[#C5A880]/60 transition-all duration-300 cursor-pointer group hover:bg-white/10"
+                >
+                  <span className="text-[#C5A880] text-[10px] font-sans font-bold tracking-[0.2em] uppercase block mb-1">
+                    {gem.stone}
+                  </span>
+                  <h4 
+                    className="font-serif text-base sm:text-lg font-bold text-white group-hover:text-[#E5C396] transition-colors"
+                    style={{ fontFamily: "'Cormorant Garamond', 'Playfair Display', Georgia, serif" }}
+                  >
+                    {gem.name}
+                  </h4>
+                  <p className="text-gray-400 text-xs font-sans mt-1.5 leading-relaxed">
+                    {gem.desc}
+                  </p>
+                  <span className="text-[#C5A880] text-[11px] font-sans font-semibold tracking-wider uppercase mt-3 inline-flex items-center gap-1 group-hover:translate-x-1 transition-transform">
+                    <span>Shop Jewels</span>
+                    <span>→</span>
+                  </span>
+                </div>
+              ))}
+            </div>
+
+          </div>
+        </section>
+
+        {/* ==========================================================
+          CLIENT FEEDBACK SECTION 5: BUDGET TIERS (Feedback #6.3, 6.4, 6.5)
+          - UNDER 499
+          - UNDER 999
+          - UNDER 1999
+          ========================================================== */}
+        <section id="curated-budget-tiers" className="w-full py-14 sm:py-20 bg-[#FDFBF7] border-b border-[#EAE3D9] select-none text-left">
+          <div className="max-w-[1536px] mx-auto px-6 sm:px-10 lg:px-14">
+            
+            {/* Header */}
+            <div className="text-center max-w-2xl mx-auto mb-10 sm:mb-14">
+              <span className="inline-block text-[#8C6D46] text-xs sm:text-[13px] font-sans font-semibold tracking-[0.28em] uppercase mb-2">
+                AFFORDABLE 925 LUXURY
+              </span>
+              <h2 
+                className="text-3xl sm:text-4xl lg:text-[46px] font-bold text-[#1A1817] leading-tight"
+                style={{ fontFamily: "'Cormorant Garamond', 'Playfair Display', Georgia, serif" }}
+              >
+                Shop by Budget
+              </h2>
+              <p className="text-[#6F6862] text-xs sm:text-sm font-sans mt-2 font-normal">
+                Pure 925 sterling silver crafted to shine within your everyday celebration budget.
+              </p>
+            </div>
+
+            {/* 3 Budget Tier Showcase Cards (Under 499, Under 999, Under 1999) */}
+            <div className="grid grid-cols-1 md:grid-cols-3 gap-6 sm:gap-8">
+              
+              {/* Tier 1: Under 499 */}
+              <div className="p-6 sm:p-8 bg-gradient-to-b from-white to-[#F9F6F0] border border-[#E8DFD5] hover:border-[#8C6D46] shadow-[0_4px_20px_rgba(0,0,0,0.04)] hover:shadow-[0_12px_32px_rgba(140,109,70,0.15)] transition-all duration-300 flex flex-col justify-between group">
+                <div>
+                  <div className="flex items-center justify-between mb-4">
+                    <span className="px-3 py-1 bg-[#8C6D46]/10 text-[#8C6D46] text-[10px] font-sans font-bold tracking-[0.2em] uppercase rounded-full">
+                      POCKET LUXURY
+                    </span>
+                    <span className="text-xs text-gray-500 font-sans">BIS 925 Pure</span>
+                  </div>
+                  <h3 
+                    className="font-serif text-3xl sm:text-4xl font-bold text-[#1A1817] group-hover:text-[#8C6D46] transition-colors"
+                    style={{ fontFamily: "'Cormorant Garamond', 'Playfair Display', Georgia, serif" }}
+                  >
+                    Under ₹499
+                  </h3>
+                  <p className="text-xs sm:text-sm text-[#6F6862] font-sans mt-2.5 leading-relaxed">
+                    Minimalist 925 silver rings, nose pins, auspicious tokens, and silver charms for daily grace.
+                  </p>
+                  <ul className="mt-4 space-y-2 text-xs font-sans text-[#5A5550]">
+                    <li className="flex items-center gap-2">✦ Minimalist Silver Bands</li>
+                    <li className="flex items-center gap-2">✦ Hallmarked Nose Pins &amp; Studs</li>
+                    <li className="flex items-center gap-2">✦ Auspicious Charms &amp; Coins</li>
+                  </ul>
+                </div>
+
+                <div className="mt-8 pt-4 border-t border-[#EAE3D9]">
+                  <button
+                    onClick={() => {
+                      if (typeof setMaxPriceFilter === 'function') setMaxPriceFilter(499);
+                      changeCategoryTab?.('Collections');
+                      navigateTo('collections');
+                    }}
+                    className="w-full py-3.5 bg-[#1A1817] group-hover:bg-[#8C6D46] text-white font-sans text-xs font-semibold tracking-[0.2em] uppercase transition-colors cursor-pointer flex items-center justify-center gap-2"
+                  >
+                    <span>EXPLORE UNDER ₹499</span>
+                    <span>→</span>
+                  </button>
+                </div>
+              </div>
+
+              {/* Tier 2: Under 999 */}
+              <div className="p-6 sm:p-8 bg-gradient-to-b from-white to-[#F9F6F0] border-2 border-[#8C6D46] shadow-[0_8px_30px_rgba(140,109,70,0.18)] transition-all duration-300 flex flex-col justify-between group relative overflow-hidden">
+                <div className="absolute top-0 right-0 bg-[#8C6D46] text-white text-[9px] font-sans font-bold tracking-[0.2em] uppercase px-3 py-1">
+                  POPULAR
+                </div>
+                <div>
+                  <div className="flex items-center justify-between mb-4">
+                    <span className="px-3 py-1 bg-[#8C6D46] text-white text-[10px] font-sans font-bold tracking-[0.2em] uppercase rounded-full">
+                      EVERYDAY ELEGANCE
+                    </span>
+                    <span className="text-xs text-gray-500 font-sans">BIS 925 Pure</span>
+                  </div>
+                  <h3 
+                    className="font-serif text-3xl sm:text-4xl font-bold text-[#1A1817] group-hover:text-[#8C6D46] transition-colors"
+                    style={{ fontFamily: "'Cormorant Garamond', 'Playfair Display', Georgia, serif" }}
+                  >
+                    Under ₹999
+                  </h3>
+                  <p className="text-xs sm:text-sm text-[#6F6862] font-sans mt-2.5 leading-relaxed">
+                    Certified 925 silver pendants, nazariya bracelets, statement hoop earrings, and delicate chains.
+                  </p>
+                  <ul className="mt-4 space-y-2 text-xs font-sans text-[#5A5550]">
+                    <li className="flex items-center gap-2">✦ Solitaire &amp; Floral Pendants</li>
+                    <li className="flex items-center gap-2">✦ Nazariya &amp; Charm Bracelets</li>
+                    <li className="flex items-center gap-2">✦ Oxidised Jhumkis &amp; Hoops</li>
+                  </ul>
+                </div>
+
+                <div className="mt-8 pt-4 border-t border-[#EAE3D9]">
+                  <button
+                    onClick={() => {
+                      if (typeof setMaxPriceFilter === 'function') setMaxPriceFilter(999);
+                      changeCategoryTab?.('Collections');
+                      navigateTo('collections');
+                    }}
+                    className="w-full py-3.5 bg-[#8C6D46] hover:bg-[#A37B4D] text-white font-sans text-xs font-semibold tracking-[0.2em] uppercase transition-colors cursor-pointer flex items-center justify-center gap-2 shadow-md"
+                  >
+                    <span>EXPLORE UNDER ₹999</span>
+                    <span>→</span>
+                  </button>
+                </div>
+              </div>
+
+              {/* Tier 3: Under 1999 */}
+              <div className="p-6 sm:p-8 bg-gradient-to-b from-white to-[#F9F6F0] border border-[#E8DFD5] hover:border-[#8C6D46] shadow-[0_4px_20px_rgba(0,0,0,0.04)] hover:shadow-[0_12px_32px_rgba(140,109,70,0.15)] transition-all duration-300 flex flex-col justify-between group">
+                <div>
+                  <div className="flex items-center justify-between mb-4">
+                    <span className="px-3 py-1 bg-[#8C6D46]/10 text-[#8C6D46] text-[10px] font-sans font-bold tracking-[0.2em] uppercase rounded-full">
+                      ROYAL ATTIRE
+                    </span>
+                    <span className="text-xs text-gray-500 font-sans">BIS 925 Pure</span>
+                  </div>
+                  <h3 
+                    className="font-serif text-3xl sm:text-4xl font-bold text-[#1A1817] group-hover:text-[#8C6D46] transition-colors"
+                    style={{ fontFamily: "'Cormorant Garamond', 'Playfair Display', Georgia, serif" }}
+                  >
+                    Under ₹1999
+                  </h3>
+                  <p className="text-xs sm:text-sm text-[#6F6862] font-sans mt-2.5 leading-relaxed">
+                    Heavy masculine chains, engraved Rajasthani kadas, traditional payals, and gem cocktail rings.
+                  </p>
+                  <ul className="mt-4 space-y-2 text-xs font-sans text-[#5A5550]">
+                    <li className="flex items-center gap-2">✦ Solid Curb &amp; Rope Silver Chains</li>
+                    <li className="flex items-center gap-2">✦ Hand-hammered Silver Kadas</li>
+                    <li className="flex items-center gap-2">✦ Bridal Ghungroo Payals &amp; Chokers</li>
+                  </ul>
+                </div>
+
+                <div className="mt-8 pt-4 border-t border-[#EAE3D9]">
+                  <button
+                    onClick={() => {
+                      if (typeof setMaxPriceFilter === 'function') setMaxPriceFilter(1999);
+                      changeCategoryTab?.('Collections');
+                      navigateTo('collections');
+                    }}
+                    className="w-full py-3.5 bg-[#1A1817] group-hover:bg-[#8C6D46] text-white font-sans text-xs font-semibold tracking-[0.2em] uppercase transition-colors cursor-pointer flex items-center justify-center gap-2"
+                  >
+                    <span>EXPLORE UNDER ₹1999</span>
+                    <span>→</span>
+                  </button>
+                </div>
+              </div>
+
+            </div>
+
           </div>
         </section>
 
