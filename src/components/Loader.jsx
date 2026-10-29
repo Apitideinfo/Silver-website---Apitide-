@@ -70,7 +70,7 @@ export default function Loader({ onDismiss }) {
         isExiting ? 'opacity-0 scale-[1.02] pointer-events-none' : 'opacity-100 scale-100'
       }`}
     >
-      {/* 100% Fullscreen Splash Art Background with subtle luxury darken */}
+      {/* 100% Fullscreen Splash Art Background with clean mandala center */}
       <picture className="w-full h-full absolute inset-0">
         <source 
           media="(max-width: 768px) and (orientation: portrait)" 
@@ -79,51 +79,51 @@ export default function Loader({ onDismiss }) {
         <img
           src={splashLandscape}
           alt="MANISH & CO - Fine Jewellery"
-          className="w-full h-full object-cover select-none pointer-events-none opacity-45 brightness-75 scale-105 transition-transform duration-1000 ease-out"
+          className="w-full h-full object-cover select-none pointer-events-none opacity-85 brightness-95 scale-100 transition-transform duration-1000 ease-out"
         />
       </picture>
 
-      {/* Deep luxury radial ambient vignette */}
-      <div className="absolute inset-0 bg-gradient-to-t from-[#02050D] via-[#050B14]/80 to-[#02050D] pointer-events-none" />
+      {/* Deep luxury radial ambient vignette for perfect focal contrast */}
+      <div className="absolute inset-0 bg-radial from-transparent via-[#030712]/40 to-[#02050D]/90 pointer-events-none" />
 
-      {/* Dynamic Ambient Golden Glow that follows mouse position */}
+      {/* Dynamic Ambient Golden Glow that follows mouse position subtly */}
       <motion.div 
         animate={{ 
-          x: mousePos.x * 1.5,
-          y: mousePos.y * 1.5,
-          scale: [1, 1.08, 1],
-          opacity: [0.35, 0.55, 0.35]
+          x: mousePos.x * 1.2,
+          y: mousePos.y * 1.2,
+          scale: [1, 1.05, 1],
+          opacity: [0.25, 0.4, 0.25]
         }}
         transition={{ 
           scale: { duration: 4, repeat: Infinity, ease: "easeInOut" },
-          opacity: { duration: 3, repeat: Infinity, ease: "easeInOut" },
-          x: { type: "spring", stiffness: 60, damping: 20 },
-          y: { type: "spring", stiffness: 60, damping: 20 }
+          opacity: { duration: 3.5, repeat: Infinity, ease: "easeInOut" },
+          x: { type: "spring", stiffness: 50, damping: 20 },
+          y: { type: "spring", stiffness: 50, damping: 20 }
         }}
-        className="absolute w-[360px] h-[360px] sm:w-[520px] sm:h-[520px] rounded-full bg-[#C5A880]/15 blur-[120px] pointer-events-none"
+        className="absolute w-[320px] h-[320px] sm:w-[460px] sm:h-[460px] rounded-full bg-[#C5A880]/12 blur-[100px] pointer-events-none"
       />
 
       {/* ==========================================================
           MOVABLE / ANIMATED SPLASH SCREEN LOGO EMBLEM
-          (Continuous luxury floating loop + mouse-responsive physics)
+          (Clean, perfectly fitted within the mandala, movable on mouse & float)
           ========================================================== */}
       <motion.div
         animate={{
           x: mousePos.x,
           y: mousePos.y,
         }}
-        transition={{ type: "spring", stiffness: 75, damping: 22 }}
-        className="relative z-20 flex flex-col items-center text-center p-6"
+        transition={{ type: "spring", stiffness: 70, damping: 22 }}
+        className="relative z-20 flex flex-col items-center text-center px-4"
       >
         {/* Floating Movable Logo Container with 3D Depth */}
         <motion.div
           animate={{
-            y: [-10, 10, -10],
-            rotate: [-1.5, 1.5, -1.5],
-            scale: [1, 1.03, 1],
+            y: [-8, 8, -8],
+            rotate: [-1, 1, -1],
+            scale: [1, 1.025, 1],
           }}
           transition={{
-            duration: 5,
+            duration: 4.5,
             repeat: Infinity,
             ease: "easeInOut"
           }}
@@ -132,45 +132,45 @@ export default function Loader({ onDismiss }) {
           {/* Outer Rotating Sacred Ring */}
           <motion.div 
             animate={{ rotate: 360 }}
-            transition={{ duration: 28, repeat: Infinity, ease: "linear" }}
-            className="absolute -inset-5 sm:-inset-7 rounded-full border border-dashed border-[#D4AF37]/35 pointer-events-none"
+            transition={{ duration: 32, repeat: Infinity, ease: "linear" }}
+            className="absolute -inset-4 sm:-inset-6 rounded-full border border-dashed border-[#D4AF37]/35 pointer-events-none"
           />
 
           {/* Secondary Shimmer Ring */}
           <motion.div 
             animate={{ rotate: -360 }}
-            transition={{ duration: 40, repeat: Infinity, ease: "linear" }}
-            className="absolute -inset-9 sm:-inset-12 rounded-full border border-dotted border-[#E5C396]/20 pointer-events-none"
+            transition={{ duration: 44, repeat: Infinity, ease: "linear" }}
+            className="absolute -inset-8 sm:-inset-10 rounded-full border border-dotted border-[#E5C396]/20 pointer-events-none"
           />
 
           {/* Glowing Aura Halo */}
-          <div className="absolute inset-0 rounded-full bg-gradient-to-tr from-[#D4AF37]/30 to-[#F5D77F]/40 blur-xl pointer-events-none scale-110" />
+          <div className="absolute inset-0 rounded-full bg-gradient-to-tr from-[#D4AF37]/20 to-[#F5D77F]/30 blur-2xl pointer-events-none scale-110" />
 
-          {/* Circular Client Logo Badge */}
-          <div className="relative w-28 h-28 sm:w-36 sm:h-36 rounded-full bg-white p-1.5 shadow-[0_12px_45px_rgba(212,175,55,0.45)] border-2 border-[#D4AF37] flex items-center justify-center overflow-hidden group">
+          {/* Circular Client Logo Badge (Properly Fitted & Sealed) */}
+          <div className="relative w-32 h-32 sm:w-40 sm:h-40 md:w-44 md:h-44 rounded-full bg-white p-1 shadow-[0_8px_35px_rgba(212,175,55,0.35),0_15px_30px_rgba(0,0,0,0.7)] border-2 border-[#D4AF37] ring-4 ring-[#D4AF37]/20 flex items-center justify-center overflow-hidden group">
             <img 
               src={brandLogo} 
-              alt="MANISH & CO Fine Jewellery Logo" 
-              className="w-full h-full object-contain drop-shadow-md transition-transform duration-500 hover:scale-105"
+              alt="M&CO Fine Jewellery Logo" 
+              className="w-full h-full object-contain select-none pointer-events-none transition-transform duration-500 group-hover:scale-105"
             />
             {/* Shimmer Light Bar */}
             <motion.div
               animate={{ x: ['-140%', '140%'] }}
-              transition={{ duration: 2.8, repeat: Infinity, repeatDelay: 1.2, ease: "easeInOut" }}
-              className="absolute inset-0 w-1/2 bg-gradient-to-r from-transparent via-white/50 to-transparent skew-x-12 pointer-events-none"
+              transition={{ duration: 2.6, repeat: Infinity, repeatDelay: 1.5, ease: "easeInOut" }}
+              className="absolute inset-0 w-1/2 bg-gradient-to-r from-transparent via-white/40 to-transparent skew-x-12 pointer-events-none"
             />
           </div>
         </motion.div>
 
-        {/* Brand Text Typography with Metallic Shimmer */}
+        {/* Brand Text Typography with Crisp Luxury Serif */}
         <motion.div
           initial={{ opacity: 0, y: 15 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.8, delay: 0.2 }}
-          className="mt-6 sm:mt-7 flex flex-col items-center"
+          className="mt-6 sm:mt-8 flex flex-col items-center"
         >
           <h1 
-            className="font-serif text-3xl sm:text-4xl lg:text-5xl font-bold tracking-[0.2em] text-white uppercase drop-shadow-[0_4px_20px_rgba(0,0,0,0.8)]"
+            className="font-serif text-3xl sm:text-4xl lg:text-[46px] font-bold tracking-[0.18em] text-white uppercase drop-shadow-[0_4px_25px_rgba(0,0,0,0.9)]"
             style={{ fontFamily: "'Cormorant Garamond', 'Playfair Display', Georgia, serif" }}
           >
             MANISH &amp; CO
@@ -179,7 +179,7 @@ export default function Loader({ onDismiss }) {
           <div className="flex items-center gap-3 mt-2 sm:mt-2.5">
             <span className="w-8 sm:w-12 h-[1px] bg-gradient-to-r from-transparent to-[#D4AF37]" />
             <span 
-              className="font-serif text-[10px] sm:text-xs tracking-[0.35em] text-[#E5C396] uppercase font-semibold whitespace-nowrap"
+              className="font-serif text-[10px] sm:text-xs tracking-[0.3em] text-[#E5C396] uppercase font-semibold whitespace-nowrap"
               style={{ fontFamily: "'Cormorant Garamond', 'Playfair Display', Georgia, serif" }}
             >
               FINE JEWELLERY • 925 SILVER
@@ -187,8 +187,8 @@ export default function Loader({ onDismiss }) {
             <span className="w-8 sm:w-12 h-[1px] bg-gradient-to-l from-transparent to-[#D4AF37]" />
           </div>
 
-          <p className="text-[11px] sm:text-xs font-sans tracking-[0.16em] uppercase text-gray-400 mt-2 font-normal">
-            Royal Silversmithing Atelier • Estd. 1952
+          <p className="text-[10px] sm:text-[11px] font-sans tracking-[0.18em] uppercase text-gray-400 mt-2 font-normal">
+            Royal Silversmithing Atelier • Estd. 1952 • Mau
           </p>
         </motion.div>
       </motion.div>
