@@ -945,7 +945,7 @@ export default function Checkout({ navigateTo, triggerAudio }) {
           <div className="grid grid-cols-2 md:grid-cols-4 gap-6 text-center md:text-left">
             <div className="space-y-1">
               <span className="text-[10px] uppercase font-bold tracking-widest text-[#0D2B4E]">Fine Silver Maison</span>
-              <p className="text-[9px] text-gray-400 font-light">Established lineage since 1952</p>
+              <p className="text-[9px] text-gray-400 font-light">Established lineage since 1996</p>
             </div>
             <div className="space-y-1">
               <span className="text-[10px] uppercase font-bold tracking-widest text-[#0D2B4E]">Trusted by Patrons</span>

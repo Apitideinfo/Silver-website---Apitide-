@@ -315,7 +315,7 @@ export default function AdminOrders({
                 <div class="company-details">
                   BIS Hallmarked Luxury Boutique<br/>
                   Sanskriti Bhawan Road, Sadar Bazar, Mau, Uttar Pradesh (275101)<br/>
-                  Contact: +91 9451638680 | manishverma.bussiness@gmail.com<br/>
+                  Contact: +91 9451638680 | manishandco.in@gmail.com<br/>
                   <strong style="color: #111;">State:</strong> 09-Uttar Pradesh
                 </div>
               </div>

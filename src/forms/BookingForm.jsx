@@ -10,11 +10,12 @@ export default function BookingForm({
   const { submitting, errors, bookConsultation } = useBooking();
   const [formData, setFormData] = useState({
     name: '',
+    email: '',
     phone: '',
     date: '',
     timeSlot: '',
     description: '',
-    preferredType: 'Gold Jewellery',
+    preferredType: '925 Silver Jewellery',
     categoryType: 'Rings',
     budget: ''
   });
@@ -96,16 +97,37 @@ export default function BookingForm({
         
         const waUrl = `https://wa.me/919451638680?text=${encodeURIComponent(text)}`;
         window.open(waUrl, '_blank');
+      } else if (type === 'consultation') {
+        // Open WhatsApp with appointment booking details
+        let text = `*New Appointment Booking Request*\n\n`;
+        text += `*Name:* ${formData.name}\n`;
+        text += `*Contact:* ${formData.phone}\n`;
+        if (formData.email) {
+          text += `*Email:* ${formData.email}\n`;
+        }
+        text += `*Preferred Date:* ${formData.date}\n`;
+        text += `*Time Slot:* ${formData.timeSlot}\n`;
+        if (formData.description) {
+          text += `*Customer Need / Details:* ${formData.description}\n`;
+        }
+        if (formData.preferredType) {
+          text += `*Collection Interest:* ${formData.preferredType}\n`;
+        }
+        text += `\n_Sent via Manish & Co Website — Book an Appointment_`;
+
+        const waUrl2 = `https://wa.me/919451638680?text=${encodeURIComponent(text)}`;
+        window.open(waUrl2, '_blank');
       }
 
       setFormSuccess(true);
       setFormData({
         name: '',
+        email: '',
         phone: '',
         date: '',
         timeSlot: '',
         description: '',
-        preferredType: 'Gold Jewellery',
+        preferredType: '925 Silver Jewellery',
         categoryType: 'Rings',
         budget: ''
       });
@@ -158,7 +180,7 @@ export default function BookingForm({
 
       {/* WhatsApp Number */}
       <div className="space-y-1">
-        <label className="text-[10px] uppercase tracking-wider text-zinc-400 font-bold">WhatsApp Contact</label>
+        <label className="text-[10px] uppercase tracking-wider text-zinc-400 font-bold">WhatsApp / Contact Number</label>
         <input
           type="tel"
           name="phone"
@@ -171,11 +193,38 @@ export default function BookingForm({
         {errors.phone && <p className="text-red-500 text-[9px] font-bold">{errors.phone}</p>}
       </div>
 
+      {/* Email Address */}
+      <div className="space-y-1">
+        <label className="text-[10px] uppercase tracking-wider text-zinc-400 font-bold">Email Address (Optional)</label>
+        <input
+          type="email"
+          name="email"
+          value={formData.email}
+          onChange={handleInputChange}
+          placeholder="e.g. yourname@gmail.com"
+          className="w-full h-11 px-4 rounded-xl border border-solid border-slate-100 focus:border-gold focus:outline-none"
+        />
+      </div>
+
       {type === 'consultation' ? (
         <>
+          {/* Customer Need / Description */}
+          <div className="space-y-1">
+            <label className="text-[10px] uppercase tracking-wider text-zinc-400 font-bold">Your Need / Requirement</label>
+            <textarea
+              name="description"
+              value={formData.description}
+              onChange={handleInputChange}
+              rows="3"
+              placeholder="Tell us what you're looking for (e.g., custom bridal set, ring sizing, kada design, pooja items)..."
+              className="w-full p-3 rounded-xl border border-solid border-slate-100 focus:border-gold focus:outline-none resize-none font-sans"
+              required
+            />
+          </div>
+
           {/* Preferred Date */}
           <div className="space-y-1">
-            <label className="text-[10px] uppercase tracking-wider text-zinc-400 font-bold">Preferred Date</label>
+            <label className="text-[10px] uppercase tracking-wider text-zinc-400 font-bold">Preferred Appointment Date</label>
             <input
               type="date"
               name="date"
@@ -189,7 +238,7 @@ export default function BookingForm({
 
           {/* Time Slot */}
           <div className="space-y-1">
-            <label className="text-[10px] uppercase tracking-wider text-zinc-400 font-bold">Time Slot</label>
+            <label className="text-[10px] uppercase tracking-wider text-zinc-400 font-bold">Preferred Time Slot</label>
             <select
               name="timeSlot"
               value={formData.timeSlot}
@@ -208,17 +257,19 @@ export default function BookingForm({
 
           {/* Preferred Categories */}
           <div className="space-y-1">
-            <label className="text-[10px] uppercase tracking-wider text-zinc-400 font-bold">Preferred Collection Type</label>
+            <label className="text-[10px] uppercase tracking-wider text-zinc-400 font-bold">Preferred Collection</label>
             <select
               name="preferredType"
               value={formData.preferredType}
               onChange={handleInputChange}
               className="w-full h-11 px-4 rounded-xl border border-solid border-slate-100 focus:border-gold focus:outline-none bg-white"
             >
-              <option value="Gold Jewellery">Gold Jewellery</option>
-              <option value="Diamond Suite">Diamond Suite</option>
-              <option value="Polki / Kundan">Polki / Kundan</option>
-              <option value="Investment Bullion">Investment Bullion</option>
+              <option value="925 Silver Jewellery">925 Silver Fine Jewellery</option>
+              <option value="Bridal & Payals">Bridal &amp; Payals</option>
+              <option value="Men's Collection">Men's Collection (Kada &amp; Chains)</option>
+              <option value="Kid's Collection">Kid's Collection (Nazariya &amp; Kits)</option>
+              <option value="Couple Sets">Couple Sets &amp; Secret Sets</option>
+              <option value="Silver Coins & Bullion">Silver Coins &amp; Bullion</option>
             </select>
           </div>
         </>
@@ -329,9 +380,18 @@ export default function BookingForm({
       <button
         type="submit"
         disabled={submitting || uploadProgress}
-        className="w-full py-3.5 bg-gradient-to-r from-[#6B4B2E] to-[#B09A82] text-white text-xs uppercase font-bold tracking-widest rounded-xl transition-all transform hover:-translate-y-0.5 hover:shadow-lg disabled:opacity-50 cursor-pointer border-none text-white font-bold"
+        className="w-full py-3.5 bg-gradient-to-r from-[#6B4B2E] to-[#B09A82] text-white text-xs uppercase font-bold tracking-widest rounded-xl transition-all transform hover:-translate-y-0.5 hover:shadow-lg disabled:opacity-50 cursor-pointer border-none font-bold flex items-center justify-center gap-2"
       >
-        {submitting || uploadProgress ? 'Submitting secure request...' : 'Book secure suite consultation'}
+        <svg className="w-4 h-4 shrink-0" fill="currentColor" viewBox="0 0 24 24">
+          <path d="M12.012 2c-5.506 0-9.989 4.478-9.99 9.984a9.96 9.96 0 001.37 5.037L2 22l5.135-1.348a9.954 9.954 0 004.878 1.28c5.505 0 9.988-4.478 9.989-9.984 0-2.67-1.037-5.18-2.925-7.07C17.186 3.037 14.678 2 12.012 2zm5.727 14.153c-.313.882-1.554 1.61-2.148 1.666-.59.055-1.18.326-3.766-.694-2.585-1.02-4.237-3.663-4.364-3.834-.127-.171-1.03-1.374-1.03-2.623 0-1.25.654-1.862.887-2.102.233-.24.509-.3.678-.3.17 0 .34 0 .487.007.155.007.363-.058.567.442.204.5.7 1.713.76 1.838.06.126.1.272.017.438-.083.166-.124.272-.25.418-.125.146-.263.327-.375.44-.124.125-.253.26-.11.507.144.247.64 1.056 1.373 1.71.942.843 1.737 1.103 1.983 1.226.246.123.39.103.535-.062.145-.165.62-.72.787-.966.166-.247.33-.206.555-.124.225.083 1.427.674 1.674.8.247.124.412.185.472.289.06.103.06.6-.253 1.482z" />
+        </svg>
+        <span>
+          {submitting || uploadProgress
+            ? 'Submitting...'
+            : type === 'custom_design'
+            ? 'Send Custom Design on WhatsApp'
+            : 'Book Appointment on WhatsApp'}
+        </span>
       </button>
     </form>
   );

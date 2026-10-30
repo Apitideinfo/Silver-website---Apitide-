@@ -21,7 +21,7 @@ export default function Heritage({
   const triggerAudio = (type) => { try { triggerAudioProp?.(type); } catch { /* noop */ } };
 
   // Local state (previously passed as props)
-  const [activeStoryTimeline, setActiveStoryTimeline] = useState(1952);
+  const [activeStoryTimeline, setActiveStoryTimeline] = useState(1996);
   const [consultationModal, setConsultationModal] = useState(false);
   const [mousePos, setMousePos] = useState({ x: 0, y: 0 });
   const isCatalogDark = false;
@@ -188,13 +188,13 @@ export default function Heritage({
                 <div className="absolute -inset-1 blur-2xl bg-[#B09A82]/15 opacity-70 rounded-full z-0 pointer-events-none"></div>
                 <img
                   src={
-                    activeStoryTimeline === 1952
+                    activeStoryTimeline === 1996
                       ? familySignet
-                      : activeStoryTimeline === 1974
+                      : activeStoryTimeline === 2004
                         ? goldKada
-                        : activeStoryTimeline === 1998
+                        : activeStoryTimeline === 2012
                           ? sapphireHeritageSet
-                          : activeStoryTimeline === 2014
+                          : activeStoryTimeline === 2020
                             ? luxuryShowroom
                             : emeraldSovereignRing
                   }
@@ -204,10 +204,10 @@ export default function Heritage({
                 <div className="absolute inset-0 bg-gradient-to-t from-[#091B2B]/50 via-transparent to-transparent z-20 pointer-events-none"></div>
                 <div className="absolute top-4 left-4 z-20 px-3 py-1 bg-[#091B2B]/60 backdrop-blur-md border border-[#B09A82]/30 rounded-full text-[#B09A82] text-[8px] font-black uppercase tracking-widest">
                   {
-                    activeStoryTimeline === 1952 ? "THE GENESIS"
-                      : activeStoryTimeline === 1974 ? "ROYAL STANDARD"
-                        : activeStoryTimeline === 1998 ? "POLKI FUSION"
-                          : activeStoryTimeline === 2014 ? "CREATIVE STUDIO"
+                    activeStoryTimeline === 1996 ? "THE GENESIS"
+                      : activeStoryTimeline === 2004 ? "ROYAL STANDARD"
+                        : activeStoryTimeline === 2012 ? "POLKI FUSION"
+                          : activeStoryTimeline === 2020 ? "CREATIVE STUDIO"
                             : "DIGITAL AVANT-GARDE"
                   }
                 </div>
@@ -232,18 +232,18 @@ export default function Heritage({
               {/* Narrative copy that morphs based on selected year */}
               <div className="min-h-[160px] border border-gold/10 p-6 rounded-3xl space-y-4 shadow-inner transition-all duration-500 bg-[#0D2B4E]/5 text-left w-full">
                 <h3 className="serif-luxury text-lg sm:text-xl font-bold text-[#B09A82]">
-                  {activeStoryTimeline === 1952 && "1988: Foundations in Mau, Uttar Pradesh"}
-                  {activeStoryTimeline === 1974 && "1974: Purity Guild Standardization"}
-                  {activeStoryTimeline === 1998 && "1998: Syndicate Uncut Diamonds Polki"}
-                  {activeStoryTimeline === 2014 && "2014: Flagship Showroom Fitting Lounge"}
-                  {activeStoryTimeline === 2026 && "2026: High-Luxury MANISH & CO accredited Partner"}
+                  {activeStoryTimeline === 1996 && "1996: Foundations in Mau, Uttar Pradesh"}
+                  {activeStoryTimeline === 2004 && "2004: Purity Guild & Chitai Craft"}
+                  {activeStoryTimeline === 2012 && "2012: Fine Silver & Bridal Expansion"}
+                  {activeStoryTimeline === 2020 && "2020: Flagship Showroom & Atelier"}
+                  {activeStoryTimeline === 2026 && "Present: Nationwide 925 Hallmark Flagship"}
                 </h3>
                 <p className="text-xs sm:text-sm font-light leading-relaxed tracking-wide opacity-80 font-sans">
-                  {activeStoryTimeline === 1952 && "Our lineage began in Mau, Uttar Pradesh, where master silversmiths began hand-sculpting pristine silver ornaments, temple payals, and royal heirlooms with unwavering devotion to 925 purity."}
-                  {activeStoryTimeline === 1974 && "The atelier institutes rigorous purity standards and established hallmark testing guidelines, pioneering trust and authenticity across Uttar Pradesh."}
-                  {activeStoryTimeline === 1998 && "Introduction of signature bridal silver suites, handcrafted chokers, and certified gemstones catering to bespoke royal trousseau orders."}
-                  {activeStoryTimeline === 2014 && "Inauguration of our grand flagship showroom in Mau, featuring dedicated bridal consultation lounges and masterwork viewing suites."}
-                  {activeStoryTimeline === 2026 && "Transitioning to a fully accredited MANISH & CO partner boutique, integrating advanced live gold API conversion matrices, digital certification catalogs, and instant WhatsApp booking."}
+                  {activeStoryTimeline === 1996 && "Our lineage began in Mau, Uttar Pradesh, where master silversmith Manish Verma began hand-sculpting pristine silver ornaments, temple payals, and royal heirlooms with unwavering devotion to 925 purity."}
+                  {activeStoryTimeline === 2004 && "The atelier institutes rigorous purity standards and established hallmark testing guidelines, pioneering trust and authenticity across Uttar Pradesh."}
+                  {activeStoryTimeline === 2012 && "Introduction of signature bridal silver suites, handcrafted chokers, and certified gemstones catering to bespoke royal trousseau orders."}
+                  {activeStoryTimeline === 2020 && "Inauguration of our grand flagship showroom in Mau, featuring dedicated bridal consultation lounges and masterwork viewing suites."}
+                  {activeStoryTimeline === 2026 && "Transitioning to a fully accredited MANISH & CO nationwide boutique, integrating digital certification catalogs, live silver rates, and instant WhatsApp booking."}
                 </p>
               </div>
 
@@ -254,7 +254,7 @@ export default function Heritage({
 
                 {/* Interactive nodes */}
                 <div className="relative z-10 flex justify-between items-center text-center w-full">
-                  {[1952, 1974, 1998, 2014, 2026].map((yr) => (
+                  {[1996, 2004, 2012, 2020, 2026].map((yr) => (
                     <button
                       key={yr}
                       onClick={() => {
@@ -266,7 +266,7 @@ export default function Heritage({
                     >
                       <span className={`text-[10px] sm:text-xs tracking-wider font-extrabold transition-all duration-300 ${activeStoryTimeline === yr ? 'text-[#B09A82] scale-110' : 'opacity-50 hover:opacity-100'
                         }`}>
-                        {yr}
+                        {yr === 2026 ? 'Present' : yr}
                       </span>
                       <span className={`w-8 h-8 rounded-full border-2 transition-all duration-300 flex items-center justify-center font-bold text-[9px] ${activeStoryTimeline === yr
                         ? 'bg-[#B09A82] border-[#B09A82] text-[#0D2B4E] shadow-[0_0_12px_rgba(212,175,55,0.6)] scale-110'
@@ -276,7 +276,7 @@ export default function Heritage({
                       </span>
                       <span className={`text-[7px] uppercase tracking-wider font-extrabold transition-all duration-300 block ${activeStoryTimeline === yr ? 'opacity-100 text-[#B09A82]' : 'opacity-0 sm:opacity-45 sm:group-hover:opacity-75'
                         }`}>
-                        {yr === 1952 ? "Genesis" : yr === 1974 ? "Standard" : yr === 1998 ? "Polki" : yr === 2014 ? "Showroom" : "Lounge"}
+                        {yr === 1996 ? "Genesis" : yr === 2004 ? "Standard" : yr === 2012 ? "Polki" : yr === 2020 ? "Showroom" : "Lounge"}
                       </span>
                     </button>
                   ))}
@@ -296,7 +296,7 @@ export default function Heritage({
             {/* Heading */}
             <div className="space-y-3 max-w-2xl mx-auto">
               <span className="text-[9px] font-bold tracking-[0.3em] text-[#B09A82] uppercase block">
-                TRUSTED SINCE 1952
+                TRUSTED SINCE 1996
               </span>
               <h2 className="serif-luxury text-3xl sm:text-5xl font-bold">
                 Why Customers Trust Us

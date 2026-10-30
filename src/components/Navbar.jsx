@@ -104,16 +104,11 @@ export default function Navbar({
           onClick={() => {
             navigateTo('home');
           }}
-          className="flex items-center gap-2 sm:gap-3 focus:outline-none cursor-pointer group text-left border-none bg-transparent shrink-0"
+          className="flex items-center focus:outline-none cursor-pointer group text-left border-none bg-transparent shrink-0"
         >
-          <img 
-            src={brandLogo} 
-            alt="M&CO Fine Jewellery" 
-            className="w-9 h-9 sm:w-11 sm:h-11 rounded-full object-contain bg-white shadow-[0_2px_12px_rgba(0,0,0,0.4)] border border-white/20 transition-transform duration-300 group-hover:scale-105 shrink-0"
-          />
           <div className="flex flex-col items-start min-w-0">
             <span 
-              className="font-serif text-[17px] xs:text-[19px] sm:text-[23px] font-bold tracking-[0.16em] sm:tracking-[0.18em] text-white uppercase leading-none drop-shadow-sm group-hover:text-[#E5C396] transition-colors whitespace-nowrap"
+              className="font-serif text-[18px] xs:text-[20px] sm:text-[24px] font-bold tracking-[0.16em] sm:tracking-[0.18em] text-white uppercase leading-none drop-shadow-sm group-hover:text-[#E5C396] transition-colors whitespace-nowrap"
               style={{ fontFamily: "'Cormorant Garamond', 'Playfair Display', Georgia, serif" }}
             >
               MANISH &amp; CO
@@ -121,7 +116,7 @@ export default function Navbar({
             <div className="flex items-center gap-1.5 sm:gap-2 mt-1.5 w-full">
               <span className="h-[1px] flex-1 bg-gradient-to-r from-transparent to-white/70" />
               <span 
-                className="font-serif text-[8px] sm:text-[9.5px] tracking-[0.24em] sm:tracking-[0.28em] text-white/90 uppercase font-semibold whitespace-nowrap"
+                className="font-serif text-[8.5px] sm:text-[10px] tracking-[0.24em] sm:tracking-[0.28em] text-white/90 uppercase font-semibold whitespace-nowrap"
                 style={{ fontFamily: "'Cormorant Garamond', 'Playfair Display', Georgia, serif" }}
               >
                 FINE JEWELLERY

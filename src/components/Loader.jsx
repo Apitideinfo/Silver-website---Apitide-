@@ -188,7 +188,7 @@ export default function Loader({ onDismiss }) {
           </div>
 
           <p className="text-[10px] sm:text-[11px] font-sans tracking-[0.18em] uppercase text-gray-400 mt-2 font-normal">
-            Royal Silversmithing Atelier • Estd. 1952 • Mau
+            Royal Silversmithing Atelier • Estd. 1996 • Mau
           </p>
         </motion.div>
       </motion.div>

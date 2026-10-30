@@ -581,7 +581,7 @@ export default function SavingsEnroll({
           <div className="grid grid-cols-2 md:grid-cols-4 gap-6 text-center md:text-left">
             <div className="space-y-1">
               <span className="text-[10px] uppercase font-bold tracking-widest text-[#031838]">Bikaner's Heritage Store</span>
-              <p className="text-[9px] text-gray-400 font-light">Established lineage since 1952</p>
+              <p className="text-[9px] text-gray-400 font-light">Established lineage since 1996</p>
             </div>
             <div className="space-y-1">
               <span className="text-[10px] uppercase font-bold tracking-widest text-[#031838]">Trusted by Patrons</span>

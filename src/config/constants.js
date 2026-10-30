@@ -9,7 +9,7 @@ export const BUSINESS = Object.freeze({
   WHATSAPP_NUMBER: '919451638680',
   PHONE_PRIMARY: '+91-9451638680',
   FOUNDER: 'Manish Verma',
-  EMAIL: 'manishverma.bussiness@gmail.com',
+  EMAIL: 'manishandco.in@gmail.com',
   ADDRESS: 'Mau, Uttar Pradesh 275101, India',
   MAPS_URL: 'https://maps.google.com/?q=Mau+Uttar+Pradesh',
   SITE_URL: 'https://manishsilverjewellery.com',

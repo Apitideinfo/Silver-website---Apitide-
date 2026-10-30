@@ -28,23 +28,13 @@ import silverPayalsImg from '../assets/silver_payals.png';
 import citrineFloralSet from '../assets/citrine_floral_set.png';
 import nathNosePinImg from '../assets/nath_nose_pin.png';
 import jhumkasImg from '../assets/jhumkas.png';
+import EditorialShowcaseSection from '../components/EditorialShowcaseSection';
+import { getShowcaseSectionsConfig } from '../config/showcaseSections';
 import { INITIAL_CATEGORIES } from '../config/constants';
 import { priceCategoryService, getColorStyles } from '../services/priceCategoryService';
 
 
 // Editorial Collection Showcase (01 Men's, 02 Women's, 03 Kid's, 04 Gift's)
-import himRings from '../assets/editorial/him_rings.jpg';
-import himChains from '../assets/editorial/him_chains.jpg';
-import himBracelets from '../assets/editorial/him_bracelets.jpg';
-import herRings from '../assets/editorial/her_rings.jpg';
-import herBracelets from '../assets/editorial/her_bracelets.jpg';
-import herAnklets from '../assets/editorial/her_anklets.jpg';
-import kidsBracelets from '../assets/editorial/kids_bracelets.jpg';
-import kidsChains from '../assets/editorial/kids_chains.jpg';
-import kidsKadas from '../assets/editorial/kids_kadas.jpg';
-import giftsCoins from '../assets/editorial/gifts_coins.jpg';
-import giftsPooja from '../assets/editorial/gifts_pooja.jpg';
-import giftsKeepsakes from '../assets/editorial/gifts_keepsakes.jpg';
 
 // Testimonial Images
 import testimonial1 from '../assets/testimonial_1.png';
@@ -66,35 +56,6 @@ import bannerPureSilverCollection from '../assets/banner_pure_silver_collection.
 import madePersonalSketch from '../assets/made_personal_sketch.jpg';
 import gemsCollectionBanner from '../assets/gems_collection_banner.jpg';
 import goldPlatingBanner from '../assets/gold_plating_banner.jpg';
-
-// Clean Transparent Category Images
-import cleanBangles from '../assets/clean_categories/bangles.png';
-import cleanBracelets from '../assets/clean_categories/bracelets.png';
-import cleanEarrings from '../assets/clean_categories/earrings.png';
-import cleanJhumka from '../assets/clean_categories/jhumka.png';
-import cleanKada from '../assets/clean_categories/kada.png';
-import cleanNathNosePin from '../assets/clean_categories/nath_nose_pin.png';
-import cleanNecklace from '../assets/clean_categories/necklace.png';
-import cleanNosePin from '../assets/clean_categories/nose_pin.png';
-import cleanPayal from '../assets/clean_categories/payal.png';
-import cleanPendantLocket from '../assets/clean_categories/pendant_locket.png';
-import cleanRings from '../assets/clean_categories/rings.png';
-import cleanSilverChain from '../assets/clean_categories/silver_chain.png';
-
-const cleanCategoryList = [
-  { id: 'rings', name: 'Rings', tab: 'Rings', img: cleanRings },
-  { id: 'bracelets', name: 'Bracelets', tab: 'Bracelets', img: cleanBracelets },
-  { id: 'earrings', name: 'Earrings', tab: 'Earrings', img: cleanEarrings },
-  { id: 'necklaces', name: 'Necklaces', tab: 'Necklaces', img: cleanNecklace },
-  { id: 'pendants', name: 'Pendants', tab: 'Pendants', img: cleanPendantLocket },
-  { id: 'bangles', name: 'Bangles', tab: 'Bangles', img: cleanBangles },
-  { id: 'kada', name: 'Kadas', tab: 'Bangles', img: cleanKada },
-  { id: 'silver-chain', name: 'Chains', tab: 'Necklaces', img: cleanSilverChain },
-  { id: 'payal', name: 'Payals & Anklets', tab: 'Silver', img: cleanPayal },
-  { id: 'jhumka', name: 'Jhumkas', tab: 'Earrings', img: cleanJhumka },
-  { id: 'nose-pin', name: 'Nose Pins', tab: 'Collections', img: cleanNosePin },
-  { id: 'nath-nose-pin', name: 'Nath & Studs', tab: 'Collections', img: cleanNathNosePin },
-];
 
 
 
@@ -190,7 +151,7 @@ export default function Home({
 
   // Story & Process States
   const activeCategories = displayCategories;
-  const [activeStoryTimeline, setActiveStoryTimeline] = useState(1952);
+  const [activeStoryTimeline, setActiveStoryTimeline] = useState(1996);
   const [timelineDirection, setTimelineDirection] = useState(1);
   const [openFaqIndex, setOpenFaqIndex] = useState(null);
 
@@ -304,6 +265,50 @@ export default function Home({
     <div className={`pb-0 transition-colors duration-500 ${isCatalogDark ? "text-[#FCFAFF]" : "text-[#202329]"}`}>
 
       {/* ==========================================================
+        TOP ACTION BAR: CUSTOM DESIGNS + BOOK AN APPOINTMENT
+        (Sticky at very top, above all sections)
+        ========================================================== */}
+      <div className="w-full bg-[#050B14] border-b border-white/10 py-3 px-4 sm:px-8 lg:px-14 flex flex-col sm:flex-row items-center justify-center gap-3 sm:gap-6 z-30 relative">
+        <p className="text-[#C5A880] text-[11px] sm:text-xs font-sans font-semibold tracking-[0.22em] uppercase text-center shrink-0">
+          ✦ Bespoke Silver Jewellery — Made Just For You ✦
+        </p>
+        <div className="flex items-center gap-3 sm:gap-4 flex-wrap justify-center">
+          {/* Custom Designs Button */}
+          <button
+            onClick={() => {
+              triggerAudio('click');
+              setCustomDesignOpen(true);
+            }}
+            className="inline-flex items-center gap-2 px-5 py-2 bg-[#8C6D46] hover:bg-[#A37B4D] active:scale-95 text-white font-sans text-[10px] sm:text-[11px] font-bold tracking-[0.2em] uppercase transition-all duration-300 shadow-[0_4px_16px_rgba(140,109,70,0.35)] cursor-pointer rounded-[2px]"
+            aria-label="Send Custom Design Request on WhatsApp"
+          >
+            <svg className="w-3.5 h-3.5 shrink-0" fill="currentColor" viewBox="0 0 24 24">
+              <path d="M12.012 2c-5.506 0-9.989 4.478-9.99 9.984a9.96 9.96 0 001.37 5.037L2 22l5.135-1.348a9.954 9.954 0 004.878 1.28c5.505 0 9.988-4.478 9.989-9.984 0-2.67-1.037-5.18-2.925-7.07C17.186 3.037 14.678 2 12.012 2zm5.727 14.153c-.313.882-1.554 1.61-2.148 1.666-.59.055-1.18.326-3.766-.694-2.585-1.02-4.237-3.663-4.364-3.834-.127-.171-1.03-1.374-1.03-2.623 0-1.25.654-1.862.887-2.102.233-.24.509-.3.678-.3.17 0 .34 0 .487.007.155.007.363-.058.567.442.204.5.7 1.713.76 1.838.06.126.1.272.017.438-.083.166-.124.272-.25.418-.125.146-.263.327-.375.44-.124.125-.253.26-.11.507.144.247.64 1.056 1.373 1.71.942.843 1.737 1.103 1.983 1.226.246.123.39.103.535-.062.145-.165.62-.72.787-.966.166-.247.33-.206.555-.124.225.083 1.427.674 1.674.8.247.124.412.185.472.289.06.103.06.6-.253 1.482z" />
+            </svg>
+            <span>Custom Designs</span>
+          </button>
+
+          {/* Book an Appointment Button */}
+          <button
+            onClick={() => {
+              triggerAudio('click');
+              setConsultationModal(true);
+            }}
+            className="inline-flex items-center gap-2 px-5 py-2 border border-[#C5A880]/60 hover:border-[#C5A880] hover:bg-white/5 text-[#C5A880] font-sans text-[10px] sm:text-[11px] font-bold tracking-[0.2em] uppercase transition-all duration-300 cursor-pointer rounded-[2px] active:scale-95"
+            aria-label="Book an Appointment"
+          >
+            <svg className="w-3.5 h-3.5 shrink-0" fill="none" stroke="currentColor" strokeWidth="2" viewBox="0 0 24 24">
+              <rect x="3" y="4" width="18" height="18" rx="2" ry="2" />
+              <line x1="16" y1="2" x2="16" y2="6" />
+              <line x1="8" y1="2" x2="8" y2="6" />
+              <line x1="3" y1="10" x2="21" y2="10" />
+            </svg>
+            <span>Book Appointment</span>
+          </button>
+        </div>
+      </div>
+
+      {/* ==========================================================
         SECTION 01: LUXURY HERO SECTION - MORE THAN JEWELLERY
         (Production-Ready: High-Performance WebP + Framer Motion Stagger + Polished Typography & Trust Badges)
         ========================================================== */}
@@ -335,6 +340,36 @@ export default function Home({
 
           {/* Luxury Ambient Shimmer Particles (Top Glint) */}
           <div className="absolute top-1/4 left-1/4 w-96 h-96 bg-[#C5A880]/5 rounded-full blur-3xl pointer-events-none" />
+
+          {/* Floating Animated Golden & Silver Stardust Particles */}
+          <div className="absolute inset-0 pointer-events-none overflow-hidden z-10">
+            {[
+              { top: '15%', left: '8%', size: 'w-2 h-2', delay: 0, duration: 4.5 },
+              { top: '28%', left: '38%', size: 'w-1.5 h-1.5', delay: 1, duration: 5 },
+              { top: '62%', left: '18%', size: 'w-2 h-2', delay: 0.6, duration: 4.2 },
+              { top: '22%', left: '72%', size: 'w-2.5 h-2.5', delay: 1.4, duration: 3.8 },
+              { top: '70%', left: '65%', size: 'w-1.5 h-1.5', delay: 2.1, duration: 5.5 },
+              { top: '45%', left: '88%', size: 'w-2 h-2', delay: 0.9, duration: 4.8 },
+              { top: '80%', left: '40%', size: 'w-1.5 h-1.5', delay: 1.8, duration: 4.0 },
+            ].map((p, i) => (
+              <motion.div
+                key={i}
+                className={`absolute ${p.size} rounded-full bg-gradient-to-tr from-[#D4AF37] to-[#FFF5DC] shadow-[0_0_12px_#D4AF37]`}
+                style={{ top: p.top, left: p.left }}
+                animate={{
+                  y: [0, -20, 0],
+                  opacity: [0.25, 0.95, 0.25],
+                  scale: [0.75, 1.35, 0.75],
+                }}
+                transition={{
+                  duration: p.duration,
+                  repeat: Infinity,
+                  ease: "easeInOut",
+                  delay: p.delay,
+                }}
+              />
+            ))}
+          </div>
         </div>
 
         {/* Hero Left Content Container with Framer-Motion Staggered Entrance */}
@@ -369,7 +404,7 @@ export default function Home({
             >
               <span className="text-[#C5A880] text-xs font-serif select-none">✦</span>
               <span className="inline-block text-[#C5A880] text-xs sm:text-[13px] font-sans font-semibold tracking-[0.28em] uppercase">
-                TIMELESS BY NATURE • ESTD. 1952
+                TIMELESS BY NATURE • ESTD. 1996
               </span>
             </motion.div>
 
@@ -517,9 +552,458 @@ export default function Home({
       <div className="bg-[#F8F5EC] text-[#202329] transition-colors duration-500 !mt-0">
 
         {/* ==========================================================
-          FEATURE 02: OUR COLLECTIONS - CRAFTED FOR EVERY MOMENT
-          (Exact Reference Screenshot Design)
+          ANIMATED LUXURY MARQUEE TICKER (Continuous moving sheen)
           ========================================================== */}
+        <div className="w-full bg-[#071322] border-y border-[#C5A880]/30 py-3 overflow-hidden select-none relative z-20 shadow-inner">
+          <div className="flex animate-marquee-smooth whitespace-nowrap gap-8 text-[11px] sm:text-xs font-sans font-bold tracking-[0.25em] uppercase text-[#E5C396]">
+            {[...Array(3)].map((_, i) => (
+              <span key={i} className="inline-flex items-center gap-8">
+                <span>✦ 100% BIS 925 HALLMARKED PURE SILVER</span>
+                <span className="text-[#8C6D46]">•</span>
+                <span>ESTD. 1996 ATELIER • MAU HERITAGE</span>
+                <span className="text-[#8C6D46]">•</span>
+                <span>BESPOKE CUSTOM DESIGNS VIA WHATSAPP</span>
+                <span className="text-[#8C6D46]">•</span>
+                <span>INSURED PAN-INDIA DOORSTEP DELIVERY</span>
+                <span className="text-[#8C6D46]">•</span>
+                <span>LIFETIME EXCHANGE &amp; BUYBACK</span>
+                <span className="text-[#8C6D46]">•</span>
+              </span>
+            ))}
+          </div>
+        </div>
+
+{/* ==========================================================
+          CLIENT FEEDBACK SECTION 2: CUSTOM DESIGNS (Screenshot 2 Match)
+          "MADE PERSONAL: Your Idea. Your Jewellery."
+          ========================================================== */}
+        <section 
+          id="custom-designs-made-personal" 
+          className="w-full bg-[#050B14] py-14 sm:py-20 lg:py-24 border-b border-white/10 select-none relative overflow-hidden text-left"
+        >
+          {/* Subtle Golden Mandala Corner Watermark */}
+          <div className="absolute top-0 right-0 w-[420px] h-[420px] bg-[#C5A880]/5 rounded-full blur-[90px] pointer-events-none" />
+          <div className="absolute bottom-0 left-0 w-[300px] h-[300px] bg-[#C5A880]/5 rounded-full blur-[80px] pointer-events-none" />
+
+          <div className="max-w-[1536px] mx-auto px-6 sm:px-10 lg:px-14 relative z-10">
+            <div className="grid grid-cols-1 lg:grid-cols-12 gap-10 lg:gap-14 items-center">
+              
+              {/* Left Column: Editorial Headline & Actions (Screenshot 2 Exact) */}
+              <div className="lg:col-span-5 text-left">
+                {/* Eyebrow */}
+                <span className="inline-block text-[#C5A880] text-xs sm:text-[13px] font-sans font-semibold tracking-[0.28em] uppercase mb-3 sm:mb-4">
+                  MADE PERSONAL
+                </span>
+
+                {/* Main Headline */}
+                <h2 
+                  className="text-3xl sm:text-5xl lg:text-[56px] xl:text-[62px] font-bold text-white leading-[1.05] mb-4 sm:mb-6"
+                  style={{ fontFamily: "'Cormorant Garamond', 'Playfair Display', Georgia, serif" }}
+                >
+                  Your Idea.<br />
+                  Your Jewellery.
+                </h2>
+
+                {/* Subtitle Description */}
+                <p className="text-gray-300 text-xs sm:text-sm lg:text-[15px] font-sans font-normal leading-relaxed mb-8 sm:mb-10 max-w-[440px]">
+                  Create a custom piece or meet us for a personal appointment to bring your vision to life.
+                </p>
+
+                {/* Two Action Buttons (Screenshot 2 Exact Design) */}
+                <div className="flex flex-wrap items-center gap-4 sm:gap-5">
+                  {/* Button 1: CUSTOM DESIGNS -> (Outlined) */}
+                  <button
+                    onClick={() => {
+                      setCustomDesignOpen(true);
+                    }}
+                    className="inline-flex items-center gap-2.5 px-6 sm:px-8 py-3.5 sm:py-4 border border-[#B09A82] hover:border-white text-white font-sans text-xs sm:text-[13px] font-semibold tracking-[0.18em] uppercase transition-all duration-300 hover:bg-white/10 cursor-pointer rounded-none active:scale-95"
+                  >
+                    <span>CUSTOM DESIGNS</span>
+                    <span className="text-sm font-light">→</span>
+                  </button>
+
+                  {/* Button 2: BOOK AN APPOINTMENT -> (Filled Gold) */}
+                  <button
+                    onClick={() => {
+                      setConsultationModal(true);
+                    }}
+                    className="inline-flex items-center gap-2.5 px-6 sm:px-8 py-3.5 sm:py-4 bg-[#8C6D46] hover:bg-[#A37B4D] text-white font-sans text-xs sm:text-[13px] font-semibold tracking-[0.18em] uppercase transition-all duration-300 shadow-[0_8px_25px_rgba(140,109,70,0.4)] cursor-pointer rounded-none active:scale-95"
+                  >
+                    <span>BOOK AN APPOINTMENT</span>
+                    <span className="text-sm font-light">→</span>
+                  </button>
+                </div>
+              </div>
+
+              {/* Right Column: Atelier Sketch Workbench Photo (Screenshot 2 Exact) */}
+              <div className="lg:col-span-7">
+                <div className="relative rounded-[2px] overflow-hidden border border-white/15 shadow-[0_20px_50px_rgba(0,0,0,0.8)] group">
+                  <img 
+                    src={madePersonalSketch} 
+                    alt="Atelier Sketch Desk - Made Personal: Your Idea. Your Jewellery."
+                    className="w-full h-auto max-h-[500px] object-cover transition-transform duration-700 ease-out group-hover:scale-103"
+                    loading="lazy"
+                  />
+                  <div className="absolute inset-0 bg-gradient-to-t from-black/50 via-transparent to-transparent pointer-events-none" />
+                  
+                  {/* Floating Atelier Badge */}
+                  <div className="absolute bottom-4 left-4 right-4 sm:bottom-6 sm:left-6 sm:right-6 bg-[#050B14]/85 backdrop-blur-md p-3.5 sm:p-4 border border-white/15 flex items-center justify-between">
+                    <div>
+                      <span className="text-[10px] text-[#C5A880] uppercase tracking-[0.2em] font-semibold block">
+                        HANDCRAFTED BESPOKE ATELIER
+                      </span>
+                      <p className="text-xs sm:text-sm text-white font-serif font-medium mt-0.5">
+                        Master Silversmith Consultation • 3D CAD Mockup • BIS 925 Hallmark
+                      </p>
+                    </div>
+                    <span className="hidden sm:inline-block text-[#C5A880] text-lg font-serif">✦</span>
+                  </div>
+                </div>
+              </div>
+
+            </div>
+          </div>
+        </section>
+{/* ==========================================================
+          EDITORIAL SHOWCASES (01-06: HIM, HER, KIDS, GIFTS, COUPLES, ACCESSORIES)
+          Refactored into clean modular components for peak performance
+          ========================================================== */}
+        {getShowcaseSectionsConfig({ navigateTo, changeCategoryTab, setCustomDesignOpen }).map((sec) => (
+          <EditorialShowcaseSection
+            key={sec.id}
+            {...sec}
+            triggerAudio={triggerAudio}
+            navigateTo={navigateTo}
+            changeCategoryTab={changeCategoryTab}
+            setGenderFilter={setGenderFilter}
+          />
+        ))}
+
+{/* ==========================================================
+          CLIENT FEEDBACK SECTION 4: GEMS COLLECTION (Feedback #10)
+          ========================================================== */}
+        <section id="gems-collection-section" className="w-full py-14 sm:py-20 bg-[#050B14] border-b border-white/10 select-none text-left text-white">
+          <div className="max-w-[1536px] mx-auto px-6 sm:px-10 lg:px-14">
+            
+            {/* Editorial Header */}
+            <div className="flex flex-col lg:flex-row items-start lg:items-end justify-between gap-6 mb-10 sm:mb-12">
+              <div>
+                <span className="inline-block text-[#C5A880] text-xs sm:text-[13px] font-sans font-semibold tracking-[0.28em] uppercase mb-2">
+                  PRECIOUS &amp; NATURAL STONES
+                </span>
+                <h2 
+                  className="text-3xl sm:text-4xl lg:text-[46px] font-bold text-white leading-tight"
+                  style={{ fontFamily: "'Cormorant Garamond', 'Playfair Display', Georgia, serif" }}
+                >
+                  Gems Collection
+                </h2>
+                <p className="text-gray-300 text-xs sm:text-sm font-sans mt-2 max-w-xl font-normal leading-relaxed">
+                  Certified Royal Blue Sapphires, Zambian Emeralds, Burmese Rubies, and Tanzanites hand-set in hallmarked 925 fine silver.
+                </p>
+              </div>
+
+              <button
+                onClick={() => {
+                  changeCategoryTab?.('Collections');
+                  navigateTo('collections');
+                }}
+                className="inline-flex items-center gap-2.5 px-8 py-3.5 bg-[#8C6D46] hover:bg-[#A37B4D] active:scale-95 text-white font-sans text-xs sm:text-[12.5px] font-semibold tracking-[0.2em] uppercase transition-all duration-300 shadow-[0_8px_25px_rgba(140,109,70,0.35)] cursor-pointer rounded-none"
+              >
+                <span>EXPLORE ALL GEMS</span>
+                <span className="text-sm font-light">→</span>
+              </button>
+            </div>
+
+            {/* Gems Showcase Banner with 4 Gem Types */}
+            <div className="relative rounded-[2px] overflow-hidden border border-white/15 shadow-2xl group mb-8">
+              <img 
+                src={gemsCollectionBanner} 
+                alt="Sapphire, Emerald, Ruby & Tanzanite 925 Silver Jewellery"
+                className="w-full h-auto max-h-[460px] object-cover transition-transform duration-700 ease-out group-hover:scale-102"
+                loading="lazy"
+              />
+              <div className="absolute inset-0 bg-gradient-to-t from-[#050B14]/85 via-transparent to-transparent pointer-events-none" />
+
+              <div className="absolute bottom-6 left-6 right-6 sm:bottom-8 sm:left-10 sm:right-10 flex flex-col sm:flex-row items-start sm:items-end justify-between gap-4">
+                <div>
+                  <span className="text-[#E5C396] text-xs font-sans font-bold tracking-[0.25em] uppercase block mb-1">
+                    ✦ CERTIFIED NATURAL GEMSTONES
+                  </span>
+                  <h3 
+                    className="font-serif text-2xl sm:text-3xl lg:text-4xl font-bold leading-tight drop-shadow-md text-white"
+                    style={{ fontFamily: "'Cormorant Garamond', 'Playfair Display', Georgia, serif" }}
+                  >
+                    Earth's Rarest Hues. Forged in Pure Silver.
+                  </h3>
+                </div>
+              </div>
+            </div>
+
+            {/* 4 Gemstone Cards */}
+            <div className="grid grid-cols-2 md:grid-cols-4 gap-4 sm:gap-6">
+              {[
+                { name: 'Royal Sapphire', stone: 'Neelam', desc: 'Symbol of wisdom, regal grace & focus' },
+                { name: 'Zambian Emerald', stone: 'Panna', desc: 'Lush green harmony & prosperous clarity' },
+                { name: 'Burmese Ruby', stone: 'Manik', desc: 'Fiery passion, courage & noble power' },
+                { name: 'Royal Tanzanite', stone: 'Tanzanite', desc: 'Rare deep indigo African treasure' }
+              ].map((gem, idx) => (
+                <div 
+                  key={idx}
+                  onClick={() => {
+                    changeCategoryTab?.('Collections');
+                    navigateTo('collections');
+                  }}
+                  className="p-4 sm:p-5 bg-white/5 border border-white/10 hover:border-[#C5A880]/60 transition-all duration-300 cursor-pointer group hover:bg-white/10"
+                >
+                  <span className="text-[#C5A880] text-[10px] font-sans font-bold tracking-[0.2em] uppercase block mb-1">
+                    {gem.stone}
+                  </span>
+                  <h4 
+                    className="font-serif text-base sm:text-lg font-bold text-white group-hover:text-[#E5C396] transition-colors"
+                    style={{ fontFamily: "'Cormorant Garamond', 'Playfair Display', Georgia, serif" }}
+                  >
+                    {gem.name}
+                  </h4>
+                  <p className="text-gray-400 text-xs font-sans mt-1.5 leading-relaxed">
+                    {gem.desc}
+                  </p>
+                  <span className="text-[#C5A880] text-[11px] font-sans font-semibold tracking-wider uppercase mt-3 inline-flex items-center gap-1 group-hover:translate-x-1 transition-transform">
+                    <span>Shop Jewels</span>
+                    <span>→</span>
+                  </span>
+                </div>
+              ))}
+            </div>
+
+          </div>
+        </section>
+
+{/* ==========================================================
+          CLIENT FEEDBACK SECTION 3: GOLD PLATING (Feedback #6.2)
+          ========================================================== */}
+        <section id="gold-plating-section" className="w-full py-14 sm:py-20 bg-[#F5ECE4] border-b border-[#E8DFD5] select-none text-left">
+          <div className="max-w-[1536px] mx-auto px-6 sm:px-10 lg:px-14">
+            
+            {/* Editorial Header */}
+            <div className="flex flex-col lg:flex-row items-start lg:items-end justify-between gap-6 mb-10 sm:mb-12">
+              <div>
+                <span className="inline-block text-[#8C6D46] text-xs sm:text-[13px] font-sans font-semibold tracking-[0.28em] uppercase mb-2">
+                  18K DUAL TONE ROYALTY
+                </span>
+                <h2 
+                  className="text-3xl sm:text-4xl lg:text-[46px] font-bold text-[#1A1817] leading-tight"
+                  style={{ fontFamily: "'Cormorant Garamond', 'Playfair Display', Georgia, serif" }}
+                >
+                  Gold Plating Collection
+                </h2>
+                <p className="text-[#6F6862] text-xs sm:text-sm font-sans mt-2 max-w-xl font-normal leading-relaxed">
+                  Rich 18K yellow gold layered seamlessly over solid 925 sterling silver. Anti-tarnish, skin-friendly, and designed for royal radiance.
+                </p>
+              </div>
+
+              <button
+                onClick={() => {
+                  changeCategoryTab?.('Collections');
+                  navigateTo('collections');
+                }}
+                className="inline-flex items-center gap-2.5 px-8 py-3.5 bg-[#785B3C] hover:bg-[#8F6D48] active:scale-95 text-white font-sans text-xs sm:text-[12.5px] font-semibold tracking-[0.2em] uppercase transition-all duration-300 shadow-[0_4px_16px_rgba(120,91,60,0.25)] cursor-pointer rounded-none"
+              >
+                <span>SHOP GOLD PLATED</span>
+                <span className="text-sm font-light">→</span>
+              </button>
+            </div>
+
+            {/* Showcase Visual: Large 16:9 Gold Plating Banner with 3 Feature Badges */}
+            <div className="relative rounded-[2px] overflow-hidden border border-[#D6CABE] shadow-xl group mb-8">
+              <img 
+                src={goldPlatingBanner} 
+                alt="18K Gold Plated 925 Sterling Silver Jewellery"
+                className="w-full h-auto max-h-[460px] object-cover transition-transform duration-700 ease-out group-hover:scale-102"
+                loading="lazy"
+              />
+              <div className="absolute inset-0 bg-gradient-to-t from-black/75 via-black/20 to-transparent pointer-events-none" />
+
+              <div className="absolute bottom-6 left-6 right-6 sm:bottom-8 sm:left-10 sm:right-10 flex flex-col sm:flex-row items-start sm:items-end justify-between gap-4 text-white">
+                <div>
+                  <span className="text-[#F5D77F] text-xs font-sans font-bold tracking-[0.25em] uppercase block mb-1">
+                    ✦ 18 KARAT YELLOW GOLD VERMEIL
+                  </span>
+                  <h3 
+                    className="font-serif text-2xl sm:text-3xl lg:text-4xl font-bold leading-tight drop-shadow-md"
+                    style={{ fontFamily: "'Cormorant Garamond', 'Playfair Display', Georgia, serif" }}
+                  >
+                    The Warmth of Gold. The Purity of Silver.
+                  </h3>
+                </div>
+                <div className="flex items-center gap-6 text-xs sm:text-sm font-sans tracking-wide text-white/90">
+                  <span>• 18K Micron Plating</span>
+                  <span>• 925 Core</span>
+                  <span>• Lifetime Buyback</span>
+                </div>
+              </div>
+            </div>
+
+          </div>
+        </section>
+
+{/* ==========================================================
+          CLIENT FEEDBACK SECTION 5: BUDGET TIERS (Feedback #6.3, 6.4, 6.5)
+          - UNDER 499
+          - UNDER 999
+          - UNDER 1999
+          ========================================================== */}
+        <section id="curated-budget-tiers" className="w-full py-14 sm:py-20 bg-[#FDFBF7] border-b border-[#EAE3D9] select-none text-left">
+          <div className="max-w-[1536px] mx-auto px-6 sm:px-10 lg:px-14">
+            
+            {/* Header */}
+            <div className="text-center max-w-2xl mx-auto mb-10 sm:mb-14">
+              <span className="inline-block text-[#8C6D46] text-xs sm:text-[13px] font-sans font-semibold tracking-[0.28em] uppercase mb-2">
+                AFFORDABLE 925 LUXURY
+              </span>
+              <h2 
+                className="text-3xl sm:text-4xl lg:text-[46px] font-bold text-[#1A1817] leading-tight"
+                style={{ fontFamily: "'Cormorant Garamond', 'Playfair Display', Georgia, serif" }}
+              >
+                Shop by Budget
+              </h2>
+              <p className="text-[#6F6862] text-xs sm:text-sm font-sans mt-2 font-normal">
+                Pure 925 sterling silver crafted to shine within your everyday celebration budget.
+              </p>
+            </div>
+
+            {/* 3 Budget Tier Showcase Cards (Under 499, Under 999, Under 1999) */}
+            <div className="grid grid-cols-1 md:grid-cols-3 gap-6 sm:gap-8">
+              
+              {/* Tier 1: Under 499 */}
+              <div className="p-6 sm:p-8 bg-gradient-to-b from-white to-[#F9F6F0] border border-[#E8DFD5] hover:border-[#8C6D46] shadow-[0_4px_20px_rgba(0,0,0,0.04)] hover:shadow-[0_12px_32px_rgba(140,109,70,0.15)] transition-all duration-300 flex flex-col justify-between group">
+                <div>
+                  <div className="flex items-center justify-between mb-4">
+                    <span className="px-3 py-1 bg-[#8C6D46]/10 text-[#8C6D46] text-[10px] font-sans font-bold tracking-[0.2em] uppercase rounded-full">
+                      POCKET LUXURY
+                    </span>
+                    <span className="text-xs text-gray-500 font-sans">BIS 925 Pure</span>
+                  </div>
+                  <h3 
+                    className="font-serif text-3xl sm:text-4xl font-bold text-[#1A1817] group-hover:text-[#8C6D46] transition-colors"
+                    style={{ fontFamily: "'Cormorant Garamond', 'Playfair Display', Georgia, serif" }}
+                  >
+                    Under ₹499
+                  </h3>
+                  <p className="text-xs sm:text-sm text-[#6F6862] font-sans mt-2.5 leading-relaxed">
+                    Minimalist 925 silver rings, nose pins, auspicious tokens, and silver charms for daily grace.
+                  </p>
+                  <ul className="mt-4 space-y-2 text-xs font-sans text-[#5A5550]">
+                    <li className="flex items-center gap-2">✦ Minimalist Silver Bands</li>
+                    <li className="flex items-center gap-2">✦ Hallmarked Nose Pins &amp; Studs</li>
+                    <li className="flex items-center gap-2">✦ Auspicious Charms &amp; Coins</li>
+                  </ul>
+                </div>
+
+                <div className="mt-8 pt-4 border-t border-[#EAE3D9]">
+                  <button
+                    onClick={() => {
+                      if (typeof setMaxPriceFilter === 'function') setMaxPriceFilter(499);
+                      changeCategoryTab?.('Collections');
+                      navigateTo('collections');
+                    }}
+                    className="w-full py-3.5 bg-[#1A1817] group-hover:bg-[#8C6D46] text-white font-sans text-xs font-semibold tracking-[0.2em] uppercase transition-colors cursor-pointer flex items-center justify-center gap-2"
+                  >
+                    <span>EXPLORE UNDER ₹499</span>
+                    <span>→</span>
+                  </button>
+                </div>
+              </div>
+
+              {/* Tier 2: Under 999 */}
+              <div className="p-6 sm:p-8 bg-gradient-to-b from-white to-[#F9F6F0] border-2 border-[#8C6D46] shadow-[0_8px_30px_rgba(140,109,70,0.18)] transition-all duration-300 flex flex-col justify-between group relative overflow-hidden">
+                <div className="absolute top-0 right-0 bg-[#8C6D46] text-white text-[9px] font-sans font-bold tracking-[0.2em] uppercase px-3 py-1">
+                  POPULAR
+                </div>
+                <div>
+                  <div className="flex items-center justify-between mb-4">
+                    <span className="px-3 py-1 bg-[#8C6D46] text-white text-[10px] font-sans font-bold tracking-[0.2em] uppercase rounded-full">
+                      EVERYDAY ELEGANCE
+                    </span>
+                    <span className="text-xs text-gray-500 font-sans">BIS 925 Pure</span>
+                  </div>
+                  <h3 
+                    className="font-serif text-3xl sm:text-4xl font-bold text-[#1A1817] group-hover:text-[#8C6D46] transition-colors"
+                    style={{ fontFamily: "'Cormorant Garamond', 'Playfair Display', Georgia, serif" }}
+                  >
+                    Under ₹999
+                  </h3>
+                  <p className="text-xs sm:text-sm text-[#6F6862] font-sans mt-2.5 leading-relaxed">
+                    Certified 925 silver pendants, nazariya bracelets, statement hoop earrings, and delicate chains.
+                  </p>
+                  <ul className="mt-4 space-y-2 text-xs font-sans text-[#5A5550]">
+                    <li className="flex items-center gap-2">✦ Solitaire &amp; Floral Pendants</li>
+                    <li className="flex items-center gap-2">✦ Nazariya &amp; Charm Bracelets</li>
+                    <li className="flex items-center gap-2">✦ Oxidised Jhumkis &amp; Hoops</li>
+                  </ul>
+                </div>
+
+                <div className="mt-8 pt-4 border-t border-[#EAE3D9]">
+                  <button
+                    onClick={() => {
+                      if (typeof setMaxPriceFilter === 'function') setMaxPriceFilter(999);
+                      changeCategoryTab?.('Collections');
+                      navigateTo('collections');
+                    }}
+                    className="w-full py-3.5 bg-[#8C6D46] hover:bg-[#A37B4D] text-white font-sans text-xs font-semibold tracking-[0.2em] uppercase transition-colors cursor-pointer flex items-center justify-center gap-2 shadow-md"
+                  >
+                    <span>EXPLORE UNDER ₹999</span>
+                    <span>→</span>
+                  </button>
+                </div>
+              </div>
+
+              {/* Tier 3: Under 1999 */}
+              <div className="p-6 sm:p-8 bg-gradient-to-b from-white to-[#F9F6F0] border border-[#E8DFD5] hover:border-[#8C6D46] shadow-[0_4px_20px_rgba(0,0,0,0.04)] hover:shadow-[0_12px_32px_rgba(140,109,70,0.15)] transition-all duration-300 flex flex-col justify-between group">
+                <div>
+                  <div className="flex items-center justify-between mb-4">
+                    <span className="px-3 py-1 bg-[#8C6D46]/10 text-[#8C6D46] text-[10px] font-sans font-bold tracking-[0.2em] uppercase rounded-full">
+                      ROYAL ATTIRE
+                    </span>
+                    <span className="text-xs text-gray-500 font-sans">BIS 925 Pure</span>
+                  </div>
+                  <h3 
+                    className="font-serif text-3xl sm:text-4xl font-bold text-[#1A1817] group-hover:text-[#8C6D46] transition-colors"
+                    style={{ fontFamily: "'Cormorant Garamond', 'Playfair Display', Georgia, serif" }}
+                  >
+                    Under ₹1999
+                  </h3>
+                  <p className="text-xs sm:text-sm text-[#6F6862] font-sans mt-2.5 leading-relaxed">
+                    Heavy masculine chains, engraved Rajasthani kadas, traditional payals, and gem cocktail rings.
+                  </p>
+                  <ul className="mt-4 space-y-2 text-xs font-sans text-[#5A5550]">
+                    <li className="flex items-center gap-2">✦ Solid Curb &amp; Rope Silver Chains</li>
+                    <li className="flex items-center gap-2">✦ Hand-hammered Silver Kadas</li>
+                    <li className="flex items-center gap-2">✦ Bridal Ghungroo Payals &amp; Chokers</li>
+                  </ul>
+                </div>
+
+                <div className="mt-8 pt-4 border-t border-[#EAE3D9]">
+                  <button
+                    onClick={() => {
+                      if (typeof setMaxPriceFilter === 'function') setMaxPriceFilter(1999);
+                      changeCategoryTab?.('Collections');
+                      navigateTo('collections');
+                    }}
+                    className="w-full py-3.5 bg-[#1A1817] group-hover:bg-[#8C6D46] text-white font-sans text-xs font-semibold tracking-[0.2em] uppercase transition-colors cursor-pointer flex items-center justify-center gap-2"
+                  >
+                    <span>EXPLORE UNDER ₹1999</span>
+                    <span>→</span>
+                  </button>
+                </div>
+              </div>
+
+            </div>
+
+          </div>
+        </section>
+
+
+
         <section id="our-collections" className="w-full py-12 sm:py-16 lg:py-20 bg-[#F5ECE4] border-b border-[#E8DFD5] select-none">
           <div className="max-w-[1536px] mx-auto px-6 sm:px-10 lg:px-14">
             <div className="flex flex-col lg:flex-row items-center justify-between gap-10 lg:gap-14">
@@ -826,420 +1310,7 @@ export default function Home({
           </div>
         </section>
 
-        {/* ==========================================================
-          CLIENT FEEDBACK SECTION 2: CUSTOM DESIGNS (Screenshot 2 Match)
-          "MADE PERSONAL: Your Idea. Your Jewellery."
-          ========================================================== */}
-        <section 
-          id="custom-designs-made-personal" 
-          className="w-full bg-[#050B14] py-14 sm:py-20 lg:py-24 border-b border-white/10 select-none relative overflow-hidden text-left"
-        >
-          {/* Subtle Golden Mandala Corner Watermark */}
-          <div className="absolute top-0 right-0 w-[420px] h-[420px] bg-[#C5A880]/5 rounded-full blur-[90px] pointer-events-none" />
-          <div className="absolute bottom-0 left-0 w-[300px] h-[300px] bg-[#C5A880]/5 rounded-full blur-[80px] pointer-events-none" />
-
-          <div className="max-w-[1536px] mx-auto px-6 sm:px-10 lg:px-14 relative z-10">
-            <div className="grid grid-cols-1 lg:grid-cols-12 gap-10 lg:gap-14 items-center">
-              
-              {/* Left Column: Editorial Headline & Actions (Screenshot 2 Exact) */}
-              <div className="lg:col-span-5 text-left">
-                {/* Eyebrow */}
-                <span className="inline-block text-[#C5A880] text-xs sm:text-[13px] font-sans font-semibold tracking-[0.28em] uppercase mb-3 sm:mb-4">
-                  MADE PERSONAL
-                </span>
-
-                {/* Main Headline */}
-                <h2 
-                  className="text-3xl sm:text-5xl lg:text-[56px] xl:text-[62px] font-bold text-white leading-[1.05] mb-4 sm:mb-6"
-                  style={{ fontFamily: "'Cormorant Garamond', 'Playfair Display', Georgia, serif" }}
-                >
-                  Your Idea.<br />
-                  Your Jewellery.
-                </h2>
-
-                {/* Subtitle Description */}
-                <p className="text-gray-300 text-xs sm:text-sm lg:text-[15px] font-sans font-normal leading-relaxed mb-8 sm:mb-10 max-w-[440px]">
-                  Create a custom piece or meet us for a personal appointment to bring your vision to life.
-                </p>
-
-                {/* Two Action Buttons (Screenshot 2 Exact Design) */}
-                <div className="flex flex-wrap items-center gap-4 sm:gap-5">
-                  {/* Button 1: CUSTOM DESIGNS -> (Outlined) */}
-                  <button
-                    onClick={() => {
-                      setCustomDesignOpen(true);
-                    }}
-                    className="inline-flex items-center gap-2.5 px-6 sm:px-8 py-3.5 sm:py-4 border border-[#B09A82] hover:border-white text-white font-sans text-xs sm:text-[13px] font-semibold tracking-[0.18em] uppercase transition-all duration-300 hover:bg-white/10 cursor-pointer rounded-none active:scale-95"
-                  >
-                    <span>CUSTOM DESIGNS</span>
-                    <span className="text-sm font-light">→</span>
-                  </button>
-
-                  {/* Button 2: BOOK AN APPOINTMENT -> (Filled Gold) */}
-                  <button
-                    onClick={() => {
-                      setConsultationModal(true);
-                    }}
-                    className="inline-flex items-center gap-2.5 px-6 sm:px-8 py-3.5 sm:py-4 bg-[#8C6D46] hover:bg-[#A37B4D] text-white font-sans text-xs sm:text-[13px] font-semibold tracking-[0.18em] uppercase transition-all duration-300 shadow-[0_8px_25px_rgba(140,109,70,0.4)] cursor-pointer rounded-none active:scale-95"
-                  >
-                    <span>BOOK AN APPOINTMENT</span>
-                    <span className="text-sm font-light">→</span>
-                  </button>
-                </div>
-              </div>
-
-              {/* Right Column: Atelier Sketch Workbench Photo (Screenshot 2 Exact) */}
-              <div className="lg:col-span-7">
-                <div className="relative rounded-[2px] overflow-hidden border border-white/15 shadow-[0_20px_50px_rgba(0,0,0,0.8)] group">
-                  <img 
-                    src={madePersonalSketch} 
-                    alt="Atelier Sketch Desk - Made Personal: Your Idea. Your Jewellery."
-                    className="w-full h-auto max-h-[500px] object-cover transition-transform duration-700 ease-out group-hover:scale-103"
-                    loading="lazy"
-                  />
-                  <div className="absolute inset-0 bg-gradient-to-t from-black/50 via-transparent to-transparent pointer-events-none" />
-                  
-                  {/* Floating Atelier Badge */}
-                  <div className="absolute bottom-4 left-4 right-4 sm:bottom-6 sm:left-6 sm:right-6 bg-[#050B14]/85 backdrop-blur-md p-3.5 sm:p-4 border border-white/15 flex items-center justify-between">
-                    <div>
-                      <span className="text-[10px] text-[#C5A880] uppercase tracking-[0.2em] font-semibold block">
-                        HANDCRAFTED BESPOKE ATELIER
-                      </span>
-                      <p className="text-xs sm:text-sm text-white font-serif font-medium mt-0.5">
-                        Master Silversmith Consultation • 3D CAD Mockup • BIS 925 Hallmark
-                      </p>
-                    </div>
-                    <span className="hidden sm:inline-block text-[#C5A880] text-lg font-serif">✦</span>
-                  </div>
-                </div>
-              </div>
-
-            </div>
-          </div>
-        </section>
-
-        {/* ==========================================================
-          CLIENT FEEDBACK SECTION 3: GOLD PLATING (Feedback #6.2)
-          ========================================================== */}
-        <section id="gold-plating-section" className="w-full py-14 sm:py-20 bg-[#F5ECE4] border-b border-[#E8DFD5] select-none text-left">
-          <div className="max-w-[1536px] mx-auto px-6 sm:px-10 lg:px-14">
-            
-            {/* Editorial Header */}
-            <div className="flex flex-col lg:flex-row items-start lg:items-end justify-between gap-6 mb-10 sm:mb-12">
-              <div>
-                <span className="inline-block text-[#8C6D46] text-xs sm:text-[13px] font-sans font-semibold tracking-[0.28em] uppercase mb-2">
-                  18K DUAL TONE ROYALTY
-                </span>
-                <h2 
-                  className="text-3xl sm:text-4xl lg:text-[46px] font-bold text-[#1A1817] leading-tight"
-                  style={{ fontFamily: "'Cormorant Garamond', 'Playfair Display', Georgia, serif" }}
-                >
-                  Gold Plating Collection
-                </h2>
-                <p className="text-[#6F6862] text-xs sm:text-sm font-sans mt-2 max-w-xl font-normal leading-relaxed">
-                  Rich 18K yellow gold layered seamlessly over solid 925 sterling silver. Anti-tarnish, skin-friendly, and designed for royal radiance.
-                </p>
-              </div>
-
-              <button
-                onClick={() => {
-                  changeCategoryTab?.('Collections');
-                  navigateTo('collections');
-                }}
-                className="inline-flex items-center gap-2.5 px-8 py-3.5 bg-[#785B3C] hover:bg-[#8F6D48] active:scale-95 text-white font-sans text-xs sm:text-[12.5px] font-semibold tracking-[0.2em] uppercase transition-all duration-300 shadow-[0_4px_16px_rgba(120,91,60,0.25)] cursor-pointer rounded-none"
-              >
-                <span>SHOP GOLD PLATED</span>
-                <span className="text-sm font-light">→</span>
-              </button>
-            </div>
-
-            {/* Showcase Visual: Large 16:9 Gold Plating Banner with 3 Feature Badges */}
-            <div className="relative rounded-[2px] overflow-hidden border border-[#D6CABE] shadow-xl group mb-8">
-              <img 
-                src={goldPlatingBanner} 
-                alt="18K Gold Plated 925 Sterling Silver Jewellery"
-                className="w-full h-auto max-h-[460px] object-cover transition-transform duration-700 ease-out group-hover:scale-102"
-                loading="lazy"
-              />
-              <div className="absolute inset-0 bg-gradient-to-t from-black/75 via-black/20 to-transparent pointer-events-none" />
-
-              <div className="absolute bottom-6 left-6 right-6 sm:bottom-8 sm:left-10 sm:right-10 flex flex-col sm:flex-row items-start sm:items-end justify-between gap-4 text-white">
-                <div>
-                  <span className="text-[#F5D77F] text-xs font-sans font-bold tracking-[0.25em] uppercase block mb-1">
-                    ✦ 18 KARAT YELLOW GOLD VERMEIL
-                  </span>
-                  <h3 
-                    className="font-serif text-2xl sm:text-3xl lg:text-4xl font-bold leading-tight drop-shadow-md"
-                    style={{ fontFamily: "'Cormorant Garamond', 'Playfair Display', Georgia, serif" }}
-                  >
-                    The Warmth of Gold. The Purity of Silver.
-                  </h3>
-                </div>
-                <div className="flex items-center gap-6 text-xs sm:text-sm font-sans tracking-wide text-white/90">
-                  <span>• 18K Micron Plating</span>
-                  <span>• 925 Core</span>
-                  <span>• Lifetime Buyback</span>
-                </div>
-              </div>
-            </div>
-
-          </div>
-        </section>
-
-        {/* ==========================================================
-          CLIENT FEEDBACK SECTION 4: GEMS COLLECTION (Feedback #10)
-          ========================================================== */}
-        <section id="gems-collection-section" className="w-full py-14 sm:py-20 bg-[#050B14] border-b border-white/10 select-none text-left text-white">
-          <div className="max-w-[1536px] mx-auto px-6 sm:px-10 lg:px-14">
-            
-            {/* Editorial Header */}
-            <div className="flex flex-col lg:flex-row items-start lg:items-end justify-between gap-6 mb-10 sm:mb-12">
-              <div>
-                <span className="inline-block text-[#C5A880] text-xs sm:text-[13px] font-sans font-semibold tracking-[0.28em] uppercase mb-2">
-                  PRECIOUS &amp; NATURAL STONES
-                </span>
-                <h2 
-                  className="text-3xl sm:text-4xl lg:text-[46px] font-bold text-white leading-tight"
-                  style={{ fontFamily: "'Cormorant Garamond', 'Playfair Display', Georgia, serif" }}
-                >
-                  Gems Collection
-                </h2>
-                <p className="text-gray-300 text-xs sm:text-sm font-sans mt-2 max-w-xl font-normal leading-relaxed">
-                  Certified Royal Blue Sapphires, Zambian Emeralds, Burmese Rubies, and Tanzanites hand-set in hallmarked 925 fine silver.
-                </p>
-              </div>
-
-              <button
-                onClick={() => {
-                  changeCategoryTab?.('Collections');
-                  navigateTo('collections');
-                }}
-                className="inline-flex items-center gap-2.5 px-8 py-3.5 bg-[#8C6D46] hover:bg-[#A37B4D] active:scale-95 text-white font-sans text-xs sm:text-[12.5px] font-semibold tracking-[0.2em] uppercase transition-all duration-300 shadow-[0_8px_25px_rgba(140,109,70,0.35)] cursor-pointer rounded-none"
-              >
-                <span>EXPLORE ALL GEMS</span>
-                <span className="text-sm font-light">→</span>
-              </button>
-            </div>
-
-            {/* Gems Showcase Banner with 4 Gem Types */}
-            <div className="relative rounded-[2px] overflow-hidden border border-white/15 shadow-2xl group mb-8">
-              <img 
-                src={gemsCollectionBanner} 
-                alt="Sapphire, Emerald, Ruby & Tanzanite 925 Silver Jewellery"
-                className="w-full h-auto max-h-[460px] object-cover transition-transform duration-700 ease-out group-hover:scale-102"
-                loading="lazy"
-              />
-              <div className="absolute inset-0 bg-gradient-to-t from-[#050B14]/85 via-transparent to-transparent pointer-events-none" />
-
-              <div className="absolute bottom-6 left-6 right-6 sm:bottom-8 sm:left-10 sm:right-10 flex flex-col sm:flex-row items-start sm:items-end justify-between gap-4">
-                <div>
-                  <span className="text-[#E5C396] text-xs font-sans font-bold tracking-[0.25em] uppercase block mb-1">
-                    ✦ CERTIFIED NATURAL GEMSTONES
-                  </span>
-                  <h3 
-                    className="font-serif text-2xl sm:text-3xl lg:text-4xl font-bold leading-tight drop-shadow-md text-white"
-                    style={{ fontFamily: "'Cormorant Garamond', 'Playfair Display', Georgia, serif" }}
-                  >
-                    Earth's Rarest Hues. Forged in Pure Silver.
-                  </h3>
-                </div>
-              </div>
-            </div>
-
-            {/* 4 Gemstone Cards */}
-            <div className="grid grid-cols-2 md:grid-cols-4 gap-4 sm:gap-6">
-              {[
-                { name: 'Royal Sapphire', stone: 'Neelam', desc: 'Symbol of wisdom, regal grace & focus' },
-                { name: 'Zambian Emerald', stone: 'Panna', desc: 'Lush green harmony & prosperous clarity' },
-                { name: 'Burmese Ruby', stone: 'Manik', desc: 'Fiery passion, courage & noble power' },
-                { name: 'Royal Tanzanite', stone: 'Tanzanite', desc: 'Rare deep indigo African treasure' }
-              ].map((gem, idx) => (
-                <div 
-                  key={idx}
-                  onClick={() => {
-                    changeCategoryTab?.('Collections');
-                    navigateTo('collections');
-                  }}
-                  className="p-4 sm:p-5 bg-white/5 border border-white/10 hover:border-[#C5A880]/60 transition-all duration-300 cursor-pointer group hover:bg-white/10"
-                >
-                  <span className="text-[#C5A880] text-[10px] font-sans font-bold tracking-[0.2em] uppercase block mb-1">
-                    {gem.stone}
-                  </span>
-                  <h4 
-                    className="font-serif text-base sm:text-lg font-bold text-white group-hover:text-[#E5C396] transition-colors"
-                    style={{ fontFamily: "'Cormorant Garamond', 'Playfair Display', Georgia, serif" }}
-                  >
-                    {gem.name}
-                  </h4>
-                  <p className="text-gray-400 text-xs font-sans mt-1.5 leading-relaxed">
-                    {gem.desc}
-                  </p>
-                  <span className="text-[#C5A880] text-[11px] font-sans font-semibold tracking-wider uppercase mt-3 inline-flex items-center gap-1 group-hover:translate-x-1 transition-transform">
-                    <span>Shop Jewels</span>
-                    <span>→</span>
-                  </span>
-                </div>
-              ))}
-            </div>
-
-          </div>
-        </section>
-
-        {/* ==========================================================
-          CLIENT FEEDBACK SECTION 5: BUDGET TIERS (Feedback #6.3, 6.4, 6.5)
-          - UNDER 499
-          - UNDER 999
-          - UNDER 1999
-          ========================================================== */}
-        <section id="curated-budget-tiers" className="w-full py-14 sm:py-20 bg-[#FDFBF7] border-b border-[#EAE3D9] select-none text-left">
-          <div className="max-w-[1536px] mx-auto px-6 sm:px-10 lg:px-14">
-            
-            {/* Header */}
-            <div className="text-center max-w-2xl mx-auto mb-10 sm:mb-14">
-              <span className="inline-block text-[#8C6D46] text-xs sm:text-[13px] font-sans font-semibold tracking-[0.28em] uppercase mb-2">
-                AFFORDABLE 925 LUXURY
-              </span>
-              <h2 
-                className="text-3xl sm:text-4xl lg:text-[46px] font-bold text-[#1A1817] leading-tight"
-                style={{ fontFamily: "'Cormorant Garamond', 'Playfair Display', Georgia, serif" }}
-              >
-                Shop by Budget
-              </h2>
-              <p className="text-[#6F6862] text-xs sm:text-sm font-sans mt-2 font-normal">
-                Pure 925 sterling silver crafted to shine within your everyday celebration budget.
-              </p>
-            </div>
-
-            {/* 3 Budget Tier Showcase Cards (Under 499, Under 999, Under 1999) */}
-            <div className="grid grid-cols-1 md:grid-cols-3 gap-6 sm:gap-8">
-              
-              {/* Tier 1: Under 499 */}
-              <div className="p-6 sm:p-8 bg-gradient-to-b from-white to-[#F9F6F0] border border-[#E8DFD5] hover:border-[#8C6D46] shadow-[0_4px_20px_rgba(0,0,0,0.04)] hover:shadow-[0_12px_32px_rgba(140,109,70,0.15)] transition-all duration-300 flex flex-col justify-between group">
-                <div>
-                  <div className="flex items-center justify-between mb-4">
-                    <span className="px-3 py-1 bg-[#8C6D46]/10 text-[#8C6D46] text-[10px] font-sans font-bold tracking-[0.2em] uppercase rounded-full">
-                      POCKET LUXURY
-                    </span>
-                    <span className="text-xs text-gray-500 font-sans">BIS 925 Pure</span>
-                  </div>
-                  <h3 
-                    className="font-serif text-3xl sm:text-4xl font-bold text-[#1A1817] group-hover:text-[#8C6D46] transition-colors"
-                    style={{ fontFamily: "'Cormorant Garamond', 'Playfair Display', Georgia, serif" }}
-                  >
-                    Under ₹499
-                  </h3>
-                  <p className="text-xs sm:text-sm text-[#6F6862] font-sans mt-2.5 leading-relaxed">
-                    Minimalist 925 silver rings, nose pins, auspicious tokens, and silver charms for daily grace.
-                  </p>
-                  <ul className="mt-4 space-y-2 text-xs font-sans text-[#5A5550]">
-                    <li className="flex items-center gap-2">✦ Minimalist Silver Bands</li>
-                    <li className="flex items-center gap-2">✦ Hallmarked Nose Pins &amp; Studs</li>
-                    <li className="flex items-center gap-2">✦ Auspicious Charms &amp; Coins</li>
-                  </ul>
-                </div>
-
-                <div className="mt-8 pt-4 border-t border-[#EAE3D9]">
-                  <button
-                    onClick={() => {
-                      if (typeof setMaxPriceFilter === 'function') setMaxPriceFilter(499);
-                      changeCategoryTab?.('Collections');
-                      navigateTo('collections');
-                    }}
-                    className="w-full py-3.5 bg-[#1A1817] group-hover:bg-[#8C6D46] text-white font-sans text-xs font-semibold tracking-[0.2em] uppercase transition-colors cursor-pointer flex items-center justify-center gap-2"
-                  >
-                    <span>EXPLORE UNDER ₹499</span>
-                    <span>→</span>
-                  </button>
-                </div>
-              </div>
-
-              {/* Tier 2: Under 999 */}
-              <div className="p-6 sm:p-8 bg-gradient-to-b from-white to-[#F9F6F0] border-2 border-[#8C6D46] shadow-[0_8px_30px_rgba(140,109,70,0.18)] transition-all duration-300 flex flex-col justify-between group relative overflow-hidden">
-                <div className="absolute top-0 right-0 bg-[#8C6D46] text-white text-[9px] font-sans font-bold tracking-[0.2em] uppercase px-3 py-1">
-                  POPULAR
-                </div>
-                <div>
-                  <div className="flex items-center justify-between mb-4">
-                    <span className="px-3 py-1 bg-[#8C6D46] text-white text-[10px] font-sans font-bold tracking-[0.2em] uppercase rounded-full">
-                      EVERYDAY ELEGANCE
-                    </span>
-                    <span className="text-xs text-gray-500 font-sans">BIS 925 Pure</span>
-                  </div>
-                  <h3 
-                    className="font-serif text-3xl sm:text-4xl font-bold text-[#1A1817] group-hover:text-[#8C6D46] transition-colors"
-                    style={{ fontFamily: "'Cormorant Garamond', 'Playfair Display', Georgia, serif" }}
-                  >
-                    Under ₹999
-                  </h3>
-                  <p className="text-xs sm:text-sm text-[#6F6862] font-sans mt-2.5 leading-relaxed">
-                    Certified 925 silver pendants, nazariya bracelets, statement hoop earrings, and delicate chains.
-                  </p>
-                  <ul className="mt-4 space-y-2 text-xs font-sans text-[#5A5550]">
-                    <li className="flex items-center gap-2">✦ Solitaire &amp; Floral Pendants</li>
-                    <li className="flex items-center gap-2">✦ Nazariya &amp; Charm Bracelets</li>
-                    <li className="flex items-center gap-2">✦ Oxidised Jhumkis &amp; Hoops</li>
-                  </ul>
-                </div>
-
-                <div className="mt-8 pt-4 border-t border-[#EAE3D9]">
-                  <button
-                    onClick={() => {
-                      if (typeof setMaxPriceFilter === 'function') setMaxPriceFilter(999);
-                      changeCategoryTab?.('Collections');
-                      navigateTo('collections');
-                    }}
-                    className="w-full py-3.5 bg-[#8C6D46] hover:bg-[#A37B4D] text-white font-sans text-xs font-semibold tracking-[0.2em] uppercase transition-colors cursor-pointer flex items-center justify-center gap-2 shadow-md"
-                  >
-                    <span>EXPLORE UNDER ₹999</span>
-                    <span>→</span>
-                  </button>
-                </div>
-              </div>
-
-              {/* Tier 3: Under 1999 */}
-              <div className="p-6 sm:p-8 bg-gradient-to-b from-white to-[#F9F6F0] border border-[#E8DFD5] hover:border-[#8C6D46] shadow-[0_4px_20px_rgba(0,0,0,0.04)] hover:shadow-[0_12px_32px_rgba(140,109,70,0.15)] transition-all duration-300 flex flex-col justify-between group">
-                <div>
-                  <div className="flex items-center justify-between mb-4">
-                    <span className="px-3 py-1 bg-[#8C6D46]/10 text-[#8C6D46] text-[10px] font-sans font-bold tracking-[0.2em] uppercase rounded-full">
-                      ROYAL ATTIRE
-                    </span>
-                    <span className="text-xs text-gray-500 font-sans">BIS 925 Pure</span>
-                  </div>
-                  <h3 
-                    className="font-serif text-3xl sm:text-4xl font-bold text-[#1A1817] group-hover:text-[#8C6D46] transition-colors"
-                    style={{ fontFamily: "'Cormorant Garamond', 'Playfair Display', Georgia, serif" }}
-                  >
-                    Under ₹1999
-                  </h3>
-                  <p className="text-xs sm:text-sm text-[#6F6862] font-sans mt-2.5 leading-relaxed">
-                    Heavy masculine chains, engraved Rajasthani kadas, traditional payals, and gem cocktail rings.
-                  </p>
-                  <ul className="mt-4 space-y-2 text-xs font-sans text-[#5A5550]">
-                    <li className="flex items-center gap-2">✦ Solid Curb &amp; Rope Silver Chains</li>
-                    <li className="flex items-center gap-2">✦ Hand-hammered Silver Kadas</li>
-                    <li className="flex items-center gap-2">✦ Bridal Ghungroo Payals &amp; Chokers</li>
-                  </ul>
-                </div>
-
-                <div className="mt-8 pt-4 border-t border-[#EAE3D9]">
-                  <button
-                    onClick={() => {
-                      if (typeof setMaxPriceFilter === 'function') setMaxPriceFilter(1999);
-                      changeCategoryTab?.('Collections');
-                      navigateTo('collections');
-                    }}
-                    className="w-full py-3.5 bg-[#1A1817] group-hover:bg-[#8C6D46] text-white font-sans text-xs font-semibold tracking-[0.2em] uppercase transition-colors cursor-pointer flex items-center justify-center gap-2"
-                  >
-                    <span>EXPLORE UNDER ₹1999</span>
-                    <span>→</span>
-                  </button>
-                </div>
-              </div>
-
-            </div>
-
-          </div>
-        </section>
+        
 
         {/* ==========================================================
           FEATURE 03: BUILT ON PURITY — WHY 925 FINE SILVER?
@@ -1429,527 +1500,7 @@ export default function Home({
           </div>
         </section>
 
-        {/* ==========================================================
-          EDITORIAL SHOWCASE 01: MEN'S JEWELLERY (FOR HIM)
-          ========================================================== */}
-        <section id="for-him" className="w-full py-12 sm:py-16 bg-[#F5ECE4] border-b border-[#E8DFD5] select-none">
-          <div className="max-w-[1536px] mx-auto px-6 sm:px-10 lg:px-14">
-            
-            {/* Editorial Header */}
-            <div className="mb-6 sm:mb-8 text-left">
-              <span className="inline-block text-[#8C6D46] text-xs sm:text-[13px] font-sans font-semibold tracking-[0.28em] uppercase mb-1.5">
-                01 / FOR HIM
-              </span>
-              <div className="flex items-center justify-between gap-4">
-                <div className="flex items-center gap-6 flex-1 min-w-0">
-                  <h2 
-                    className="text-3xl sm:text-4xl lg:text-[46px] font-bold text-[#1A1817] leading-tight shrink-0"
-                    style={{ fontFamily: "'Cormorant Garamond', 'Playfair Display', Georgia, serif" }}
-                  >
-                    Men's Jewellery
-                  </h2>
-                  <div className="hidden sm:block h-[1px] bg-[#D6CABE] flex-1 max-w-[260px] lg:max-w-[340px]" />
-                </div>
-                <button
-                  onClick={() => {
-                    triggerAudio('click');
-                    if (typeof setGenderFilter === 'function') setGenderFilter('men');
-                    changeCategoryTab?.('Collections', 'all', 'men');
-                    navigateTo('collections');
-                  }}
-                  className="text-[#1A1817] hover:text-[#8C6D46] font-sans text-xs sm:text-[13px] font-semibold tracking-[0.16em] uppercase inline-flex items-center gap-1.5 transition-colors cursor-pointer group shrink-0"
-                >
-                  <span>View All</span>
-                  <span className="text-sm font-light transition-transform duration-300 group-hover:translate-x-1">→</span>
-                </button>
-              </div>
-              <p className="text-[#6F6862] text-xs sm:text-sm font-sans mt-2 font-normal">
-                Bold 925 sterling silver designs crafted for confidence and royal presence.
-              </p>
-            </div>
-
-            {/* 3 Showcase Cards */}
-            <div className="grid grid-cols-1 md:grid-cols-3 gap-5 sm:gap-6 lg:gap-7">
-              {/* Card 1: Rings */}
-              <div
-                onClick={() => {
-                  triggerAudio('click');
-                  if (typeof setGenderFilter === 'function') setGenderFilter('men');
-                  changeCategoryTab?.('Rings', 'all', 'men');
-                  navigateTo('collections');
-                }}
-                className="group cursor-pointer flex flex-col overflow-hidden bg-[#111111] shadow-[0_4px_20px_rgba(0,0,0,0.06)] hover:shadow-[0_12px_32px_rgba(0,0,0,0.18)] transition-all duration-500 rounded-none"
-              >
-                <div className="w-full aspect-[16/10] overflow-hidden bg-[#ECE4DC] relative">
-                  <img
-                    src={himRings}
-                    alt="Men's Rings - MANISH & CO"
-                    className="w-full h-full object-cover object-center transition-transform duration-700 ease-out group-hover:scale-105"
-                    loading="lazy"
-                  />
-                  <div className="absolute inset-0 bg-black/0 group-hover:bg-black/10 transition-colors duration-300 pointer-events-none" />
-                </div>
-                <div className="bg-[#111111] px-5 py-3.5 sm:py-4 flex items-center justify-between text-white border-t border-white/5">
-                  <span className="font-serif text-base sm:text-[17px] tracking-wide text-white/95 font-medium group-hover:text-[#D5C0A5] transition-colors">
-                    Rings
-                  </span>
-                  <span className="text-sm sm:text-base font-light text-white/80 transition-transform duration-300 group-hover:translate-x-1.5 group-hover:text-[#D5C0A5]">
-                    →
-                  </span>
-                </div>
-              </div>
-
-              {/* Card 2: Chains */}
-              <div
-                onClick={() => {
-                  triggerAudio('click');
-                  if (typeof setGenderFilter === 'function') setGenderFilter('men');
-                  changeCategoryTab?.('Chains', 'all', 'men');
-                  navigateTo('collections');
-                }}
-                className="group cursor-pointer flex flex-col overflow-hidden bg-[#111111] shadow-[0_4px_20px_rgba(0,0,0,0.06)] hover:shadow-[0_12px_32px_rgba(0,0,0,0.18)] transition-all duration-500 rounded-none"
-              >
-                <div className="w-full aspect-[16/10] overflow-hidden bg-[#ECE4DC] relative">
-                  <img
-                    src={himChains}
-                    alt="Men's Chains - MANISH & CO"
-                    className="w-full h-full object-cover object-center transition-transform duration-700 ease-out group-hover:scale-105"
-                    loading="lazy"
-                  />
-                  <div className="absolute inset-0 bg-black/0 group-hover:bg-black/10 transition-colors duration-300 pointer-events-none" />
-                </div>
-                <div className="bg-[#111111] px-5 py-3.5 sm:py-4 flex items-center justify-between text-white border-t border-white/5">
-                  <span className="font-serif text-base sm:text-[17px] tracking-wide text-white/95 font-medium group-hover:text-[#D5C0A5] transition-colors">
-                    Chains
-                  </span>
-                  <span className="text-sm sm:text-base font-light text-white/80 transition-transform duration-300 group-hover:translate-x-1.5 group-hover:text-[#D5C0A5]">
-                    →
-                  </span>
-                </div>
-              </div>
-
-              {/* Card 3: Bracelets & Kadas */}
-              <div
-                onClick={() => {
-                  triggerAudio('click');
-                  if (typeof setGenderFilter === 'function') setGenderFilter('men');
-                  changeCategoryTab?.('Bracelets', 'all', 'men');
-                  navigateTo('collections');
-                }}
-                className="group cursor-pointer flex flex-col overflow-hidden bg-[#111111] shadow-[0_4px_20px_rgba(0,0,0,0.06)] hover:shadow-[0_12px_32px_rgba(0,0,0,0.18)] transition-all duration-500 rounded-none"
-              >
-                <div className="w-full aspect-[16/10] overflow-hidden bg-[#ECE4DC] relative">
-                  <img
-                    src={himBracelets}
-                    alt="Men's Bracelets & Kadas - MANISH & CO"
-                    className="w-full h-full object-cover object-center transition-transform duration-700 ease-out group-hover:scale-105"
-                    loading="lazy"
-                  />
-                  <div className="absolute inset-0 bg-black/0 group-hover:bg-black/10 transition-colors duration-300 pointer-events-none" />
-                </div>
-                <div className="bg-[#111111] px-5 py-3.5 sm:py-4 flex items-center justify-between text-white border-t border-white/5">
-                  <span className="font-serif text-base sm:text-[17px] tracking-wide text-white/95 font-medium group-hover:text-[#D5C0A5] transition-colors">
-                    Bracelets &amp; Kadas
-                  </span>
-                  <span className="text-sm sm:text-base font-light text-white/80 transition-transform duration-300 group-hover:translate-x-1.5 group-hover:text-[#D5C0A5]">
-                    →
-                  </span>
-                </div>
-              </div>
-            </div>
-
-          </div>
-        </section>
-
-        {/* ==========================================================
-          EDITORIAL SHOWCASE 02: WOMEN'S JEWELLERY (FOR HER)
-          ========================================================== */}
-        <section id="for-her" className="w-full py-12 sm:py-16 bg-[#F5ECE4] border-b border-[#E8DFD5] select-none">
-          <div className="max-w-[1536px] mx-auto px-6 sm:px-10 lg:px-14">
-            
-            {/* Editorial Header */}
-            <div className="mb-6 sm:mb-8 text-left">
-              <span className="inline-block text-[#8C6D46] text-xs sm:text-[13px] font-sans font-semibold tracking-[0.28em] uppercase mb-1.5">
-                02 / FOR HER
-              </span>
-              <div className="flex items-center justify-between gap-4">
-                <div className="flex items-center gap-6 flex-1 min-w-0">
-                  <h2 
-                    className="text-3xl sm:text-4xl lg:text-[46px] font-bold text-[#1A1817] leading-tight shrink-0"
-                    style={{ fontFamily: "'Cormorant Garamond', 'Playfair Display', Georgia, serif" }}
-                  >
-                    Women's Jewellery
-                  </h2>
-                  <div className="hidden sm:block h-[1px] bg-[#D6CABE] flex-1 max-w-[260px] lg:max-w-[340px]" />
-                </div>
-                <button
-                  onClick={() => {
-                    triggerAudio('click');
-                    if (typeof setGenderFilter === 'function') setGenderFilter('women');
-                    changeCategoryTab?.('Collections', 'all', 'women');
-                    navigateTo('collections');
-                  }}
-                  className="text-[#1A1817] hover:text-[#8C6D46] font-sans text-xs sm:text-[13px] font-semibold tracking-[0.16em] uppercase inline-flex items-center gap-1.5 transition-colors cursor-pointer group shrink-0"
-                >
-                  <span>View All</span>
-                  <span className="text-sm font-light transition-transform duration-300 group-hover:translate-x-1">→</span>
-                </button>
-              </div>
-              <p className="text-[#6F6862] text-xs sm:text-sm font-sans mt-2 font-normal">
-                Elegant 925 sterling silver pieces for everyday beauty and royal moments.
-              </p>
-            </div>
-
-            {/* 3 Showcase Cards */}
-            <div className="grid grid-cols-1 md:grid-cols-3 gap-5 sm:gap-6 lg:gap-7">
-              {/* Card 1: Rings */}
-              <div
-                onClick={() => {
-                  triggerAudio('click');
-                  if (typeof setGenderFilter === 'function') setGenderFilter('women');
-                  changeCategoryTab?.('Rings', 'all', 'women');
-                  navigateTo('collections');
-                }}
-                className="group cursor-pointer flex flex-col overflow-hidden bg-[#111111] shadow-[0_4px_20px_rgba(0,0,0,0.06)] hover:shadow-[0_12px_32px_rgba(0,0,0,0.18)] transition-all duration-500 rounded-none"
-              >
-                <div className="w-full aspect-[16/10] overflow-hidden bg-[#ECE4DC] relative">
-                  <img
-                    src={herRings}
-                    alt="Women's Rings - MANISH & CO"
-                    className="w-full h-full object-cover object-center transition-transform duration-700 ease-out group-hover:scale-105"
-                    loading="lazy"
-                  />
-                  <div className="absolute inset-0 bg-black/0 group-hover:bg-black/10 transition-colors duration-300 pointer-events-none" />
-                </div>
-                <div className="bg-[#111111] px-5 py-3.5 sm:py-4 flex items-center justify-between text-white border-t border-white/5">
-                  <span className="font-serif text-base sm:text-[17px] tracking-wide text-white/95 font-medium group-hover:text-[#D5C0A5] transition-colors">
-                    Rings
-                  </span>
-                  <span className="text-sm sm:text-base font-light text-white/80 transition-transform duration-300 group-hover:translate-x-1.5 group-hover:text-[#D5C0A5]">
-                    →
-                  </span>
-                </div>
-              </div>
-
-              {/* Card 2: Bracelets */}
-              <div
-                onClick={() => {
-                  triggerAudio('click');
-                  if (typeof setGenderFilter === 'function') setGenderFilter('women');
-                  changeCategoryTab?.('Bracelets', 'all', 'women');
-                  navigateTo('collections');
-                }}
-                className="group cursor-pointer flex flex-col overflow-hidden bg-[#111111] shadow-[0_4px_20px_rgba(0,0,0,0.06)] hover:shadow-[0_12px_32px_rgba(0,0,0,0.18)] transition-all duration-500 rounded-none"
-              >
-                <div className="w-full aspect-[16/10] overflow-hidden bg-[#ECE4DC] relative">
-                  <img
-                    src={herBracelets}
-                    alt="Women's Bracelets - MANISH & CO"
-                    className="w-full h-full object-cover object-center transition-transform duration-700 ease-out group-hover:scale-105"
-                    loading="lazy"
-                  />
-                  <div className="absolute inset-0 bg-black/0 group-hover:bg-black/10 transition-colors duration-300 pointer-events-none" />
-                </div>
-                <div className="bg-[#111111] px-5 py-3.5 sm:py-4 flex items-center justify-between text-white border-t border-white/5">
-                  <span className="font-serif text-base sm:text-[17px] tracking-wide text-white/95 font-medium group-hover:text-[#D5C0A5] transition-colors">
-                    Bracelets
-                  </span>
-                  <span className="text-sm sm:text-base font-light text-white/80 transition-transform duration-300 group-hover:translate-x-1.5 group-hover:text-[#D5C0A5]">
-                    →
-                  </span>
-                </div>
-              </div>
-
-              {/* Card 3: Anklets */}
-              <div
-                onClick={() => {
-                  triggerAudio('click');
-                  if (typeof setGenderFilter === 'function') setGenderFilter('women');
-                  changeCategoryTab?.('Payal', 'all', 'women');
-                  navigateTo('collections');
-                }}
-                className="group cursor-pointer flex flex-col overflow-hidden bg-[#111111] shadow-[0_4px_20px_rgba(0,0,0,0.06)] hover:shadow-[0_12px_32px_rgba(0,0,0,0.18)] transition-all duration-500 rounded-none"
-              >
-                <div className="w-full aspect-[16/10] overflow-hidden bg-[#ECE4DC] relative">
-                  <img
-                    src={herAnklets}
-                    alt="Women's Anklets & Payals - MANISH & CO"
-                    className="w-full h-full object-cover object-center transition-transform duration-700 ease-out group-hover:scale-105"
-                    loading="lazy"
-                  />
-                  <div className="absolute inset-0 bg-black/0 group-hover:bg-black/10 transition-colors duration-300 pointer-events-none" />
-                </div>
-                <div className="bg-[#111111] px-5 py-3.5 sm:py-4 flex items-center justify-between text-white border-t border-white/5">
-                  <span className="font-serif text-base sm:text-[17px] tracking-wide text-white/95 font-medium group-hover:text-[#D5C0A5] transition-colors">
-                    Anklets &amp; Payals
-                  </span>
-                  <span className="text-sm sm:text-base font-light text-white/80 transition-transform duration-300 group-hover:translate-x-1.5 group-hover:text-[#D5C0A5]">
-                    →
-                  </span>
-                </div>
-              </div>
-            </div>
-
-          </div>
-        </section>
-
-        {/* ==========================================================
-          EDITORIAL SHOWCASE 03: KID'S JEWELLERY (LITTLE TREASURES)
-          ========================================================== */}
-        <section id="kids-collection" className="w-full py-12 sm:py-16 bg-[#F5ECE4] border-b border-[#E8DFD5] select-none">
-          <div className="max-w-[1536px] mx-auto px-6 sm:px-10 lg:px-14">
-            
-            {/* Editorial Header */}
-            <div className="mb-6 sm:mb-8 text-left">
-              <span className="inline-block text-[#8C6D46] text-xs sm:text-[13px] font-sans font-semibold tracking-[0.28em] uppercase mb-1.5">
-                03 / LITTLE TREASURES
-              </span>
-              <div className="flex items-center justify-between gap-4">
-                <div className="flex items-center gap-6 flex-1 min-w-0">
-                  <h2 
-                    className="text-3xl sm:text-4xl lg:text-[46px] font-bold text-[#1A1817] leading-tight shrink-0"
-                    style={{ fontFamily: "'Cormorant Garamond', 'Playfair Display', Georgia, serif" }}
-                  >
-                    Kid's Jewellery
-                  </h2>
-                  <div className="hidden sm:block h-[1px] bg-[#D6CABE] flex-1 max-w-[260px] lg:max-w-[340px]" />
-                </div>
-                <button
-                  onClick={() => {
-                    triggerAudio('click');
-                    if (typeof setGenderFilter === 'function') setGenderFilter('kids');
-                    changeCategoryTab?.('Collections', 'all', 'kids');
-                    navigateTo('collections');
-                  }}
-                  className="text-[#1A1817] hover:text-[#8C6D46] font-sans text-xs sm:text-[13px] font-semibold tracking-[0.16em] uppercase inline-flex items-center gap-1.5 transition-colors cursor-pointer group shrink-0"
-                >
-                  <span>View All</span>
-                  <span className="text-sm font-light transition-transform duration-300 group-hover:translate-x-1">→</span>
-                </button>
-              </div>
-              <p className="text-[#6F6862] text-xs sm:text-sm font-sans mt-2 font-normal">
-                Pure, skin-friendly 925 silver keepsakes handcrafted for your little precious ones.
-              </p>
-            </div>
-
-            {/* 3 Showcase Cards */}
-            <div className="grid grid-cols-1 md:grid-cols-3 gap-5 sm:gap-6 lg:gap-7">
-              {/* Card 1: Nazariya & Bracelets */}
-              <div
-                onClick={() => {
-                  triggerAudio('click');
-                  if (typeof setGenderFilter === 'function') setGenderFilter('kids');
-                  changeCategoryTab?.('Bracelets', 'all', 'kids');
-                  navigateTo('collections');
-                }}
-                className="group cursor-pointer flex flex-col overflow-hidden bg-[#111111] shadow-[0_4px_20px_rgba(0,0,0,0.06)] hover:shadow-[0_12px_32px_rgba(0,0,0,0.18)] transition-all duration-500 rounded-none"
-              >
-                <div className="w-full aspect-[16/10] overflow-hidden bg-[#ECE4DC] relative">
-                  <img
-                    src={kidsBracelets}
-                    alt="Kids' Nazariya & Bracelets - MANISH & CO"
-                    className="w-full h-full object-cover object-center transition-transform duration-700 ease-out group-hover:scale-105"
-                    loading="lazy"
-                  />
-                  <div className="absolute inset-0 bg-black/0 group-hover:bg-black/10 transition-colors duration-300 pointer-events-none" />
-                </div>
-                <div className="bg-[#111111] px-5 py-3.5 sm:py-4 flex items-center justify-between text-white border-t border-white/5">
-                  <span className="font-serif text-base sm:text-[17px] tracking-wide text-white/95 font-medium group-hover:text-[#D5C0A5] transition-colors">
-                    Nazariya &amp; Bracelets
-                  </span>
-                  <span className="text-sm sm:text-base font-light text-white/80 transition-transform duration-300 group-hover:translate-x-1.5 group-hover:text-[#D5C0A5]">
-                    →
-                  </span>
-                </div>
-              </div>
-
-              {/* Card 2: Chains & Pendants */}
-              <div
-                onClick={() => {
-                  triggerAudio('click');
-                  if (typeof setGenderFilter === 'function') setGenderFilter('kids');
-                  changeCategoryTab?.('Pendants', 'all', 'kids');
-                  navigateTo('collections');
-                }}
-                className="group cursor-pointer flex flex-col overflow-hidden bg-[#111111] shadow-[0_4px_20px_rgba(0,0,0,0.06)] hover:shadow-[0_12px_32px_rgba(0,0,0,0.18)] transition-all duration-500 rounded-none"
-              >
-                <div className="w-full aspect-[16/10] overflow-hidden bg-[#ECE4DC] relative">
-                  <img
-                    src={kidsChains}
-                    alt="Kids' Chains & Pendants - MANISH & CO"
-                    className="w-full h-full object-cover object-center transition-transform duration-700 ease-out group-hover:scale-105"
-                    loading="lazy"
-                  />
-                  <div className="absolute inset-0 bg-black/0 group-hover:bg-black/10 transition-colors duration-300 pointer-events-none" />
-                </div>
-                <div className="bg-[#111111] px-5 py-3.5 sm:py-4 flex items-center justify-between text-white border-t border-white/5">
-                  <span className="font-serif text-base sm:text-[17px] tracking-wide text-white/95 font-medium group-hover:text-[#D5C0A5] transition-colors">
-                    Chains &amp; Pendants
-                  </span>
-                  <span className="text-sm sm:text-base font-light text-white/80 transition-transform duration-300 group-hover:translate-x-1.5 group-hover:text-[#D5C0A5]">
-                    →
-                  </span>
-                </div>
-              </div>
-
-              {/* Card 3: Baby Kadas & Bangles */}
-              <div
-                onClick={() => {
-                  triggerAudio('click');
-                  if (typeof setGenderFilter === 'function') setGenderFilter('kids');
-                  changeCategoryTab?.('Bangles', 'all', 'kids');
-                  navigateTo('collections');
-                }}
-                className="group cursor-pointer flex flex-col overflow-hidden bg-[#111111] shadow-[0_4px_20px_rgba(0,0,0,0.06)] hover:shadow-[0_12px_32px_rgba(0,0,0,0.18)] transition-all duration-500 rounded-none"
-              >
-                <div className="w-full aspect-[16/10] overflow-hidden bg-[#ECE4DC] relative">
-                  <img
-                    src={kidsKadas}
-                    alt="Kids' Baby Kadas & Bangles - MANISH & CO"
-                    className="w-full h-full object-cover object-center transition-transform duration-700 ease-out group-hover:scale-105"
-                    loading="lazy"
-                  />
-                  <div className="absolute inset-0 bg-black/0 group-hover:bg-black/10 transition-colors duration-300 pointer-events-none" />
-                </div>
-                <div className="bg-[#111111] px-5 py-3.5 sm:py-4 flex items-center justify-between text-white border-t border-white/5">
-                  <span className="font-serif text-base sm:text-[17px] tracking-wide text-white/95 font-medium group-hover:text-[#D5C0A5] transition-colors">
-                    Baby Kadas &amp; Bangles
-                  </span>
-                  <span className="text-sm sm:text-base font-light text-white/80 transition-transform duration-300 group-hover:translate-x-1.5 group-hover:text-[#D5C0A5]">
-                    →
-                  </span>
-                </div>
-              </div>
-            </div>
-
-          </div>
-        </section>
-
-        {/* ==========================================================
-          EDITORIAL SHOWCASE 04: GIFT'S COLLECTION (SACRED CELEBRATIONS)
-          ========================================================== */}
-        <section id="gifts-collection" className="w-full py-12 sm:py-16 bg-[#F5ECE4] border-b border-[#E8DFD5] select-none">
-          <div className="max-w-[1536px] mx-auto px-6 sm:px-10 lg:px-14">
-            
-            {/* Editorial Header */}
-            <div className="mb-6 sm:mb-8 text-left">
-              <span className="inline-block text-[#8C6D46] text-xs sm:text-[13px] font-sans font-semibold tracking-[0.28em] uppercase mb-1.5">
-                04 / SACRED &amp; CELEBRATION
-              </span>
-              <div className="flex items-center justify-between gap-4">
-                <div className="flex items-center gap-6 flex-1 min-w-0">
-                  <h2 
-                    className="text-3xl sm:text-4xl lg:text-[46px] font-bold text-[#1A1817] leading-tight shrink-0"
-                    style={{ fontFamily: "'Cormorant Garamond', 'Playfair Display', Georgia, serif" }}
-                  >
-                    Gift's Collection
-                  </h2>
-                  <div className="hidden sm:block h-[1px] bg-[#D6CABE] flex-1 max-w-[260px] lg:max-w-[340px]" />
-                </div>
-                <button
-                  onClick={() => {
-                    triggerAudio('click');
-                    navigateTo('gold-coins');
-                  }}
-                  className="text-[#1A1817] hover:text-[#8C6D46] font-sans text-xs sm:text-[13px] font-semibold tracking-[0.16em] uppercase inline-flex items-center gap-1.5 transition-colors cursor-pointer group shrink-0"
-                >
-                  <span>View All</span>
-                  <span className="text-sm font-light transition-transform duration-300 group-hover:translate-x-1">→</span>
-                </button>
-              </div>
-              <p className="text-[#6F6862] text-xs sm:text-sm font-sans mt-2 font-normal">
-                Auspicious 999 fine silver coins, sacred pooja articles, and royal heirloom keepsakes.
-              </p>
-            </div>
-
-            {/* 3 Showcase Cards */}
-            <div className="grid grid-cols-1 md:grid-cols-3 gap-5 sm:gap-6 lg:gap-7">
-              {/* Card 1: Silver Coins & Bullion */}
-              <div
-                onClick={() => {
-                  triggerAudio('click');
-                  navigateTo('gold-coins');
-                }}
-                className="group cursor-pointer flex flex-col overflow-hidden bg-[#111111] shadow-[0_4px_20px_rgba(0,0,0,0.06)] hover:shadow-[0_12px_32px_rgba(0,0,0,0.18)] transition-all duration-500 rounded-none"
-              >
-                <div className="w-full aspect-[16/10] overflow-hidden bg-[#ECE4DC] relative">
-                  <img
-                    src={giftsCoins}
-                    alt="Pure Silver Coins & Bars - MANISH & CO"
-                    className="w-full h-full object-cover object-center transition-transform duration-700 ease-out group-hover:scale-105"
-                    loading="lazy"
-                  />
-                  <div className="absolute inset-0 bg-black/0 group-hover:bg-black/10 transition-colors duration-300 pointer-events-none" />
-                </div>
-                <div className="bg-[#111111] px-5 py-3.5 sm:py-4 flex items-center justify-between text-white border-t border-white/5">
-                  <span className="font-serif text-base sm:text-[17px] tracking-wide text-white/95 font-medium group-hover:text-[#D5C0A5] transition-colors">
-                    Silver Coins &amp; Bullion
-                  </span>
-                  <span className="text-sm sm:text-base font-light text-white/80 transition-transform duration-300 group-hover:translate-x-1.5 group-hover:text-[#D5C0A5]">
-                    →
-                  </span>
-                </div>
-              </div>
-
-              {/* Card 2: Pooja Silver Articles */}
-              <div
-                onClick={() => {
-                  triggerAudio('click');
-                  changeCategoryTab?.('Silver', 'all');
-                  navigateTo('collections');
-                }}
-                className="group cursor-pointer flex flex-col overflow-hidden bg-[#111111] shadow-[0_4px_20px_rgba(0,0,0,0.06)] hover:shadow-[0_12px_32px_rgba(0,0,0,0.18)] transition-all duration-500 rounded-none"
-              >
-                <div className="w-full aspect-[16/10] overflow-hidden bg-[#ECE4DC] relative">
-                  <img
-                    src={giftsPooja}
-                    alt="Pooja Silver Articles - MANISH & CO"
-                    className="w-full h-full object-cover object-center transition-transform duration-700 ease-out group-hover:scale-105"
-                    loading="lazy"
-                  />
-                  <div className="absolute inset-0 bg-black/0 group-hover:bg-black/10 transition-colors duration-300 pointer-events-none" />
-                </div>
-                <div className="bg-[#111111] px-5 py-3.5 sm:py-4 flex items-center justify-between text-white border-t border-white/5">
-                  <span className="font-serif text-base sm:text-[17px] tracking-wide text-white/95 font-medium group-hover:text-[#D5C0A5] transition-colors">
-                    Pooja Silver Articles
-                  </span>
-                  <span className="text-sm sm:text-base font-light text-white/80 transition-transform duration-300 group-hover:translate-x-1.5 group-hover:text-[#D5C0A5]">
-                    →
-                  </span>
-                </div>
-              </div>
-
-              {/* Card 3: Keepsakes & Heirlooms */}
-              <div
-                onClick={() => {
-                  triggerAudio('click');
-                  changeCategoryTab?.('Collections', 'all');
-                  navigateTo('collections');
-                }}
-                className="group cursor-pointer flex flex-col overflow-hidden bg-[#111111] shadow-[0_4px_20px_rgba(0,0,0,0.06)] hover:shadow-[0_12px_32px_rgba(0,0,0,0.18)] transition-all duration-500 rounded-none"
-              >
-                <div className="w-full aspect-[16/10] overflow-hidden bg-[#ECE4DC] relative">
-                  <img
-                    src={giftsKeepsakes}
-                    alt="Royal Keepsakes & Gifting - MANISH & CO"
-                    className="w-full h-full object-cover object-center transition-transform duration-700 ease-out group-hover:scale-105"
-                    loading="lazy"
-                  />
-                  <div className="absolute inset-0 bg-black/0 group-hover:bg-black/10 transition-colors duration-300 pointer-events-none" />
-                </div>
-                <div className="bg-[#111111] px-5 py-3.5 sm:py-4 flex items-center justify-between text-white border-t border-white/5">
-                  <span className="font-serif text-base sm:text-[17px] tracking-wide text-white/95 font-medium group-hover:text-[#D5C0A5] transition-colors">
-                    Keepsakes &amp; Heirlooms
-                  </span>
-                  <span className="text-sm sm:text-base font-light text-white/80 transition-transform duration-300 group-hover:translate-x-1.5 group-hover:text-[#D5C0A5]">
-                    →
-                  </span>
-                </div>
-              </div>
-            </div>
-
-          </div>
-        </section>
+        
 
         {/* ==========================================================
           TAILORED SELECTION RECOMMENDED FOR YOU
@@ -2242,11 +1793,11 @@ export default function Home({
           ========================================================== */}
         {(() => {
           const timelineItems = [
-            { yr: 1952, title: "Mau Atelier Inception", desc: "Foundations of our ancestral silversmith studio in Mau, hand-sculpting pristine silver ornaments for noble families. Setting absolute purity standards in handcrafting, utilizing dense 925 silver & gold bullion." },
-            { yr: 1974, title: "Pioneering Purity Benchmarks", desc: "The atelier institutes rigorous purity testing procedures and establishes hallmark standards, decades before national hallmarking laws were standardized." },
-            { yr: 1998, title: "Fine Silver & Polki Expansion", desc: "Introduction of signature bridal silver suites, handcrafted chokers, and certified gemstones catering to bespoke royal trousseau orders." },
-            { yr: 2014, title: "Flagship Mau Showroom Lounge", desc: "Opening of our grand flagship boutique in Mau, offering bespoke design tables and private bridal suites for family bridal viewings." },
-            { yr: 2026, title: "MANISH & CO Fine Silver Boutique", desc: "Full expansion as MANISH & CO Fine Silver Jewellery, offering certified 925 hallmark collections, live transparent silver rate updates, and luxury wax-sealed express delivery nationwide." }
+            { yr: 1996, label: "1996", title: "Mau Atelier Inception", desc: "Foundations of our master silversmith studio in Mau, hand-sculpting pristine silver ornaments and setting absolute purity standards in dense 925 fine silver." },
+            { yr: 2004, label: "2004", title: "Artisanal Hallmarking & Chitai Craft", desc: "Pioneering traditional hand-hammered Chitai work and introducing rigorous 925 purity benchmarks across eastern Uttar Pradesh." },
+            { yr: 2012, label: "2012", title: "Fine Silver & Bridal Expansion", desc: "Introduction of signature handcrafted bridal silver payals, royal kadas, heavy curb chains, and bespoke gemstone suites." },
+            { yr: 2020, label: "2020", title: "Flagship Mau Boutique & Custom Studio", desc: "Opening of our grand showroom lounge in Mau, offering 3D CAD design tables and private bridal suites for family appointments." },
+            { yr: 2026, label: "Present", title: "MANISH & CO Pan-India Digital Flagship", desc: "Certified 925 BIS Hallmarked collections, live transparent silver bullion rates, bespoke WhatsApp concierge, and insured doorstep delivery across India." }
           ];
 
           const years = timelineItems.map(t => t.yr);
@@ -2293,7 +1844,7 @@ export default function Home({
                         </div>
                         <span className={`text-[13px] font-bold font-sans tracking-wider mt-3 transition-colors duration-300 ${isActive ? 'text-[#6B4B2E]' : 'text-gray-400 group-hover:text-gray-600'
                           }`}>
-                          {item.yr}
+                          {item.label || item.yr}
                         </span>
                       </div>
                     );
@@ -2431,7 +1982,7 @@ export default function Home({
               <div className="flex flex-col items-center max-w-[120px] text-center">
                 <div className="w-20 h-20 sm:w-24 sm:h-24 md:w-28 md:h-28 rounded-full bg-[#031838] text-white flex flex-col justify-center items-center shadow-md hover:scale-105 transition-transform duration-300">
                   <span className="text-[8px] sm:text-[10px] tracking-widest uppercase opacity-75 font-semibold font-sans">SINCE</span>
-                  <span className="text-lg sm:text-xl md:text-2xl font-bold font-serif tracking-wider mt-0.5">1952</span>
+                  <span className="text-lg sm:text-xl md:text-2xl font-bold font-serif tracking-wider mt-0.5">1996</span>
                 </div>
                 <p className="text-[9px] sm:text-[11px] text-[#2c3e50] font-sans font-medium tracking-wide text-center mt-3 leading-snug">Artisanal Heritage of Mau</p>
               </div>
