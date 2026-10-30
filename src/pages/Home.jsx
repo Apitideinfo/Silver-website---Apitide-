@@ -117,8 +117,25 @@ export default function Home({
     };
 
     window.addEventListener('manish_price_categories_updated', handlePriceCategoriesUpdate);
+    const storageHandler = (e) => {
+      if (e.key === 'manish_price_categories' || e.key === 'manish_price_pulse') {
+        handlePriceCategoriesUpdate();
+      }
+    };
+    window.addEventListener('storage', storageHandler);
+    let bc = null;
+    if (typeof window !== 'undefined' && 'BroadcastChannel' in window) {
+      bc = new BroadcastChannel('manish_store_sync');
+      bc.onmessage = (msg) => {
+        if (msg?.data?.type === 'price_categories') {
+          handlePriceCategoriesUpdate();
+        }
+      };
+    }
     return () => {
       window.removeEventListener('manish_price_categories_updated', handlePriceCategoriesUpdate);
+      window.removeEventListener('storage', storageHandler);
+      if (bc) bc.close();
     };
   }, []);
 

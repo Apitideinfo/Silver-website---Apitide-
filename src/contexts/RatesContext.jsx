@@ -1,5 +1,6 @@
 import React, { createContext, useState, useEffect } from 'react';
 import { ratesApi } from '../api/rates.api';
+import { StorageService } from '../services/StorageService';
 
 export const RatesContext = createContext();
 
@@ -30,12 +31,29 @@ const DEFAULTS = {
 };
 
 export function RatesProvider({ children }) {
-  const [rates, setRates]     = useState(DEFAULTS);
-  const [loading, setLoading] = useState(true);
+  const [rates, setRates] = useState(() => {
+    try {
+      const cached = StorageService.get('manish_metal_rates', null);
+      if (cached && typeof cached === 'object') {
+        const baseSilver = cached.silverRate || cached.silverRate1kg || DEFAULTS.silverRate1kg;
+        return {
+          ...DEFAULTS,
+          ...cached,
+          silverRate:       baseSilver,
+          silverRate1kg:    baseSilver,
+          silverRate925:    cached.silverRate925 || Math.round(baseSilver * 0.925),
+          silverRateNormal: cached.silverRateNormal || Math.round(baseSilver * 0.90),
+        };
+      }
+    } catch (e) {}
+    return DEFAULTS;
+  });
+  const [loading, setLoading] = useState(false);
 
   useEffect(() => {
     const unsubscribe = ratesApi.subscribeToRates(
       (data) => {
+        if (!data) return;
         const baseSilver = data.silverRate || data.silverRate1kg || DEFAULTS.silverRate1kg;
         setRates({
           ...DEFAULTS,
@@ -48,7 +66,7 @@ export function RatesProvider({ children }) {
         setLoading(false);
       },
       (err) => {
-        console.error('Rates subscription error:', err);
+        console.warn('Rates subscription notice:', err?.message);
         setLoading(false);
       }
     );

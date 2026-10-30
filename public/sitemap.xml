@@ -1,39 +1,51 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
   <url>
-    <loc>https://hrjewellers.com/</loc>
-    <lastmod>2026-06-25</lastmod>
+    <loc>https://manishsilverdevjewellery-website.vercel.app/</loc>
+    <lastmod>2026-10-31</lastmod>
     <changefreq>daily</changefreq>
     <priority>1.0</priority>
   </url>
   <url>
-    <loc>https://hrjewellers.com/collections</loc>
-    <lastmod>2026-06-25</lastmod>
+    <loc>https://manishsilverdevjewellery-website.vercel.app/collections</loc>
+    <lastmod>2026-10-31</lastmod>
+    <changefreq>daily</changefreq>
+    <priority>0.9</priority>
+  </url>
+  <url>
+    <loc>https://manishsilverdevjewellery-website.vercel.app/about-us</loc>
+    <lastmod>2026-10-31</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.8</priority>
+  </url>
+  <url>
+    <loc>https://manishsilverdevjewellery-website.vercel.app/valuation</loc>
+    <lastmod>2026-10-31</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.8</priority>
   </url>
   <url>
-    <loc>https://hrjewellers.com/savings</loc>
-    <lastmod>2026-06-25</lastmod>
+    <loc>https://manishsilverdevjewellery-website.vercel.app/showrooms</loc>
+    <lastmod>2026-10-31</lastmod>
     <changefreq>monthly</changefreq>
-    <priority>0.7</priority>
-  </url>
-  <url>
-    <loc>https://hrjewellers.com/gold-reserve</loc>
-    <lastmod>2026-06-25</lastmod>
-    <changefreq>monthly</changefreq>
-    <priority>0.7</priority>
-  </url>
-  <url>
-    <loc>https://hrjewellers.com/offers</loc>
-    <lastmod>2026-06-25</lastmod>
-    <changefreq>weekly</changefreq>
     <priority>0.8</priority>
   </url>
   <url>
-    <loc>https://hrjewellers.com/showrooms</loc>
-    <lastmod>2026-06-25</lastmod>
+    <loc>https://manishsilverdevjewellery-website.vercel.app/heritage</loc>
+    <lastmod>2026-10-31</lastmod>
     <changefreq>monthly</changefreq>
-    <priority>0.6</priority>
+    <priority>0.7</priority>
+  </url>
+  <url>
+    <loc>https://manishsilverdevjewellery-website.vercel.app/terms-and-conditions</loc>
+    <lastmod>2026-10-31</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.5</priority>
+  </url>
+  <url>
+    <loc>https://manishsilverdevjewellery-website.vercel.app/privacy-policy</loc>
+    <lastmod>2026-10-31</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.5</priority>
   </url>
 </urlset>

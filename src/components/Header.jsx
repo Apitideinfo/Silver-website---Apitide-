@@ -4,7 +4,8 @@ import {
   CheckCheck,
   ExternalLink, 
   LogOut,
-  KeyRound
+  KeyRound,
+  Menu
 } from 'lucide-react';
 
 
@@ -40,7 +41,8 @@ export default function Header({
   setOrderSearch,
   setOrderStatusFilter,
   setCrmSearch,
-  markAllRead
+  markAllRead,
+  onOpenMobileMenu
 }) {
   const getBreadcrumbs = () => {
     switch (activeTab) {
@@ -85,17 +87,57 @@ export default function Header({
   };
 
   return (
-    <header className="flex flex-col sm:flex-row justify-between items-start sm:items-center bg-white border-b border-solid border-zinc-200 text-zinc-900 px-4 sm:px-6 py-3.5 sm:py-4 gap-3 sm:gap-4 mb-6 sm:mb-8 select-none w-full shadow-sm">
-      <div className="flex flex-col text-left min-w-0">
-        <span className="text-[9px] font-mono tracking-wider text-zinc-400 dark:text-zinc-500 font-bold block mb-0.5 uppercase truncate">
-          {getBreadcrumbs()}
-        </span>
-        <h2 className="text-lg sm:text-xl font-bold tracking-tight text-zinc-950 dark:text-zinc-55 leading-none">
-          {getPageTitle()}
-        </h2>
+    <header className="flex flex-col sm:flex-row justify-between items-start sm:items-center bg-white border-b border-solid border-zinc-200 text-zinc-900 px-3.5 sm:px-6 py-3 sm:py-4 gap-3 sm:gap-4 mb-4 sm:mb-8 select-none w-full shadow-sm">
+      <div className="flex items-center gap-3 w-full sm:w-auto justify-between sm:justify-start">
+        <div className="flex items-center gap-2.5 min-w-0">
+          <button
+            type="button"
+            onClick={onOpenMobileMenu}
+            className="md:hidden p-2 rounded-lg border border-solid border-zinc-200 bg-zinc-50 hover:bg-zinc-100 text-zinc-800 focus:outline-none cursor-pointer flex items-center justify-center shrink-0 shadow-xs"
+            aria-label="Open Admin Navigation Menu"
+            title="Open Menu"
+          >
+            <Menu className="w-5 h-5 text-zinc-800" />
+          </button>
+          <div className="flex flex-col text-left min-w-0">
+            <span className="text-[9px] font-mono tracking-wider text-zinc-400 font-bold block mb-0.5 uppercase truncate">
+              {getBreadcrumbs()}
+            </span>
+            <h2 className="text-base sm:text-xl font-bold tracking-tight text-zinc-950 leading-tight truncate">
+              {getPageTitle()}
+            </h2>
+          </div>
+        </div>
+
+        {/* Mobile Quick Action Pills (Visible on small screens) */}
+        <div className="flex sm:hidden items-center gap-1.5 shrink-0">
+          {adminUser && (
+            <>
+              <button 
+                onClick={() => setShowNotifications(!showNotifications)}
+                className="relative p-1.5 rounded-lg border border-solid border-zinc-200 bg-white text-zinc-600 hover:text-zinc-900 cursor-pointer"
+                aria-label="Notifications"
+              >
+                <Bell className="w-4 h-4" />
+                {notifications.length > 0 && (
+                  <span className="absolute -top-1 -right-1 min-w-3.5 h-3.5 bg-amber-500 text-white text-[7.5px] font-black rounded-full flex items-center justify-center px-0.5">
+                    {notifications.length}
+                  </span>
+                )}
+              </button>
+              <a
+                href="/"
+                className="p-1.5 rounded-lg border border-solid border-zinc-200 bg-white text-zinc-600 hover:text-zinc-900 flex items-center justify-center"
+                title="View Storefront"
+              >
+                <ExternalLink className="w-4 h-4" />
+              </a>
+            </>
+          )}
+        </div>
       </div>
 
-      <div className="flex gap-2 items-center flex-wrap w-full sm:w-auto justify-start sm:justify-end">
+      <div className="hidden sm:flex gap-2 items-center flex-wrap w-full sm:w-auto justify-start sm:justify-end">
         {adminUser && (
           <>
             {/* Notifications icon */}

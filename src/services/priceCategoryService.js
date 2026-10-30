@@ -107,6 +107,14 @@ export const priceCategoryService = {
     StorageService.set('manish_price_categories', tiers);
     if (typeof window !== 'undefined') {
       window.dispatchEvent(new Event('manish_price_categories_updated'));
+      try {
+        if ('BroadcastChannel' in window) {
+          const bc = new BroadcastChannel('manish_store_sync');
+          bc.postMessage({ type: 'price_categories', timestamp: Date.now() });
+          bc.close();
+        }
+        localStorage.setItem('manish_price_pulse', String(Date.now()));
+      } catch (e) {}
     }
 
     try {

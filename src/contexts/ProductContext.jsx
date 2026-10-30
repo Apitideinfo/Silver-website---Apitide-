@@ -23,12 +23,12 @@ export function ProductProvider({ children }) {
       : null;
 
     const handleCatalogUpdate = () => {
-      const updatedCats = StorageService.get('manish_categories_store', []);
+      const updatedCats = StorageService.get('manish_categories_store', null);
       if (Array.isArray(updatedCats) && updatedCats.length > 0) {
         setCategories(updatedCats);
       }
-      const updatedProds = StorageService.get('manish_products_store', []);
-      if (Array.isArray(updatedProds) && updatedProds.length > 0) {
+      const updatedProds = StorageService.get('manish_products_store', null);
+      if (Array.isArray(updatedProds)) {
         setProducts(updatedProds);
       }
     };

@@ -3,4 +3,4 @@ Allow: /
 Disallow: /admin
 Disallow: /api/
 
-Sitemap: https://hrjewellers.com/sitemap.xml
+Sitemap: https://manishsilverdevjewellery-website.vercel.app/sitemap.xml

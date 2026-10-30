@@ -10,27 +10,110 @@ import {
   onSnapshot,
 } from '../firebase/firestore';
 import { FIRESTORE_COLLECTIONS } from '../config/constants';
+import { StorageService } from './StorageService';
 
 const RATE_DOC_REF = () => doc(db, FIRESTORE_COLLECTIONS.SYSTEM_CONFIGS, 'metal_rates');
+const LOCAL_STORAGE_RATES_KEY = 'manish_metal_rates';
+
+const syncChannel = (typeof window !== 'undefined' && 'BroadcastChannel' in window)
+  ? new BroadcastChannel('manish_store_sync')
+  : null;
+
+const broadcastRatesChange = (payload) => {
+  if (typeof window !== 'undefined') {
+    try {
+      window.dispatchEvent(new CustomEvent('manish_rates_updated', { detail: payload }));
+      if (syncChannel) syncChannel.postMessage({ type: 'rates', data: payload });
+      localStorage.setItem('manish_rates_pulse', String(Date.now()));
+    } catch (e) {
+      console.warn("Rates broadcast warning:", e);
+    }
+  }
+};
 
 export const goldRateService = {
   /**
    * Fetch current rates (one-time read)
    */
   async getRates() {
-    const snap = await getDoc(RATE_DOC_REF());
-    if (snap.exists()) return snap.data();
-    return getDefaultRates();
+    try {
+      const snap = await getDoc(RATE_DOC_REF());
+      if (snap.exists()) {
+        const data = snap.data();
+        StorageService.set(LOCAL_STORAGE_RATES_KEY, data);
+        return data;
+      }
+    } catch (e) {
+      console.warn("Fetching remote rates failed, using cache:", e.message);
+    }
+    return StorageService.get(LOCAL_STORAGE_RATES_KEY, getDefaultRates());
   },
 
   /**
-   * Subscribe to live rate changes
-   * @returns unsubscribe function
+   * Subscribe to live rate changes with instant local emit and real-time multi-tab sync
    */
   subscribeToRates(onUpdate, onError) {
-    return onSnapshot(RATE_DOC_REF(), (snap) => {
-      onUpdate(snap.exists() ? snap.data() : getDefaultRates());
-    }, onError);
+    // 1. Immediately emit cached or default rates so UI is instantaneous
+    const initial = StorageService.get(LOCAL_STORAGE_RATES_KEY, getDefaultRates());
+    onUpdate(initial);
+
+    let localHandler = null;
+    let channelHandler = null;
+    let storageHandler = null;
+
+    if (typeof window !== 'undefined') {
+      localHandler = (e) => {
+        if (e?.detail) onUpdate(e.detail);
+      };
+      window.addEventListener('manish_rates_updated', localHandler);
+
+      storageHandler = (e) => {
+        if (e.key === LOCAL_STORAGE_RATES_KEY || e.key === 'manish_rates_pulse') {
+          const updated = StorageService.get(LOCAL_STORAGE_RATES_KEY, initial);
+          onUpdate(updated);
+        }
+      };
+      window.addEventListener('storage', storageHandler);
+
+      if (syncChannel) {
+        channelHandler = (msg) => {
+          if (msg?.data?.type === 'rates' && msg?.data?.data) {
+            onUpdate(msg.data.data);
+          }
+        };
+        syncChannel.addEventListener('message', channelHandler);
+      }
+    }
+
+    // 2. Connect Firestore listener
+    let unsubscribeFirestore = () => {};
+    try {
+      unsubscribeFirestore = onSnapshot(RATE_DOC_REF(), (snap) => {
+        if (snap.exists()) {
+          const data = snap.data();
+          StorageService.set(LOCAL_STORAGE_RATES_KEY, data);
+          onUpdate(data);
+        }
+      }, (err) => {
+        console.warn("Rates firestore stream notice:", err.message);
+        onError?.(err);
+      });
+    } catch (err) {
+      console.warn("Firestore rate listener init error:", err);
+    }
+
+    return () => {
+      if (typeof window !== 'undefined') {
+        if (localHandler) window.removeEventListener('manish_rates_updated', localHandler);
+        if (storageHandler) window.removeEventListener('storage', storageHandler);
+      }
+      if (syncChannel && channelHandler) {
+        syncChannel.removeEventListener('message', channelHandler);
+      }
+      if (typeof unsubscribeFirestore === 'function') {
+        unsubscribeFirestore();
+      }
+    };
   },
 
   /**
@@ -38,7 +121,14 @@ export const goldRateService = {
    */
   async saveRates(ratesData, adminEmail = 'admin') {
     const payload = buildRatePayload(ratesData, adminEmail, false);
-    await setDoc(RATE_DOC_REF(), payload, { merge: true });
+    StorageService.set(LOCAL_STORAGE_RATES_KEY, payload);
+    broadcastRatesChange(payload);
+
+    try {
+      await setDoc(RATE_DOC_REF(), payload, { merge: true });
+    } catch (e) {
+      console.warn("Background Firestore rate save offline:", e.message);
+    }
     return payload;
   },
 
@@ -48,7 +138,14 @@ export const goldRateService = {
   async publishRates(ratesData, adminEmail = 'admin') {
     const now = new Date().toISOString();
     const payload = buildRatePayload(ratesData, adminEmail, true, now);
-    await setDoc(RATE_DOC_REF(), payload, { merge: true });
+    StorageService.set(LOCAL_STORAGE_RATES_KEY, payload);
+    broadcastRatesChange(payload);
+
+    try {
+      await setDoc(RATE_DOC_REF(), payload, { merge: true });
+    } catch (e) {
+      console.warn("Background Firestore rate publish offline:", e.message);
+    }
     return payload;
   },
 };
