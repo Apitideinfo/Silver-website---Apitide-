@@ -1,3 +1,4 @@
+import { Helmet } from 'react-helmet-async';
 import React, { useState } from 'react';
 import { Sparkles } from 'lucide-react';
 import heritageBg from '../assets/heritage_palace_interior.png';

@@ -1508,7 +1508,7 @@ export default function ProductForm({
                       </button>
                     </div>
                   </div>
-                  <div className="grid grid-cols-7 sm:grid-cols-10 md:grid-cols-15 gap-2">
+                  <div className="grid grid-cols-5 xs:grid-cols-7 sm:grid-cols-10 md:grid-cols-15 gap-1.5 sm:gap-2">
                     {ALL_RING_SIZES.map((szStr) => {
                       const isSelected = currentRingSizes.includes(szStr);
 

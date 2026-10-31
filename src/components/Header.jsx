@@ -87,7 +87,7 @@ export default function Header({
   };
 
   return (
-    <header className="flex flex-col sm:flex-row justify-between items-start sm:items-center bg-white border-b border-solid border-zinc-200 text-zinc-900 px-3.5 sm:px-6 py-3 sm:py-4 gap-3 sm:gap-4 mb-4 sm:mb-8 select-none w-full shadow-sm">
+    <header className="relative flex flex-col sm:flex-row justify-between items-start sm:items-center bg-white border-b border-solid border-zinc-200 text-zinc-900 px-3.5 sm:px-6 py-3 sm:py-4 gap-3 sm:gap-4 mb-4 sm:mb-8 select-none w-full shadow-sm">
       <div className="flex items-center gap-3 w-full sm:w-auto justify-between sm:justify-start">
         <div className="flex items-center gap-2.5 min-w-0">
           <button
@@ -154,11 +154,49 @@ export default function Header({
                 )}
               </button>
 
-              {/* Notification Dropdown Panel */}
+              </div>
+
+            {/* Security & Password Quick Action */}
+            <button
+              onClick={() => setActiveTab('security')}
+              className={`border border-solid font-bold text-xs px-3 py-2 rounded-lg transition-all flex items-center gap-1.5 shadow-xs cursor-pointer whitespace-nowrap ${
+                activeTab === 'security'
+                  ? 'bg-amber-50 border-[#D5A529] text-[#8A6623]'
+                  : 'border-zinc-200 hover:border-[#D5A529]/60 text-zinc-700 hover:text-zinc-950 bg-white'
+              }`}
+              title="Change Vault Password & Security"
+            >
+              <KeyRound className="w-3.5 h-3.5 text-[#A88038]" />
+              <span className="hidden sm:inline">Password &amp; Security</span>
+              <span className="sm:hidden">Security</span>
+            </button>
+
+            {/* Storefront redirect */}
+            <a
+              href="/"
+              className="border border-solid border-zinc-200 hover:border-zinc-300 text-zinc-700 bg-white font-bold text-xs px-3 py-2 rounded-lg transition-all text-center flex items-center gap-1.5 shadow-xs whitespace-nowrap"
+            >
+              <span>Visit Store</span>
+              <ExternalLink className="w-3.5 h-3.5" />
+            </a>
+
+            {/* Logout button */}
+            <button
+              onClick={handleAdminLogout}
+              className="bg-zinc-900 hover:bg-zinc-700 text-white font-bold text-xs px-3 py-2 rounded-lg transition-all flex items-center gap-1.5 shadow-xs cursor-pointer border-none whitespace-nowrap"
+            >
+              <span>Log Out</span>
+              <LogOut className="w-3.5 h-3.5" />
+            </button>
+          </>
+        )}
+      </div>
+    
+      {/* Notification Dropdown Panel */}
               {showNotifications && (
                 <>
                   <div className="fixed inset-0 z-40 bg-black/20 sm:bg-transparent backdrop-blur-[1px] sm:backdrop-blur-none" onClick={() => setShowNotifications(false)}></div>
-                  <div className="max-sm:fixed max-sm:inset-x-3 max-sm:top-16 max-sm:w-auto sm:absolute sm:right-0 sm:w-96 mt-2.5 bg-white dark:bg-zinc-900 border border-solid border-zinc-200 dark:border-zinc-800 rounded-2xl shadow-[0_10px_30px_rgba(0,0,0,0.18)] dark:shadow-[0_15px_40px_rgba(0,0,0,0.4)] z-50 overflow-hidden text-zinc-800 dark:text-zinc-200 max-w-[calc(100vw-24px)] mx-auto">
+                  <div className="max-sm:fixed max-sm:inset-x-3 max-sm:top-16 max-sm:w-auto sm:absolute sm:right-6 sm:top-16 sm:w-96 mt-1 bg-white dark:bg-zinc-900 border border-solid border-zinc-200 dark:border-zinc-800 rounded-2xl shadow-[0_10px_30px_rgba(0,0,0,0.18)] dark:shadow-[0_15px_40px_rgba(0,0,0,0.4)] z-50 overflow-hidden text-zinc-800 dark:text-zinc-200 max-w-[calc(100vw-24px)] mx-auto">
                     <div className="flex items-center justify-between px-4 py-3 bg-zinc-50 dark:bg-zinc-900 border-b border-solid border-zinc-200 dark:border-zinc-800">
                       <span className="text-[10px] font-mono font-bold tracking-wider text-zinc-400 dark:text-zinc-500 uppercase">
                         Action Centre ({notifications.length})
@@ -219,43 +257,6 @@ export default function Header({
                   </div>
                 </>
               )}
-            </div>
-
-            {/* Security & Password Quick Action */}
-            <button
-              onClick={() => setActiveTab('security')}
-              className={`border border-solid font-bold text-xs px-3 py-2 rounded-lg transition-all flex items-center gap-1.5 shadow-xs cursor-pointer whitespace-nowrap ${
-                activeTab === 'security'
-                  ? 'bg-amber-50 border-[#D5A529] text-[#8A6623]'
-                  : 'border-zinc-200 hover:border-[#D5A529]/60 text-zinc-700 hover:text-zinc-950 bg-white'
-              }`}
-              title="Change Vault Password & Security"
-            >
-              <KeyRound className="w-3.5 h-3.5 text-[#A88038]" />
-              <span className="hidden sm:inline">Password &amp; Security</span>
-              <span className="sm:hidden">Security</span>
-            </button>
-
-            {/* Storefront redirect */}
-            <a
-              href="/"
-              className="border border-solid border-zinc-200 hover:border-zinc-300 text-zinc-700 bg-white font-bold text-xs px-3 py-2 rounded-lg transition-all text-center flex items-center gap-1.5 shadow-xs whitespace-nowrap"
-            >
-              <span>Visit Store</span>
-              <ExternalLink className="w-3.5 h-3.5" />
-            </a>
-
-            {/* Logout button */}
-            <button
-              onClick={handleAdminLogout}
-              className="bg-zinc-900 hover:bg-zinc-700 text-white font-bold text-xs px-3 py-2 rounded-lg transition-all flex items-center gap-1.5 shadow-xs cursor-pointer border-none whitespace-nowrap"
-            >
-              <span>Log Out</span>
-              <LogOut className="w-3.5 h-3.5" />
-            </button>
-          </>
-        )}
-      </div>
     </header>
   );
 }

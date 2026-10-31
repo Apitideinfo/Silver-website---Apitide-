@@ -1,3 +1,4 @@
+import { Helmet } from 'react-helmet-async';
 import React, { useState, useEffect } from 'react';
 import { Gem, Scale, Ruler, Copy } from 'lucide-react';
 import { useWishlist } from '../hooks/useWishlist';
@@ -475,6 +476,46 @@ export default function ProductDetail({
 
   return (
     <div className="bg-white text-[#181818] min-h-screen pb-24 relative font-sans">
+      <Helmet>
+        <title>{`${detailProduct?.name || 'Fine Silver Jewellery'} | BIS 925 Sterling Silver | MANISH & CO`}</title>
+        <meta
+          name="description"
+          content={detailProduct?.desc || `Shop ${detailProduct?.name || 'fine silver jewellery'} in hallmarked 925 sterling silver at MANISH & CO. Handcrafted with generational devotion in Mau since 1996.`}
+        />
+        <meta property="og:title" content={`${detailProduct?.name || 'Fine Jewellery'} | MANISH & CO`} />
+        <meta property="og:description" content={detailProduct?.desc || `Discover ${detailProduct?.name} in BIS 925 hallmarked sterling silver.`} />
+        <meta property="og:image" content={detailProduct?.img || 'https://manishsilverdevjewellery-website.vercel.app/images/hero-necklace.jpg'} />
+        <meta property="og:type" content="product" />
+        <meta name="twitter:title" content={`${detailProduct?.name} | MANISH & CO`} />
+        <meta name="twitter:image" content={detailProduct?.img || 'https://manishsilverdevjewellery-website.vercel.app/images/hero-necklace.jpg'} />
+        {detailProduct && (
+          <script type="application/ld+json">
+            {`{
+              "@context": "https://schema.org",
+              "@type": "Product",
+              "name": ${JSON.stringify(detailProduct.name || '')},
+              "image": ${JSON.stringify(detailProduct.img || '')},
+              "description": ${JSON.stringify(detailProduct.desc || detailProduct.name || '')},
+              "sku": ${JSON.stringify(detailProduct.sku || detailProduct.id || '')},
+              "brand": {
+                "@type": "Brand",
+                "name": "MANISH & CO"
+              },
+              "offers": {
+                "@type": "Offer",
+                "priceCurrency": "INR",
+                "price": ${JSON.stringify(String(calculatedPrice?.total || detailProduct.price || 0).replace(/[^0-9]/g, '') || "1999")},
+                "availability": "https://schema.org/InStock",
+                "seller": {
+                  "@type": "Organization",
+                  "name": "MANISH & CO"
+                }
+              }
+            }`}
+          </script>
+        )}
+      </Helmet>
+
       <div className="max-w-[1400px] mx-auto px-4 sm:px-6 md:px-8 py-8 space-y-16 animate-fade-in">
 
         {/* Breadcrumbs */}

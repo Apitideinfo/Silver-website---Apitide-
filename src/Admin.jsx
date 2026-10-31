@@ -236,7 +236,7 @@ export default function Admin() {
 
   if (!isAuthorizedAdmin) {
     return (
-      <div className="min-h-screen w-full flex items-center justify-center lg:justify-end lg:pr-[10%] relative overflow-hidden font-sans select-none text-[#2F2F2F] h-screen admin-login-bg">
+      <div className="min-h-screen w-full flex items-center justify-center lg:justify-end lg:pr-[10%] relative overflow-y-auto py-8 sm:py-12 font-sans select-none text-[#2F2F2F] admin-login-bg">
         <style>{`
           .admin-login-bg {
             background-color: #FCFAF6;
@@ -280,7 +280,7 @@ export default function Admin() {
           initial={{ opacity: 0, y: 30 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.7, ease: "easeOut" }}
-          className="max-w-[90%] sm:max-w-[760px] w-full bg-white/88 border border-white/60 backdrop-blur-[24px] rounded-[24px] sm:rounded-[32px] p-6 sm:p-12 lg:p-16 shadow-2xl flex flex-col items-center text-center relative z-10 lg:mr-[2%]"
+          className="w-full max-w-[92%] sm:max-w-[560px] lg:max-w-[640px] bg-white/88 border border-white/60 backdrop-blur-[24px] rounded-[24px] sm:rounded-[32px] p-5 sm:p-10 lg:p-12 shadow-2xl flex flex-col items-center text-center relative z-10 lg:mr-[2%]"
         >
 
           {/* Top floating white rounded square with gold lock icon */}

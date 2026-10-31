@@ -1,3 +1,4 @@
+import { Helmet } from 'react-helmet-async';
 import React, { useState, useEffect, useRef } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { useProducts } from '../hooks/useProducts';
@@ -280,6 +281,17 @@ export default function Home({
 
   return (
     <div className={`pb-0 transition-colors duration-500 ${isCatalogDark ? "text-[#FCFAFF]" : "text-[#202329]"}`}>
+      <Helmet>
+        <title>MANISH &amp; CO — Fine Silver Jewellery | BIS 925 Sterling Silver &amp; Heirlooms</title>
+        <meta name="description" content="Discover royal 925 sterling silver necklaces, solitaires, payals, kadas, and custom bespoke heirloom jewellery at MANISH &amp; CO. Handcrafted in Mau since 1996." />
+        <meta property="og:title" content="MANISH &amp; CO — Fine 925 Silver Jewellery &amp; Heirlooms" />
+        <meta property="og:description" content="Explore pure 925 sterling silver solitaires, royal bridal heirlooms, and fine bullion at MANISH &amp; CO." />
+        <meta property="og:type" content="website" />
+        <meta property="og:url" content="https://manishsilverdevjewellery-website.vercel.app/" />
+        <meta name="twitter:title" content="MANISH &amp; CO — Fine Silver Jewellery" />
+        <meta name="twitter:description" content="Pure 925 sterling silver solitaires, royal heirlooms, and bespoke silver jewellery." />
+      </Helmet>
+
 
       {/* ==========================================================
         TOP ACTION BAR: CUSTOM DESIGNS + BOOK AN APPOINTMENT

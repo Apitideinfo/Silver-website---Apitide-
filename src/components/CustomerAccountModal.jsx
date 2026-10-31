@@ -299,7 +299,7 @@ export default function CustomerAccountModal({
         </div>
 
         {/* Navigation Tabs */}
-        <div className="flex border-b border-solid border-zinc-100 dark:border-white/10 bg-white dark:bg-[#12071B] px-6 shrink-0">
+        <div className="flex overflow-x-auto no-scrollbar whitespace-nowrap border-b border-solid border-zinc-100 dark:border-white/10 bg-white dark:bg-[#12071B] px-3 sm:px-6 shrink-0">
           <button
             onClick={() => { triggerAudio?.('click'); setActiveTab('orders'); }}
             className={`py-3.5 px-3 border-b-2 font-sans text-xs font-bold uppercase tracking-wider flex items-center gap-2 cursor-pointer bg-transparent border-none transition-all ${
