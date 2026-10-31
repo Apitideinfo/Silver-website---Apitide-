@@ -397,7 +397,7 @@ export default function GoldRateManagement({ setAdminNotification, adminUser }) 
 
           {/* Core Gold Rates Container */}
           <div className="bg-white dark:bg-[#15151A] border border-solid border-zinc-200 dark:border-zinc-800 rounded-2xl p-6 sm:p-8 space-y-6 shadow-xs">
-            <div className="flex items-center justify-between border-b border-solid border-zinc-100 dark:border-zinc-850 pb-4">
+            <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-3 border-b border-solid border-zinc-100 dark:border-zinc-850 pb-4">
               <div>
                 <h3 className="text-sm font-black tracking-wider text-zinc-900 dark:text-[#E6C687] uppercase">
                   Gold Karat Rates

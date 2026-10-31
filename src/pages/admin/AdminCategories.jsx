@@ -346,8 +346,8 @@ export default function AdminCategories({
     <div className="space-y-6 text-[#1A1A1A] dark:text-zinc-100 font-sans text-left w-full overflow-x-hidden">
       
       {/* Sub-Tab Navigation Bar */}
-      <div className="flex flex-wrap items-center justify-between gap-3 bg-white dark:bg-[#15151A] p-2 sm:p-2.5 rounded-2xl border border-zinc-200 dark:border-zinc-800 shadow-xs">
-        <div className="flex items-center gap-2">
+      <div className="flex flex-col sm:flex-row items-stretch sm:items-center justify-between gap-3 bg-white dark:bg-[#15151A] p-2 sm:p-2.5 rounded-2xl border border-zinc-200 dark:border-zinc-800 shadow-xs">
+        <div className="flex flex-col xs:flex-row items-stretch sm:items-center gap-2 w-full sm:w-auto">
           <button
             type="button"
             onClick={() => setActiveSubTab('categories')}

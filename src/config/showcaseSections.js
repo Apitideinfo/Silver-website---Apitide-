@@ -100,7 +100,7 @@ export const getShowcaseSectionsConfig = ({ navigateTo, changeCategoryTab, setCu
       { label: 'Nazariya & Bracelets', img: kidsBracelets, tab: 'Bracelets' },
       { label: 'Chains', img: kidsChains, tab: 'Necklaces' },
       { label: 'Pendants', img: pendantsImg, tab: 'Pendants' },
-      { label: 'Baby Kadas & Berwa', img: kidsKadas, tab: 'Bangles' },
+      { label: 'Baby Kadas', img: kidsKadas, tab: 'Bangles' },
       { label: 'Other', img: kidsJewelleryImg, tab: 'Collections' },
     ],
     curatedItems: [

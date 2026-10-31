@@ -1,3 +1,4 @@
+import { Helmet } from 'react-helmet-async';
 import React, { useState, useEffect, useMemo } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { 
@@ -984,6 +985,17 @@ export default function Collections({
 
   return (
     <>
+      <Helmet>
+        <title>{`${activeCategoryTab === 'Collections' ? 'All Collections' : activeCategoryTab} | 925 Sterling Silver Jewellery | MANISH & CO`}</title>
+        <meta
+          name="description"
+          content={`Explore pure BIS 925 sterling silver ${activeCategoryTab.toLowerCase()} crafted by master silversmiths at MANISH & CO. Insured pan-India delivery.`}
+        />
+        <meta property="og:title" content={`${activeCategoryTab} — Fine Silver Jewellery | MANISH & CO`} />
+        <meta property="og:description" content={`Browse bespoke 925 sterling silver ${activeCategoryTab.toLowerCase()} and royal heirloom treasures.`} />
+        <meta property="og:type" content="website" />
+      </Helmet>
+
       {/* SORT + FILTER STICKY BAR FOR MOBILE ONLY */}
       <div className={`lg:hidden fixed bottom-0 left-0 w-full z-30 border-t flex items-center justify-center shadow-[0_-4px_20px_rgba(0,0,0,0.12)] backdrop-blur-md transition-colors duration-500 ${isCatalogDark
         ? "bg-[#1D0E29]/95 border-gold/15 text-white shadow-2xl"

@@ -273,7 +273,7 @@ export default function AdminLayout({
             animate={{ opacity: 1, y: 0, scale: 1 }}
             exit={{ opacity: 0, y: 20, scale: 0.95 }}
             transition={{ duration: 0.3, ease: [0.16, 1, 0.3, 1] }}
-            className={`fixed bottom-6 right-6 z-[9999] max-w-sm w-full p-4 rounded-2xl border border-solid flex items-center gap-3.5 shadow-2xl backdrop-blur-md ${
+            className={`fixed bottom-20 sm:bottom-6 left-3 right-3 sm:left-auto sm:right-6 sm:max-w-sm z-[9999] p-4 rounded-2xl border border-solid flex items-center gap-3.5 shadow-2xl backdrop-blur-md ${
               adminNotification.type === 'error'
                 ? 'bg-red-50/95 dark:bg-red-950/90 border-red-200 dark:border-red-900/50 text-red-800 dark:text-red-200 shadow-red-500/5'
                 : 'bg-white/95 dark:bg-zinc-900/95 border-[#E6C687]/30 text-zinc-900 dark:text-zinc-100 shadow-[#E6C687]/5'
