@@ -401,7 +401,7 @@ export default function Home({
               className="text-4xl sm:text-6xl lg:text-[72px] xl:text-[80px] font-bold uppercase text-white leading-[1.02] tracking-[0.03em] drop-shadow-[0_4px_30px_rgba(0,0,0,0.95)]"
               style={{ fontFamily: "'Cormorant Garamond', 'Playfair Display', Georgia, serif" }}
             >
-              MORE THAN<br />
+              MORE THEN<br />
               <span className="bg-gradient-to-r from-white via-[#F5E6D3] to-white bg-clip-text text-transparent">
                 JEWELLERY
               </span>
