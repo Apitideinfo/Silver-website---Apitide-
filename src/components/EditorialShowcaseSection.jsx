@@ -49,10 +49,7 @@ export default function EditorialShowcaseSection({
     }
   };
 
-<<<<<<< HEAD
 
-=======
->>>>>>> 0d86d49 (remove: 'CURATED FOR EVERY OCCASION' section from homepage showcase)
   const isDark = dark;
   const sectionBg = isDark ? 'bg-[#050B14]' : 'bg-[#FAF7F2]';
   const sectionBorder = isDark ? 'border-white/10' : 'border-[#EAE3D9]';
