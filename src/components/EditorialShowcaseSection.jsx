@@ -4,9 +4,7 @@ import { ChevronLeft, ChevronRight } from 'lucide-react';
 /**
  * EditorialShowcaseSection
  * Compact, modern showcase matching client reference:
- * 1. Horizontal category slide (square photo + title underneath)
- * 2. "— CURATED FOR EVERY OCCASION —" divider
- * 3. Compact curated product row (photo + title + price)
+ * - Horizontal category slide (square photo + title underneath)
  * Result: No excessive vertical scrolling!
  */
 export default function EditorialShowcaseSection({
@@ -16,7 +14,6 @@ export default function EditorialShowcaseSection({
   subtitle,
   dark = false,
   categories = [],
-  curatedItems = [],
   triggerAudio,
   navigateTo,
   changeCategoryTab,
@@ -52,7 +49,10 @@ export default function EditorialShowcaseSection({
     }
   };
 
+<<<<<<< HEAD
 
+=======
+>>>>>>> 0d86d49 (remove: 'CURATED FOR EVERY OCCASION' section from homepage showcase)
   const isDark = dark;
   const sectionBg = isDark ? 'bg-[#050B14]' : 'bg-[#FAF7F2]';
   const sectionBorder = isDark ? 'border-white/10' : 'border-[#EAE3D9]';
@@ -128,7 +128,7 @@ export default function EditorialShowcaseSection({
         </div>
 
         {/* ========================================================
-            ROW 1: CATEGORY SLIDE (Square image + title below)
+            ROW: CATEGORY SLIDE (Square image + title below)
             Matches client reference image exact structure
             ======================================================== */}
         <div 
