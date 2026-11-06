@@ -45,7 +45,7 @@ export default function Modal({
             animate={{ opacity: 1, scale: 1, y: 0 }}
             exit={{ opacity: 0, scale: 0.95, y: 30 }}
             transition={{ type: 'spring', damping: 25, stiffness: 350 }}
-            className={`relative w-full rounded-[2rem] border border-solid border-[#E6DFD3] bg-white p-6 sm:p-8 shadow-2xl text-left select-none text-[#202329] z-50 ${sizes[size]}`}
+            className={`relative w-full rounded-2xl sm:rounded-[2rem] border border-solid border-[#E6DFD3] bg-white p-4 sm:p-8 shadow-2xl text-left select-none text-[#202329] z-50 ${sizes[size]}`}
           >
             {/* Top Header */}
             <div className="flex items-center justify-between border-b border-solid border-[#E6DFD3] pb-4 mb-5">
