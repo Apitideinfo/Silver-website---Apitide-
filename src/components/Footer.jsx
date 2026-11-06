@@ -32,7 +32,7 @@ export default function Footer({
                 className="serif-luxury text-sm font-semibold tracking-[4px] text-[#B09A82] mt-1"
                 style={{ fontFamily: "'Cormorant Garamond', 'Playfair Display', Georgia, serif" }}
               >
-                FINE SILVER JEWELLERY
+                FINE JEWELLERY
               </h4>
               <p className="text-[10px] tracking-[0.2em] text-[#657989] font-sans uppercase font-medium mt-1">
                 925 HALLMARKED • SINCE 1996
@@ -140,7 +140,7 @@ export default function Footer({
               { label: "Silver Earrings", action: () => handleCategoryNav('silver-earrings') },
               { label: "Solitaire Rings", action: () => handleCategoryNav('Rings') },
               { label: "Royal Necklaces", action: () => handleCategoryNav('Necklaces') },
-              { label: "Fine Silver Kadas", action: () => handleCategoryNav('Kada') },
+              { label: "Sterling Silver Kadas", action: () => handleCategoryNav('Kada') },
               { label: "Gold & Coins", action: () => handleCategoryNav('gold') },
             ].map((item, idx) => (
               <li key={idx}>
@@ -215,13 +215,13 @@ export default function Footer({
               </div>
             </a>
 
-            <a href="mailto:manishandco.in@gmail.com" className="flex flex-col md:flex-row items-center md:items-start text-center md:text-left gap-2.5 md:gap-3.5 group hover:text-[#F8F5EC] transition-colors">
+            <a href="mailto:manishandco.shop@gmail.com" className="flex flex-col md:flex-row items-center md:items-start text-center md:text-left gap-2.5 md:gap-3.5 group hover:text-[#F8F5EC] transition-colors">
               <div className="w-9 h-9 rounded-full border border-[#B09A82]/30 group-hover:border-[#B09A82]/70 flex items-center justify-center text-[#B09A82] bg-white/5 transition-all">
                 <svg className="w-4.5 h-4.5" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth="2">
                   <path strokeLinecap="round" strokeLinejoin="round" d="M3 8l7.89 5.26a2 2 0 002.22 0L21 8M5 19h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z" />
                 </svg>
               </div>
-              <span className="tracking-wide break-all font-sans font-medium text-center md:text-left text-[#B2BAC1]">manishandco.in@gmail.com</span>
+              <span className="tracking-wide break-all font-sans font-medium text-center md:text-left text-[#B2BAC1]">manishandco.shop@gmail.com</span>
             </a>
 
             <div className="flex flex-col md:flex-row items-center md:items-start text-center md:text-left gap-2.5 md:gap-3.5 group shrink-0">
@@ -352,7 +352,7 @@ export default function Footer({
         </div>
 
         <p className="text-center sm:text-right text-[#657989] text-[10px]">
-          &copy; {new Date().getFullYear()} MANISH &amp; CO. Fine Silver Jewellery. All Rights Reserved.
+          &copy; {new Date().getFullYear()} MANISH &amp; CO. Fine Jewellery. All Rights Reserved.
         </p>
       </div>
     </footer>

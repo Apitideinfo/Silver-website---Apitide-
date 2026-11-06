@@ -1,12 +1,12 @@
 import { Helmet } from 'react-helmet-async';
-import React, { useState, useEffect, useRef } from 'react';
+import React, { useState, useEffect, useRef, useMemo } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { useProducts } from '../hooks/useProducts';
 import { useRates } from '../hooks/useRates';
 import Modal from '../components/Modal';
 import BookingForm from '../forms/BookingForm';
 import { getOptimizedImageUrl } from '../utils/imageOptimizer';
-import { ShieldCheck, Gem, Truck, Package, ArrowRight, Star, Sparkles, CheckCircle2, ChevronRight } from 'lucide-react';
+import { ShieldCheck, Gem, Truck, Package, ArrowRight, Star, Sparkles, CheckCircle2, ChevronRight, ChevronLeft, Heart, Calendar } from 'lucide-react';
 
 // Category Image Fallbacks
 import solitariesImg from '../assets/solitaries.png';
@@ -44,8 +44,87 @@ import testimonial3 from '../assets/testimonial_3.png';
 import testimonial4 from '../assets/testimonial_4.png';
 
 // Banners & Collections
+import heroBannerTimelessSilverPng from '../assets/hero_banner_timeless_silver.png';
+import heroBannerTimelessSilverWebp from '../assets/hero_banner_timeless_silver.webp';
+import heroBannerLuxuryEarringPng from '../assets/hero_banner_luxury_earring.png';
+import heroBannerLuxuryEarringWebp from '../assets/hero_banner_luxury_earring.webp';
+import heroBannerBrandPromisePng from '../assets/hero_banner_brand_promise.png';
+import heroBannerBrandPromiseWebp from '../assets/hero_banner_brand_promise.webp';
+import heroBannerDiwaliGlowPng from '../assets/hero_banner_diwali_glow.png';
+import heroBannerDiwaliGlowWebp from '../assets/hero_banner_diwali_glow.webp';
 import midnightSapphireHero from '../assets/midnight_sapphire_hero.png';
 import midnightSapphireHeroWebp from '../assets/midnight_sapphire_hero.webp';
+import catRefRings from '../assets/cat_ref_rings.png';
+import catRefRingsWebp from '../assets/cat_ref_rings.webp';
+import catRefStoneBracelets from '../assets/cat_ref_stone_bracelets.png';
+import catRefStoneBraceletsWebp from '../assets/cat_ref_stone_bracelets.webp';
+import catRefEarring from '../assets/cat_ref_earring.png';
+import catRefEarringWebp from '../assets/cat_ref_earring.webp';
+import catRefBracelets from '../assets/cat_ref_bracelets.png';
+import catRefBraceletsWebp from '../assets/cat_ref_bracelets.webp';
+import catRefPendant from '../assets/cat_ref_pendant.png';
+import catRefPendantWebp from '../assets/cat_ref_pendant.webp';
+import catRefNecklaces from '../assets/cat_ref_necklaces.png';
+import catRefNecklacesWebp from '../assets/cat_ref_necklaces.webp';
+import colTennisPng from '../assets/col_tennis.png';
+import colTennisWebp from '../assets/col_tennis.webp';
+import colToeRingPng from '../assets/col_toe_ring.png';
+import colToeRingWebp from '../assets/col_toe_ring.webp';
+import colPearlPng from '../assets/col_pearl.png';
+import colPearlWebp from '../assets/col_pearl.webp';
+import colStonePng from '../assets/col_stone.png';
+import colStoneWebp from '../assets/col_stone.webp';
+import diwaliFestiveManishAndCoJpg from '../assets/diwali_festive_manish_and_co.jpg';
+import diwaliFestiveManishAndCoWebp from '../assets/diwali_festive_manish_and_co.webp';
+
+// Dynamic Silver Story Showcase Service
+import { silverStoryService, DEFAULT_SILVER_STORY_DATA } from '../services/silverStoryService';
+
+// Craft Your Bespoke Jewellery Assets
+import craftYourBespokeJewelleryPng from '../assets/craft_your_bespoke_jewellery.png';
+import craftYourBespokeJewelleryWebp from '../assets/craft_your_bespoke_jewellery.webp';
+
+// Trust Seals & Brand Assurances Assets (High-Res Transparent)
+import trustSealBisWebp from '../assets/trust_seal_bis.webp';
+import trustSealBisPng from '../assets/trust_seal_bis.png';
+import trustSealShippingWebp from '../assets/trust_seal_shipping.webp';
+import trustSealShippingPng from '../assets/trust_seal_shipping.png';
+import trustSealCodWebp from '../assets/trust_seal_cod.webp';
+import trustSealCodPng from '../assets/trust_seal_cod.png';
+import trustSealCustomersWebp from '../assets/trust_seal_customers.webp';
+import trustSealCustomersPng from '../assets/trust_seal_customers.png';
+
+// Silver Gifting Hampers Assets
+import giftPick1499Webp from '../assets/gift_pick_1499.webp';
+import giftPick1499Png from '../assets/gift_pick_1499.png';
+import giftPick1999Webp from '../assets/gift_pick_1999.webp';
+import giftPick1999Png from '../assets/gift_pick_1999.png';
+import giftPick2999Webp from '../assets/gift_pick_2999.webp';
+import giftPick2999Png from '../assets/gift_pick_2999.png';
+import giftPickPremiumWebp from '../assets/gift_pick_premium.webp';
+import giftPickPremiumPng from '../assets/gift_pick_premium.png';
+// Eri's Best Picks Assets
+import erisInfinityRingWebp from '../assets/eris_infinity_ring.webp';
+import erisInfinityRingPng from '../assets/eris_infinity_ring.png';
+import erisHeartPendantWebp from '../assets/eris_heart_pendant.webp';
+import erisHeartPendantPng from '../assets/eris_heart_pendant.png';
+
+// Curated Category Extra Assets
+import catRefAnkletsWebp from '../assets/cat_ref_anklets.webp';
+import catRefChainWebp from '../assets/cat_ref_chain.webp';
+import catRefToeRingWebp from '../assets/cat_ref_toe_ring.webp';
+
+// Made for Every Kind of Love Assets
+import loveStory1Webp from '../assets/love_story_1.webp';
+import loveStory1Png from '../assets/love_story_1.png';
+import loveStory2Webp from '../assets/love_story_2.webp';
+import loveStory2Png from '../assets/love_story_2.png';
+import loveStory3Webp from '../assets/love_story_3.webp';
+import loveStory3Png from '../assets/love_story_3.png';
+import loveStory4Webp from '../assets/love_story_4.webp';
+import loveStory4Png from '../assets/love_story_4.png';
+
+
 import colRings from '../assets/col_rings.png';
 import colBracelets from '../assets/col_bracelets.png';
 import colPendants from '../assets/col_pendants.png';
@@ -62,27 +141,178 @@ import goldPlatingBanner from '../assets/gold_plating_banner.jpg';
 
 const getCategoryFallbackImage = (catNameOrId) => {
   const norm = String(catNameOrId || '').toLowerCase().replace(/\s+/g, '');
-  if (norm.includes('bangle')) return kadaImg;
-  if (norm.includes('bracelet')) return diamondBracelet;
-  if (norm.includes('jhumka')) return jhumkasImg;
-  if (norm.includes('earring')) return sapphireHeritageSet;
-  if (norm.includes('kada')) return goldKada;
-  if (norm.includes('necklace') || norm.includes('choker')) return necklacesImg;
+  if (norm.includes('stone') || (norm.includes('bracelet') && norm.includes('stone'))) return catRefStoneBraceletsWebp || catRefStoneBracelets;
+  if (norm.includes('ring') && !norm.includes('ear') && !norm.includes('toe')) return catRefRingsWebp || catRefRings;
+  if (norm.includes('toering') || norm.includes('toe-ring') || norm.includes('toe')) return colToeRingWebp || colToeRingPng;
+  if (norm.includes('earring') || norm.includes('jhumka') || norm.includes('top') || norm.includes('stud')) return catRefEarringWebp || catRefEarring;
+  if (norm.includes('bracelet')) return catRefBraceletsWebp || catRefBracelets;
+  if (norm.includes('pendant') || norm.includes('locket')) return catRefPendantWebp || catRefPendant;
+  if (norm.includes('necklace') || norm.includes('choker') || norm.includes('haar')) return catRefNecklacesWebp || catRefNecklaces;
   if (norm.includes('payal') || norm.includes('anklet')) return silverPayalsImg;
-  if (norm.includes('pendant') || norm.includes('locket')) return pendantsImg;
-  if (norm.includes('ring')) return ringsImg;
+  if (norm.includes('mangal')) return mangalsutrasImg;
   if (norm.includes('chain')) return goldChainsImg;
-  if (norm.includes('nath')) return nathNosePinImg;
-  if (norm.includes('top') || norm.includes('stud') || norm.includes('nose')) return nosePinsImg;
-  if (norm.includes('mangalsutra')) return mangalsutrasImg;
+  if (norm.includes('bangle') || norm.includes('kada')) return kadaImg;
+  if (norm.includes('nath') || norm.includes('nose')) return nosePinsImg;
   if (norm.includes('coin') || norm.includes('bullion')) return goldCoinsImg;
   if (norm.includes('solitaire') || norm.includes('diamond')) return solitariesImg;
   if (norm.includes('watch')) return watchJewelleryImg;
   if (norm.includes('men')) return mensJewelleryImg;
   if (norm.includes('kids') || norm.includes('child')) return kidsJewelleryImg;
-  return ringsImg;
+  return catRefRingsWebp || catRefRings;
 };
 
+
+const TRUST_SEALS_DATA = [
+  {
+    id: 'bis-hallmark',
+    label: 'BIS Hallmarked Silver',
+    imgWebp: trustSealBisWebp,
+    imgPng: trustSealBisPng
+  },
+  {
+    id: 'free-shipping',
+    label: 'Free Shipping',
+    imgWebp: trustSealShippingWebp,
+    imgPng: trustSealShippingPng
+  },
+  {
+    id: 'cash-on-delivery',
+    label: 'Cash On Delivery',
+    imgWebp: trustSealCodWebp,
+    imgPng: trustSealCodPng
+  },
+  {
+    id: 'happy-customers',
+    label: '25,000+ Happy Customers',
+    imgWebp: trustSealCustomersWebp,
+    imgPng: trustSealCustomersPng
+  }
+];
+
+const GIFT_HAMPERS_DATA = [
+  {
+    id: 'under-1499',
+    title: 'Picks Under ₹1499',
+    imgWebp: giftPick1499Webp,
+    imgPng: giftPick1499Png,
+    path: '/collections?maxPrice=1499'
+  },
+  {
+    id: 'under-1999',
+    title: 'Picks Under ₹1999',
+    imgWebp: giftPick1999Webp,
+    imgPng: giftPick1999Png,
+    path: '/collections?maxPrice=1999'
+  },
+  {
+    id: 'under-2999',
+    title: 'Picks Under ₹2999',
+    imgWebp: giftPick2999Webp,
+    imgPng: giftPick2999Png,
+    path: '/collections?maxPrice=2999'
+  },
+  {
+    id: 'premium-gifts',
+    title: 'Premium Gifts',
+    imgWebp: giftPickPremiumWebp,
+    imgPng: giftPickPremiumPng,
+    path: '/collections?sort=luxury'
+  }
+];
+
+const CURATED_AUDIENCE_SECTIONS = [
+  {
+    id: 'for-her',
+    label: 'FOR HER',
+    icon: '👸',
+    subtitle: 'Bracelets, Anklets, Rings, Ear rings, Toe Rings & Necklaces',
+    items: [
+      { id: 'her-bracelets', name: 'Bracelets', sub: '925 Italian & Tennis', img: catRefBraceletsWebp, tab: 'bracelets' },
+      { id: 'her-anklets', name: 'Anklets', sub: 'Traditional & Minimal', img: catRefAnkletsWebp, tab: 'anklets' },
+      { id: 'her-rings', name: 'Rings', sub: 'Pavé Solitaires & Bands', img: catRefRingsWebp, tab: 'rings' },
+      { id: 'her-earrings', name: 'Ear Rings', sub: 'Studs, Drops & Jhumkas', img: catRefEarringWebp, tab: 'earrings' },
+      { id: 'her-toe-rings', name: 'Toe Rings', sub: 'Hallmarked 925 Silver', img: catRefToeRingWebp, tab: 'rings' },
+      { id: 'her-chains', name: 'Chains', sub: 'Delicate Link Chains', img: catRefChainWebp, tab: 'chains' },
+      { id: 'her-necklaces', name: 'Necklaces', sub: 'Chokers & Layered Chains', img: catRefNecklacesWebp, tab: 'necklaces' },
+      { id: 'her-pendants', name: 'Pendants', sub: 'Evil Eye & Symbolic Charms', img: catRefPendantWebp, tab: 'pendants' },
+      { id: 'her-other', name: 'Other Jewellery', sub: 'Explore Complete Range', img: colBracelets, tab: 'Collections' },
+    ]
+  },
+  {
+    id: 'for-him',
+    label: 'FOR HIM',
+    icon: '🤴',
+    subtitle: 'Bracelets & Kada, Chains, Signet Rings & Regal Pendants',
+    items: [
+      { id: 'him-kadas', name: 'Bracelets & Kada', sub: 'Chitai & Heavy 925 Kada', img: kadaImg, tab: 'bracelets' },
+      { id: 'him-chains', name: 'Chains', sub: 'Curb, Figaro & Rope', img: catRefChainWebp, tab: 'chains' },
+      { id: 'him-rings', name: 'Rings', sub: 'Bold Signet & Sovereign Rings', img: catRefRingsWebp, tab: 'rings' },
+      { id: 'him-pendants', name: 'Pendants', sub: 'Om, Trishul, Shield Pendants', img: catRefPendantWebp, tab: 'pendants' },
+      { id: 'him-other', name: 'Other Essentials', sub: 'Men’s Silver Brooches & Sets', img: kadaImg, tab: 'Collections' },
+    ]
+  },
+  {
+    id: 'for-kids',
+    label: 'KIDS COLLECTION',
+    icon: '👶',
+    subtitle: 'Born Baby Kit, Gentle Chains, Cute Pendants & Nazariya Berwa',
+    items: [
+      { id: 'kids-kit', name: 'Bornbaby Kit', sub: 'Silver Spoon, Bowl & Glass', img: kidsJewelleryImg, tab: 'Collections' },
+      { id: 'kids-chains', name: 'Chains', sub: 'Lightweight & Safe Silver', img: catRefChainWebp, tab: 'chains' },
+      { id: 'kids-pendants', name: 'Pendants', sub: 'Cute Animal & Star Charms', img: catRefPendantWebp, tab: 'pendants' },
+      { id: 'kids-berwa', name: 'Bracelets & Berwa', sub: 'Hypoallergenic Silver Nazariya', img: kidsJewelleryImg, tab: 'bracelets' },
+      { id: 'kids-other', name: 'Other Keepsakes', sub: 'Silver Rattles & Silver Coins', img: kidsJewelleryImg, tab: 'Collections' },
+    ]
+  },
+  {
+    id: 'couples-gifts',
+    label: 'COUPLES & GIFTS',
+    icon: '🎁',
+    subtitle: 'Couple Rings, Couple Chains, Secret Sets & Curated Hampers',
+    items: [
+      { id: 'couple-rings', name: 'Couple Rings', sub: 'Matching Forever Bands', img: catRefRingsWebp, tab: 'rings' },
+      { id: 'couple-chains', name: 'Couple Chains', sub: 'Interlocking Infinity Chains', img: catRefChainWebp, tab: 'chains' },
+      { id: 'couple-bracelets', name: 'Couple Bracelets', sub: 'His & Hers Silver Pair', img: catRefBraceletsWebp, tab: 'bracelets' },
+      { id: 'couple-secret-sets', name: 'Secret Sets', sub: 'Hidden Message Pendants', img: giftPickPremiumWebp, tab: 'Collections' },
+      { id: 'couple-gifts', name: 'Gifts Section', sub: 'Born Baby Kit & Romantic Hampers', img: giftPick1999Webp, tab: 'Collections' },
+    ]
+  }
+];
+
+const LOVE_STORY_CARDS = [
+  {
+    id: 'first-glance',
+    title: 'FIRST GLANCE',
+    imgWebp: loveStory1Webp,
+    imgPng: loveStory1Png,
+    tab: 'earrings',
+    active: false
+  },
+  {
+    id: 'everyday-love',
+    title: 'EVERYDAY LOVE',
+    imgWebp: loveStory2Webp,
+    imgPng: loveStory2Png,
+    tab: 'rings',
+    active: true
+  },
+  {
+    id: 'just-for-me',
+    title: 'JUST FOR ME',
+    imgWebp: loveStory3Webp,
+    imgPng: loveStory3Png,
+    tab: 'pendants',
+    active: false
+  },
+  {
+    id: 'the-special-day',
+    title: 'THE SPECIAL DAY',
+    imgWebp: loveStory4Webp,
+    imgPng: loveStory4Png,
+    tab: 'mangalsutras',
+    active: false
+  }
+];
 
 export default function Home({
   navigateTo,
@@ -104,8 +334,180 @@ export default function Home({
   // Local modal state
   const [consultationModal, setConsultationModal] = useState(false);
   const [customDesignOpen, setCustomDesignOpen] = useState(false);
+  const [wishlistLoveCards, setWishlistLoveCards] = useState(['everyday-love']);
+  const [activeAudienceTab, setActiveAudienceTab] = useState('for-her');
+  const audienceCarouselRef = useRef(null);
+
+  const toggleWishlistLoveCard = (id) => {
+    setWishlistLoveCards((prev) => 
+      prev.includes(id) ? prev.filter(x => x !== id) : [...prev, id]
+    );
+  };
+
+  const scrollAudienceCarousel = (dir) => {
+    if (audienceCarouselRef.current) {
+      const step = audienceCarouselRef.current.clientWidth > 768 ? 320 : 200;
+      audienceCarouselRef.current.scrollBy({ left: dir === 'left' ? -step : step, behavior: 'smooth' });
+    }
+  };
+
+  // Hero Carousel State (Auto slide every 5 sec)
+  const heroBanners = [
+    {
+      id: 1,
+      title: 'Timeless Silver Jewellery Collection',
+      webp: heroBannerTimelessSilverWebp,
+      png: heroBannerTimelessSilverPng,
+      alt: 'Timeless Silver Jewellery Collection - MANISH & CO',
+      page: 'collections',
+      category: 'Collections'
+    },
+    {
+      id: 2,
+      title: 'Luxury Navy Blue Earring Collection',
+      webp: heroBannerLuxuryEarringWebp,
+      png: heroBannerLuxuryEarringPng,
+      alt: 'Luxury Navy Blue Earring Collection - MANISH & CO',
+      page: 'collections',
+      category: 'earrings'
+    },
+    {
+      id: 3,
+      title: 'Manish & Co. Brand Promise',
+      webp: heroBannerBrandPromiseWebp,
+      png: heroBannerBrandPromisePng,
+      alt: 'Manish & Co. Brand Promise - 925 Hallmarked Sterling Silver',
+      page: 'about-us',
+      category: null
+    },
+    {
+      id: 4,
+      title: 'Navy Silver Diwali Glow',
+      webp: heroBannerDiwaliGlowWebp,
+      png: heroBannerDiwaliGlowPng,
+      alt: 'Navy Silver Diwali Glow - Festive Fine Jewellery Collection',
+      page: 'collections',
+      category: 'Collections'
+    }
+  ];
+
+  const [currentHeroSlide, setCurrentHeroSlide] = useState(0);
+  const [isHeroPaused, setIsHeroPaused] = useState(false);
+  const heroTouchStartX = useRef(0);
+  const storyCarouselRef = useRef(null);
+  const storyIsDragging = useRef(false);
+  const storyStartX = useRef(0);
+  const storyScrollLeft = useRef(0);
+  const storyHasDragged = useRef(false);
+
+  // Dynamic Category Slider (populated live from Admin Categories)
+  const dynamicStoryCategories = React.useMemo(() => {
+    const list = Array.isArray(categories) && categories.length > 0 ? categories : INITIAL_CATEGORIES;
+    return list.map((cat) => {
+      const catId = cat.id || cat.docId || String(cat.name || '').toLowerCase().replace(/\s+/g, '-');
+      // If Admin uploaded or set an image, use it directly! Otherwise fall back cleanly
+      const catImg = (cat.img && typeof cat.img === 'string' && cat.img.trim())
+        ? cat.img.trim()
+        : (cat.image && typeof cat.image === 'string' && cat.image.trim())
+          ? cat.image.trim()
+          : getCategoryFallbackImage(cat.name || catId);
+
+      return {
+        id: catId,
+        name: cat.name || catId,
+        img: catImg,
+        badge: cat.badge || null,
+        tab: cat.tab || catId
+      };
+    });
+  }, [categories]);
+
+  const scrollStoryCarousel = (direction) => {
+    if (storyCarouselRef.current) {
+      const scrollStep = Math.max(260, Math.floor(storyCarouselRef.current.clientWidth * 0.55));
+      storyCarouselRef.current.scrollBy({
+        left: direction === 'left' ? -scrollStep : scrollStep,
+        behavior: 'smooth'
+      });
+    }
+  };
+
+  const handleStoryMouseDown = (e) => {
+    if (!storyCarouselRef.current) return;
+    storyIsDragging.current = true;
+    storyHasDragged.current = false;
+    storyStartX.current = e.pageX - storyCarouselRef.current.offsetLeft;
+    storyScrollLeft.current = storyCarouselRef.current.scrollLeft;
+  };
+
+  const handleStoryMouseMove = (e) => {
+    if (!storyIsDragging.current || !storyCarouselRef.current) return;
+    const x = e.pageX - storyCarouselRef.current.offsetLeft;
+    const walk = (x - storyStartX.current) * 1.4;
+    if (Math.abs(walk) > 6) {
+      storyHasDragged.current = true;
+    }
+    storyCarouselRef.current.scrollLeft = storyScrollLeft.current - walk;
+  };
+
+  const handleStoryMouseUp = () => {
+    storyIsDragging.current = false;
+  };
+
+  const handleStoryCardClick = (cat) => {
+    if (storyHasDragged.current) {
+      storyHasDragged.current = false;
+      return;
+    }
+    triggerAudio('click');
+    if (typeof changeCategoryTab === 'function') {
+      changeCategoryTab(cat.tab);
+    }
+    navigateTo('collections');
+  };
+
+  // Auto slide every 5000ms (5 seconds)
+  useEffect(() => {
+    if (isHeroPaused) return;
+    const timer = setInterval(() => {
+      setCurrentHeroSlide((prev) => (prev + 1) % heroBanners.length);
+    }, 5000);
+    return () => clearInterval(timer);
+  }, [isHeroPaused, heroBanners.length]);
+
+  const nextHeroSlide = () => {
+    triggerAudio('click');
+    setCurrentHeroSlide((prev) => (prev + 1) % heroBanners.length);
+  };
+
+  const prevHeroSlide = () => {
+    triggerAudio('click');
+    setCurrentHeroSlide((prev) => (prev - 1 + heroBanners.length) % heroBanners.length);
+  };
 
   // Dynamic Price / Budget Categories ("Gol Categories" - Under 199, Under 229, Under 299 etc.)
+  // ─── DYNAMIC SILVER FOR EVERY STORY SHOWCASE ─────────────────────
+  const [silverStoryData, setSilverStoryData] = useState(() => silverStoryService.getStoredStoryData());
+
+  useEffect(() => {
+    silverStoryService.fetchRemoteStoryData().then(res => {
+      if (res) setSilverStoryData(res);
+    });
+
+    const handleSilverStorySync = () => {
+      setSilverStoryData(silverStoryService.getStoredStoryData());
+    };
+
+    if (typeof window !== 'undefined') {
+      window.addEventListener('manish_silver_story_updated', handleSilverStorySync);
+    }
+    return () => {
+      if (typeof window !== 'undefined') {
+        window.removeEventListener('manish_silver_story_updated', handleSilverStorySync);
+      }
+    };
+  }, []);
+
   const [priceCategories, setPriceCategories] = useState(() => priceCategoryService.getStoredCategories());
 
   useEffect(() => {
@@ -143,17 +545,10 @@ export default function Home({
 
   // Combined dynamic categories with baseline reference set (all 10+ reference categories)
   const displayCategories = React.useMemo(() => {
-    const list = (Array.isArray(categories) && categories.length > 0) ? [...categories] : [...INITIAL_CATEGORIES];
-    INITIAL_CATEGORIES.forEach((base) => {
-      const exists = list.some(c =>
-        (c.id && c.id.toLowerCase() === base.id.toLowerCase()) ||
-        (c.name && c.name.toLowerCase() === base.name.toLowerCase())
-      );
-      if (!exists) {
-        list.push(base);
-      }
-    });
-    return list;
+    if (Array.isArray(categories) && categories.length > 0) {
+      return categories;
+    }
+    return INITIAL_CATEGORIES;
   }, [categories]);
 
   // Lower Recommendations Carousel Scrolling Refs & Autoplay
@@ -282,408 +677,962 @@ export default function Home({
   return (
     <div className={`pb-0 transition-colors duration-500 ${isCatalogDark ? "text-[#FCFAFF]" : "text-[#202329]"}`}>
       <Helmet>
-        <title>MANISH &amp; CO — Fine Silver Jewellery | BIS 925 Sterling Silver &amp; Heirlooms</title>
+        <title>MANISH &amp; CO — Fine Jewellery | BIS 925 Sterling Silver &amp; Heirlooms</title>
         <meta name="description" content="Discover royal 925 sterling silver necklaces, solitaires, payals, kadas, and custom bespoke heirloom jewellery at MANISH &amp; CO. Handcrafted in Mau since 1996." />
         <meta property="og:title" content="MANISH &amp; CO — Fine 925 Silver Jewellery &amp; Heirlooms" />
         <meta property="og:description" content="Explore pure 925 sterling silver solitaires, royal bridal heirlooms, and fine bullion at MANISH &amp; CO." />
         <meta property="og:type" content="website" />
         <meta property="og:url" content="https://manishsilverdevjewellery-website.vercel.app/" />
-        <meta name="twitter:title" content="MANISH &amp; CO — Fine Silver Jewellery" />
+        <meta name="twitter:title" content="MANISH &amp; CO — Fine Jewellery" />
         <meta name="twitter:description" content="Pure 925 sterling silver solitaires, royal heirlooms, and bespoke silver jewellery." />
       </Helmet>
 
 
-            {/* ==========================================================
-        SECTION 01: LUXURY HERO SECTION - MORE THAN JEWELLERY
-        (Production-Ready: High-Performance WebP + Framer Motion Stagger + Polished Typography & Trust Badges)
-        ========================================================== */}
-      <section 
+      {/* ==========================================================
+          SECTION 01: LUXURY HERO AUTO-SLIDER (5-SECOND AUTO-ROTATE)
+          Banners:
+          1. Timeless Silver Jewellery Collection
+          2. Luxury Navy Blue Earring Collection
+          3. Manish & Co. Brand Promise
+          4. Navy Silver Diwali Glow
+          ========================================================== */}
+      <section
         id="hero-section"
-        aria-label="Manish & Co Fine Jewellery Introduction" 
-        className="relative w-full min-h-[580px] sm:min-h-[640px] lg:min-h-[720px] xl:min-h-[760px] overflow-hidden select-none bg-[#050B14] flex items-center"
+        aria-label="Manish and Co Fine Jewellery Hero Showcase"
+        className="relative w-full overflow-hidden select-none bg-[#050B14]"
+        onMouseEnter={() => setIsHeroPaused(true)}
+        onMouseLeave={() => setIsHeroPaused(false)}
+        onTouchStart={(e) => {
+          heroTouchStartX.current = e.touches[0].clientX;
+          setIsHeroPaused(true);
+        }}
+        onTouchEnd={(e) => {
+          setIsHeroPaused(false);
+          const diff = heroTouchStartX.current - e.changedTouches[0].clientX;
+          if (diff > 45) nextHeroSlide();
+          else if (diff < -45) prevHeroSlide();
+        }}
       >
-        {/* Background Still Life Image with High-Performance <picture> */}
-        <div className="absolute inset-0 w-full h-full">
-          <picture className="w-full h-full block">
-            <source srcSet={midnightSapphireHeroWebp} type="image/webp" />
-            <img
-              src={midnightSapphireHero}
-              alt="MANISH & CO - 925 Fine Silver Jewellery"
-              className="w-full h-full object-cover object-right sm:object-center select-none pointer-events-none transition-transform duration-1000 ease-out will-change-transform"
-              loading="eager"
-              fetchPriority="high"
-              decoding="async"
-            />
-          </picture>
-          
-          {/* Desktop Left-to-Right Dark Gradient for Crisp Text Contrast */}
-          <div className="absolute inset-0 bg-gradient-to-r from-[#050B14] via-[#050B14]/85 to-transparent w-full md:w-[70%] lg:w-[62%] pointer-events-none" />
-          
-          {/* Mobile Bottom-up & Subtle Dark Vignette for 100% Mobile Readability */}
-          <div className="absolute inset-0 bg-gradient-to-t from-[#050B14] via-[#050B14]/60 to-transparent sm:hidden pointer-events-none" />
-          <div className="absolute inset-0 bg-[#050B14]/30 sm:bg-transparent pointer-events-none" />
+        {/* Banner Images Carousel Container */}
+        <div className="relative w-full aspect-[2172/724] min-h-[190px] sm:min-h-[280px] md:min-h-[380px] lg:min-h-[460px] xl:min-h-[520px] overflow-hidden bg-[#050B14]">
+          <AnimatePresence initial={false} mode="wait">
+            <motion.div
+              key={currentHeroSlide}
+              initial={{ opacity: 0 }}
+              animate={{ opacity: 1 }}
+              exit={{ opacity: 0 }}
+              transition={{ duration: 0.65, ease: "easeInOut" }}
+              className="absolute inset-0 w-full h-full cursor-pointer"
+              onClick={() => {
+                const banner = heroBanners[currentHeroSlide];
+                if (banner.category && typeof changeCategoryTab === 'function') {
+                  changeCategoryTab(banner.category);
+                }
+                navigateTo(banner.page || 'collections');
+              }}
+            >
+              <picture className="w-full h-full block">
+                <source srcSet={heroBanners[currentHeroSlide].webp} type="image/webp" />
+                <img
+                  src={heroBanners[currentHeroSlide].png}
+                  alt={heroBanners[currentHeroSlide].alt}
+                  className="w-full h-full object-cover sm:object-contain object-center select-none"
+                  loading="eager"
+                  fetchPriority="high"
+                  decoding="async"
+                />
+              </picture>
+            </motion.div>
+          </AnimatePresence>
 
-          {/* Luxury Ambient Shimmer Particles (Top Glint) */}
-          <div className="absolute top-1/4 left-1/4 w-96 h-96 bg-[#C5A880]/5 rounded-full blur-3xl pointer-events-none" />
+          {/* Left Navigation Arrow */}
+          <button
+            onClick={(e) => {
+              e.stopPropagation();
+              prevHeroSlide();
+            }}
+            aria-label="Previous Banner"
+            className="absolute left-2 sm:left-4 lg:left-6 top-1/2 -translate-y-1/2 w-8 h-8 sm:w-11 sm:h-11 rounded-full bg-black/35 hover:bg-black/70 text-white backdrop-blur-md border border-white/20 flex items-center justify-center transition-all duration-300 opacity-80 hover:opacity-100 hover:scale-105 active:scale-95 cursor-pointer z-20 focus:outline-none shadow-lg"
+          >
+            <ChevronLeft className="w-5 h-5 sm:w-6 sm:h-6" />
+          </button>
 
-          {/* Floating Animated Golden & Silver Stardust Particles */}
-          <div className="absolute inset-0 pointer-events-none overflow-hidden z-10">
-            {[
-              { top: '15%', left: '8%', size: 'w-2 h-2', delay: 0, duration: 4.5 },
-              { top: '28%', left: '38%', size: 'w-1.5 h-1.5', delay: 1, duration: 5 },
-              { top: '62%', left: '18%', size: 'w-2 h-2', delay: 0.6, duration: 4.2 },
-              { top: '22%', left: '72%', size: 'w-2.5 h-2.5', delay: 1.4, duration: 3.8 },
-              { top: '70%', left: '65%', size: 'w-1.5 h-1.5', delay: 2.1, duration: 5.5 },
-              { top: '45%', left: '88%', size: 'w-2 h-2', delay: 0.9, duration: 4.8 },
-              { top: '80%', left: '40%', size: 'w-1.5 h-1.5', delay: 1.8, duration: 4.0 },
-            ].map((p, i) => (
-              <motion.div
-                key={i}
-                className={`absolute ${p.size} rounded-full bg-gradient-to-tr from-[#D4AF37] to-[#FFF5DC] shadow-[0_0_12px_#D4AF37]`}
-                style={{ top: p.top, left: p.left }}
-                animate={{
-                  y: [0, -20, 0],
-                  opacity: [0.25, 0.95, 0.25],
-                  scale: [0.75, 1.35, 0.75],
+          {/* Right Navigation Arrow */}
+          <button
+            onClick={(e) => {
+              e.stopPropagation();
+              nextHeroSlide();
+            }}
+            aria-label="Next Banner"
+            className="absolute right-2 sm:right-4 lg:right-6 top-1/2 -translate-y-1/2 w-8 h-8 sm:w-11 sm:h-11 rounded-full bg-black/35 hover:bg-black/70 text-white backdrop-blur-md border border-white/20 flex items-center justify-center transition-all duration-300 opacity-80 hover:opacity-100 hover:scale-105 active:scale-95 cursor-pointer z-20 focus:outline-none shadow-lg"
+          >
+            <ChevronRight className="w-5 h-5 sm:w-6 sm:h-6" />
+          </button>
+
+          {/* Slide Indicator Dots */}
+          <div className="absolute bottom-2.5 sm:bottom-4 lg:bottom-6 left-1/2 -translate-x-1/2 z-20 flex items-center gap-2 sm:gap-2.5 px-3 py-1.5 rounded-full bg-black/35 backdrop-blur-md border border-white/10">
+            {heroBanners.map((banner, index) => (
+              <button
+                key={banner.id}
+                onClick={(e) => {
+                  e.stopPropagation();
+                  triggerAudio('click');
+                  setCurrentHeroSlide(index);
                 }}
-                transition={{
-                  duration: p.duration,
-                  repeat: Infinity,
-                  ease: "easeInOut",
-                  delay: p.delay,
-                }}
+                aria-label={'Go to slide ' + (index + 1)}
+                className={'transition-all duration-300 rounded-full cursor-pointer focus:outline-none ' + (
+                  currentHeroSlide === index
+                    ? 'w-6 sm:w-8 h-2 sm:h-2.5 bg-gradient-to-r from-[#D4AF37] to-[#FFF5DC] shadow-[0_0_8px_rgba(212,175,55,0.7)]'
+                    : 'w-2 sm:w-2.5 h-2 sm:h-2.5 bg-white/40 hover:bg-white/80'
+                )}
               />
             ))}
           </div>
         </div>
 
-        {/* Hero Left Content Container with Framer-Motion Staggered Entrance */}
-        <div className="relative z-10 max-w-[1536px] w-full mx-auto px-6 sm:px-10 lg:px-14 py-14 sm:py-16 lg:py-20 flex flex-col justify-center">
-          <motion.div 
-            initial={{ opacity: 0, y: 30 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.9, ease: [0.16, 1, 0.3, 1] }}
-            className="max-w-[640px] text-left"
-          >
-            
-            {/* Animated Royal Welcome Badge (Client Feedback #5: Welcome Animation) */}
-            <motion.div
-              initial={{ opacity: 0, scale: 0.9, y: 15 }}
-              animate={{ opacity: 1, scale: 1, y: 0 }}
-              transition={{ duration: 0.8, ease: "easeOut" }}
-              className="inline-flex items-center gap-2.5 px-4 py-1.5 rounded-full bg-gradient-to-r from-[#C5A880]/25 via-[#C5A880]/10 to-transparent border border-[#C5A880]/40 backdrop-blur-md mb-4 sm:mb-5 shadow-[0_4px_20px_rgba(197,168,128,0.2)] group"
-            >
-              <Sparkles className="w-3.5 h-3.5 text-[#E5C396] animate-pulse" />
-              <span className="text-[10px] sm:text-[11px] font-sans font-bold tracking-[0.28em] text-[#E5C396] uppercase">
-                WELCOME TO MANISH &amp; CO
-              </span>
-              <span className="w-1.5 h-1.5 rounded-full bg-[#D4AF37] animate-ping" />
-            </motion.div>
-
-            {/* Eyebrow */}
-            <motion.div
-              initial={{ opacity: 0, y: 15 }}
-              animate={{ opacity: 1, y: 0 }}
-              transition={{ duration: 0.6, delay: 0.15 }}
-              className="flex items-center gap-2 mb-3 sm:mb-4"
-            >
-              <span className="text-[#C5A880] text-xs font-serif select-none">✦</span>
-              <span className="inline-block text-[#C5A880] text-xs sm:text-[13px] font-sans font-semibold tracking-[0.28em] uppercase">
-                TIMELESS BY NATURE • ESTD. 1996
-              </span>
-            </motion.div>
-
-            {/* Main Luxury Headline with Shimmering Gradient and Presence */}
-            <motion.h1 
-              initial={{ opacity: 0, y: 25 }}
-              animate={{ opacity: 1, y: 0 }}
-              transition={{ duration: 0.9, delay: 0.25, ease: [0.16, 1, 0.3, 1] }}
-              className="text-4xl sm:text-6xl lg:text-[72px] xl:text-[80px] font-bold uppercase text-white leading-[1.02] tracking-[0.03em] drop-shadow-[0_4px_30px_rgba(0,0,0,0.95)]"
-              style={{ fontFamily: "'Cormorant Garamond', 'Playfair Display', Georgia, serif" }}
-            >
-              MORE THEN<br />
-              <span className="bg-gradient-to-r from-white via-[#F5E6D3] to-white bg-clip-text text-transparent">
-                JEWELLERY
-              </span>
-            </motion.h1>
-
-            {/* Subtitle Description */}
-            <motion.p 
-              initial={{ opacity: 0, y: 15 }}
-              animate={{ opacity: 1, y: 0 }}
-              transition={{ duration: 0.7, delay: 0.38 }}
-              className="text-gray-200 text-xs sm:text-sm lg:text-[15px] font-sans font-medium tracking-[0.18em] uppercase mt-4 sm:mt-5 mb-7 sm:mb-9 leading-relaxed max-w-[480px]"
-            >
-              925 FINE SILVER JEWELLERY<br className="hidden sm:inline" /> FOR A MODERN YOU
-            </motion.p>
-
-            {/* Action Buttons Row */}
-            <motion.div 
-              initial={{ opacity: 0, y: 15 }}
-              animate={{ opacity: 1, y: 0 }}
-              transition={{ duration: 0.7, delay: 0.45 }}
-              className="flex flex-wrap items-center gap-4"
-            >
-              {/* Primary Bronze CTA */}
-              <button
-                onClick={() => {
-                  triggerAudio('click');
-                  changeCategoryTab?.('Collections');
-                  navigateTo('collections');
-                }}
-                aria-label="Explore 925 fine silver jewellery collections"
-                className="group relative inline-flex items-center gap-3 px-8 sm:px-10 py-3.5 sm:py-4 bg-[#8C6D46] hover:bg-[#A37B4D] active:scale-[0.98] text-white font-sans text-xs sm:text-sm font-semibold tracking-[0.2em] uppercase transition-all duration-300 shadow-[0_8px_25px_rgba(140,109,70,0.4)] hover:shadow-[0_12px_32px_rgba(140,109,70,0.6)] cursor-pointer rounded-[2px] overflow-hidden"
-              >
-                {/* Light Sweep Shimmer Sheen */}
-                <span className="absolute inset-0 w-full h-full bg-gradient-to-r from-transparent via-white/20 to-transparent -translate-x-full group-hover:translate-x-full transition-transform duration-1000 ease-out pointer-events-none" />
-                <span className="relative z-10">EXPLORE COLLECTIONS</span>
-                <span className="relative z-10 text-base font-light transition-transform duration-300 group-hover:translate-x-1.5">→</span>
-              </button>
-
-              {/* Secondary Clean Editorial Scroll Button */}
-              <button
-                onClick={() => {
-                  triggerAudio('click');
-                  const colElem = document.getElementById('our-collections');
-                  if (colElem) {
-                    colElem.scrollIntoView({ behavior: 'smooth' });
-                  } else {
-                    changeCategoryTab?.('Collections');
-                    navigateTo('collections');
-                  }
-                }}
-                aria-label="Scroll to discover collections"
-                className="hidden sm:inline-flex items-center gap-2 px-6 py-3.5 border border-white/20 hover:border-[#C5A880]/70 text-gray-300 hover:text-white font-sans text-xs sm:text-sm font-medium tracking-[0.16em] uppercase transition-all duration-300 hover:bg-white/[0.04] cursor-pointer rounded-[2px]"
-              >
-                <span>OUR CRAFT</span>
-                <span className="text-xs text-[#C5A880]">↓</span>
-              </button>
-            </motion.div>
-
-            {/* Value Proposition Trust Badges (Production Polish: Micro-cards, High-DPI icons, Glassmorphic Hover) */}
-            <motion.div 
-              initial={{ opacity: 0, y: 15 }}
-              animate={{ opacity: 1, y: 0 }}
-              transition={{ duration: 0.8, delay: 0.55 }}
-              className="grid grid-cols-2 sm:grid-cols-4 gap-3 sm:gap-4 pt-6 sm:pt-8 border-t border-white/10 mt-8 sm:mt-12"
-              role="list"
-              aria-label="Value propositions"
-            >
-              {/* Badge 1: 925 Pure Silver */}
-              <div 
-                role="listitem"
-                className="group/badge flex items-center gap-2.5 p-2 rounded transition-colors duration-300 hover:bg-white/[0.03]"
-              >
-                <div className="w-8 h-8 rounded-full bg-white/[0.04] flex items-center justify-center shrink-0 border border-white/5 group-hover/badge:border-[#C5A880]/30 transition-colors">
-                  <ShieldCheck className="w-4 h-4 sm:w-4.5 sm:h-4.5 text-[#C5A880] group-hover/badge:text-[#DFC6A4] transition-colors" strokeWidth={1.75} />
-                </div>
-                <div className="flex flex-col text-left">
-                  <span className="text-white text-xs sm:text-[13px] font-bold leading-tight font-sans tracking-wide">925</span>
-                  <span className="text-gray-400 group-hover/badge:text-gray-300 text-[10px] sm:text-[11px] leading-tight font-sans transition-colors">Pure Silver</span>
-                </div>
+        {/* Value Proposition Trust Badges Row */}
+        <div className="w-full bg-[#08121E] border-t border-b border-white/10 py-3.5 sm:py-4 px-4 sm:px-6">
+          <div className="max-w-6xl mx-auto grid grid-cols-2 lg:grid-cols-4 gap-4 sm:gap-6 lg:gap-8 items-center justify-items-center" role="list">
+            <div role="listitem" className="flex items-center justify-center gap-2.5 sm:gap-3 p-1 w-full max-w-[260px]">
+              <div className="w-7 h-7 sm:w-8 sm:h-8 rounded-full bg-white/5 flex items-center justify-center shrink-0 border border-white/10">
+                <ShieldCheck className="w-4 h-4 text-[#C5A880]" strokeWidth={1.8} />
               </div>
-
-              {/* Badge 2: Premium Craftsmanship */}
-              <div 
-                role="listitem"
-                className="group/badge flex items-center gap-2.5 p-2 rounded transition-colors duration-300 hover:bg-white/[0.03]"
-              >
-                <div className="w-8 h-8 rounded-full bg-white/[0.04] flex items-center justify-center shrink-0 border border-white/5 group-hover/badge:border-[#C5A880]/30 transition-colors">
-                  <Gem className="w-4 h-4 sm:w-4.5 sm:h-4.5 text-[#C5A880] group-hover/badge:text-[#DFC6A4] transition-colors" strokeWidth={1.75} />
-                </div>
-                <div className="flex flex-col text-left">
-                  <span className="text-white text-xs sm:text-[13px] font-bold leading-tight font-sans tracking-wide">Premium</span>
-                  <span className="text-gray-400 group-hover/badge:text-gray-300 text-[10px] sm:text-[11px] leading-tight font-sans transition-colors">Craftsmanship</span>
-                </div>
+              <div className="flex flex-col text-left">
+                <span className="text-white text-xs sm:text-[13px] font-bold leading-tight font-sans">925 Pure Silver</span>
+                <span className="text-gray-400 text-[10px] sm:text-[11px] leading-tight font-sans">Certified Hallmarked</span>
               </div>
+            </div>
 
-              {/* Badge 3: Pan India Delivery */}
-              <div 
-                role="listitem"
-                className="group/badge flex items-center gap-2.5 p-2 rounded transition-colors duration-300 hover:bg-white/[0.03]"
-              >
-                <div className="w-8 h-8 rounded-full bg-white/[0.04] flex items-center justify-center shrink-0 border border-white/5 group-hover/badge:border-[#C5A880]/30 transition-colors">
-                  <Truck className="w-4 h-4 sm:w-4.5 sm:h-4.5 text-[#C5A880] group-hover/badge:text-[#DFC6A4] transition-colors" strokeWidth={1.75} />
-                </div>
-                <div className="flex flex-col text-left">
-                  <span className="text-white text-xs sm:text-[13px] font-bold leading-tight font-sans tracking-wide">Pan India</span>
-                  <span className="text-gray-400 group-hover/badge:text-gray-300 text-[10px] sm:text-[11px] leading-tight font-sans transition-colors">Delivery</span>
-                </div>
+            <div role="listitem" className="flex items-center justify-center gap-2.5 sm:gap-3 p-1 w-full max-w-[260px]">
+              <div className="w-7 h-7 sm:w-8 sm:h-8 rounded-full bg-white/5 flex items-center justify-center shrink-0 border border-white/10">
+                <Gem className="w-4 h-4 text-[#C5A880]" strokeWidth={1.8} />
               </div>
-
-              {/* Badge 4: Secure Packaging */}
-              <div 
-                role="listitem"
-                className="group/badge flex items-center gap-2.5 p-2 rounded transition-colors duration-300 hover:bg-white/[0.03]"
-              >
-                <div className="w-8 h-8 rounded-full bg-white/[0.04] flex items-center justify-center shrink-0 border border-white/5 group-hover/badge:border-[#C5A880]/30 transition-colors">
-                  <Package className="w-4 h-4 sm:w-4.5 sm:h-4.5 text-[#C5A880] group-hover/badge:text-[#DFC6A4] transition-colors" strokeWidth={1.75} />
-                </div>
-                <div className="flex flex-col text-left">
-                  <span className="text-white text-xs sm:text-[13px] font-bold leading-tight font-sans tracking-wide">Secure</span>
-                  <span className="text-gray-400 group-hover/badge:text-gray-300 text-[10px] sm:text-[11px] leading-tight font-sans transition-colors">Packaging</span>
-                </div>
+              <div className="flex flex-col text-left">
+                <span className="text-white text-xs sm:text-[13px] font-bold leading-tight font-sans">Master Craftsmanship</span>
+                <span className="text-gray-400 text-[10px] sm:text-[11px] leading-tight font-sans">Heirloom Hand-finished</span>
               </div>
-            </motion.div>
+            </div>
 
-          </motion.div>
+            <div role="listitem" className="flex items-center justify-center gap-2.5 sm:gap-3 p-1 w-full max-w-[260px]">
+              <div className="w-7 h-7 sm:w-8 sm:h-8 rounded-full bg-white/5 flex items-center justify-center shrink-0 border border-white/10">
+                <Truck className="w-4 h-4 text-[#C5A880]" strokeWidth={1.8} />
+              </div>
+              <div className="flex flex-col text-left">
+                <span className="text-white text-xs sm:text-[13px] font-bold leading-tight font-sans">Pan-India Delivery</span>
+                <span className="text-gray-400 text-[10px] sm:text-[11px] leading-tight font-sans">100% Insured Transit</span>
+              </div>
+            </div>
+
+            <div role="listitem" className="flex items-center justify-center gap-2.5 sm:gap-3 p-1 w-full max-w-[260px]">
+              <div className="w-7 h-7 sm:w-8 sm:h-8 rounded-full bg-white/5 flex items-center justify-center shrink-0 border border-white/10">
+                <Package className="w-4 h-4 text-[#C5A880]" strokeWidth={1.8} />
+              </div>
+              <div className="flex flex-col text-left">
+                <span className="text-white text-xs sm:text-[13px] font-bold leading-tight font-sans">Luxury Packaging</span>
+                <span className="text-gray-400 text-[10px] sm:text-[11px] leading-tight font-sans">Certificate & Box</span>
+              </div>
+            </div>
+          </div>
         </div>
       </section>
 
       {/* Divider */}
       <div className="w-full h-[1px] bg-[#E6DFD3] relative z-20" />
 
+      {/* ==========================================================
+          TOP CONCIERGE BAR: CUSTOM DESIGN & BOOK AN APPOINTMENT
+          Direct WhatsApp Connect (+91 94516 38680)
+          ========================================================== */}
+      <div className="w-full bg-[#17131F] text-white py-2.5 sm:py-3 px-4 border-b border-[#C8A646]/30 shadow-xs relative z-20">
+        <div className="max-w-[1536px] mx-auto px-2 sm:px-6 flex flex-col md:flex-row items-center justify-between gap-2.5 sm:gap-4 text-center md:text-left">
+          
+          <div className="flex items-center gap-2 sm:gap-3">
+            <span className="w-2 h-2 rounded-full bg-[#C8A646] animate-pulse shrink-0" />
+            <p className="text-xs sm:text-[13px] font-sans text-[#EAE2D5] tracking-wide m-0">
+              <strong className="text-[#C8A646] font-semibold">Bespoke Atelier:</strong> Share your custom design or meet our master silversmith for a private appointment.
+            </p>
+          </div>
+
+          <div className="flex items-center gap-2.5 sm:gap-3.5 shrink-0">
+            {/* 1. Custom Designs Button */}
+            <button
+              type="button"
+              onClick={() => {
+                triggerAudio('click');
+                setCustomDesignOpen(true);
+              }}
+              className="inline-flex items-center gap-1.5 sm:gap-2 px-3.5 sm:px-4 py-1.5 sm:py-2 rounded-full border border-[#C8A646]/80 bg-white/5 hover:bg-[#C8A646] hover:text-[#17131F] text-[#F3E5C8] font-sans text-xs sm:text-[12.5px] font-bold tracking-wider uppercase transition-all duration-300 shadow-xs cursor-pointer active:scale-95 focus:outline-none"
+              title="Upload your design photo directly on WhatsApp"
+            >
+              <Sparkles className="w-3.5 h-3.5 text-[#C8A646] group-hover:text-[#17131F]" />
+              <span>Custom Designs</span>
+            </button>
+
+            {/* 2. Book An Appointment Button */}
+            <button
+              type="button"
+              onClick={() => {
+                triggerAudio('click');
+                setConsultationModal(true);
+              }}
+              className="inline-flex items-center gap-1.5 sm:gap-2 px-4 sm:px-5 py-1.5 sm:py-2 rounded-full bg-gradient-to-r from-[#C8A646] to-[#A37B4D] hover:from-[#D8BA65] hover:to-[#B58C5E] text-[#17131F] font-sans text-xs sm:text-[12.5px] font-bold tracking-wider uppercase transition-all duration-300 shadow-[0_3px_12px_rgba(200,166,70,0.35)] cursor-pointer active:scale-95 focus:outline-none"
+              title="Book a private visit or live consultation"
+            >
+              <Calendar className="w-3.5 h-3.5 text-[#17131F]" />
+              <span>Book An Appointment</span>
+            </button>
+          </div>
+
+        </div>
+      </div>
+
       {/* Main Content Area (White/Ivory background) */}
       <div className="bg-[#F8F5EC] text-[#202329] transition-colors duration-500 !mt-0">
 
         {/* ==========================================================
-          ANIMATED LUXURY MARQUEE TICKER (Continuous moving sheen)
+          SECTION: SHOP BY CATEGORY ("Silver For Every Story")
+          Reference Screenshot Match: 
+          Rings | Stone Bracelets | Earring | Bracelets | Pendant | Necklaces
+          Theme: MANISH & CO Signature (#F8F5EC Ivory, #0D2B4E Navy, #8C6D46 Bronze, #E6DFD3 Border)
           ========================================================== */}
-        <div className="w-full bg-[#071322] border-y border-[#C5A880]/30 py-3 overflow-hidden select-none relative z-20 shadow-inner">
-          <div className="flex animate-marquee-smooth whitespace-nowrap gap-8 text-[11px] sm:text-xs font-sans font-bold tracking-[0.25em] uppercase text-[#E5C396]">
-            {[...Array(3)].map((_, i) => (
-              <span key={i} className="inline-flex items-center gap-8">
-                <span>✦ 100% BIS 925 HALLMARKED PURE SILVER</span>
-                <span className="text-[#8C6D46]">•</span>
-                <span>ESTD. 1996 ATELIER • MAU HERITAGE</span>
-                <span className="text-[#8C6D46]">•</span>
-                <span>BESPOKE CUSTOM DESIGNS VIA WHATSAPP</span>
-                <span className="text-[#8C6D46]">•</span>
-                <span>INSURED PAN-INDIA DOORSTEP DELIVERY</span>
-                <span className="text-[#8C6D46]">•</span>
-                <span>LIFETIME EXCHANGE &amp; BUYBACK</span>
-                <span className="text-[#8C6D46]">•</span>
-              </span>
-            ))}
-          </div>
-        </div>
+        <section
+          id="silver-for-every-story"
+          aria-label="Silver For Every Story - Featured Categories"
+          className="w-full bg-[#FFFFFF] pt-8 pb-7 sm:pt-10 sm:pb-9 border-b border-gray-100/60 select-none relative"
+        >
+          <div className="max-w-[1536px] mx-auto px-4 sm:px-8 lg:px-12 relative">
 
-{/* ==========================================================
-          CLIENT FEEDBACK SECTION 2: CUSTOM DESIGNS (Screenshot 2 Match)
-          "MADE PERSONAL: Your Idea. Your Jewellery."
+            {/* Left Navigation Arrow */}
+            <button
+              type="button"
+              onClick={() => scrollStoryCarousel('left')}
+              aria-label="Previous categories"
+              className="flex absolute left-1 sm:left-2 lg:left-3 top-[36%] -translate-y-1/2 w-8 h-8 sm:w-10 sm:h-10 rounded-full bg-white/95 backdrop-blur-xs border border-[#8C6D46]/40 shadow-md hover:shadow-xl hover:bg-[#0D2B4E] hover:border-[#0D2B4E] items-center justify-center text-[#0D2B4E] hover:text-white transition-all z-30 cursor-pointer focus:outline-none"
+            >
+              <ChevronLeft className="w-4 h-4 sm:w-5 sm:h-5" />
+            </button>
+
+            {/* Right Navigation Arrow */}
+            <button
+              type="button"
+              onClick={() => scrollStoryCarousel('right')}
+              aria-label="Next categories"
+              className="flex absolute right-1 sm:right-2 lg:right-3 top-[36%] -translate-y-1/2 w-8 h-8 sm:w-10 sm:h-10 rounded-full bg-white/95 backdrop-blur-xs border border-[#8C6D46]/40 shadow-md hover:shadow-xl hover:bg-[#0D2B4E] hover:border-[#0D2B4E] items-center justify-center text-[#0D2B4E] hover:text-white transition-all z-30 cursor-pointer focus:outline-none"
+            >
+              <ChevronRight className="w-4 h-4 sm:w-5 sm:h-5" />
+            </button>
+
+            {/* Horizontal Scrollable Category Cards Carousel */}
+            <div
+              ref={storyCarouselRef}
+              onMouseDown={handleStoryMouseDown}
+              onMouseMove={handleStoryMouseMove}
+              onMouseUp={handleStoryMouseUp}
+              onMouseLeave={handleStoryMouseUp}
+              className="flex items-center gap-3.5 sm:gap-5 md:gap-6 lg:gap-7 overflow-x-auto no-scrollbar scroll-smooth justify-start py-2 px-3 sm:px-6 cursor-grab active:cursor-grabbing select-none"
+            >
+              {dynamicStoryCategories.map((cat) => (
+                <button
+                  key={cat.id}
+                  onClick={() => handleStoryCardClick(cat)}
+                  className="w-[130px] sm:w-[150px] md:w-[165px] lg:w-[178px] bg-white rounded-xl border border-[#E6DFD3] hover:border-[#8C6D46] shadow-[0_4px_16px_rgba(0,0,0,0.04)] hover:shadow-[0_10px_28px_rgba(140,109,70,0.18)] p-2.5 sm:p-3 transition-all duration-300 group cursor-pointer flex flex-col items-center shrink-0 focus:outline-none hover:-translate-y-1"
+                >
+                  {/* Square Card Image */}
+                  <div className="relative w-full aspect-square rounded-lg overflow-hidden bg-[#FAF7F2] border border-[#EADBCE]/50 pointer-events-none">
+                    <img
+                      src={cat.img}
+                      alt={cat.name}
+                      draggable={false}
+                      className="w-full h-full object-cover object-center group-hover:scale-108 transition-transform duration-500 ease-out select-none pointer-events-none"
+                      loading="lazy"
+                      onError={(e) => {
+                        e.target.onerror = null;
+                        e.target.src = getCategoryFallbackImage(cat.name || cat.id);
+                      }}
+                    />
+                    {cat.badge && (
+                      <span className="absolute top-1.5 left-1.5 bg-[#8C6D46] text-white text-[8px] sm:text-[9px] font-bold px-1.5 py-0.5 rounded shadow-xs tracking-wider uppercase font-sans">
+                        {cat.badge}
+                      </span>
+                    )}
+                  </div>
+
+                  {/* Category Label */}
+                  <span className="mt-2.5 sm:mt-3 text-xs sm:text-[13.5px] font-sans font-semibold text-[#0D2B4E] tracking-tight group-hover:text-[#8C6D46] transition-colors text-center whitespace-nowrap">
+                    {cat.name}
+                  </span>
+                </button>
+              ))}
+            </div>
+
+            {/* Reference Screenshot Exact: ♥ Silver For Every Story ♥ */}
+            <div className="max-w-4xl mx-auto flex items-center justify-center mt-7 sm:mt-10 px-4">
+              <div className="flex-1 h-[2px] sm:h-[2.5px] bg-[#8C6D46] rounded-full" />
+              <span className="px-4 sm:px-6 text-[15px] sm:text-[18px] md:text-[20px] font-serif font-bold text-[#0D2B4E] flex items-center gap-2.5 whitespace-nowrap tracking-wide">
+                <span className="text-[#8C6D46] text-base sm:text-lg font-bold">♥</span>
+                <span>Silver For Every Story</span>
+                <span className="text-[#8C6D46] text-base sm:text-lg font-bold">♥</span>
+              </span>
+              <div className="flex-1 h-[2px] sm:h-[2.5px] bg-[#8C6D46] rounded-full" />
+            </div>
+
+            {/* ==========================================================
+                DIWALI FESTIVE SHOWCASE & 4 COLLECTION SPOTLIGHT (Reference Screenshot Exact)
+                Left: 2x2 Grid (Tennis, Toe Ring, Pearl, Stone Collections)
+                Right: MANISH & CO Royal Diwali Festive Banner (Flat 15% Off)
+                ========================================================== */}
+            <div className="mt-8 sm:mt-12 grid grid-cols-1 lg:grid-cols-12 gap-6 sm:gap-8 items-stretch">
+
+              {/* Left Column: 2x2 Grid of 4 Collections */}
+              <div className="lg:col-span-6 grid grid-cols-2 gap-3.5 sm:gap-5">
+
+                {/* 1. Tennis Collection */}
+                <button
+                  type="button"
+                  onClick={() => {
+                    triggerAudio('click');
+                    changeCategoryTab?.(silverStoryData?.cards?.[0]?.tab || 'bracelets');
+                    navigateTo('collections');
+                  }}
+                  className="flex flex-col items-center group cursor-pointer border-none bg-transparent text-left focus:outline-none"
+                >
+                  <div className="relative w-full aspect-[4/3] rounded-xl overflow-hidden bg-white border border-[#E6DFD3] shadow-xs group-hover:shadow-md transition-all duration-300">
+                    <img
+                      src={silverStoryData?.cards?.[0]?.img || colTennisWebp || colTennisPng}
+                      alt={silverStoryData?.cards?.[0]?.title || 'TENNIS COLLECTION'}
+                      className="w-full h-full object-cover object-center group-hover:scale-106 transition-transform duration-500 ease-out"
+                      loading="lazy"
+                    />
+                  </div>
+                  <div className="mt-2.5 sm:mt-3 text-center">
+                    <h3 className="text-xs sm:text-[13.5px] font-sans font-bold tracking-wider uppercase text-[#0D2B4E] group-hover:text-[#8C6D46] transition-colors leading-tight">
+                      {silverStoryData?.cards?.[0]?.title || 'TENNIS COLLECTION'}
+                    </h3>
+                    <p className="text-[10px] sm:text-[11px] font-sans text-[#8C6D46] font-medium tracking-wide mt-0.5">
+                      {silverStoryData?.cards?.[0]?.tagline || '♥ Sparkle On Repeat ♥'}
+                    </p>
+                  </div>
+                </button>
+
+                {/* 2. Toe Ring Collection */}
+                <button
+                  type="button"
+                  onClick={() => {
+                    triggerAudio('click');
+                    changeCategoryTab?.(silverStoryData?.cards?.[1]?.tab || 'payal');
+                    navigateTo('collections');
+                  }}
+                  className="flex flex-col items-center group cursor-pointer border-none bg-transparent text-left focus:outline-none"
+                >
+                  <div className="relative w-full aspect-[4/3] rounded-xl overflow-hidden bg-white border border-[#E6DFD3] shadow-xs group-hover:shadow-md transition-all duration-300">
+                    <img
+                      src={silverStoryData?.cards?.[1]?.img || colToeRingWebp || colToeRingPng}
+                      alt={silverStoryData?.cards?.[1]?.title || 'TOE RING COLLECTION'}
+                      className="w-full h-full object-cover object-center group-hover:scale-106 transition-transform duration-500 ease-out"
+                      loading="lazy"
+                    />
+                  </div>
+                  <div className="mt-2.5 sm:mt-3 text-center">
+                    <h3 className="text-xs sm:text-[13.5px] font-sans font-bold tracking-wider uppercase text-[#0D2B4E] group-hover:text-[#8C6D46] transition-colors leading-tight">
+                      {silverStoryData?.cards?.[1]?.title || 'TOE RING COLLECTION'}
+                    </h3>
+                    <p className="text-[10px] sm:text-[11px] font-sans text-[#8C6D46] font-medium tracking-wide mt-0.5">
+                      {silverStoryData?.cards?.[1]?.tagline || '♥ Little Detail Big Mood ♥'}
+                    </p>
+                  </div>
+                </button>
+
+                {/* 3. Pearl Collection */}
+                <button
+                  type="button"
+                  onClick={() => {
+                    triggerAudio('click');
+                    changeCategoryTab?.(silverStoryData?.cards?.[2]?.tab || 'necklaces');
+                    navigateTo('collections');
+                  }}
+                  className="flex flex-col items-center group cursor-pointer border-none bg-transparent text-left focus:outline-none"
+                >
+                  <div className="relative w-full aspect-[4/3] rounded-xl overflow-hidden bg-white border border-[#E6DFD3] shadow-xs group-hover:shadow-md transition-all duration-300">
+                    <img
+                      src={silverStoryData?.cards?.[2]?.img || colPearlWebp || colPearlPng}
+                      alt={silverStoryData?.cards?.[2]?.title || 'PEARL COLLECTION'}
+                      className="w-full h-full object-cover object-center group-hover:scale-106 transition-transform duration-500 ease-out"
+                      loading="lazy"
+                    />
+                  </div>
+                  <div className="mt-2.5 sm:mt-3 text-center">
+                    <h3 className="text-xs sm:text-[13.5px] font-sans font-bold tracking-wider uppercase text-[#0D2B4E] group-hover:text-[#8C6D46] transition-colors leading-tight">
+                      {silverStoryData?.cards?.[2]?.title || 'PEARL COLLECTION'}
+                    </h3>
+                    <p className="text-[10px] sm:text-[11px] font-sans text-[#8C6D46] font-medium tracking-wide mt-0.5">
+                      {silverStoryData?.cards?.[2]?.tagline || '♥ Timeless Elegance ♥'}
+                    </p>
+                  </div>
+                </button>
+
+                {/* 4. Stone Collection */}
+                <button
+                  type="button"
+                  onClick={() => {
+                    triggerAudio('click');
+                    changeCategoryTab?.(silverStoryData?.cards?.[3]?.tab || 'bracelets');
+                    navigateTo('collections');
+                  }}
+                  className="flex flex-col items-center group cursor-pointer border-none bg-transparent text-left focus:outline-none"
+                >
+                  <div className="relative w-full aspect-[4/3] rounded-xl overflow-hidden bg-white border border-[#E6DFD3] shadow-xs group-hover:shadow-md transition-all duration-300">
+                    <img
+                      src={silverStoryData?.cards?.[3]?.img || colStoneWebp || colStonePng}
+                      alt={silverStoryData?.cards?.[3]?.title || 'STONE COLLECTION'}
+                      className="w-full h-full object-cover object-center group-hover:scale-106 transition-transform duration-500 ease-out"
+                      loading="lazy"
+                    />
+                  </div>
+                  <div className="mt-2.5 sm:mt-3 text-center">
+                    <h3 className="text-xs sm:text-[13.5px] font-sans font-bold tracking-wider uppercase text-[#0D2B4E] group-hover:text-[#8C6D46] transition-colors leading-tight">
+                      {silverStoryData?.cards?.[3]?.title || 'STONE COLLECTION'}
+                    </h3>
+                    <p className="text-[10px] sm:text-[11px] font-sans text-[#8C6D46] font-medium tracking-wide mt-0.5">
+                      {silverStoryData?.cards?.[3]?.tagline || '♥ Add Some Shine ♥'}
+                    </p>
+                  </div>
+                </button>
+
+              </div>
+
+              {/* Right Column: MANISH & CO Diwali Festive Banner (Generated for brand) */}
+              <div className="lg:col-span-6 flex">
+                <button
+                  type="button"
+                  onClick={() => {
+                    triggerAudio('click');
+                    changeCategoryTab?.(silverStoryData?.banner?.tab || 'Collections');
+                    navigateTo('collections');
+                  }}
+                  className="relative w-full h-full min-h-[320px] sm:min-h-[380px] rounded-2xl overflow-hidden border border-[#E6DFD3] shadow-md hover:shadow-xl transition-all duration-500 group cursor-pointer focus:outline-none bg-gradient-to-br from-[#FAF5EE] to-[#F2E8DA]"
+                  aria-label="Explore MANISH & CO Diwali Festive Offer"
+                >
+                  <img
+                    src={silverStoryData?.banner?.img || diwaliFestiveManishAndCoWebp || diwaliFestiveManishAndCoJpg}
+                    alt={silverStoryData?.banner?.title || "MANISH & CO Diwali Festive Season - Flat 15% Off On 925 Sterling Silver Jewellery"}
+                    className="w-full h-full object-cover object-center group-hover:scale-104 transition-transform duration-700 ease-out"
+                    loading="lazy"
+                  />
+
+                  {/* Subtle Interactive Shimmer Overlay */}
+                  <span className="absolute inset-0 w-full h-full bg-gradient-to-tr from-transparent via-white/10 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-500 pointer-events-none" />
+                </button>
+              </div>
+
+            </div>
+
+          </div>
+        </section>
+
+
+
+                {/* ==========================================================
+          SECTION: TRUST SEALS / BRAND ASSURANCES
+          (BIS Hallmarked, Free Shipping, COD, 25,000+ Happy Customers)
+          Size enlarged, luxury balanced, crystal clear badges
+          ========================================================== */}
+        <section id="trust-seals-section" className="w-full bg-[#FFFFFF] py-6 sm:py-8 border-b border-gray-100 select-none">
+          <div className="max-w-[1536px] mx-auto px-4 sm:px-8 lg:px-12 relative">
+            <div className="relative flex items-center justify-center">
+              {/* Subtle navigation arrows matching luxury reference */}
+              <div className="hidden sm:flex absolute left-0 top-1/2 -translate-y-1/2 w-9 h-9 rounded-full border border-gray-200/90 items-center justify-center text-gray-400 hover:text-gray-700 bg-white shadow-xs transition-colors pointer-events-none">
+                <ChevronLeft className="w-4 h-4" />
+              </div>
+
+              {/* 4 Trust Circular Seals - Exactly 240x95px Rendered Slot & Balanced Proportions */}
+              <div className="w-full max-w-[1040px] flex items-center justify-center sm:justify-between gap-1 sm:gap-3 md:gap-4 px-2 sm:px-4">
+                {TRUST_SEALS_DATA.map((seal) => (
+                  <div key={seal.id} className="w-[160px] sm:w-[240px] h-[95px] flex items-center justify-center group cursor-pointer select-none">
+                    <div className="w-[85px] h-[85px] sm:w-[95px] sm:h-[95px] flex items-center justify-center transition-all duration-300 group-hover:scale-105 group-hover:drop-shadow-xs">
+                      <picture className="w-full h-full block">
+                        <source srcSet={seal.imgWebp} type="image/webp" />
+                        <img 
+                          src={seal.imgPng} 
+                          alt={seal.label} 
+                          className="w-full h-full object-contain"
+                          style={{ height: '95px', width: 'auto' }}
+                          loading="lazy"
+                        />
+                      </picture>
+                    </div>
+                  </div>
+                ))}
+              </div>
+
+              <div className="hidden sm:flex absolute right-0 top-1/2 -translate-y-1/2 w-9 h-9 rounded-full border border-gray-200/90 items-center justify-center text-gray-400 hover:text-gray-700 bg-white shadow-xs transition-colors pointer-events-none">
+                <ChevronRight className="w-4 h-4" />
+              </div>
+            </div>
+          </div>
+        </section>
+
+        {/* ==========================================================
+          SECTION: SILVER GIFTING HAMPERS
+          Festive Gift Picks (Under 1499, Under 1999, Under 2999, Premium Gifts)
+          ========================================================== */}
+        <section id="silver-gifting-hampers-section" className="w-full bg-[#FFFFFF] py-10 sm:py-14 border-b border-gray-100 select-none">
+          <div className="max-w-[1536px] mx-auto px-4 sm:px-8 lg:px-12">
+            
+            <div className="text-center mb-8 sm:mb-10">
+              <span className="text-[11px] sm:text-xs font-sans font-bold tracking-[0.28em] text-[#8C6D46] uppercase block mb-2">
+                FESTIVE CELEBRATIONS
+              </span>
+              <h2 
+                className="text-2xl sm:text-3xl md:text-[34px] font-bold text-[#1F142B] tracking-tight"
+                style={{ fontFamily: "'Cormorant Garamond', 'Playfair Display', Georgia, serif" }}
+              >
+                Silver Gifting Hampers
+              </h2>
+              <div className="w-12 h-[2px] bg-[#C8A646] mx-auto mt-3 rounded-full" />
+            </div>
+
+            <div className="grid grid-cols-2 md:grid-cols-4 gap-4 sm:gap-6 lg:gap-7">
+              {GIFT_HAMPERS_DATA.map((hamper) => (
+                <button
+                  key={hamper.id}
+                  type="button"
+                  onClick={() => {
+                    triggerAudio('click');
+                    if (hamper.path) {
+                      navigateTo(hamper.path);
+                    }
+                  }}
+                  className="group relative w-full aspect-square rounded-2xl overflow-hidden bg-white shadow-xs hover:shadow-xl transition-all duration-300 transform hover:-translate-y-1.5 focus:outline-none cursor-pointer border border-[#E8DFD5] hover:border-[#C8A646]"
+                  aria-label={hamper.title}
+                >
+                  <picture className="w-full h-full block">
+                    <source srcSet={hamper.imgWebp} type="image/webp" />
+                    <img 
+                      src={hamper.imgPng} 
+                      alt={hamper.title} 
+                      className="w-full h-full object-cover group-hover:scale-[1.04] transition-transform duration-500 ease-out" 
+                      loading="lazy" 
+                    />
+                  </picture>
+                  <div className="absolute inset-0 bg-gradient-to-t from-black/15 via-transparent to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300 pointer-events-none" />
+                </button>
+              ))}
+            </div>
+
+          </div>
+        </section>
+
+        {/* ==========================================================
+          SECTION: CRAFT YOUR BESPOKE JEWELLERY BANNER (Edge-to-Edge)
           ========================================================== */}
         <section 
-          id="custom-designs-made-personal" 
-          className="w-full bg-[#050B14] py-14 sm:py-20 lg:py-24 border-b border-white/10 select-none relative overflow-hidden text-left"
+          id="craft-bespoke-jewellery-banner"
+          className="w-full bg-white select-none overflow-hidden"
         >
-          {/* Subtle Golden Mandala Corner Watermark */}
-          <div className="absolute top-0 right-0 w-[420px] h-[420px] bg-[#C5A880]/5 rounded-full blur-[90px] pointer-events-none" />
-          <div className="absolute bottom-0 left-0 w-[300px] h-[300px] bg-[#C5A880]/5 rounded-full blur-[80px] pointer-events-none" />
+          <button
+            type="button"
+            onClick={() => {
+              triggerAudio('click');
+              setConsultationModal(true);
+            }}
+            className="w-full block border-none p-0 m-0 cursor-pointer text-left focus:outline-none relative group"
+            aria-label="Craft Your Bespoke Jewellery - Book a Consultation"
+          >
+            <picture className="w-full block">
+              <source srcSet={craftYourBespokeJewelleryWebp} type="image/webp" />
+              <img 
+                src={craftYourBespokeJewelleryPng} 
+                alt="Craft Your Bespoke Jewellery - MANISH & CO" 
+                className="w-full h-auto block object-cover group-hover:scale-[1.01] transition-transform duration-700 ease-out"
+                loading="lazy"
+              />
+            </picture>
+            <div className="absolute inset-0 bg-gradient-to-t from-black/10 via-transparent to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300 pointer-events-none" />
+          </button>
+        </section>
 
-          <div className="max-w-[1536px] mx-auto px-6 sm:px-10 lg:px-14 relative z-10">
-            <div className="grid grid-cols-1 lg:grid-cols-12 gap-10 lg:gap-14 items-center">
-              
-              {/* Left Column: Editorial Headline & Actions (Screenshot 2 Exact) */}
-              <div className="lg:col-span-5 text-left">
-                {/* Eyebrow */}
-                <span className="inline-block text-[#C5A880] text-xs sm:text-[13px] font-sans font-semibold tracking-[0.28em] uppercase mb-3 sm:mb-4">
-                  MADE PERSONAL
-                </span>
+        {/* ==========================================================
+          SECTION: MADE FOR EVERY KIND OF LOVE (Screenshot 01 Exact)
+          ========================================================== */}
+        <section id="made-for-every-kind-of-love" className="w-full bg-[#FFFFFF] py-10 sm:py-14 border-b border-gray-100 select-none">
+          <div className="max-w-[1536px] mx-auto px-4 sm:px-8 lg:px-12">
+            
+            {/* Header: ✨ Made for Every Kind of Love ✨ */}
+            <div className="text-center mb-8 sm:mb-10">
+              <h2 className="text-xl sm:text-2xl md:text-[26px] font-sans font-bold text-[#1F142B] tracking-tight inline-flex items-center justify-center gap-2">
+                <span className="text-amber-500 text-lg">✨</span>
+                <span>Made for Every Kind of Love</span>
+                <span className="text-amber-500 text-lg">✨</span>
+              </h2>
+            </div>
 
-                {/* Main Headline */}
-                <h2 
-                  className="text-3xl sm:text-5xl lg:text-[56px] xl:text-[62px] font-bold text-white leading-[1.05] mb-4 sm:mb-6"
-                  style={{ fontFamily: "'Cormorant Garamond', 'Playfair Display', Georgia, serif" }}
+            {/* 4 Cards Row */}
+            <div className="grid grid-cols-2 md:grid-cols-4 gap-4 sm:gap-6 lg:gap-8 max-w-5xl mx-auto">
+              {LOVE_STORY_CARDS.map((card) => (
+                <div 
+                  key={card.id}
+                  onClick={() => {
+                    triggerAudio('click');
+                    if (card.tab) changeCategoryTab(card.tab);
+                    navigateTo('collections');
+                  }}
+                  className="flex flex-col items-center group cursor-pointer"
                 >
-                  Your Idea.<br />
-                  Your Jewellery.
-                </h2>
+                  <div className="relative w-full aspect-square rounded-[24px] sm:rounded-[30px] overflow-hidden bg-[#E8DEF8]/30 border border-[#D0BCFF]/30 shadow-xs hover:shadow-xl transition-all duration-300 transform group-hover:-translate-y-1.5 group-hover:scale-[1.02]">
+                    <picture className="w-full h-full block">
+                      <source srcSet={card.imgWebp} type="image/webp" />
+                      <img 
+                        src={card.imgPng} 
+                        alt={card.title} 
+                        className="w-full h-full object-cover transition-transform duration-500 group-hover:scale-105"
+                        loading="lazy"
+                      />
+                    </picture>
 
-                {/* Subtitle Description */}
-                <p className="text-gray-300 text-xs sm:text-sm lg:text-[15px] font-sans font-normal leading-relaxed mb-8 sm:mb-10 max-w-[440px]">
-                  Create a custom piece or meet us for a personal appointment to bring your vision to life.
-                </p>
+                    {/* Top-Right Luxury Wishlist Heart Icon */}
+                    <button
+                      type="button"
+                      onClick={(e) => {
+                        e.stopPropagation();
+                        triggerAudio('click');
+                        toggleWishlistLoveCard(card.id);
+                      }}
+                      className="absolute top-2.5 right-2.5 sm:top-3 sm:right-3 w-8 h-8 sm:w-9 sm:h-9 rounded-full bg-white/95 hover:bg-white shadow-xs hover:shadow-md flex items-center justify-center text-[#571B3E] transition-all duration-300 hover:scale-110 z-10 focus:outline-none cursor-pointer"
+                      aria-label="Save to Wishlist"
+                    >
+                      <Heart 
+                        className={`w-4 h-4 transition-all duration-200 ${
+                          wishlistLoveCards.includes(card.id)
+                            ? 'fill-[#571B3E] text-[#571B3E] scale-110'
+                            : 'fill-transparent text-[#571B3E] hover:fill-[#571B3E]/20'
+                        }`} 
+                        strokeWidth={1.8}
+                      />
+                    </button>
+                  </div>
 
-                {/* Two Action Buttons (Screenshot 2 Exact Design) */}
-                <div className="flex flex-wrap items-center gap-4 sm:gap-5">
-                  {/* Button 1: CUSTOM DESIGNS -> (Outlined) */}
+                  <div className="mt-3.5 sm:mt-4 text-center">
+                    <span className={`text-xs sm:text-[13px] font-sans font-bold tracking-wider uppercase transition-colors ${
+                      card.active 
+                        ? 'text-[#571B3E] border-b-2 border-[#571B3E] pb-0.5' 
+                        : 'text-[#1F142B] group-hover:text-[#571B3E]'
+                    }`}>
+                      {card.title}
+                    </span>
+                  </div>
+                </div>
+              ))}
+            </div>
+
+          </div>
+        </section>
+
+        {/* ==========================================================
+          SECTION: CURATED COLLECTIONS FOR HER, HIM, KIDS & COUPLES
+          Interactive Tabbed Carousel Slider
+          ========================================================== */}
+        <section id="curated-audience-section" className="w-full bg-[#FFFFFF] py-10 sm:py-14 border-b border-gray-100 select-none">
+          <div className="max-w-[1536px] mx-auto px-4 sm:px-8 lg:px-12">
+            
+            {/* Section Header */}
+            <div className="text-center mb-6 sm:mb-8">
+              <span className="text-[11px] sm:text-xs font-sans font-bold tracking-[0.25em] text-[#8C6D46] uppercase block mb-1.5">
+                CURATED FOR EVERYONE
+              </span>
+              <h2 
+                className="text-2xl sm:text-3xl md:text-[34px] font-bold text-[#1F142B] tracking-tight"
+                style={{ fontFamily: "'Cormorant Garamond', 'Playfair Display', Georgia, serif" }}
+              >
+                Shop By Recipient &amp; Style
+              </h2>
+              <div className="w-12 h-[2px] bg-[#C8A646] mx-auto mt-2.5 rounded-full" />
+            </div>
+
+            {/* Audience Segmented Filter Tabs */}
+            <div className="flex items-center justify-center gap-2 sm:gap-3 flex-wrap mb-7 sm:mb-9">
+              {CURATED_AUDIENCE_SECTIONS.map((sec) => (
+                <button
+                  key={sec.id}
+                  type="button"
+                  onClick={() => {
+                    triggerAudio('click');
+                    setActiveAudienceTab(sec.id);
+                  }}
+                  className={`inline-flex items-center gap-2 px-4 sm:px-6 py-2 sm:py-2.5 rounded-full font-sans text-xs sm:text-[13px] font-bold tracking-wider uppercase transition-all duration-300 cursor-pointer border focus:outline-none ${
+                    activeAudienceTab === sec.id
+                      ? 'bg-[#17131F] text-[#F3E5C8] border-[#17131F] shadow-md scale-102'
+                      : 'bg-[#FAF8F5] text-gray-700 border-gray-200 hover:border-[#8C6D46] hover:bg-white'
+                  }`}
+                >
+                  <span className="text-sm">{sec.icon}</span>
+                  <span>{sec.label}</span>
+                </button>
+              ))}
+            </div>
+
+            {/* Active Audience Items Carousel */}
+            {(() => {
+              const currentSection = CURATED_AUDIENCE_SECTIONS.find(s => s.id === activeAudienceTab) || CURATED_AUDIENCE_SECTIONS[0];
+              return (
+                <div className="relative">
+                  {/* Left Carousel Arrow */}
                   <button
-                    onClick={() => {
-                      setCustomDesignOpen(true);
-                    }}
-                    className="inline-flex items-center gap-2.5 px-6 sm:px-8 py-3.5 sm:py-4 border border-[#B09A82] hover:border-white text-white font-sans text-xs sm:text-[13px] font-semibold tracking-[0.18em] uppercase transition-all duration-300 hover:bg-white/10 cursor-pointer rounded-none active:scale-95"
+                    type="button"
+                    onClick={() => scrollAudienceCarousel('left')}
+                    aria-label="Previous categories"
+                    className="flex absolute -left-2 sm:left-0 top-[38%] -translate-y-1/2 w-8 h-8 sm:w-10 sm:h-10 rounded-full bg-white/95 backdrop-blur-xs border border-gray-200 shadow-md hover:shadow-xl hover:bg-[#0D2B4E] hover:text-white items-center justify-center text-gray-700 transition-all z-20 cursor-pointer focus:outline-none"
                   >
-                    <span>CUSTOM DESIGNS</span>
-                    <span className="text-sm font-light">→</span>
+                    <ChevronLeft className="w-4 h-4 sm:w-5 sm:h-5" />
                   </button>
 
-                  {/* Button 2: BOOK AN APPOINTMENT -> (Filled Gold) */}
+                  {/* Right Carousel Arrow */}
                   <button
-                    onClick={() => {
-                      setConsultationModal(true);
-                    }}
-                    className="inline-flex items-center gap-2.5 px-6 sm:px-8 py-3.5 sm:py-4 bg-[#8C6D46] hover:bg-[#A37B4D] text-white font-sans text-xs sm:text-[13px] font-semibold tracking-[0.18em] uppercase transition-all duration-300 shadow-[0_8px_25px_rgba(140,109,70,0.4)] cursor-pointer rounded-none active:scale-95"
+                    type="button"
+                    onClick={() => scrollAudienceCarousel('right')}
+                    aria-label="Next categories"
+                    className="flex absolute -right-2 sm:right-0 top-[38%] -translate-y-1/2 w-8 h-8 sm:w-10 sm:h-10 rounded-full bg-white/95 backdrop-blur-xs border border-gray-200 shadow-md hover:shadow-xl hover:bg-[#0D2B4E] hover:text-white items-center justify-center text-gray-700 transition-all z-20 cursor-pointer focus:outline-none"
                   >
-                    <span>BOOK AN APPOINTMENT</span>
-                    <span className="text-sm font-light">→</span>
+                    <ChevronRight className="w-4 h-4 sm:w-5 sm:h-5" />
                   </button>
+
+                  {/* Horizontal Scroll Track */}
+                  <div
+                    ref={audienceCarouselRef}
+                    className="flex items-stretch gap-4 sm:gap-6 overflow-x-auto no-scrollbar scroll-smooth py-2 px-2 sm:px-8 select-none"
+                  >
+                    {currentSection.items.map((item) => (
+                      <div
+                        key={item.id}
+                        onClick={() => {
+                          triggerAudio('click');
+                          if (item.tab) changeCategoryTab?.(item.tab);
+                          navigateTo('collections');
+                        }}
+                        className="w-[145px] sm:w-[175px] md:w-[195px] shrink-0 bg-[#FFFDFB] rounded-2xl border border-[#EADBCE]/70 hover:border-[#8C6D46] shadow-xs hover:shadow-lg transition-all duration-300 p-2.5 sm:p-3 flex flex-col items-center group cursor-pointer hover:-translate-y-1"
+                      >
+                        <div className="relative w-full aspect-square rounded-xl overflow-hidden bg-[#FAF6F0] border border-[#EADBCE]/40">
+                          <img
+                            src={item.img}
+                            alt={item.name}
+                            className="w-full h-full object-cover group-hover:scale-108 transition-transform duration-500 ease-out"
+                            loading="lazy"
+                          />
+                        </div>
+
+                        <div className="mt-3 text-center w-full px-1">
+                          <h4 className="text-xs sm:text-[13.5px] font-sans font-bold text-[#1F142B] group-hover:text-[#8C6D46] transition-colors leading-tight uppercase tracking-tight">
+                            {item.name}
+                          </h4>
+                          <p className="text-[10px] sm:text-[11px] font-sans text-gray-500 font-medium mt-0.5 truncate">
+                            {item.sub}
+                          </p>
+                        </div>
+                      </div>
+                    ))}
+                  </div>
+                </div>
+              );
+            })()}
+
+          </div>
+        </section>
+
+        {/* ==========================================================
+          SECTION: 🎁 ERI'S BEST PICKS 🎁 (Screenshot 02 Exact)
+          Two Arched Royal Showcase Cards: Infinity Ring & Heart Pendant
+          ========================================================== */}
+        <section id="eris-best-picks-section" className="w-full bg-[#FFFFFF] py-10 sm:py-16 border-b border-gray-100 select-none">
+          <div className="max-w-[1536px] mx-auto px-4 sm:px-8 lg:px-12">
+            
+            {/* Header: 🎁 Eri's Best Picks 🎁 with fine luxury divider lines */}
+            <div className="max-w-4xl mx-auto flex items-center justify-center mb-8 sm:mb-12 px-4">
+              <div className="flex-1 h-[1.5px] sm:h-[2px] bg-[#E8C88A] rounded-full" />
+              <span className="px-4 sm:px-6 text-[15px] sm:text-[18px] md:text-[20px] font-serif font-bold text-[#1F142B] flex items-center gap-2 whitespace-nowrap tracking-wide">
+                <span>🎁</span>
+                <span>Eri’s Best Picks</span>
+                <span>🎁</span>
+              </span>
+              <div className="flex-1 h-[1.5px] sm:h-[2px] bg-[#E8C88A] rounded-full" />
+            </div>
+
+            {/* 2 Arched Cards Grid */}
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-6 sm:gap-10 max-w-4xl mx-auto px-2 sm:px-6">
+
+              {/* CARD 1: INFINITY RING */}
+              <div 
+                onClick={() => {
+                  triggerAudio('click');
+                  changeCategoryTab?.('rings');
+                  navigateTo('collections');
+                }}
+                className="flex flex-col items-center group cursor-pointer"
+              >
+                {/* Arch Window Frame with Gold Gradient & Mandala Watermark */}
+                <div className="relative w-full aspect-[4/5] sm:aspect-[3/4] rounded-t-full border-[3px] border-[#E8C88A] bg-gradient-to-b from-[#FFFDF9] via-[#FAF5EA] to-[#FFFFFF] p-6 sm:p-8 flex items-center justify-center overflow-hidden shadow-xs hover:shadow-xl transition-all duration-500 group-hover:-translate-y-1.5">
+                  
+                  {/* Sacred Mandala SVG Watermark Motif in Arch */}
+                  <svg 
+                    viewBox="0 0 200 200" 
+                    className="absolute -top-10 inset-x-0 mx-auto w-52 h-52 sm:w-60 sm:h-60 opacity-[0.22] pointer-events-none text-[#C8A646] group-hover:scale-105 transition-transform duration-700"
+                  >
+                    <circle cx="100" cy="100" r="90" fill="none" stroke="currentColor" strokeWidth="1" strokeDasharray="3,3" />
+                    <circle cx="100" cy="100" r="70" fill="none" stroke="currentColor" strokeWidth="0.8" />
+                    <circle cx="100" cy="100" r="50" fill="none" stroke="currentColor" strokeWidth="0.8" />
+                    <circle cx="100" cy="100" r="30" fill="none" stroke="currentColor" strokeWidth="0.8" />
+                    {[0, 15, 30, 45, 60, 75, 90, 105, 120, 135, 150, 165].map((deg) => (
+                      <line
+                        key={deg}
+                        x1="100"
+                        y1="15"
+                        x2="100"
+                        y2="185"
+                        stroke="currentColor"
+                        strokeWidth="0.6"
+                        transform={`rotate(${deg} 100 100)`}
+                      />
+                    ))}
+                    {[0, 45, 90, 135, 180, 225, 270, 315].map((deg) => (
+                      <path
+                        key={deg}
+                        d="M100 55 Q115 78 100 100 Q85 78 100 55 Z"
+                        fill="none"
+                        stroke="currentColor"
+                        strokeWidth="0.8"
+                        transform={`rotate(${deg} 100 100)`}
+                      />
+                    ))}
+                  </svg>
+
+                  {/* Sparkling Sterling Silver Infinity Ring Image */}
+                  <picture className="w-[78%] sm:w-[82%] aspect-square relative z-10 flex items-center justify-center">
+                    <source srcSet={erisInfinityRingWebp} type="image/webp" />
+                    <img 
+                      src={erisInfinityRingPng} 
+                      alt="Infinity Ring - MANISH & CO"
+                      className="w-full h-full object-contain filter drop-shadow-md group-hover:scale-108 group-hover:-translate-y-2 transition-transform duration-500 ease-out"
+                      loading="lazy"
+                    />
+                  </picture>
+
+                  {/* Subtle Shimmer Overlay on hover */}
+                  <div className="absolute inset-0 bg-gradient-to-tr from-transparent via-white/20 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-500 pointer-events-none" />
+                </div>
+
+                {/* Typography below arch: Infinity Ring */}
+                <div className="mt-4 sm:mt-5 text-center">
+                  <h3 
+                    className="text-2xl sm:text-3xl text-[#1F142B] tracking-tight leading-none"
+                    style={{ fontFamily: "'Cormorant Garamond', 'Playfair Display', Georgia, serif" }}
+                  >
+                    <span className="font-bold">Infinity</span> <span className="font-light italic text-[#8C6D46]">Ring</span>
+                  </h3>
+                  <span className="inline-flex items-center gap-1.5 text-xs sm:text-[13px] font-sans text-[#8C6D46] font-semibold tracking-wider uppercase mt-1.5 group-hover:text-[#0D2B4E] transition-colors">
+                    <span>Explore Ring</span>
+                    <span className="text-sm">→</span>
+                  </span>
                 </div>
               </div>
 
-              {/* Right Column: Atelier Sketch Workbench Photo (Screenshot 2 Exact) */}
-              <div className="lg:col-span-7">
-                <div className="relative rounded-[2px] overflow-hidden border border-white/15 shadow-[0_20px_50px_rgba(0,0,0,0.8)] group">
-                  <img 
-                    src={madePersonalSketch} 
-                    alt="Atelier Sketch Desk - Made Personal: Your Idea. Your Jewellery."
-                    className="w-full h-auto max-h-[500px] object-cover transition-transform duration-700 ease-out group-hover:scale-103"
-                    loading="lazy"
-                  />
-                  <div className="absolute inset-0 bg-gradient-to-t from-black/50 via-transparent to-transparent pointer-events-none" />
+              {/* CARD 2: HEART PENDANT */}
+              <div 
+                onClick={() => {
+                  triggerAudio('click');
+                  changeCategoryTab?.('pendants');
+                  navigateTo('collections');
+                }}
+                className="flex flex-col items-center group cursor-pointer"
+              >
+                {/* Arch Window Frame with Gold Gradient & Mandala Watermark */}
+                <div className="relative w-full aspect-[4/5] sm:aspect-[3/4] rounded-t-full border-[3px] border-[#E8C88A] bg-gradient-to-b from-[#FFFDF9] via-[#FAF5EA] to-[#FFFFFF] p-6 sm:p-8 flex items-center justify-center overflow-hidden shadow-xs hover:shadow-xl transition-all duration-500 group-hover:-translate-y-1.5">
                   
-                  {/* Floating Atelier Badge */}
-                  <div className="absolute bottom-4 left-4 right-4 sm:bottom-6 sm:left-6 sm:right-6 bg-[#050B14]/85 backdrop-blur-md p-3.5 sm:p-4 border border-white/15 flex items-center justify-between">
-                    <div>
-                      <span className="text-[10px] text-[#C5A880] uppercase tracking-[0.2em] font-semibold block">
-                        HANDCRAFTED BESPOKE ATELIER
-                      </span>
-                      <p className="text-xs sm:text-sm text-white font-serif font-medium mt-0.5">
-                        Master Silversmith Consultation • 3D CAD Mockup • BIS 925 Hallmark
-                      </p>
-                    </div>
-                    <span className="hidden sm:inline-block text-[#C5A880] text-lg font-serif">✦</span>
-                  </div>
+                  {/* Sacred Mandala SVG Watermark Motif in Arch */}
+                  <svg 
+                    viewBox="0 0 200 200" 
+                    className="absolute -top-10 inset-x-0 mx-auto w-52 h-52 sm:w-60 sm:h-60 opacity-[0.22] pointer-events-none text-[#C8A646] group-hover:scale-105 transition-transform duration-700"
+                  >
+                    <circle cx="100" cy="100" r="90" fill="none" stroke="currentColor" strokeWidth="1" strokeDasharray="3,3" />
+                    <circle cx="100" cy="100" r="70" fill="none" stroke="currentColor" strokeWidth="0.8" />
+                    <circle cx="100" cy="100" r="50" fill="none" stroke="currentColor" strokeWidth="0.8" />
+                    <circle cx="100" cy="100" r="30" fill="none" stroke="currentColor" strokeWidth="0.8" />
+                    {[0, 15, 30, 45, 60, 75, 90, 105, 120, 135, 150, 165].map((deg) => (
+                      <line
+                        key={deg}
+                        x1="100"
+                        y1="15"
+                        x2="100"
+                        y2="185"
+                        stroke="currentColor"
+                        strokeWidth="0.6"
+                        transform={`rotate(${deg} 100 100)`}
+                      />
+                    ))}
+                    {[0, 45, 90, 135, 180, 225, 270, 315].map((deg) => (
+                      <path
+                        key={deg}
+                        d="M100 55 Q115 78 100 100 Q85 78 100 55 Z"
+                        fill="none"
+                        stroke="currentColor"
+                        strokeWidth="0.8"
+                        transform={`rotate(${deg} 100 100)`}
+                      />
+                    ))}
+                  </svg>
+
+                  {/* Mother-of-Pearl & Pavé Diamond Halo Heart Pendant Image */}
+                  <picture className="w-[78%] sm:w-[82%] aspect-square relative z-10 flex items-center justify-center">
+                    <source srcSet={erisHeartPendantWebp} type="image/webp" />
+                    <img 
+                      src={erisHeartPendantPng} 
+                      alt="Heart Pendant - MANISH & CO"
+                      className="w-full h-full object-contain filter drop-shadow-md group-hover:scale-108 group-hover:-translate-y-2 transition-transform duration-500 ease-out"
+                      loading="lazy"
+                    />
+                  </picture>
+
+                  {/* Subtle Shimmer Overlay on hover */}
+                  <div className="absolute inset-0 bg-gradient-to-tr from-transparent via-white/20 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-500 pointer-events-none" />
+                </div>
+
+                {/* Typography below arch: Heart Pendant */}
+                <div className="mt-4 sm:mt-5 text-center">
+                  <h3 
+                    className="text-2xl sm:text-3xl text-[#1F142B] tracking-tight leading-none"
+                    style={{ fontFamily: "'Cormorant Garamond', 'Playfair Display', Georgia, serif" }}
+                  >
+                    <span className="font-bold">Heart</span> <span className="font-light italic text-[#8C6D46]">Pendant</span>
+                  </h3>
+                  <span className="inline-flex items-center gap-1.5 text-xs sm:text-[13px] font-sans text-[#8C6D46] font-semibold tracking-wider uppercase mt-1.5 group-hover:text-[#0D2B4E] transition-colors">
+                    <span>Explore Pendant</span>
+                    <span className="text-sm">→</span>
+                  </span>
                 </div>
               </div>
 
             </div>
+
           </div>
         </section>
-{/* ==========================================================
-          EDITORIAL SHOWCASES (01-06: HIM, HER, KIDS, GIFTS, COUPLES, ACCESSORIES)
-          Refactored into clean modular components for peak performance
-          ========================================================== */}
-        {getShowcaseSectionsConfig({ navigateTo, changeCategoryTab, setCustomDesignOpen }).map((sec) => (
-          <EditorialShowcaseSection
-            key={sec.id}
-            {...sec}
-            triggerAudio={triggerAudio}
-            navigateTo={navigateTo}
-            changeCategoryTab={changeCategoryTab}
-            setGenderFilter={setGenderFilter}
-          />
-        ))}
 
-{/* ==========================================================
+        {/* ==========================================================
           CLIENT FEEDBACK SECTION 4: GEMS COLLECTION (Feedback #10)
           ========================================================== */}
         <section id="gems-collection-section" className="w-full py-14 sm:py-20 bg-[#050B14] border-b border-white/10 select-none text-left text-white">
           <div className="max-w-[1536px] mx-auto px-6 sm:px-10 lg:px-14">
-            
+
             {/* Editorial Header */}
             <div className="flex flex-col lg:flex-row items-start lg:items-end justify-between gap-6 mb-10 sm:mb-12">
               <div>
                 <span className="inline-block text-[#C5A880] text-xs sm:text-[13px] font-sans font-semibold tracking-[0.28em] uppercase mb-2">
                   PRECIOUS &amp; NATURAL STONES
                 </span>
-                <h2 
+                <h2
                   className="text-3xl sm:text-4xl lg:text-[46px] font-bold text-white leading-tight"
                   style={{ fontFamily: "'Cormorant Garamond', 'Playfair Display', Georgia, serif" }}
                 >
                   Gems Collection
                 </h2>
                 <p className="text-gray-300 text-xs sm:text-sm font-sans mt-2 max-w-xl font-normal leading-relaxed">
-                  Certified Royal Blue Sapphires, Zambian Emeralds, Burmese Rubies, and Tanzanites hand-set in hallmarked 925 fine silver.
+                  Certified Royal Blue Sapphires, Zambian Emeralds, Burmese Rubies, and Tanzanites hand-set in hallmarked 925 sterling silver.
                 </p>
               </div>
 
@@ -701,8 +1650,8 @@ export default function Home({
 
             {/* Gems Showcase Banner with 4 Gem Types */}
             <div className="relative rounded-[2px] overflow-hidden border border-white/15 shadow-2xl group mb-8">
-              <img 
-                src={gemsCollectionBanner} 
+              <img
+                src={gemsCollectionBanner}
                 alt="Sapphire, Emerald, Ruby & Tanzanite 925 Silver Jewellery"
                 className="w-full h-auto max-h-[460px] object-cover transition-transform duration-700 ease-out group-hover:scale-102"
                 loading="lazy"
@@ -714,7 +1663,7 @@ export default function Home({
                   <span className="text-[#E5C396] text-xs font-sans font-bold tracking-[0.25em] uppercase block mb-1">
                     ✦ CERTIFIED NATURAL GEMSTONES
                   </span>
-                  <h3 
+                  <h3
                     className="font-serif text-2xl sm:text-3xl lg:text-4xl font-bold leading-tight drop-shadow-md text-white"
                     style={{ fontFamily: "'Cormorant Garamond', 'Playfair Display', Georgia, serif" }}
                   >
@@ -732,7 +1681,7 @@ export default function Home({
                 { name: 'Burmese Ruby', stone: 'Manik', desc: 'Fiery passion, courage & noble power' },
                 { name: 'Royal Tanzanite', stone: 'Tanzanite', desc: 'Rare deep indigo African treasure' }
               ].map((gem, idx) => (
-                <div 
+                <div
                   key={idx}
                   onClick={() => {
                     changeCategoryTab?.('Collections');
@@ -743,7 +1692,7 @@ export default function Home({
                   <span className="text-[#C5A880] text-[10px] font-sans font-bold tracking-[0.2em] uppercase block mb-1">
                     {gem.stone}
                   </span>
-                  <h4 
+                  <h4
                     className="font-serif text-base sm:text-lg font-bold text-white group-hover:text-[#E5C396] transition-colors"
                     style={{ fontFamily: "'Cormorant Garamond', 'Playfair Display', Georgia, serif" }}
                   >
@@ -763,19 +1712,19 @@ export default function Home({
           </div>
         </section>
 
-{/* ==========================================================
+        {/* ==========================================================
           CLIENT FEEDBACK SECTION 3: GOLD PLATING (Feedback #6.2)
           ========================================================== */}
         <section id="gold-plating-section" className="w-full py-14 sm:py-20 bg-[#F5ECE4] border-b border-[#E8DFD5] select-none text-left">
           <div className="max-w-[1536px] mx-auto px-6 sm:px-10 lg:px-14">
-            
+
             {/* Editorial Header */}
             <div className="flex flex-col lg:flex-row items-start lg:items-end justify-between gap-6 mb-10 sm:mb-12">
               <div>
                 <span className="inline-block text-[#8C6D46] text-xs sm:text-[13px] font-sans font-semibold tracking-[0.28em] uppercase mb-2">
                   18K DUAL TONE ROYALTY
                 </span>
-                <h2 
+                <h2
                   className="text-3xl sm:text-4xl lg:text-[46px] font-bold text-[#1A1817] leading-tight"
                   style={{ fontFamily: "'Cormorant Garamond', 'Playfair Display', Georgia, serif" }}
                 >
@@ -800,8 +1749,8 @@ export default function Home({
 
             {/* Showcase Visual: Large 16:9 Gold Plating Banner with 3 Feature Badges */}
             <div className="relative rounded-[2px] overflow-hidden border border-[#D6CABE] shadow-xl group mb-8">
-              <img 
-                src={goldPlatingBanner} 
+              <img
+                src={goldPlatingBanner}
                 alt="18K Gold Plated 925 Sterling Silver Jewellery"
                 className="w-full h-auto max-h-[460px] object-cover transition-transform duration-700 ease-out group-hover:scale-102"
                 loading="lazy"
@@ -813,7 +1762,7 @@ export default function Home({
                   <span className="text-[#F5D77F] text-xs font-sans font-bold tracking-[0.25em] uppercase block mb-1">
                     ✦ 18 KARAT YELLOW GOLD VERMEIL
                   </span>
-                  <h3 
+                  <h3
                     className="font-serif text-2xl sm:text-3xl lg:text-4xl font-bold leading-tight drop-shadow-md"
                     style={{ fontFamily: "'Cormorant Garamond', 'Playfair Display', Georgia, serif" }}
                   >
@@ -831,168 +1780,10 @@ export default function Home({
           </div>
         </section>
 
-{/* ==========================================================
-          CLIENT FEEDBACK SECTION 5: BUDGET TIERS (Feedback #6.3, 6.4, 6.5)
-          - UNDER 499
-          - UNDER 999
-          - UNDER 1999
-          ========================================================== */}
-        <section id="curated-budget-tiers" className="w-full py-14 sm:py-20 bg-[#FDFBF7] border-b border-[#EAE3D9] select-none text-left">
-          <div className="max-w-[1536px] mx-auto px-6 sm:px-10 lg:px-14">
-            
-            {/* Header */}
-            <div className="text-center max-w-2xl mx-auto mb-10 sm:mb-14">
-              <span className="inline-block text-[#8C6D46] text-xs sm:text-[13px] font-sans font-semibold tracking-[0.28em] uppercase mb-2">
-                AFFORDABLE 925 LUXURY
-              </span>
-              <h2 
-                className="text-3xl sm:text-4xl lg:text-[46px] font-bold text-[#1A1817] leading-tight"
-                style={{ fontFamily: "'Cormorant Garamond', 'Playfair Display', Georgia, serif" }}
-              >
-                Shop by Budget
-              </h2>
-              <p className="text-[#6F6862] text-xs sm:text-sm font-sans mt-2 font-normal">
-                Pure 925 sterling silver crafted to shine within your everyday celebration budget.
-              </p>
-            </div>
-
-            {/* 3 Budget Tier Showcase Cards (Under 499, Under 999, Under 1999) */}
-            <div className="grid grid-cols-1 md:grid-cols-3 gap-6 sm:gap-8">
-              
-              {/* Tier 1: Under 499 */}
-              <div className="p-6 sm:p-8 bg-gradient-to-b from-white to-[#F9F6F0] border border-[#E8DFD5] hover:border-[#8C6D46] shadow-[0_4px_20px_rgba(0,0,0,0.04)] hover:shadow-[0_12px_32px_rgba(140,109,70,0.15)] transition-all duration-300 flex flex-col justify-between group">
-                <div>
-                  <div className="flex items-center justify-between mb-4">
-                    <span className="px-3 py-1 bg-[#8C6D46]/10 text-[#8C6D46] text-[10px] font-sans font-bold tracking-[0.2em] uppercase rounded-full">
-                      POCKET LUXURY
-                    </span>
-                    <span className="text-xs text-gray-500 font-sans">BIS 925 Pure</span>
-                  </div>
-                  <h3 
-                    className="font-serif text-3xl sm:text-4xl font-bold text-[#1A1817] group-hover:text-[#8C6D46] transition-colors"
-                    style={{ fontFamily: "'Cormorant Garamond', 'Playfair Display', Georgia, serif" }}
-                  >
-                    Under ₹499
-                  </h3>
-                  <p className="text-xs sm:text-sm text-[#6F6862] font-sans mt-2.5 leading-relaxed">
-                    Minimalist 925 silver rings, nose pins, auspicious tokens, and silver charms for daily grace.
-                  </p>
-                  <ul className="mt-4 space-y-2 text-xs font-sans text-[#5A5550]">
-                    <li className="flex items-center gap-2">✦ Minimalist Silver Bands</li>
-                    <li className="flex items-center gap-2">✦ Hallmarked Nose Pins &amp; Studs</li>
-                    <li className="flex items-center gap-2">✦ Auspicious Charms &amp; Coins</li>
-                  </ul>
-                </div>
-
-                <div className="mt-8 pt-4 border-t border-[#EAE3D9]">
-                  <button
-                    onClick={() => {
-                      if (typeof setMaxPriceFilter === 'function') setMaxPriceFilter(499);
-                      changeCategoryTab?.('Collections');
-                      navigateTo('collections');
-                    }}
-                    className="w-full py-3.5 bg-[#1A1817] group-hover:bg-[#8C6D46] text-white font-sans text-xs font-semibold tracking-[0.2em] uppercase transition-colors cursor-pointer flex items-center justify-center gap-2"
-                  >
-                    <span>EXPLORE UNDER ₹499</span>
-                    <span>→</span>
-                  </button>
-                </div>
-              </div>
-
-              {/* Tier 2: Under 999 */}
-              <div className="p-6 sm:p-8 bg-gradient-to-b from-white to-[#F9F6F0] border-2 border-[#8C6D46] shadow-[0_8px_30px_rgba(140,109,70,0.18)] transition-all duration-300 flex flex-col justify-between group relative overflow-hidden">
-                <div className="absolute top-0 right-0 bg-[#8C6D46] text-white text-[9px] font-sans font-bold tracking-[0.2em] uppercase px-3 py-1">
-                  POPULAR
-                </div>
-                <div>
-                  <div className="flex items-center justify-between mb-4">
-                    <span className="px-3 py-1 bg-[#8C6D46] text-white text-[10px] font-sans font-bold tracking-[0.2em] uppercase rounded-full">
-                      EVERYDAY ELEGANCE
-                    </span>
-                    <span className="text-xs text-gray-500 font-sans">BIS 925 Pure</span>
-                  </div>
-                  <h3 
-                    className="font-serif text-3xl sm:text-4xl font-bold text-[#1A1817] group-hover:text-[#8C6D46] transition-colors"
-                    style={{ fontFamily: "'Cormorant Garamond', 'Playfair Display', Georgia, serif" }}
-                  >
-                    Under ₹999
-                  </h3>
-                  <p className="text-xs sm:text-sm text-[#6F6862] font-sans mt-2.5 leading-relaxed">
-                    Certified 925 silver pendants, nazariya bracelets, statement hoop earrings, and delicate chains.
-                  </p>
-                  <ul className="mt-4 space-y-2 text-xs font-sans text-[#5A5550]">
-                    <li className="flex items-center gap-2">✦ Solitaire &amp; Floral Pendants</li>
-                    <li className="flex items-center gap-2">✦ Nazariya &amp; Charm Bracelets</li>
-                    <li className="flex items-center gap-2">✦ Oxidised Jhumkis &amp; Hoops</li>
-                  </ul>
-                </div>
-
-                <div className="mt-8 pt-4 border-t border-[#EAE3D9]">
-                  <button
-                    onClick={() => {
-                      if (typeof setMaxPriceFilter === 'function') setMaxPriceFilter(999);
-                      changeCategoryTab?.('Collections');
-                      navigateTo('collections');
-                    }}
-                    className="w-full py-3.5 bg-[#8C6D46] hover:bg-[#A37B4D] text-white font-sans text-xs font-semibold tracking-[0.2em] uppercase transition-colors cursor-pointer flex items-center justify-center gap-2 shadow-md"
-                  >
-                    <span>EXPLORE UNDER ₹999</span>
-                    <span>→</span>
-                  </button>
-                </div>
-              </div>
-
-              {/* Tier 3: Under 1999 */}
-              <div className="p-6 sm:p-8 bg-gradient-to-b from-white to-[#F9F6F0] border border-[#E8DFD5] hover:border-[#8C6D46] shadow-[0_4px_20px_rgba(0,0,0,0.04)] hover:shadow-[0_12px_32px_rgba(140,109,70,0.15)] transition-all duration-300 flex flex-col justify-between group">
-                <div>
-                  <div className="flex items-center justify-between mb-4">
-                    <span className="px-3 py-1 bg-[#8C6D46]/10 text-[#8C6D46] text-[10px] font-sans font-bold tracking-[0.2em] uppercase rounded-full">
-                      ROYAL ATTIRE
-                    </span>
-                    <span className="text-xs text-gray-500 font-sans">BIS 925 Pure</span>
-                  </div>
-                  <h3 
-                    className="font-serif text-3xl sm:text-4xl font-bold text-[#1A1817] group-hover:text-[#8C6D46] transition-colors"
-                    style={{ fontFamily: "'Cormorant Garamond', 'Playfair Display', Georgia, serif" }}
-                  >
-                    Under ₹1999
-                  </h3>
-                  <p className="text-xs sm:text-sm text-[#6F6862] font-sans mt-2.5 leading-relaxed">
-                    Heavy masculine chains, engraved Rajasthani kadas, traditional payals, and gem cocktail rings.
-                  </p>
-                  <ul className="mt-4 space-y-2 text-xs font-sans text-[#5A5550]">
-                    <li className="flex items-center gap-2">✦ Solid Curb &amp; Rope Silver Chains</li>
-                    <li className="flex items-center gap-2">✦ Hand-hammered Silver Kadas</li>
-                    <li className="flex items-center gap-2">✦ Bridal Ghungroo Payals &amp; Chokers</li>
-                  </ul>
-                </div>
-
-                <div className="mt-8 pt-4 border-t border-[#EAE3D9]">
-                  <button
-                    onClick={() => {
-                      if (typeof setMaxPriceFilter === 'function') setMaxPriceFilter(1999);
-                      changeCategoryTab?.('Collections');
-                      navigateTo('collections');
-                    }}
-                    className="w-full py-3.5 bg-[#1A1817] group-hover:bg-[#8C6D46] text-white font-sans text-xs font-semibold tracking-[0.2em] uppercase transition-colors cursor-pointer flex items-center justify-center gap-2"
-                  >
-                    <span>EXPLORE UNDER ₹1999</span>
-                    <span>→</span>
-                  </button>
-                </div>
-              </div>
-
-            </div>
-
-          </div>
-        </section>
-
-
-
         <section id="our-collections" className="w-full py-12 sm:py-16 lg:py-20 bg-[#F5ECE4] border-b border-[#E8DFD5] select-none">
           <div className="max-w-[1536px] mx-auto px-6 sm:px-10 lg:px-14">
             <div className="flex flex-col lg:flex-row items-center justify-between gap-10 lg:gap-14">
-              
+
               {/* Left Column: Editorial Brand Headline */}
               <div className="w-full lg:w-[32%] xl:w-[28%] shrink-0 text-left">
                 {/* Eyebrow */}
@@ -1001,7 +1792,7 @@ export default function Home({
                 </span>
 
                 {/* Main Serif Headline */}
-                <h2 
+                <h2
                   className="text-3xl sm:text-4xl lg:text-[44px] xl:text-[48px] font-bold text-[#1A1817] leading-[1.08] mb-4 sm:mb-5"
                   style={{ fontFamily: "'Cormorant Garamond', 'Playfair Display', Georgia, serif" }}
                 >
@@ -1032,7 +1823,7 @@ export default function Home({
 
               {/* Right Column: 4 Collection Category Cards */}
               <div className="w-full lg:flex-1 grid grid-cols-2 md:grid-cols-4 gap-4 sm:gap-5 lg:gap-6">
-                
+
                 {/* Card 1: RINGS */}
                 <div
                   onClick={() => {
@@ -1152,14 +1943,14 @@ export default function Home({
           ========================================================== */}
         <section id="best-sellers" className="w-full py-14 sm:py-20 bg-[#FDFBF7] border-b border-[#EAE3D9] select-none">
           <div className="max-w-[1536px] mx-auto px-6 sm:px-10 lg:px-14">
-            
+
             {/* Editorial Header */}
             <div className="flex flex-col sm:flex-row items-start sm:items-end justify-between gap-4 mb-10 sm:mb-12">
               <div className="text-left">
                 <span className="inline-block text-[#8C6D46] text-xs sm:text-[13px] font-sans font-semibold tracking-[0.28em] uppercase mb-2">
                   CURATED PATRON FAVORITES
                 </span>
-                <h2 
+                <h2
                   className="text-3xl sm:text-4xl lg:text-[46px] font-bold text-[#1A1817] leading-tight"
                   style={{ fontFamily: "'Cormorant Garamond', 'Playfair Display', Georgia, serif" }}
                 >
@@ -1240,14 +2031,14 @@ export default function Home({
                 >
                   {/* Image Container with Badge */}
                   <div className="w-full aspect-[4/5] overflow-hidden bg-[#FAF6F2] relative">
-                    <img 
-                      src={item.img} 
+                    <img
+                      src={item.img}
                       alt={item.title}
                       loading="lazy"
                       className="w-full h-full object-cover transition-transform duration-700 ease-out group-hover:scale-106"
                     />
                     <div className="absolute inset-0 bg-black/0 group-hover:bg-black/5 transition-colors duration-300 pointer-events-none" />
-                    
+
                     {/* Badge */}
                     <span className="absolute top-2.5 left-2.5 bg-[#050B14]/90 backdrop-blur-xs text-[#E5C396] text-[8.5px] sm:text-[9.5px] font-sans font-bold tracking-[0.16em] uppercase px-2.5 py-1 rounded-[1px] border border-[#C5A880]/30 shadow-xs">
                       {item.badge}
@@ -1271,7 +2062,7 @@ export default function Home({
                           <span>{item.rating}</span>
                         </span>
                       </div>
-                      <h3 
+                      <h3
                         className="font-serif text-sm sm:text-base lg:text-[17px] font-bold text-[#1A1817] group-hover:text-[#8C6D46] transition-colors line-clamp-1"
                         style={{ fontFamily: "'Cormorant Garamond', 'Playfair Display', Georgia, serif" }}
                       >
@@ -1295,14 +2086,14 @@ export default function Home({
           </div>
         </section>
 
-        
+
 
         {/* ==========================================================
           FEATURE 03: BUILT ON PURITY — WHY 925 FINE SILVER?
           (Edge-by-Edge Full-Bleed Banner)
           ========================================================== */}
-        <section 
-          id="built-on-purity" 
+        <section
+          id="built-on-purity"
           className="w-full relative overflow-hidden select-none bg-[#050B14] cursor-pointer group border-b border-white/10"
           onClick={() => {
             triggerAudio('click');
@@ -1313,122 +2104,12 @@ export default function Home({
         >
           <img
             src={bannerBuiltOnPurity}
-            alt="Built on Purity - Why 925 Fine Silver? MANISH & CO Fine Jewellery"
+            alt="Built on Purity - Why 925 Sterling Silver? MANISH & CO Fine Jewellery"
             className="w-full h-auto min-h-[190px] sm:min-h-0 object-cover object-center block transition-transform duration-700 ease-out group-hover:scale-[1.008]"
             loading="lazy"
           />
           {/* Subtle luxury ambient hover sheen */}
           <div className="absolute inset-0 bg-white/0 group-hover:bg-white/[0.025] transition-colors duration-300 pointer-events-none" />
-        </section>
-
-        {/* ==========================================================
-          FEATURE 04: SHOP BY CATEGORY / BUDGET STORE (GOL PRICE TIERS)
-          ========================================================== */}
-        <section 
-          id="shop-by-category-marquee" 
-          className="w-full py-12 sm:py-16 bg-[#FDFBF7] border-b border-[#EAE3D9] overflow-hidden select-none"
-        >
-          <div className="max-w-[1536px] mx-auto px-6 sm:px-10 lg:px-14">
-            <div className="flex flex-col lg:flex-row items-center gap-8 lg:gap-14 relative">
-              
-              {/* LEFT COLUMN: Editorial "Shop by Category" */}
-              <div className="w-full lg:w-[320px] xl:w-[350px] shrink-0 text-left z-20 bg-[#FDFBF7] py-2">
-                <span className="inline-block text-[#8C6D46] text-xs sm:text-[13px] font-sans font-semibold tracking-[0.25em] uppercase mb-2.5">
-                  AFFORDABLE PURITY
-                </span>
-                
-                <h2 
-                  className="text-3xl sm:text-4xl lg:text-[44px] font-bold text-[#1A1817] leading-[1.08] mb-3.5"
-                  style={{ fontFamily: "'Cormorant Garamond', 'Playfair Display', Georgia, serif" }}
-                >
-                  Shop by<br />Category
-                </h2>
-
-                <p className="text-[#6F6862] text-xs sm:text-sm font-sans leading-relaxed mb-6 max-w-[300px]">
-                  Explore all certified 925 fine silver designs by price. Handcrafted jewellery designed to shine within your everyday budget.
-                </p>
-
-                <div>
-                  <button
-                    onClick={() => {
-                      triggerAudio('click');
-                      if (typeof setMaxPriceFilter === 'function') setMaxPriceFilter(100000000);
-                      changeCategoryTab?.('Collections');
-                      navigateTo('collections');
-                    }}
-                    className="inline-flex items-center gap-2 px-7 py-3.5 bg-[#785B3C] hover:bg-[#8F6D48] active:scale-95 text-white font-sans text-xs sm:text-[12.5px] font-semibold tracking-[0.2em] uppercase transition-all duration-300 shadow-[0_4px_16px_rgba(120,91,60,0.25)] cursor-pointer rounded-none"
-                  >
-                    <span>VIEW ALL DEALS</span>
-                    <span className="text-sm font-light">→</span>
-                  </button>
-                </div>
-              </div>
-
-              {/* RIGHT COLUMN: Continuous Moving Marquee of Vibrant Gol (Round) Price Categories */}
-              <div className="w-full lg:flex-1 relative overflow-hidden py-4">
-                {/* Left & Right gradient fades for smooth fade-in/fade-out */}
-                <div className="absolute left-0 top-0 bottom-0 w-8 sm:w-16 bg-gradient-to-r from-[#FDFBF7] to-transparent z-10 pointer-events-none" />
-                <div className="absolute right-0 top-0 bottom-0 w-8 sm:w-16 bg-gradient-to-l from-[#FDFBF7] to-transparent z-10 pointer-events-none" />
-
-                {/* Moving Marquee Strip of Gol Categories */}
-                <div className="animate-marquee-smooth flex flex-row items-center gap-6 sm:gap-8 lg:gap-10 select-none py-3">
-                  {[...priceCategories.filter(t => t.active !== false), ...priceCategories.filter(t => t.active !== false)].map((tier, idx) => {
-                    const style = getColorStyles(tier.color);
-                    return (
-                      <div
-                        key={`price-tier-${tier.id}-${idx}`}
-                        onClick={() => {
-                          triggerAudio('click');
-                          if (typeof setMaxPriceFilter === 'function') setMaxPriceFilter(tier.price);
-                          if (typeof setGenderFilter === 'function') setGenderFilter('all');
-                          if (typeof setMetalFilter === 'function') setMetalFilter('all');
-                          changeCategoryTab?.('Collections');
-                          navigateTo('collections');
-                        }}
-                        className="group/item cursor-pointer flex flex-col items-center text-center shrink-0 w-[120px] sm:w-[136px] lg:w-[146px] transition-all duration-300"
-                      >
-                        {/* Vibrant Round "Gol" Badge */}
-                        <div className={`w-[110px] h-[110px] sm:w-[124px] sm:h-[124px] lg:w-[136px] lg:h-[136px] rounded-full bg-gradient-to-br ${style.gradient} ${style.shadow} ${style.border} border-2 flex flex-col items-center justify-center p-3 relative overflow-hidden transition-all duration-300 group-hover/item:scale-108 group-hover/item:ring-4 ${style.ring} group-hover/item:shadow-2xl`}>
-                          
-                          {/* Ambient Sparkle / Sheen Accent */}
-                          <div className="absolute inset-0 bg-white/0 group-hover/item:bg-white/10 transition-colors duration-300 pointer-events-none" />
-                          <div className="absolute -top-6 -right-6 w-16 h-16 bg-white/20 rounded-full blur-sm pointer-events-none" />
-
-                          {/* Top "UNDER" Eyebrow */}
-                          <span className="font-sans font-bold text-[9px] sm:text-[10px] tracking-[0.22em] uppercase text-white/90 drop-shadow-sm leading-none mb-1">
-                            UNDER
-                          </span>
-
-                          {/* Bold Price Amount */}
-                          <span 
-                            className="text-2xl sm:text-[28px] lg:text-[30px] font-bold text-white leading-none tracking-tight drop-shadow-md"
-                            style={{ fontFamily: "'Cormorant Garamond', 'Playfair Display', Georgia, serif" }}
-                          >
-                            ₹{tier.price}
-                          </span>
-
-                          {/* Bottom Action Pill */}
-                          <span className="inline-flex items-center gap-1 text-[8.5px] sm:text-[9.5px] font-sans font-bold tracking-wider uppercase text-white bg-black/25 px-2 py-0.5 rounded-full mt-1.5 border border-white/20 shadow-xs group-hover/item:bg-black/35 transition-colors">
-                            <span>Shop</span>
-                            <span className="text-[10px] transition-transform duration-200 group-hover/item:translate-x-0.5">→</span>
-                          </span>
-                        </div>
-
-                        {/* Title Underneath */}
-                        <span className="font-sans font-semibold text-[11px] sm:text-xs tracking-[0.14em] uppercase text-[#1A1817] group-hover/item:text-[#8C6D46] transition-colors mt-3 line-clamp-1">
-                          {tier.title || `Under ₹${tier.price}`}
-                        </span>
-                        <span className="text-[10px] text-[#8C6D46] tracking-wider uppercase font-semibold mt-0.5 opacity-0 group-hover/item:opacity-100 transition-opacity">
-                          View Items →
-                        </span>
-                      </div>
-                    );
-                  })}
-                </div>
-              </div>
-
-            </div>
-          </div>
         </section>
 
         {/* ==========================================================
@@ -1485,7 +2166,7 @@ export default function Home({
           </div>
         </section>
 
-        
+
 
         {/* ==========================================================
           TAILORED SELECTION RECOMMENDED FOR YOU
@@ -1493,10 +2174,10 @@ export default function Home({
         <section className="py-12 bg-white border-b border-solid border-[#E6DFD3] relative overflow-hidden text-center">
           <div className="w-full px-4 md:px-12 space-y-10 relative group/sect text-center">
 
-            <div className="text-center space-y-3">
-              <span className="text-[10px] uppercase tracking-[0.35em] text-[#6B4B2E] font-bold font-sans">TAILORED SELECTION</span>
-              <h2 className="serif-luxury text-3xl sm:text-5xl font-semibold text-[#0D2B4E]">Recommended for You</h2>
-              <div className="w-16 h-[1.5px] bg-[#6B4B2E] mx-auto mt-3"></div>
+            <div className="text-center space-y-2.5">
+              <span className="text-[10.5px] uppercase tracking-[0.35em] text-[#8C6D46] font-bold font-sans">TAILORED SELECTION</span>
+              <h2 className="serif-luxury text-3xl sm:text-4xl md:text-[42px] font-semibold text-[#1F142B]">Recommended for You</h2>
+              <div className="w-14 h-[2px] bg-[#C8A646] mx-auto mt-2 rounded-full"></div>
             </div>
 
             <div
@@ -1545,7 +2226,7 @@ export default function Home({
                       className="flex flex-col items-center gap-3 cursor-pointer shrink-0 snap-center group text-center"
                     >
                       <div
-                        className="w-[90px] h-[90px] sm:w-[110px] sm:h-[110px] rounded-full overflow-hidden border border-solid flex items-center justify-center transition-all duration-300 ease group-hover:scale-105 border-[#EADBCE]/75 bg-[#F7F4EB] shadow-[0_4px_14px_rgba(160,140,110,0.12)] group-hover:shadow-[0_8px_24px_rgba(201,161,74,0.22)]"
+                        className="w-[115px] h-[115px] sm:w-[135px] sm:h-[135px] md:w-[150px] md:h-[150px] rounded-2xl overflow-hidden border border-solid border-[#EADBCE]/90 bg-white flex items-center justify-center transition-all duration-300 ease group-hover:scale-[1.04] group-hover:-translate-y-1.5 shadow-[0_4px_16px_rgba(0,0,0,0.06)] group-hover:shadow-[0_12px_28px_rgba(107,75,46,0.18)]"
                       >
                         <img
                           src={catImg}
@@ -1557,7 +2238,7 @@ export default function Home({
                               e.currentTarget.src = fallback;
                             }
                           }}
-                          className="w-[72%] h-[72%] object-contain transition-transform duration-300 filter drop-shadow-[0_4px_6px_rgba(0,0,0,0.06)] mix-blend-multiply"
+                          className="w-full h-full object-cover transition-transform duration-500 group-hover:scale-108"
                         />
                       </div>
                       <span
@@ -1589,8 +2270,8 @@ export default function Home({
           CRAFTSMANSHIP JOURNEY — BEAUTY IS IN THE DETAILS (925 SILVER)
           (Edge-by-Edge Full-Bleed Banner)
           ========================================================== */}
-        <section 
-          id="craftsmanship-journey-banner" 
+        <section
+          id="craftsmanship-journey-banner"
           className="w-full relative overflow-hidden select-none bg-[#050B14] cursor-pointer group border-y border-white/10"
           onClick={() => {
             triggerAudio('click');
@@ -1610,8 +2291,7 @@ export default function Home({
         {/* ==========================================================
           POLAROID TESTIMONIALS
           ========================================================== */}
-        <section
-          ref={testimonialsRef}
+        <section id="testimonials" ref={testimonialsRef}
           data-inview={testimonialsInView ? "true" : "false"}
           className="w-full py-16 overflow-hidden select-none border-y border-solid transition-colors duration-500 group bg-[#F8F5EC] border-[#E6DFD3] text-center"
         >
@@ -1778,9 +2458,9 @@ export default function Home({
           ========================================================== */}
         {(() => {
           const timelineItems = [
-            { yr: 1996, label: "1996", title: "Mau Atelier Inception", desc: "Foundations of our master silversmith studio in Mau, hand-sculpting pristine silver ornaments and setting absolute purity standards in dense 925 fine silver." },
+            { yr: 1996, label: "1996", title: "Mau Atelier Inception", desc: "Foundations of our master silversmith studio in Mau, hand-sculpting pristine silver ornaments and setting absolute purity standards in dense 925 sterling silver." },
             { yr: 2004, label: "2004", title: "Artisanal Hallmarking & Chitai Craft", desc: "Pioneering traditional hand-hammered Chitai work and introducing rigorous 925 purity benchmarks across eastern Uttar Pradesh." },
-            { yr: 2012, label: "2012", title: "Fine Silver & Bridal Expansion", desc: "Introduction of signature handcrafted bridal silver payals, royal kadas, heavy curb chains, and bespoke gemstone suites." },
+            { yr: 2012, label: "2012", title: "Sterling Silver & Bridal Expansion", desc: "Introduction of signature handcrafted bridal silver payals, royal kadas, heavy curb chains, and bespoke gemstone suites." },
             { yr: 2020, label: "2020", title: "Flagship Mau Boutique & Custom Studio", desc: "Opening of our grand showroom lounge in Mau, offering 3D CAD design tables and private bridal suites for family appointments." },
             { yr: 2026, label: "Present", title: "MANISH & CO Pan-India Digital Flagship", desc: "Certified 925 BIS Hallmarked collections, live transparent silver bullion rates, bespoke WhatsApp concierge, and insured doorstep delivery across India." }
           ];

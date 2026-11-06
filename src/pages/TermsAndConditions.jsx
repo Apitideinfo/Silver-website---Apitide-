@@ -222,7 +222,7 @@ const TERMS_DATA = [
       brand: `${BUSINESS.NAME} (${BUSINESS.TAGLINE})`,
       address: BUSINESS.ADDRESS,
       email: BUSINESS.EMAIL,
-      backupEmail: "contact@manishsilver.com",
+      backupEmail: "manishandco.shop@gmail.com",
       phone: BUSINESS.PHONE_PRIMARY,
       hours: "All 7 Days, 10:30 AM – 8:30 PM"
     },

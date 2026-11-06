@@ -72,7 +72,7 @@ export default function Heritage({
             </h1>
 
             <p className={`text-xs sm:text-sm font-light max-w-2xl leading-relaxed pt-2 tracking-wide font-sans transition-colors duration-500 text-center mx-auto ${isCatalogDark ? "text-[#F8F4EE]/90" : "text-[#0D2B4E]/80"}`}>
-              MANISH & CO is a trusted beacon of fine silver & heirloom craftsmanship. For generations, our family-led maison has crafted high-luxury bridal masterworks using ancient ancestral setting techniques, hand-selected Syndicate Polki, and master-refined 22-karat bullion.
+              MANISH & CO is a trusted beacon of sterling silver & fine jewellery craftsmanship. For generations, our family-led maison has crafted high-luxury bridal masterworks using ancient ancestral setting techniques, hand-selected Syndicate Polki, and master-refined 22-karat bullion.
             </p>
 
             <div className="pt-4 flex flex-wrap gap-5 w-full justify-center">
@@ -235,7 +235,7 @@ export default function Heritage({
                 <h3 className="serif-luxury text-lg sm:text-xl font-bold text-[#B09A82]">
                   {activeStoryTimeline === 1996 && "1996: Foundations in Mau, Uttar Pradesh"}
                   {activeStoryTimeline === 2004 && "2004: Purity Guild & Chitai Craft"}
-                  {activeStoryTimeline === 2012 && "2012: Fine Silver & Bridal Expansion"}
+                  {activeStoryTimeline === 2012 && "2012: Sterling Silver & Bridal Expansion"}
                   {activeStoryTimeline === 2020 && "2020: Flagship Showroom & Atelier"}
                   {activeStoryTimeline === 2026 && "Present: Nationwide 925 Hallmark Flagship"}
                 </h3>

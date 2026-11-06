@@ -200,21 +200,21 @@ function AppContent() {
 
   // Sync title and SEO meta descriptions tags dynamically
   useEffect(() => {
-    let title = 'MANISH & CO — Fine Silver Jewellery | 925 Hallmarked';
+    let title = 'MANISH & CO — Fine Jewellery | 925 Sterling Silver';
     let desc = 'Luxury handcrafted 925 sterling silver, certified solitaires, royal heirlooms, and bespoke fine jewellery by MANISH & CO. Timeless, Elegant, Modern, Authentic.';
     
     switch (currentPage) {
       case 'collections':
-        title = 'Fine Silver & Gold Collections — MANISH & CO';
+        title = 'Fine Jewellery & Gold Collections — MANISH & CO';
         desc = 'Browse our modern interactive catalog of certified 925 sterling silver, solitaires, royal neckwear, and precious adornments.';
         break;
       case 'heritage':
         title = 'Our Heritage & Royal Atelier — MANISH & CO';
-        desc = 'Discover the legacy and certified royal lineage of our master silversmiths and artisans crafting fine silver jewellery since 1996.';
+        desc = 'Discover the legacy and certified royal lineage of our master silversmiths and artisans crafting 925 sterling silver & fine jewellery since 1996.';
         break;
       case 'valuation':
         title = 'Live Daily Silver & Gold Bullion Rates — MANISH & CO';
-        desc = 'Calculate fine silver and gold jewelry rates instantly according to active Indian bullion indexes and 925 hallmark metrics.';
+        desc = 'Calculate sterling silver and gold jewelry rates instantly according to active Indian bullion indexes and 925 hallmark metrics.';
         break;
       case 'showrooms':
         title = 'Flagship Fitting Showroom — MANISH & CO';
@@ -237,8 +237,8 @@ function AppContent() {
         desc = `Complete your order securely with MANISH & CO. Choose express insured delivery or boutique pick-up.`;
         break;
       case 'about-us':
-        title = `About Us — MANISH & CO Fine Silver Jewellery`;
-        desc = `The story of MANISH & CO. Timeless, Elegant, Modern, Authentic fine silver treasures since 1996.`;
+        title = `About Us — MANISH & CO Fine Jewellery`;
+        desc = `The story of MANISH & CO. Timeless, Elegant, Modern, Authentic sterling silver & fine jewellery treasures since 1996.`;
         break;
     }
     

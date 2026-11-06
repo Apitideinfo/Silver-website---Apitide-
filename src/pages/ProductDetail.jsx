@@ -388,7 +388,7 @@ export default function ProductDetail({
           </div>
           <h2 className="text-xl font-bold text-[#0D2B4E] serif-luxury tracking-tight">No Product Selected</h2>
           <p className="text-sm text-[#657989] font-medium leading-relaxed font-sans">
-            Please browse our fine silver collection and select a product to view its details.
+            Please browse our sterling silver collection and select a product to view its details.
           </p>
           <button
             onClick={() => navigateTo?.('collections')}
@@ -477,10 +477,10 @@ export default function ProductDetail({
   return (
     <div className="bg-white text-[#181818] min-h-screen pb-24 relative font-sans">
       <Helmet>
-        <title>{`${detailProduct?.name || 'Fine Silver Jewellery'} | BIS 925 Sterling Silver | MANISH & CO`}</title>
+        <title>{`${detailProduct?.name || 'Fine Jewellery'} | BIS 925 Sterling Silver | MANISH & CO`}</title>
         <meta
           name="description"
-          content={detailProduct?.desc || `Shop ${detailProduct?.name || 'fine silver jewellery'} in hallmarked 925 sterling silver at MANISH & CO. Handcrafted with generational devotion in Mau since 1996.`}
+          content={detailProduct?.desc || `Shop ${detailProduct?.name || 'sterling silver jewellery'} in hallmarked 925 sterling silver at MANISH & CO. Handcrafted with generational devotion in Mau since 1996.`}
         />
         <meta property="og:title" content={`${detailProduct?.name || 'Fine Jewellery'} | MANISH & CO`} />
         <meta property="og:description" content={detailProduct?.desc || `Discover ${detailProduct?.name} in BIS 925 hallmarked sterling silver.`} />

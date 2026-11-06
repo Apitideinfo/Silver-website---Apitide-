@@ -5,11 +5,11 @@
 // ─── BUSINESS CONFIG ──────────────────────────────────────────
 export const BUSINESS = Object.freeze({
   NAME: 'MANISH & CO',
-  TAGLINE: 'Fine Silver Jewellery',
+  TAGLINE: 'Fine Jewellery',
   WHATSAPP_NUMBER: '919451638680',
   PHONE_PRIMARY: '+91-9451638680',
   FOUNDER: 'Manish Verma',
-  EMAIL: 'manishandco.in@gmail.com',
+  EMAIL: 'manishandco.shop@gmail.com',
   ADDRESS: 'Mau, Uttar Pradesh 275101, India',
   MAPS_URL: 'https://maps.google.com/?q=Mau+Uttar+Pradesh',
   SITE_URL: 'https://manishsilverjewellery.com',
@@ -98,9 +98,23 @@ export const ROUTES = Object.freeze({
 // ─── INITIAL BASELINE CATEGORIES ──────────────────────────────
 export const INITIAL_CATEGORIES = Object.freeze([
   {
-    id: 'bangles',
-    name: 'Bangles',
-    desc: 'Artisanal silver and gold filigree bangles crafted with timeless perfection.',
+    id: 'rings',
+    name: 'Rings',
+    desc: 'Handcrafted 925 sterling silver rings, solitaires, and band rings.',
+    img: '',
+    createdDate: '2026-01-01T00:00:00.000Z'
+  },
+  {
+    id: 'stone-bracelets',
+    name: 'Stone Bracelets',
+    desc: 'Healing gemstones and vibrant beaded stone bracelets in 925 sterling silver.',
+    img: '',
+    createdDate: '2026-01-01T00:00:00.000Z'
+  },
+  {
+    id: 'earring',
+    name: 'Earring',
+    desc: 'Designer silver drops, hoops, chandbalis, and daily wear studs.',
     img: '',
     createdDate: '2026-01-01T00:00:00.000Z'
   },
@@ -112,100 +126,44 @@ export const INITIAL_CATEGORIES = Object.freeze([
     createdDate: '2026-01-01T00:00:00.000Z'
   },
   {
-    id: 'earrings',
-    name: 'Earrings',
-    desc: 'Bespoke chandeliers, hoops, and designer drops adorned with fine gems.',
-    img: '',
-    createdDate: '2026-01-01T00:00:00.000Z'
-  },
-  {
-    id: 'jhumka',
-    name: 'Jhumka',
-    desc: 'Traditional royal heritage jhumkas with exquisite meenakari and bell drops.',
-    img: '',
-    createdDate: '2026-01-01T00:00:00.000Z'
-  },
-  {
-    id: 'nath-nose-pin',
-    name: 'Nath & Nose Pin',
-    desc: 'Traditional bridal naths with pearl chains and sparkling floral studs.',
-    img: '',
-    createdDate: '2026-01-01T00:00:00.000Z'
-  },
-  {
-    id: 'nose-pin',
-    name: 'Nose Pin',
-    desc: 'Delicate floral diamond nose studs and daily wear silver nose screws.',
-    img: '',
-    createdDate: '2026-01-01T00:00:00.000Z'
-  },
-  {
-    id: 'kada',
-    name: 'Kada',
-    desc: 'Royal antique chitai kadas and solid silver & gold statement cuffs.',
-    img: '',
-    createdDate: '2026-01-01T00:00:00.000Z'
-  },
-  {
-    id: 'necklace',
-    name: 'Necklace',
-    desc: 'Grand heirloom bridal necklaces, polki jadau sets, and royal chokers.',
-    img: '',
-    createdDate: '2026-01-01T00:00:00.000Z'
-  },
-  {
-    id: 'payal',
-    name: 'Payal',
-    desc: 'Pure 925 sterling silver payals, bridal anklets, and delicate daily chains.',
-    img: '',
-    createdDate: '2026-01-01T00:00:00.000Z'
-  },
-  {
-    id: 'pendant-locket',
-    name: 'Pendant & Locket',
+    id: 'pendant',
+    name: 'Pendant',
     desc: 'Sacred deity lockets, solitaires, and vintage filigree everyday pendants.',
     img: '',
     createdDate: '2026-01-01T00:00:00.000Z'
   },
   {
-    id: 'rings',
-    name: 'Rings',
-    desc: 'Handcrafted diamond solitaires, sovereign signets, and cocktail eternity bands.',
+    id: 'necklaces',
+    name: 'Necklaces',
+    desc: 'Grand heirloom bridal necklaces, polki jadau sets, and royal chokers.',
     img: '',
     createdDate: '2026-01-01T00:00:00.000Z'
   },
   {
-    id: 'silver-chain',
-    name: 'Silver Chain',
+    id: 'mangalsutra',
+    name: 'Mangalsutra',
+    desc: 'Sacred auspicious black beads mangalsutras in 925 hallmarked silver.',
+    img: '',
+    createdDate: '2026-01-01T00:00:00.000Z'
+  },
+  {
+    id: 'toe-ring',
+    name: 'Toe Ring',
+    desc: 'Traditional and contemporary 925 pure silver toe rings and bichiyas.',
+    img: '',
+    createdDate: '2026-01-01T00:00:00.000Z'
+  },
+  {
+    id: 'anklets',
+    name: 'Anklets',
+    desc: 'Pure 925 sterling silver payals, bridal anklets, and delicate daily chains.',
+    img: '',
+    createdDate: '2026-01-01T00:00:00.000Z'
+  },
+  {
+    id: 'chain',
+    name: 'Chain',
     desc: 'Italian curb, rope, and box chains in 925 sterling silver and 22K gold.',
-    img: '',
-    createdDate: '2026-01-01T00:00:00.000Z'
-  },
-  {
-    id: 'tops-studs',
-    name: 'Tops & Studs',
-    desc: 'Sparkling diamond florals, solitaires, and minimalist daily studs.',
-    img: '',
-    createdDate: '2026-01-01T00:00:00.000Z'
-  },
-  {
-    id: 'mangalsutras',
-    name: 'Mangalsutras',
-    desc: 'Authentic 22K gold and silver designer sacred mangalsutra suites.',
-    img: '',
-    createdDate: '2026-01-01T00:00:00.000Z'
-  },
-  {
-    id: 'gold-coins',
-    name: 'Gold Coins',
-    desc: '24K 999 certified Lakshmi & Ganesh gold bullion coins and silver bars.',
-    img: '',
-    createdDate: '2026-01-01T00:00:00.000Z'
-  },
-  {
-    id: 'solitaires',
-    name: 'Solitaires',
-    desc: 'Exquisite certified solitaires and brilliant cut diamonds set in hallmarked gold.',
     img: '',
     createdDate: '2026-01-01T00:00:00.000Z'
   }

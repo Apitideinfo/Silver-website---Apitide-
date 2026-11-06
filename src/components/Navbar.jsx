@@ -2,22 +2,19 @@ import React, { useState, useEffect, useRef } from 'react';
 import { 
   Search, 
   User, 
-  ShoppingBag, 
+  ShoppingCart, 
   Heart, 
   Menu, 
   X, 
   ChevronRight,
-  ShieldCheck,
-  Gem,
-  Truck,
-  Sparkles
+  Phone
 } from 'lucide-react';
 import { useCart } from '../hooks/useCart';
 import { useWishlist } from '../hooks/useWishlist';
 import { useRates } from '../hooks/useRates';
 import { useProducts } from '../hooks/useProducts';
 import { getOptimizedImageUrl } from '../utils/imageOptimizer';
-import brandLogo from '../assets/logo.png';
+import { INITIAL_CATEGORIES } from '../config/constants';
 
 export default function Navbar({
   currentPage,
@@ -38,15 +35,17 @@ export default function Navbar({
   setSearchQuery,
   openCustomerAccount
 }) {
-  const { cartItemCount, setCartOpen } = useCart();
-  const { wishlistItems, setWishlistOpen } = useWishlist();
-  const { products = [] } = useProducts();
+  const { cartItemCount = 0, setCartOpen } = useCart();
+  const { wishlistItems = [], setWishlistOpen } = useWishlist();
+  const { products = [], categories = [] } = useProducts();
   const { formatPrice, calculatePrice } = useRates();
 
-  const [searchOpen, setSearchOpen] = useState(false);
+  const [searchOpenMobile, setSearchOpenMobile] = useState(false);
   const [searchVal, setSearchVal] = useState(searchQuery || '');
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
+  const [isSearchFocused, setIsSearchFocused] = useState(false);
   const searchInputRef = useRef(null);
+  const searchContainerRef = useRef(null);
 
   const triggerAudio = (type) => {
     try { triggerAudioProp?.(type); } catch { /* noop */ }
@@ -59,12 +58,16 @@ export default function Navbar({
     }
   }, [searchQuery]);
 
-  // Focus search input when opened
+  // Click outside search container to close suggestions
   useEffect(() => {
-    if (searchOpen && searchInputRef.current) {
-      searchInputRef.current.focus();
-    }
-  }, [searchOpen]);
+    const handleClickOutside = (e) => {
+      if (searchContainerRef.current && !searchContainerRef.current.contains(e.target)) {
+        setIsSearchFocused(false);
+      }
+    };
+    document.addEventListener('mousedown', handleClickOutside);
+    return () => document.removeEventListener('mousedown', handleClickOutside);
+  }, []);
 
   // Autocomplete suggestions
   const searchSuggestions = searchVal.trim()
@@ -79,7 +82,7 @@ export default function Navbar({
     : [];
 
   const handleSearchSubmit = (e) => {
-    e.preventDefault();
+    if (e) e.preventDefault();
     if (searchVal.trim()) {
       triggerAudio('click');
       if (typeof setSearchQuery === 'function') {
@@ -89,315 +92,375 @@ export default function Navbar({
         changeCategoryTab('Collections');
       }
       navigateTo('collections');
-      setSearchOpen(false);
+      setIsSearchFocused(false);
+      setSearchOpenMobile(false);
     }
   };
 
-  return (
-    <nav className="fixed top-0 left-0 right-0 w-full z-50 select-none bg-[#050B14]/95 backdrop-blur-md border-b border-white/10 transition-colors duration-300">
-      <div className="max-w-[1536px] mx-auto px-4 sm:px-6 lg:px-10 h-20 flex items-center justify-between">
-        
-        {/* ==========================================================
-            LEFT: BRAND LOGO WORDMARK (Screenshot Exact: White Subtitle, Single-Line Mobile)
-            ========================================================== */}
-        <button
-          onClick={() => {
+  const navCategories = React.useMemo(() => {
+    const list = Array.isArray(categories) && categories.length > 0 ? categories : INITIAL_CATEGORIES;
+    return [
+      { label: 'New Arrivals', action: () => { changeCategoryTab?.('Collections'); navigateTo('collections'); } },
+      { label: 'Bestsellers', action: () => { changeCategoryTab?.('Collections'); navigateTo('collections'); } },
+      ...list.map((cat) => ({
+        label: cat.name,
+        action: () => {
+          changeCategoryTab?.(cat.id || cat.slug || cat.name);
+          navigateTo('collections');
+        }
+      })),
+      { 
+        label: 'Reviews', 
+        action: () => {
+          if (currentPage === 'home') {
+            const el = document.getElementById('testimonials') || document.getElementById('reviews');
+            if (el) el.scrollIntoView({ behavior: 'smooth' });
+          } else {
             navigateTo('home');
-          }}
-          className="flex items-center focus:outline-none cursor-pointer group text-left border-none bg-transparent shrink-0"
-        >
-          <div className="flex flex-col items-start min-w-0">
-            <span 
-              className="font-serif text-[18px] xs:text-[20px] sm:text-[24px] font-bold tracking-[0.16em] sm:tracking-[0.18em] text-white uppercase leading-none drop-shadow-sm group-hover:text-[#E5C396] transition-colors whitespace-nowrap"
-              style={{ fontFamily: "'Cormorant Garamond', 'Playfair Display', Georgia, serif" }}
-            >
-              MANISH &amp; CO
-            </span>
-            <div className="flex items-center gap-1.5 sm:gap-2 mt-1.5 w-full">
-              <span className="h-[1px] flex-1 bg-gradient-to-r from-transparent to-white/70" />
-              <span 
-                className="font-serif text-[8.5px] sm:text-[10px] tracking-[0.24em] sm:tracking-[0.28em] text-white/90 uppercase font-semibold whitespace-nowrap"
-                style={{ fontFamily: "'Cormorant Garamond', 'Playfair Display', Georgia, serif" }}
-              >
-                FINE JEWELLERY
-              </span>
-              <span className="h-[1px] flex-1 bg-gradient-to-l from-transparent to-white/70" />
-            </div>
-          </div>
-        </button>
+            setTimeout(() => {
+              const el = document.getElementById('testimonials') || document.getElementById('reviews');
+              if (el) el.scrollIntoView({ behavior: 'smooth' });
+            }, 350);
+          }
+        } 
+      }
+    ];
+  }, [categories, changeCategoryTab, navigateTo, currentPage]);
 
-        {/* ==========================================================
-            CENTER: NAVIGATION LINKS (Reference Screenshot Design)
-            ========================================================== */}
-        <div className="hidden md:flex items-center gap-7 lg:gap-11">
-          {/* Home */}
-          <button
-            onClick={() => {
-              triggerAudio('click');
-              navigateTo('home');
-            }}
-            className={`relative py-1.5 text-[13px] lg:text-[14px] font-sans tracking-[0.06em] cursor-pointer transition-colors ${
-              currentPage === 'home'
-                ? 'text-white font-medium after:content-[""] after:absolute after:bottom-0 after:left-0 after:right-0 after:h-[1.5px] after:bg-[#C5A880]'
-                : 'text-gray-300 hover:text-white'
-            }`}
-          >
-            Home
-          </button>
-
-          {/* Collections */}
-          <button
-            onClick={() => {
-              triggerAudio('click');
-              changeCategoryTab?.('Collections');
-              navigateTo('collections');
-            }}
-            className={`relative py-1.5 text-[13px] lg:text-[14px] font-sans tracking-[0.06em] cursor-pointer transition-colors ${
-              currentPage === 'collections'
-                ? 'text-white font-medium after:content-[""] after:absolute after:bottom-0 after:left-0 after:right-0 after:h-[1.5px] after:bg-[#C5A880]'
-                : 'text-gray-300 hover:text-white'
-            }`}
-          >
-            Collections
-          </button>
-
-          {/* About */}
-          <button
-            onClick={() => {
-              triggerAudio('click');
-              navigateTo('about-us');
-            }}
-            className={`relative py-1.5 text-[13px] lg:text-[14px] font-sans tracking-[0.06em] cursor-pointer transition-colors ${
-              currentPage === 'about-us' || currentPage === 'heritage'
-                ? 'text-white font-medium after:content-[""] after:absolute after:bottom-0 after:left-0 after:right-0 after:h-[1.5px] after:bg-[#C5A880]'
-                : 'text-gray-300 hover:text-white'
-            }`}
-          >
-            About
-          </button>
-
-          {/* Silver Guide */}
-          <button
-            onClick={() => {
-              triggerAudio('click');
-              navigateTo('valuation');
-            }}
-            className={`relative py-1.5 text-[13px] lg:text-[14px] font-sans tracking-[0.06em] cursor-pointer transition-colors ${
-              currentPage === 'valuation'
-                ? 'text-white font-medium after:content-[""] after:absolute after:bottom-0 after:left-0 after:right-0 after:h-[1.5px] after:bg-[#C5A880]'
-                : 'text-gray-300 hover:text-white'
-            }`}
-          >
-            Silver Guide
-          </button>
-
-          {/* Contact */}
-          <button
-            onClick={() => {
-              triggerAudio('click');
-              navigateTo('showrooms');
-            }}
-            className={`relative py-1.5 text-[13px] lg:text-[14px] font-sans tracking-[0.06em] cursor-pointer transition-colors ${
-              currentPage === 'showrooms'
-                ? 'text-white font-medium after:content-[""] after:absolute after:bottom-0 after:left-0 after:right-0 after:h-[1.5px] after:bg-[#C5A880]'
-                : 'text-gray-300 hover:text-white'
-            }`}
-          >
-            Contact
-          </button>
-        </div>
-
-        {/* ==========================================================
-            RIGHT: ICONS (Search, User, Cart) + Mobile Hamburger
-            ========================================================== */}
-        <div className="flex items-center gap-3 sm:gap-4">
-
-          {/* Search Trigger Icon */}
-          <button
-            onClick={() => {
-              triggerAudio('click');
-              setSearchOpen(!searchOpen);
-            }}
-            aria-label="Search Fine Jewellery"
-            className="p-2 text-gray-200 hover:text-white transition-colors cursor-pointer focus:outline-none rounded-full hover:bg-white/5 active:scale-95"
-          >
-            <Search className="w-5 h-5" strokeWidth={1.8} />
-          </button>
-
-          {/* Customer Account / Orders Icon */}
-          <button
-            onClick={() => {
-              triggerAudio('click');
-              openCustomerAccount?.('orders');
-            }}
-            aria-label="My Account and Orders"
-            className="p-2 text-gray-200 hover:text-white transition-colors cursor-pointer focus:outline-none rounded-full hover:bg-white/5 active:scale-95"
-          >
-            <User className="w-5 h-5" strokeWidth={1.8} />
-          </button>
-
-          {/* Cart Icon with Gold Badge */}
-          <button
-            onClick={() => {
-              triggerAudio('click');
-              setCartOpen(true);
-            }}
-            aria-label="View Shopping Bag"
-            className="relative p-2 text-gray-200 hover:text-white transition-colors cursor-pointer focus:outline-none rounded-full hover:bg-white/5 active:scale-95"
-          >
-            <ShoppingBag className="w-5 h-5" strokeWidth={1.8} />
-            <span className="absolute -top-0.5 -right-0.5 bg-[#8C6D46] text-white text-[10px] font-bold min-w-4.5 h-4.5 px-1 rounded-full flex items-center justify-center shadow-[0_2px_8px_rgba(140,109,70,0.5)]">
-              {cartItemCount || 0}
-            </span>
-          </button>
-
-          {/* Mobile Hamburger Menu Toggle */}
-          <button
-            onClick={() => {
-              triggerAudio('click');
-              setMobileMenuOpen(!mobileMenuOpen);
-            }}
-            aria-label="Open Navigation Menu"
-            className="md:hidden p-2 text-gray-200 hover:text-white focus:outline-none cursor-pointer rounded-full hover:bg-white/5"
-          >
-            {mobileMenuOpen ? <X className="w-6 h-6" /> : <Menu className="w-6 h-6" />}
-          </button>
+  return (
+    <header className="fixed top-0 left-0 right-0 w-full z-50 select-none bg-white shadow-xs">
+      
+      {/* ==========================================================
+          TIER 1: TOP ANNOUNCEMENT BANNER (Reference Screenshot Style - Centered)
+          ========================================================== */}
+      <div className="w-full bg-[#5A3825] text-white text-[11px] sm:text-[12.5px] py-1.5 px-4 font-sans tracking-wide">
+        <div className="max-w-[1536px] mx-auto flex items-center justify-center text-center px-2">
+          <p className="truncate text-center font-medium">
+            ✨ Crafted with care, trusted by thousands – Welcome to MANISH &amp; CO, where every piece tells your story
+          </p>
         </div>
       </div>
 
       {/* ==========================================================
-          SEARCH BAR OVERLAY / DROPDOWN
+          TIER 2: MIDDLE ROW (Customer Care, MANISH & CO Logo, Icons)
           ========================================================== */}
-      {searchOpen && (
-        <div className="w-full bg-[#070E1A] border-t border-white/10 px-4 sm:px-8 py-3.5 shadow-2xl animate-fade-in">
-          <div className="max-w-2xl mx-auto relative">
-            <form onSubmit={handleSearchSubmit} className="relative flex items-center">
-              <Search className="w-5 h-5 text-[#C5A880] absolute left-4" />
-              <input
-                ref={searchInputRef}
-                type="text"
-                value={searchVal}
-                onChange={(e) => setSearchVal(e.target.value)}
-                placeholder="Search Solitaires, Rings, 925 Silver Necklaces..."
-                className="w-full h-11 pl-12 pr-10 bg-white/10 border border-white/15 focus:border-[#C5A880] focus:bg-white/15 focus:outline-none rounded-full text-white placeholder-gray-400 text-sm transition-all shadow-inner font-sans"
-              />
-              {searchVal && (
-                <button
-                  type="button"
-                  onClick={() => setSearchVal('')}
-                  className="absolute right-3 p-1 text-gray-400 hover:text-white cursor-pointer"
-                >
-                  <X className="w-4 h-4" />
-                </button>
-              )}
-            </form>
+      <div className="w-full bg-white border-b border-gray-100">
+        <div className="max-w-[1536px] mx-auto px-4 sm:px-6 lg:px-10 h-16 sm:h-[72px] flex items-center justify-between gap-4">
+          
+          {/* LEFT: Customer Care (Desktop) / Hamburger + Care (Mobile) */}
+          <div className="flex items-center gap-3 w-1/3 min-w-0">
+            {/* Mobile Hamburger Toggle */}
+            <button
+              onClick={() => {
+                triggerAudio('click');
+                setMobileMenuOpen(!mobileMenuOpen);
+              }}
+              aria-label="Open Navigation Menu"
+              className="md:hidden p-1.5 -ml-1.5 text-gray-800 hover:text-black focus:outline-none cursor-pointer rounded-md"
+            >
+              {mobileMenuOpen ? <X className="w-6 h-6" /> : <Menu className="w-6 h-6" />}
+            </button>
 
-            {/* Suggestions list */}
-            {searchSuggestions.length > 0 && (
-              <div className="mt-2 bg-[#091322] border border-white/15 rounded-2xl p-2 shadow-2xl max-h-64 overflow-y-auto">
-                {searchSuggestions.map((prod) => (
-                  <button
-                    key={prod.id}
-                    onClick={() => {
-                      triggerAudio('click');
-                      navigateToPDP?.(prod);
-                      setSearchOpen(false);
-                    }}
-                    className="w-full flex items-center gap-3 p-2 hover:bg-white/10 rounded-xl transition-colors text-left cursor-pointer focus:outline-none border-none bg-transparent"
-                  >
-                    <img 
-                      src={getOptimizedImageUrl(prod.img, { width: 100 })} 
-                      alt={prod.name} 
-                      className="w-9 h-9 object-contain rounded-lg border border-white/10 bg-white/5" 
-                    />
-                    <div className="flex-1 min-w-0">
-                      <div className="text-xs font-medium text-white truncate">{prod.name}</div>
-                      <div className="text-[11px] text-[#C5A880] font-sans font-semibold">
-                        ₹{formatPrice?.(calculatePrice?.(prod)?.total || prod.price) || prod.price}
-                      </div>
-                    </div>
-                  </button>
-                ))}
-              </div>
-            )}
+            {/* Desktop Customer Care link */}
+            <a 
+              href="tel:+919714312202"
+              className="hidden md:inline-flex items-center text-[13px] lg:text-[13.5px] text-gray-700 hover:text-black font-sans tracking-tight transition-colors whitespace-nowrap"
+            >
+              Customer Care: <span className="font-medium ml-1 text-gray-900">+91 97143 12202</span>
+            </a>
+
+            {/* Mobile Phone link */}
+            <a 
+              href="tel:+919714312202"
+              aria-label="Call Customer Care"
+              className="md:hidden text-gray-700 hover:text-black p-1"
+            >
+              <Phone className="w-4 h-4" />
+            </a>
           </div>
+
+          {/* CENTER: BRAND LOGO (MANISH & CO replacing "eri SILVERS") */}
+          <div className="flex items-center justify-center w-1/3 text-center">
+            <button
+              onClick={() => {
+                triggerAudio('click');
+                navigateTo('home');
+              }}
+              className="flex flex-col items-center justify-center focus:outline-none cursor-pointer group text-center border-none bg-transparent"
+              aria-label="MANISH & CO Home"
+            >
+              <span 
+                className="font-serif text-[21px] sm:text-[25px] md:text-[28px] lg:text-[31px] font-bold tracking-[0.12em] text-[#111111] uppercase leading-none group-hover:text-[#8C6D46] transition-colors whitespace-nowrap"
+                style={{ fontFamily: "'Cormorant Garamond', 'Playfair Display', Georgia, serif" }}
+              >
+                MANISH &amp; CO
+              </span>
+              <div className="flex items-center justify-center gap-1.5 mt-0.5 sm:mt-1">
+                <span className="h-[0.5px] w-3 sm:w-5 bg-gray-300" />
+                <span 
+                  className="font-sans text-[8px] sm:text-[9.5px] tracking-[0.3em] text-[#8C6D46] uppercase font-semibold whitespace-nowrap"
+                >
+                  SILVERS
+                </span>
+                <span className="h-[0.5px] w-3 sm:w-5 bg-gray-300" />
+              </div>
+            </button>
+          </div>
+
+          {/* RIGHT: Search Bar + Profile + Wishlist + Cart (Matching Screenshot) */}
+          <div className="flex items-center justify-end gap-2 sm:gap-4 md:gap-5 w-1/3" ref={searchContainerRef}>
+            
+            {/* Desktop Embedded Search Box */}
+            <div className="relative hidden md:block">
+              <form onSubmit={handleSearchSubmit} className="relative flex items-center">
+                <input
+                  ref={searchInputRef}
+                  type="text"
+                  value={searchVal}
+                  onChange={(e) => setSearchVal(e.target.value)}
+                  onFocus={() => setIsSearchFocused(true)}
+                  placeholder="Search"
+                  className="w-32 lg:w-48 xl:w-56 py-1 pl-1 pr-7 text-[13px] bg-transparent border-b border-gray-300 focus:border-gray-900 focus:outline-none text-gray-800 placeholder-gray-500 font-sans transition-colors"
+                />
+                <button
+                  type="submit"
+                  aria-label="Submit Search"
+                  className="absolute right-0 top-1/2 -translate-y-1/2 text-gray-600 hover:text-black cursor-pointer p-0.5"
+                >
+                  <Search className="w-4.5 h-4.5" strokeWidth={1.5} />
+                </button>
+              </form>
+
+              {/* Autocomplete Dropdown under search */}
+              {isSearchFocused && searchSuggestions.length > 0 && (
+                <div className="absolute right-0 top-full mt-2 w-72 bg-white border border-gray-200 rounded-lg shadow-xl p-2 z-50">
+                  <div className="text-[10px] font-semibold uppercase tracking-wider text-gray-400 px-2 py-1">
+                    Matching Products
+                  </div>
+                  {searchSuggestions.map((prod) => (
+                    <button
+                      key={prod.id}
+                      onClick={() => {
+                        triggerAudio('click');
+                        navigateToPDP?.(prod);
+                        setIsSearchFocused(false);
+                      }}
+                      className="w-full flex items-center gap-2.5 p-2 hover:bg-gray-50 rounded-md transition-colors text-left cursor-pointer border-none bg-transparent"
+                    >
+                      <img 
+                        src={getOptimizedImageUrl(prod.img, { width: 80 })} 
+                        alt={prod.name} 
+                        className="w-8 h-8 object-contain rounded border border-gray-100 bg-[#F9F9F9]" 
+                      />
+                      <div className="flex-1 min-w-0">
+                        <div className="text-xs font-medium text-gray-900 truncate">{prod.name}</div>
+                        <div className="text-[11px] text-[#8C6D46] font-semibold">
+                          ₹{formatPrice?.(calculatePrice?.(prod)?.total || prod.price) || prod.price}
+                        </div>
+                      </div>
+                    </button>
+                  ))}
+                </div>
+              )}
+            </div>
+
+            {/* Mobile Search Icon Toggle */}
+            <button
+              onClick={() => {
+                triggerAudio('click');
+                setSearchOpenMobile(!searchOpenMobile);
+              }}
+              aria-label="Search"
+              className="md:hidden p-1.5 text-gray-800 hover:text-black cursor-pointer"
+            >
+              <Search className="w-5 h-5" strokeWidth={1.5} />
+            </button>
+
+            {/* Profile / Account Icon */}
+            <button
+              onClick={() => {
+                triggerAudio('click');
+                openCustomerAccount?.('orders');
+              }}
+              aria-label="Customer Account"
+              title="My Account & Orders"
+              className="p-1.5 text-gray-800 hover:text-black transition-colors cursor-pointer focus:outline-none"
+            >
+              <User className="w-5 h-5 sm:w-5.5 sm:h-5.5" strokeWidth={1.5} />
+            </button>
+
+            {/* Wishlist Heart Icon */}
+            <button
+              onClick={() => {
+                triggerAudio('click');
+                setWishlistOpen(true);
+              }}
+              aria-label="Wishlist"
+              title="View Wishlist"
+              className="relative p-1.5 text-gray-800 hover:text-black transition-colors cursor-pointer focus:outline-none"
+            >
+              <Heart className="w-5 h-5 sm:w-5.5 sm:h-5.5" strokeWidth={1.5} />
+              {wishlistItems?.length > 0 && (
+                <span className="absolute -top-0.5 -right-0.5 bg-[#8C6D46] text-white text-[9px] font-bold min-w-4 h-4 px-1 rounded-full flex items-center justify-center">
+                  {wishlistItems.length}
+                </span>
+              )}
+            </button>
+
+            {/* Shopping Cart Icon with Badge */}
+            <button
+              onClick={() => {
+                triggerAudio('click');
+                setCartOpen(true);
+              }}
+              aria-label="Shopping Cart"
+              title="View Shopping Bag"
+              className="relative p-1.5 text-gray-800 hover:text-black transition-colors cursor-pointer focus:outline-none"
+            >
+              <ShoppingCart className="w-5 h-5 sm:w-5.5 sm:h-5.5" strokeWidth={1.5} />
+              <span className="absolute -top-1 -right-1 bg-[#1A1A1A] text-white text-[10px] font-bold min-w-4.5 h-4.5 px-1 rounded-full flex items-center justify-center shadow-xs">
+                {cartItemCount || 0}
+              </span>
+            </button>
+
+          </div>
+
+        </div>
+      </div>
+
+      {/* ==========================================================
+          MOBILE SEARCH INPUT (DROPDOWN)
+          ========================================================== */}
+      {searchOpenMobile && (
+        <div className="md:hidden w-full bg-[#FAFAFA] border-b border-gray-200 px-4 py-2.5">
+          <form onSubmit={handleSearchSubmit} className="relative flex items-center">
+            <input
+              type="text"
+              value={searchVal}
+              onChange={(e) => setSearchVal(e.target.value)}
+              placeholder="Search Rings, Earrings, Silver Jewellery..."
+              autoFocus
+              className="w-full py-1.5 pl-3 pr-9 text-xs bg-white border border-gray-300 rounded-full focus:outline-none focus:border-gray-800 text-gray-800"
+            />
+            <button
+              type="submit"
+              className="absolute right-3 text-gray-600 hover:text-black"
+            >
+              <Search className="w-4 h-4" />
+            </button>
+          </form>
         </div>
       )}
+
+      {/* ==========================================================
+          TIER 3: CATEGORY NAVIGATION BAR (Reference Screenshot Exact)
+          ========================================================== */}
+      <div className="w-full bg-white border-b border-gray-200">
+        
+        {/* Desktop Horizontal Category List */}
+        <div className="max-w-[1536px] mx-auto px-4 sm:px-6 lg:px-10 hidden md:flex items-center justify-center gap-4 lg:gap-6 xl:gap-8 py-2.5">
+          {navCategories.map((item, idx) => (
+            <button
+              key={idx}
+              onClick={() => {
+                triggerAudio('click');
+                item.action();
+              }}
+              className="text-[13px] lg:text-[13.5px] font-medium text-[#222222] hover:text-[#8C6D46] transition-colors whitespace-nowrap cursor-pointer border-none bg-transparent py-1 tracking-tight"
+            >
+              {item.label}
+            </button>
+          ))}
+        </div>
+
+        {/* Mobile Horizontal Scroll Strip for Instant Access */}
+        <div className="md:hidden flex items-center overflow-x-auto no-scrollbar py-2 px-3 gap-3 text-xs font-medium text-gray-800 whitespace-nowrap scroll-smooth">
+          {navCategories.map((item, idx) => (
+            <button
+              key={idx}
+              onClick={() => {
+                triggerAudio('click');
+                item.action();
+              }}
+              className="px-2.5 py-1 rounded-full bg-gray-100 hover:bg-gray-200 text-gray-800 text-xs font-medium transition-colors shrink-0"
+            >
+              {item.label}
+            </button>
+          ))}
+        </div>
+
+      </div>
 
       {/* ==========================================================
           MOBILE NAVIGATION DRAWER
           ========================================================== */}
       {mobileMenuOpen && (
-        <div className="md:hidden bg-[#050B14] border-t border-white/10 px-6 py-6 space-y-4 shadow-2xl animate-fade-in">
-          <div className="flex flex-col space-y-3 font-sans">
-            <button
-              onClick={() => {
-                triggerAudio('click');
-                navigateTo('home');
-                setMobileMenuOpen(false);
-              }}
-              className="text-left text-base font-medium text-white hover:text-[#C5A880] py-2 border-b border-white/5 flex items-center justify-between"
-            >
-              <span>Home</span>
-              <ChevronRight className="w-4 h-4 text-gray-500" />
-            </button>
+        <div className="md:hidden bg-white border-b border-gray-200 px-6 py-5 space-y-4 shadow-xl animate-fade-in max-h-[80vh] overflow-y-auto">
+          
+          <div className="pb-3 border-b border-gray-100 flex items-center justify-between text-xs text-gray-500">
+            <span>Customer Care</span>
+            <a href="tel:+919714312202" className="font-semibold text-gray-900">+91 97143 12202</a>
+          </div>
 
-            <button
-              onClick={() => {
-                triggerAudio('click');
-                changeCategoryTab?.('Collections');
-                navigateTo('collections');
-                setMobileMenuOpen(false);
-              }}
-              className="text-left text-base font-medium text-white hover:text-[#C5A880] py-2 border-b border-white/5 flex items-center justify-between"
-            >
-              <span>Collections</span>
-              <ChevronRight className="w-4 h-4 text-gray-500" />
-            </button>
+          <div className="space-y-1">
+            <div className="text-[11px] font-bold uppercase tracking-wider text-gray-400 mb-2">
+              Browse Categories
+            </div>
+            {navCategories.map((item, idx) => (
+              <button
+                key={idx}
+                onClick={() => {
+                  triggerAudio('click');
+                  item.action();
+                  setMobileMenuOpen(false);
+                }}
+                className="w-full text-left py-2 text-sm font-medium text-gray-800 hover:text-[#8C6D46] border-b border-gray-50 flex items-center justify-between"
+              >
+                <span>{item.label}</span>
+                <ChevronRight className="w-4 h-4 text-gray-400" />
+              </button>
+            ))}
+          </div>
 
+          <div className="pt-3 border-t border-gray-100 space-y-2">
             <button
               onClick={() => {
                 triggerAudio('click');
                 navigateTo('about-us');
                 setMobileMenuOpen(false);
               }}
-              className="text-left text-base font-medium text-white hover:text-[#C5A880] py-2 border-b border-white/5 flex items-center justify-between"
+              className="w-full text-left py-1.5 text-xs font-medium text-gray-600 hover:text-black flex items-center justify-between"
             >
-              <span>About Us</span>
-              <ChevronRight className="w-4 h-4 text-gray-500" />
+              <span>About MANISH &amp; CO</span>
+              <ChevronRight className="w-3.5 h-3.5 text-gray-400" />
             </button>
-
-            <button
-              onClick={() => {
-                triggerAudio('click');
-                navigateTo('valuation');
-                setMobileMenuOpen(false);
-              }}
-              className="text-left text-base font-medium text-white hover:text-[#C5A880] py-2 border-b border-white/5 flex items-center justify-between"
-            >
-              <span>Silver Guide &amp; Bullion</span>
-              <ChevronRight className="w-4 h-4 text-gray-500" />
-            </button>
-
             <button
               onClick={() => {
                 triggerAudio('click');
                 navigateTo('showrooms');
                 setMobileMenuOpen(false);
               }}
-              className="text-left text-base font-medium text-white hover:text-[#C5A880] py-2 border-b border-white/5 flex items-center justify-between"
+              className="w-full text-left py-1.5 text-xs font-medium text-gray-600 hover:text-black flex items-center justify-between"
             >
-              <span>Contact &amp; Showrooms</span>
-              <ChevronRight className="w-4 h-4 text-gray-500" />
+              <span>Our Showrooms &amp; Contact</span>
+              <ChevronRight className="w-3.5 h-3.5 text-gray-400" />
+            </button>
+            <button
+              onClick={() => {
+                triggerAudio('click');
+                openCustomerAccount?.('orders');
+                setMobileMenuOpen(false);
+              }}
+              className="w-full text-left py-1.5 text-xs font-medium text-gray-600 hover:text-black flex items-center justify-between"
+            >
+              <span>My Orders &amp; Tracking</span>
+              <ChevronRight className="w-3.5 h-3.5 text-gray-400" />
             </button>
           </div>
 
-          <div className="pt-3 border-t border-white/10 flex items-center justify-between text-xs text-gray-400">
-            <span>925 Sterling Silver • BIS Hallmarked</span>
-            <span className="text-[#C5A880]">Authentic Luxury</span>
-          </div>
         </div>
       )}
-    </nav>
+
+    </header>
   );
 }

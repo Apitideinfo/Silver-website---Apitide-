@@ -254,7 +254,7 @@ export default function Checkout({ navigateTo, triggerAudio }) {
                 bookingApi.updateOrderEmailStatus(result.id, {
                   invoiceEmailSent: true,
                   emailSentAt: new Date().toISOString(),
-                  invoiceEmailRecipient: deliveryForm.email || 'orders@manishandco.com'
+                  invoiceEmailRecipient: deliveryForm.email || 'manishandco.shop@gmail.com'
                 }).catch(e => console.warn("Email status update warning:", e));
               }).catch(emailErr => {
                 console.warn("Email dispatch error (order remains safely confirmed):", emailErr);
@@ -380,7 +380,7 @@ export default function Checkout({ navigateTo, triggerAudio }) {
         bookingApi.updateOrderEmailStatus(result.id, {
           invoiceEmailSent: true,
           emailSentAt: new Date().toISOString(),
-          invoiceEmailRecipient: deliveryForm.email || 'orders@manishandco.com'
+          invoiceEmailRecipient: deliveryForm.email || 'manishandco.shop@gmail.com'
         }).catch(e => console.warn("Email status update warning:", e));
       }).catch(emailErr => {
         console.warn("Email dispatch error (order remains safely confirmed):", emailErr);

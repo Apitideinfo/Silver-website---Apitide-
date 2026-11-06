@@ -746,19 +746,31 @@ export default function Collections({
   };
 
   // Primary Category options list with luxury SVG icons
-  const primaryCategories = useMemo(() => [
-    { id: 'Collections', label: 'All Collections', icon: <Sparkles className="w-3.5 h-3.5" /> },
-    { id: 'Earrings', label: 'Earrings', icon: <Sparkles className="w-3.5 h-3.5" /> },
-    { id: 'Rings', label: 'Rings', icon: <CircleDot className="w-3.5 h-3.5" /> },
-    { id: 'Necklaces', label: 'Necklaces & Chains', icon: <Crown className="w-3.5 h-3.5" /> },
-    { id: 'Pendants', label: 'Pendants', icon: <Gem className="w-3.5 h-3.5" /> },
-    { id: 'Bangles', label: 'Bangles', icon: <Circle className="w-3.5 h-3.5" /> },
-    { id: 'Bracelets', label: 'Bracelets', icon: <Disc className="w-3.5 h-3.5" /> },
-    { id: 'Mangalsutra', label: 'Mangalsutra', icon: <Heart className="w-3.5 h-3.5" /> },
-    { id: 'Silver', label: 'Silver Collection', icon: <Award className="w-3.5 h-3.5" /> },
-    { id: 'Solitaires', label: 'Solitaires', icon: <Gem className="w-3.5 h-3.5" /> },
-    { id: 'Kids Jewellery', label: 'Kids Jewellery', icon: <Baby className="w-3.5 h-3.5" /> },
-  ], []);
+  const primaryCategories = useMemo(() => {
+    const list = Array.isArray(categories) && categories.length > 0 ? categories : INITIAL_CATEGORIES;
+    const base = [
+      { id: 'Collections', label: 'All Collections', icon: <Sparkles className="w-3.5 h-3.5" /> },
+      { id: 'Silver', label: 'Silver Collection', icon: <Award className="w-3.5 h-3.5" /> },
+    ];
+    const dynamicItems = list.map((cat) => ({
+      id: cat.id || cat.slug || cat.name,
+      label: cat.name,
+      icon: <Gem className="w-3.5 h-3.5" />
+    }));
+
+    // Avoid duplicate IDs
+    const seen = new Set(['collections', 'silver']);
+    const merged = [...base];
+    dynamicItems.forEach((item) => {
+      const key = String(item.id).toLowerCase();
+      if (!seen.has(key)) {
+        seen.add(key);
+        merged.push(item);
+      }
+    });
+
+    return merged;
+  }, [categories]);
 
   // Determine current metal mode for dynamic purity options
   const isSilverActive = ['silver', 'all silver', '925 silver', '925 sterling silver', 'normal silver', '999 silver'].includes(metalFilter.toLowerCase());
@@ -991,7 +1003,7 @@ export default function Collections({
           name="description"
           content={`Explore pure BIS 925 sterling silver ${activeCategoryTab.toLowerCase()} crafted by master silversmiths at MANISH & CO. Insured pan-India delivery.`}
         />
-        <meta property="og:title" content={`${activeCategoryTab} — Fine Silver Jewellery | MANISH & CO`} />
+        <meta property="og:title" content={`${activeCategoryTab} — Fine Jewellery | MANISH & CO`} />
         <meta property="og:description" content={`Browse bespoke 925 sterling silver ${activeCategoryTab.toLowerCase()} and royal heirloom treasures.`} />
         <meta property="og:type" content="website" />
       </Helmet>

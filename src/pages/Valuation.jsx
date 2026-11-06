@@ -263,7 +263,7 @@ export default function Valuation({
                   </div>
                   <div>
                     <h3 className="serif-luxury text-xl font-bold text-[#0D2B4E]">01. Select Precious Metal</h3>
-                    <p className="text-[11px] text-gray-500">Choose between 925 fine silver or hallmarked gold</p>
+                    <p className="text-[11px] text-gray-500">Choose between 925 sterling silver or hallmarked gold</p>
                   </div>
                 </div>
                 <span className="text-[10px] font-bold uppercase tracking-wider text-[#D4AF37] bg-[#0D2B4E] px-3 py-1 rounded-full">
@@ -286,7 +286,7 @@ export default function Valuation({
                   }`}
                 >
                   <Sparkles className="w-4 h-4 text-[#D4AF37]" />
-                  <span>925 Fine Silver</span>
+                  <span>925 Sterling Silver</span>
                 </button>
 
                 <button
@@ -498,7 +498,7 @@ export default function Valuation({
                     LIVE ATELIER QUOTE
                   </span>
                   <h4 className="serif-luxury text-2xl font-bold text-white mt-0.5">
-                    {selectedMetal === 'silver' ? '925 Fine Silver' : 'Fine Gold Bullion'}
+                    {selectedMetal === 'silver' ? '925 Sterling Silver' : 'Fine Gold Bullion'}
                   </h4>
                   <span className="text-xs text-white/70 font-mono">
                     Grade: {selectedPurity} Standard

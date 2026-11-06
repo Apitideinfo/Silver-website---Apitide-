@@ -4,12 +4,12 @@ import { doc, getDoc, setDoc } from 'firebase/firestore';
 import { FIRESTORE_COLLECTIONS } from '../config/constants';
 
 export const DEFAULT_PRICE_CATEGORIES = [
-  { id: 'tier-199', title: 'Under ₹199', price: 199, color: 'pink', active: true },
-  { id: 'tier-229', title: 'Under ₹229', price: 229, color: 'yellow', active: true },
   { id: 'tier-299', title: 'Under ₹299', price: 299, color: 'red', active: true },
   { id: 'tier-499', title: 'Under ₹499', price: 499, color: 'blue', active: true },
   { id: 'tier-799', title: 'Under ₹799', price: 799, color: 'green', active: true },
   { id: 'tier-999', title: 'Under ₹999', price: 999, color: 'purple', active: true },
+  { id: 'tier-199', title: 'Under ₹199', price: 199, color: 'pink', active: true },
+  { id: 'tier-229', title: 'Under ₹229', price: 229, color: 'yellow', active: true },
 ];
 
 export const COLOR_OPTIONS = [

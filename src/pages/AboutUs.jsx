@@ -72,10 +72,10 @@ export default function AboutUs({ navigateTo, triggerAudio: triggerAudioProp }) 
   return (
     <div className="min-h-screen bg-[#F8F5EC] text-[#202329] font-sans selection:bg-[#6B4B2E]/20 selection:text-[#091B2B]">
       <Helmet>
-        <title>About Us | MANISH & CO - Fine Silver Jewellery & Heirlooms</title>
+        <title>About Us | MANISH & CO - Fine Jewellery & Heirlooms</title>
         <meta 
           name="description" 
-          content="Discover MANISH & CO, Uttar Pradesh's premier maison of BIS 925 Hallmarked Fine Silver, Polki Jadau, and Royal Heirloom jewellery crafted with generational devotion since 1996." 
+          content="Discover MANISH & CO, Uttar Pradesh's premier maison of BIS 925 Hallmarked Sterling Silver, Polki Jadau, and Royal Heirloom jewellery crafted with generational devotion since 1996." 
         />
       </Helmet>
 
@@ -400,7 +400,7 @@ export default function AboutUs({ navigateTo, triggerAudio: triggerAudioProp }) 
               </h2>
               <div className="w-16 h-[1.5px] bg-[#D4AF37] mt-2"></div>
               <p className="text-xs sm:text-sm text-white/75 font-light leading-relaxed font-sans">
-                Step into a world of curated elegance. Our flagship boutique houses private consultation lounges, a 3D CAD design desk, and our complete 925 fine silver collections.
+                Step into a world of curated elegance. Our flagship boutique houses private consultation lounges, a 3D CAD design desk, and our complete 925 sterling silver collections.
               </p>
             </div>
 
