@@ -147,8 +147,8 @@ export default function Navbar({
       <div className="w-full bg-white border-b border-gray-100">
         <div className="max-w-[1536px] mx-auto px-4 sm:px-6 lg:px-10 h-16 sm:h-[72px] flex items-center justify-between gap-4">
           
-          {/* LEFT: Customer Care (Desktop) / Hamburger + Care (Mobile) */}
-          <div className="flex items-center gap-3 w-1/3 min-w-0">
+          {/* LEFT: Hamburger Menu & Customer Care */}
+          <div className="flex items-center gap-1 sm:gap-3 shrink-0">
             {/* Mobile Hamburger Toggle */}
             <button
               onClick={() => {
@@ -156,59 +156,59 @@ export default function Navbar({
                 setMobileMenuOpen(!mobileMenuOpen);
               }}
               aria-label="Open Navigation Menu"
-              className="md:hidden p-1.5 -ml-1.5 text-gray-800 hover:text-black focus:outline-none cursor-pointer rounded-md"
+              className="md:hidden p-1.5 -ml-1 text-gray-800 hover:text-black focus:outline-none cursor-pointer rounded-md"
             >
               {mobileMenuOpen ? <X className="w-6 h-6" /> : <Menu className="w-6 h-6" />}
             </button>
 
             {/* Desktop Customer Care link */}
             <a 
-              href="tel:+919714312202"
+              href="tel:+919451638680"
               className="hidden md:inline-flex items-center text-[13px] lg:text-[13.5px] text-gray-700 hover:text-black font-sans tracking-tight transition-colors whitespace-nowrap"
             >
-              Customer Care: <span className="font-medium ml-1 text-gray-900">+91 97143 12202</span>
+              Customer Care: <span className="font-medium ml-1 text-gray-900">+91 94516 38680</span>
             </a>
 
-            {/* Mobile Phone link */}
+            {/* Mobile Phone Call Link */}
             <a 
-              href="tel:+919714312202"
+              href="tel:+919451638680"
               aria-label="Call Customer Care"
-              className="md:hidden text-gray-700 hover:text-black p-1"
+              className="hidden xs:inline-flex md:hidden text-gray-700 hover:text-black p-1"
             >
               <Phone className="w-4 h-4" />
             </a>
           </div>
 
-          {/* CENTER: BRAND LOGO (MANISH & CO replacing "eri SILVERS") */}
-          <div className="flex items-center justify-center w-1/3 text-center">
+          {/* CENTER: BRAND LOGO (Fluid width so search icon NEVER overlaps on mobile) */}
+          <div className="flex-1 min-w-0 flex items-center justify-center text-center px-1">
             <button
               onClick={() => {
                 triggerAudio('click');
                 navigateTo('home');
               }}
-              className="flex flex-col items-center justify-center focus:outline-none cursor-pointer group text-center border-none bg-transparent"
+              className="flex flex-col items-center justify-center focus:outline-none cursor-pointer group text-center border-none bg-transparent max-w-full"
               aria-label="MANISH & CO Home"
             >
               <span 
-                className="font-serif text-[21px] sm:text-[25px] md:text-[28px] lg:text-[31px] font-bold tracking-[0.12em] text-[#111111] uppercase leading-none group-hover:text-[#8C6D46] transition-colors whitespace-nowrap"
+                className="font-serif text-[17px] xs:text-[19px] sm:text-[24px] md:text-[28px] lg:text-[31px] font-bold tracking-[0.06em] xs:tracking-[0.08em] sm:tracking-[0.12em] text-[#111111] uppercase leading-none group-hover:text-[#8C6D46] transition-colors whitespace-nowrap"
                 style={{ fontFamily: "'Cormorant Garamond', 'Playfair Display', Georgia, serif" }}
               >
                 MANISH &amp; CO
               </span>
-              <div className="flex items-center justify-center gap-1.5 mt-0.5 sm:mt-1">
-                <span className="h-[0.5px] w-3 sm:w-5 bg-gray-300" />
+              <div className="flex items-center justify-center gap-1 sm:gap-1.5 mt-0.5 sm:mt-1">
+                <span className="h-[0.5px] w-2.5 sm:w-5 bg-gray-300" />
                 <span 
-                  className="font-sans text-[8px] sm:text-[9.5px] tracking-[0.3em] text-[#8C6D46] uppercase font-semibold whitespace-nowrap"
+                  className="font-sans text-[7px] xs:text-[7.5px] sm:text-[9.5px] tracking-[0.2em] sm:tracking-[0.3em] text-[#8C6D46] uppercase font-semibold whitespace-nowrap"
                 >
-                  SILVERS
+                  FINE JEWELLERY
                 </span>
-                <span className="h-[0.5px] w-3 sm:w-5 bg-gray-300" />
+                <span className="h-[0.5px] w-2.5 sm:w-5 bg-gray-300" />
               </div>
             </button>
           </div>
 
-          {/* RIGHT: Search Bar + Profile + Wishlist + Cart (Matching Screenshot) */}
-          <div className="flex items-center justify-end gap-2 sm:gap-4 md:gap-5 w-1/3" ref={searchContainerRef}>
+          {/* RIGHT: Search Bar + Profile + Wishlist + Cart (Clean spacing) */}
+          <div className="flex items-center justify-end gap-1 xs:gap-1.5 sm:gap-4 md:gap-5 shrink-0" ref={searchContainerRef}>
             
             {/* Desktop Embedded Search Box */}
             <div className="relative hidden md:block">
@@ -399,7 +399,7 @@ export default function Navbar({
           
           <div className="pb-3 border-b border-gray-100 flex items-center justify-between text-xs text-gray-500">
             <span>Customer Care</span>
-            <a href="tel:+919714312202" className="font-semibold text-gray-900">+91 97143 12202</a>
+            <a href="tel:+919451638680" className="font-semibold text-gray-900">+91 94516 38680</a>
           </div>
 
           <div className="space-y-1">

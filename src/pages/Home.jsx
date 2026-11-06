@@ -721,8 +721,8 @@ export default function Home({
           else if (diff < -45) prevHeroSlide();
         }}
       >
-        {/* Banner Images Carousel Container */}
-        <div className="relative w-full aspect-[2172/724] min-h-[190px] sm:min-h-[280px] md:min-h-[380px] lg:min-h-[460px] xl:min-h-[520px] overflow-hidden bg-[#050B14]">
+        {/* Banner Images Carousel Container - Full Image Visible with Zero Cropping */}
+        <div className="relative w-full aspect-[2200/715] min-h-[125px] sm:min-h-[260px] md:min-h-[360px] lg:min-h-[460px] xl:min-h-[520px] overflow-hidden bg-[#050B14]">
           <AnimatePresence initial={false} mode="wait">
             <motion.div
               key={currentHeroSlide}
@@ -744,7 +744,7 @@ export default function Home({
                 <img
                   src={heroBanners[currentHeroSlide].png}
                   alt={heroBanners[currentHeroSlide].alt}
-                  className="w-full h-full object-cover sm:object-contain object-center select-none"
+                  className="w-full h-full object-contain sm:object-cover object-center select-none"
                   loading="eager"
                   fetchPriority="high"
                   decoding="async"
@@ -753,26 +753,26 @@ export default function Home({
             </motion.div>
           </AnimatePresence>
 
-          {/* Left Navigation Arrow */}
+          {/* Left Navigation Arrow (Hidden on mobile swipe to avoid blocking banner text) */}
           <button
             onClick={(e) => {
               e.stopPropagation();
               prevHeroSlide();
             }}
             aria-label="Previous Banner"
-            className="absolute left-2 sm:left-4 lg:left-6 top-1/2 -translate-y-1/2 w-8 h-8 sm:w-11 sm:h-11 rounded-full bg-black/35 hover:bg-black/70 text-white backdrop-blur-md border border-white/20 flex items-center justify-center transition-all duration-300 opacity-80 hover:opacity-100 hover:scale-105 active:scale-95 cursor-pointer z-20 focus:outline-none shadow-lg"
+            className="hidden sm:flex absolute left-2 sm:left-4 lg:left-6 top-1/2 -translate-y-1/2 w-8 h-8 sm:w-11 sm:h-11 rounded-full bg-black/35 hover:bg-black/70 text-white backdrop-blur-md border border-white/20 items-center justify-center transition-all duration-300 opacity-80 hover:opacity-100 hover:scale-105 active:scale-95 cursor-pointer z-20 focus:outline-none shadow-lg"
           >
             <ChevronLeft className="w-5 h-5 sm:w-6 sm:h-6" />
           </button>
 
-          {/* Right Navigation Arrow */}
+          {/* Right Navigation Arrow (Hidden on mobile swipe to avoid blocking banner text) */}
           <button
             onClick={(e) => {
               e.stopPropagation();
               nextHeroSlide();
             }}
             aria-label="Next Banner"
-            className="absolute right-2 sm:right-4 lg:right-6 top-1/2 -translate-y-1/2 w-8 h-8 sm:w-11 sm:h-11 rounded-full bg-black/35 hover:bg-black/70 text-white backdrop-blur-md border border-white/20 flex items-center justify-center transition-all duration-300 opacity-80 hover:opacity-100 hover:scale-105 active:scale-95 cursor-pointer z-20 focus:outline-none shadow-lg"
+            className="hidden sm:flex absolute right-2 sm:right-4 lg:right-6 top-1/2 -translate-y-1/2 w-8 h-8 sm:w-11 sm:h-11 rounded-full bg-black/35 hover:bg-black/70 text-white backdrop-blur-md border border-white/20 items-center justify-center transition-all duration-300 opacity-80 hover:opacity-100 hover:scale-105 active:scale-95 cursor-pointer z-20 focus:outline-none shadow-lg"
           >
             <ChevronRight className="w-5 h-5 sm:w-6 sm:h-6" />
           </button>
@@ -799,9 +799,9 @@ export default function Home({
         </div>
 
         {/* Value Proposition Trust Badges Row */}
-        <div className="w-full bg-[#08121E] border-t border-b border-white/10 py-3.5 sm:py-4 px-4 sm:px-6">
-          <div className="max-w-6xl mx-auto grid grid-cols-2 lg:grid-cols-4 gap-4 sm:gap-6 lg:gap-8 items-center justify-items-center" role="list">
-            <div role="listitem" className="flex items-center justify-center gap-2.5 sm:gap-3 p-1 w-full max-w-[260px]">
+        <div className="w-full bg-[#08121E] border-t border-b border-white/10 py-3 sm:py-4 px-3 sm:px-6">
+          <div className="max-w-6xl mx-auto grid grid-cols-2 lg:grid-cols-4 gap-2.5 sm:gap-6 lg:gap-8 items-center justify-items-center" role="list">
+            <div role="listitem" className="flex items-center justify-start sm:justify-center gap-2 sm:gap-3 p-1 w-full max-w-[260px]">
               <div className="w-7 h-7 sm:w-8 sm:h-8 rounded-full bg-white/5 flex items-center justify-center shrink-0 border border-white/10">
                 <ShieldCheck className="w-4 h-4 text-[#C5A880]" strokeWidth={1.8} />
               </div>
@@ -966,7 +966,7 @@ export default function Home({
                   </div>
 
                   {/* Category Label */}
-                  <span className="mt-2.5 sm:mt-3 text-xs sm:text-[13.5px] font-sans font-semibold text-[#0D2B4E] tracking-tight group-hover:text-[#8C6D46] transition-colors text-center whitespace-nowrap">
+                  <span className="mt-2 sm:mt-3 text-[11.5px] sm:text-[13.5px] font-sans font-semibold text-[#0D2B4E] tracking-tight group-hover:text-[#8C6D46] transition-colors text-center block w-full truncate px-0.5">
                     {cat.name}
                   </span>
                 </button>
