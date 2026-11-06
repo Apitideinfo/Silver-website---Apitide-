@@ -797,51 +797,6 @@ export default function Home({
             ))}
           </div>
         </div>
-
-        {/* Value Proposition Trust Badges Row */}
-        <div className="w-full bg-[#08121E] border-t border-b border-white/10 py-3 sm:py-4 px-3 sm:px-6">
-          <div className="max-w-6xl mx-auto grid grid-cols-2 lg:grid-cols-4 gap-2.5 sm:gap-6 lg:gap-8 items-center justify-items-center" role="list">
-            <div role="listitem" className="flex items-center justify-start sm:justify-center gap-2 sm:gap-3 p-1 w-full max-w-[260px]">
-              <div className="w-7 h-7 sm:w-8 sm:h-8 rounded-full bg-white/5 flex items-center justify-center shrink-0 border border-white/10">
-                <ShieldCheck className="w-4 h-4 text-[#C5A880]" strokeWidth={1.8} />
-              </div>
-              <div className="flex flex-col text-left">
-                <span className="text-white text-xs sm:text-[13px] font-bold leading-tight font-sans">925 Pure Silver</span>
-                <span className="text-gray-400 text-[10px] sm:text-[11px] leading-tight font-sans">Certified Hallmarked</span>
-              </div>
-            </div>
-
-            <div role="listitem" className="flex items-center justify-center gap-2.5 sm:gap-3 p-1 w-full max-w-[260px]">
-              <div className="w-7 h-7 sm:w-8 sm:h-8 rounded-full bg-white/5 flex items-center justify-center shrink-0 border border-white/10">
-                <Gem className="w-4 h-4 text-[#C5A880]" strokeWidth={1.8} />
-              </div>
-              <div className="flex flex-col text-left">
-                <span className="text-white text-xs sm:text-[13px] font-bold leading-tight font-sans">Master Craftsmanship</span>
-                <span className="text-gray-400 text-[10px] sm:text-[11px] leading-tight font-sans">Heirloom Hand-finished</span>
-              </div>
-            </div>
-
-            <div role="listitem" className="flex items-center justify-center gap-2.5 sm:gap-3 p-1 w-full max-w-[260px]">
-              <div className="w-7 h-7 sm:w-8 sm:h-8 rounded-full bg-white/5 flex items-center justify-center shrink-0 border border-white/10">
-                <Truck className="w-4 h-4 text-[#C5A880]" strokeWidth={1.8} />
-              </div>
-              <div className="flex flex-col text-left">
-                <span className="text-white text-xs sm:text-[13px] font-bold leading-tight font-sans">Pan-India Delivery</span>
-                <span className="text-gray-400 text-[10px] sm:text-[11px] leading-tight font-sans">100% Insured Transit</span>
-              </div>
-            </div>
-
-            <div role="listitem" className="flex items-center justify-center gap-2.5 sm:gap-3 p-1 w-full max-w-[260px]">
-              <div className="w-7 h-7 sm:w-8 sm:h-8 rounded-full bg-white/5 flex items-center justify-center shrink-0 border border-white/10">
-                <Package className="w-4 h-4 text-[#C5A880]" strokeWidth={1.8} />
-              </div>
-              <div className="flex flex-col text-left">
-                <span className="text-white text-xs sm:text-[13px] font-bold leading-tight font-sans">Luxury Packaging</span>
-                <span className="text-gray-400 text-[10px] sm:text-[11px] leading-tight font-sans">Certificate & Box</span>
-              </div>
-            </div>
-          </div>
-        </div>
       </section>
 
       {/* Divider */}
