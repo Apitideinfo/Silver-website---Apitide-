@@ -1024,9 +1024,9 @@ export default function ProductDetail({
                   <div className="grid grid-cols-1 md:grid-cols-3 gap-4 text-left">
                     {/* Card 1: METAL */}
                     <div className="bg-[#FAF9F6] border border-[#E7DED2]/60 p-5 rounded-2xl space-y-4 shadow-xs relative">
-                      <div className="flex items-center justify-between text-xs font-bold text-[#3F1F54] uppercase tracking-wider border-b border-gray-200/50 pb-2.5">
+                      <div className="flex items-center justify-between text-xs font-bold text-[#0D2B4E] uppercase tracking-wider border-b border-gray-200/50 pb-2.5">
                         <span className="flex items-center gap-2">
-                          <Scale className="w-3.5 h-3.5 text-[#C8A646]" />
+                          <Scale className="w-3.5 h-3.5 text-[#6B4B2E]" />
                           <span>Metal</span>
                         </span>
                       </div>
@@ -1048,9 +1048,9 @@ export default function ProductDetail({
 
                     {/* Card 2: DIMENSION */}
                     <div className="bg-[#FAF9F6] border border-[#E7DED2]/60 p-5 rounded-2xl space-y-4 shadow-xs relative">
-                      <div className="flex items-center justify-between text-xs font-bold text-[#3F1F54] uppercase tracking-wider border-b border-gray-200/50 pb-2.5">
+                      <div className="flex items-center justify-between text-xs font-bold text-[#0D2B4E] uppercase tracking-wider border-b border-gray-200/50 pb-2.5">
                         <span className="flex items-center gap-2">
-                          <Ruler className="w-3.5 h-3.5 text-[#C8A646]" />
+                          <Ruler className="w-3.5 h-3.5 text-[#6B4B2E]" />
                           <span>Dimension</span>
                         </span>
                       </div>
@@ -1065,9 +1065,9 @@ export default function ProductDetail({
                     {/* Card 3: DIAMOND & GEMS */}
                     {(detailProduct.category === 'diamond' || detailProduct.diamondCarat || detailProduct.diamondValue || detailProduct.diamondColor || detailProduct.diamondClarity || detailProduct.diamondShape || detailProduct.diamondQuantity || detailProduct.stoneCarat || detailProduct.beadsCarat || detailProduct.pearlsCarat || detailProduct.gemstoneCarat || detailProduct.polki || detailProduct.polkiValue) && (
                       <div className="bg-[#FAF9F6] border border-[#E7DED2]/60 p-5 rounded-2xl space-y-4 shadow-xs relative">
-                        <div className="flex items-center justify-between text-xs font-bold text-[#3F1F54] uppercase tracking-wider border-b border-gray-200/50 pb-2.5">
+                        <div className="flex items-center justify-between text-xs font-bold text-[#0D2B4E] uppercase tracking-wider border-b border-gray-200/50 pb-2.5">
                           <span className="flex items-center gap-2">
-                            <Gem className="w-3.5 h-3.5 text-[#C8A646]" />
+                            <Gem className="w-3.5 h-3.5 text-[#6B4B2E]" />
                             <span>Diamond &amp; Gems</span>
                           </span>
                         </div>
@@ -1282,7 +1282,7 @@ export default function ProductDetail({
                               Diamond ({detailProduct.diamondQuantity ? `${detailProduct.diamondQuantity} pcs` : '1 pcs'}{detailProduct.diamondCarat || detailProduct.diamondWeight ? `, ${detailProduct.diamondCarat || detailProduct.diamondWeight}ct` : ''})
                             </span>
                             {discountOffDiamond > 0 && (
-                              <span className="bg-[#E8F5E9] text-[#006361] text-[9px] font-bold px-1.5 py-0.5 rounded font-sans">
+                              <span className="bg-[#F5EDE4] text-[#6B4B2E] text-[9px] font-bold px-1.5 py-0.5 rounded font-sans">
                                 {discountOffDiamond}% OFF
                               </span>
                             )}
@@ -1360,14 +1360,14 @@ export default function ProductDetail({
 
                       {/* Item Discount Row */}
                       {itemDiscountAmt > 0 && (
-                        <div className="flex justify-between items-center py-1 text-[#006361]">
+                        <div className="flex justify-between items-center py-1 text-[#6B4B2E]">
                           <span className="flex items-center gap-1.5">
                             <span>Discount</span>
-                            <span className="bg-[#E8F5E9] text-[#006361] text-[9px] font-bold px-1.5 py-0.5 rounded font-sans">
+                            <span className="bg-[#F5EDE4] text-[#6B4B2E] text-[9px] font-bold px-1.5 py-0.5 rounded font-sans">
                               {itemDiscountPct}% OFF
                             </span>
                           </span>
-                          <span className="font-semibold font-mono text-[#006361]">
+                          <span className="font-semibold font-mono text-[#6B4B2E]">
                             -₹{(Number(itemDiscountAmt) || 0).toLocaleString('en-IN')}
                           </span>
                         </div>
@@ -1393,7 +1393,7 @@ export default function ProductDetail({
 
                       {/* You Save Row */}
                       {saveAmount > 0 && (
-                        <div className="flex justify-between items-center py-1 text-[11px] text-[#006361] font-semibold">
+                        <div className="flex justify-between items-center py-1 text-[11px] text-[#6B4B2E] font-semibold">
                           <span>🎉 You Save</span>
                           <span className="font-mono">₹{(Number(saveAmount) || 0).toLocaleString('en-IN')}</span>
                         </div>
@@ -1403,11 +1403,11 @@ export default function ProductDetail({
 
                   {/* Save Green Banner */}
                   {saveAmount > 0 && (
-                    <div className="bg-[#EEF7F2] border border-[#A3D9C9] rounded-xl px-5 py-4 flex items-center justify-between text-xs">
-                      <span className="font-bold text-[#006361] uppercase tracking-wider">
+                    <div className="bg-[#FAF8F5] border border-[#6B4B2E]/30 rounded-xl px-5 py-4 flex items-center justify-between text-xs">
+                      <span className="font-bold text-[#0D2B4E] uppercase tracking-wider">
                         Save on this jewellery
                       </span>
-                      <span className="font-mono font-black text-sm text-[#006361] font-bold">
+                      <span className="font-mono font-black text-sm text-[#6B4B2E] font-bold">
                         ₹{saveAmount.toLocaleString('en-IN')}
                       </span>
                     </div>

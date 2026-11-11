@@ -253,7 +253,7 @@ export default function AdminOrders({
               font-size: 12px;
             }
             .table-items th {
-              background: #12071B;
+              background: #0D2B4E;
               color: #fff;
               font-weight: 600;
               text-transform: uppercase;

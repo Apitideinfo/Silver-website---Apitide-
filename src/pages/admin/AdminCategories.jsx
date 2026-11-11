@@ -1212,7 +1212,7 @@ export default function AdminCategories({
                           />
                         </div>
                         <div className="mt-2">
-                          <span className="font-sans text-[11px] font-bold text-[#1F142B] uppercase tracking-wide block truncate">
+                          <span className="font-sans text-[11px] font-bold text-[#0D2B4E] uppercase tracking-wide block truncate">
                             {currentCard.title || 'COLLECTION TITLE'}
                           </span>
                           <span className="font-sans text-[9px] text-[#8C6D46] font-medium block truncate mt-0.5">

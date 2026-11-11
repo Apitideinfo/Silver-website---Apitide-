@@ -63,7 +63,7 @@ export default function MainLayout({
   };
 
   return (
-    <div className="font-sans min-h-screen relative overflow-x-clip bg-[#F8F5EC] text-[#202329] selection:bg-[#0D2B4E]/15 selection:text-[#0D2B4E]">
+    <div className="font-sans min-h-screen relative overflow-x-clip bg-white text-[#0D2B4E] selection:bg-[#0D2B4E]/15 selection:text-[#0D2B4E]">
       {/* Navigation Header (Distraction-free checkout mode hides main header) */}
       {currentPage !== 'checkout' && (
         <Navbar

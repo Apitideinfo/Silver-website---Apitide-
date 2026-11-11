@@ -707,7 +707,7 @@ export default function Home({
       <section
         id="hero-section"
         aria-label="Manish and Co Fine Jewellery Hero Showcase"
-        className="relative w-full overflow-hidden select-none bg-[#050B14]"
+        className="relative w-full overflow-hidden select-none bg-[#091B2B]"
         onMouseEnter={() => setIsHeroPaused(true)}
         onMouseLeave={() => setIsHeroPaused(false)}
         onTouchStart={(e) => {
@@ -722,7 +722,7 @@ export default function Home({
         }}
       >
         {/* Banner Images Carousel Container - Full Image Visible with Zero Cropping */}
-        <div className="relative w-full aspect-[2200/715] min-h-[125px] sm:min-h-[260px] md:min-h-[360px] lg:min-h-[460px] xl:min-h-[520px] overflow-hidden bg-[#050B14]">
+        <div className="relative w-full aspect-[2200/715] min-h-[125px] sm:min-h-[260px] md:min-h-[360px] lg:min-h-[460px] xl:min-h-[520px] overflow-hidden bg-[#091B2B]">
           <AnimatePresence initial={false} mode="wait">
             <motion.div
               key={currentHeroSlide}
@@ -806,13 +806,13 @@ export default function Home({
           TOP CONCIERGE BAR: CUSTOM DESIGN & BOOK AN APPOINTMENT
           Direct WhatsApp Connect (+91 94516 38680)
           ========================================================== */}
-      <div className="w-full bg-[#17131F] text-white py-2.5 sm:py-3 px-4 border-b border-[#C8A646]/30 shadow-xs relative z-20">
+      <div className="w-full bg-[#0D2B4E] text-white py-2.5 sm:py-3 px-4 border-b border-[#6B4B2E]/40 shadow-xs relative z-20">
         <div className="max-w-[1536px] mx-auto px-2 sm:px-6 flex flex-col md:flex-row items-center justify-between gap-2.5 sm:gap-4 text-center md:text-left">
           
           <div className="flex items-center gap-2 sm:gap-3">
-            <span className="w-2 h-2 rounded-full bg-[#C8A646] animate-pulse shrink-0" />
-            <p className="text-xs sm:text-[13px] font-sans text-[#EAE2D5] tracking-wide m-0">
-              <strong className="text-[#C8A646] font-semibold">Bespoke Atelier:</strong> Share your custom design or meet our master silversmith for a private appointment.
+            <span className="w-2 h-2 rounded-full bg-[#6B4B2E] animate-pulse shrink-0" />
+            <p className="text-xs sm:text-[13px] font-sans text-white/90 tracking-wide m-0">
+              <strong className="text-[#B09A82] font-semibold">Bespoke Atelier:</strong> Share your custom design or meet our master silversmith for a private appointment.
             </p>
           </div>
 
@@ -824,10 +824,10 @@ export default function Home({
                 triggerAudio('click');
                 setCustomDesignOpen(true);
               }}
-              className="inline-flex items-center justify-center gap-1 sm:gap-2 px-2.5 sm:px-4 py-2 sm:py-2 rounded-full border border-[#C8A646]/80 bg-white/5 hover:bg-[#C8A646] hover:text-[#17131F] text-[#F3E5C8] font-sans text-[11px] sm:text-[12.5px] font-bold tracking-wider uppercase transition-all duration-300 shadow-xs cursor-pointer active:scale-95 focus:outline-none whitespace-nowrap"
+              className="inline-flex items-center justify-center gap-1 sm:gap-2 px-2.5 sm:px-4 py-2 sm:py-2 rounded-full border border-[#6B4B2E] bg-white/5 hover:bg-[#6B4B2E] hover:text-white text-white font-sans text-[11px] sm:text-[12.5px] font-bold tracking-wider uppercase transition-all duration-300 shadow-xs cursor-pointer active:scale-95 focus:outline-none whitespace-nowrap"
               title="Upload your design photo directly on WhatsApp"
             >
-              <Sparkles className="w-3 h-3 sm:w-3.5 sm:h-3.5 text-[#C8A646] shrink-0" />
+              <Sparkles className="w-3 h-3 sm:w-3.5 sm:h-3.5 text-[#B09A82] shrink-0" />
               <span>Custom Design</span>
             </button>
 
@@ -838,10 +838,10 @@ export default function Home({
                 triggerAudio('click');
                 setConsultationModal(true);
               }}
-              className="inline-flex items-center justify-center gap-1 sm:gap-2 px-2.5 sm:px-5 py-2 sm:py-2 rounded-full bg-gradient-to-r from-[#C8A646] to-[#A37B4D] hover:from-[#D8BA65] hover:to-[#B58C5E] text-[#17131F] font-sans text-[11px] sm:text-[12.5px] font-bold tracking-wider uppercase transition-all duration-300 shadow-[0_3px_12px_rgba(200,166,70,0.35)] cursor-pointer active:scale-95 focus:outline-none whitespace-nowrap"
+              className="inline-flex items-center justify-center gap-1 sm:gap-2 px-2.5 sm:px-5 py-2 sm:py-2 rounded-full bg-gradient-to-r from-[#6B4B2E] to-[#8C6D46] hover:from-[#7B5534] hover:to-[#9D7D54] text-white font-sans text-[11px] sm:text-[12.5px] font-bold tracking-wider uppercase transition-all duration-300 shadow-[0_3px_12px_rgba(107,75,46,0.35)] cursor-pointer active:scale-95 focus:outline-none whitespace-nowrap"
               title="Book a private visit or live consultation"
             >
-              <Calendar className="w-3 h-3 sm:w-3.5 sm:h-3.5 text-[#17131F] shrink-0" />
+              <Calendar className="w-3 h-3 sm:w-3.5 sm:h-3.5 text-white shrink-0" />
               <span>Appointment</span>
             </button>
           </div>
@@ -849,8 +849,8 @@ export default function Home({
         </div>
       </div>
 
-      {/* Main Content Area (White/Ivory background) */}
-      <div className="bg-[#F8F5EC] text-[#202329] transition-colors duration-500 !mt-0">
+      {/* Main Content Area (Clean White background) */}
+      <div className="bg-white text-[#0D2B4E] transition-colors duration-500 !mt-0">
 
         {/* ==========================================================
           SECTION: SHOP BY CATEGORY ("Silver For Every Story")
@@ -1156,16 +1156,16 @@ export default function Home({
           <div className="max-w-[1536px] mx-auto px-4 sm:px-8 lg:px-12">
             
             <div className="text-center mb-8 sm:mb-10">
-              <span className="text-[11px] sm:text-xs font-sans font-bold tracking-[0.28em] text-[#8C6D46] uppercase block mb-2">
+              <span className="text-[11px] sm:text-xs font-sans font-bold tracking-[0.28em] text-[#6B4B2E] uppercase block mb-2">
                 FESTIVE CELEBRATIONS
               </span>
               <h2 
-                className="text-2xl sm:text-3xl md:text-[34px] font-bold text-[#1F142B] tracking-tight"
+                className="text-2xl sm:text-3xl md:text-[34px] font-bold text-[#0D2B4E] tracking-tight"
                 style={{ fontFamily: "'Cormorant Garamond', 'Playfair Display', Georgia, serif" }}
               >
                 Silver Gifting Hampers
               </h2>
-              <div className="w-12 h-[2px] bg-[#C8A646] mx-auto mt-3 rounded-full" />
+              <div className="w-12 h-[2px] bg-[#6B4B2E] mx-auto mt-3 rounded-full" />
             </div>
 
             <div className="grid grid-cols-2 md:grid-cols-4 gap-4 sm:gap-6 lg:gap-7">
@@ -1179,7 +1179,7 @@ export default function Home({
                       navigateTo(hamper.path);
                     }
                   }}
-                  className="group relative w-full aspect-square rounded-2xl overflow-hidden bg-white shadow-xs hover:shadow-xl transition-all duration-300 transform hover:-translate-y-1.5 focus:outline-none cursor-pointer border border-[#E8DFD5] hover:border-[#C8A646]"
+                  className="group relative w-full aspect-square rounded-2xl overflow-hidden bg-white shadow-xs hover:shadow-xl transition-all duration-300 transform hover:-translate-y-1.5 focus:outline-none cursor-pointer border border-[#E8DFD5] hover:border-[#6B4B2E]"
                   aria-label={hamper.title}
                 >
                   <picture className="w-full h-full block">
@@ -1236,10 +1236,10 @@ export default function Home({
             
             {/* Header: ✨ Made for Every Kind of Love ✨ */}
             <div className="text-center mb-8 sm:mb-10">
-              <h2 className="text-xl sm:text-2xl md:text-[26px] font-sans font-bold text-[#1F142B] tracking-tight inline-flex items-center justify-center gap-2">
-                <span className="text-amber-500 text-lg">✨</span>
+              <h2 className="text-xl sm:text-2xl md:text-[26px] font-sans font-bold text-[#0D2B4E] tracking-tight inline-flex items-center justify-center gap-2">
+                <span className="text-[#6B4B2E] text-lg">✨</span>
                 <span>Made for Every Kind of Love</span>
-                <span className="text-amber-500 text-lg">✨</span>
+                <span className="text-[#6B4B2E] text-lg">✨</span>
               </h2>
             </div>
 
@@ -1255,7 +1255,7 @@ export default function Home({
                   }}
                   className="flex flex-col items-center group cursor-pointer"
                 >
-                  <div className="relative w-full aspect-square rounded-2xl sm:rounded-[30px] overflow-hidden bg-[#E8DEF8]/30 border border-[#D0BCFF]/30 shadow-xs hover:shadow-xl transition-all duration-300 transform group-hover:-translate-y-1.5 group-hover:scale-[1.02]">
+                  <div className="relative w-full aspect-square rounded-2xl sm:rounded-[30px] overflow-hidden bg-[#F5EDE4] border border-[#E8DFD5] shadow-xs hover:shadow-xl transition-all duration-300 transform group-hover:-translate-y-1.5 group-hover:scale-[1.02]">
                     <picture className="w-full h-full block">
                       <source srcSet={card.imgWebp} type="image/webp" />
                       <img 
@@ -1274,14 +1274,14 @@ export default function Home({
                         triggerAudio('click');
                         toggleWishlistLoveCard(card.id);
                       }}
-                      className="absolute top-2 right-2 sm:top-3 sm:right-3 w-7 h-7 sm:w-9 sm:h-9 rounded-full bg-white/95 hover:bg-white shadow-xs hover:shadow-md flex items-center justify-center text-[#571B3E] transition-all duration-300 hover:scale-110 z-10 focus:outline-none cursor-pointer"
+                      className="absolute top-2 right-2 sm:top-3 sm:right-3 w-7 h-7 sm:w-9 sm:h-9 rounded-full bg-white/95 hover:bg-white shadow-xs hover:shadow-md flex items-center justify-center text-[#6B4B2E] transition-all duration-300 hover:scale-110 z-10 focus:outline-none cursor-pointer"
                       aria-label="Save to Wishlist"
                     >
                       <Heart 
                         className={`w-3.5 h-3.5 sm:w-4 sm:h-4 transition-all duration-200 ${
                           wishlistLoveCards.includes(card.id)
-                            ? 'fill-[#571B3E] text-[#571B3E] scale-110'
-                            : 'fill-transparent text-[#571B3E] hover:fill-[#571B3E]/20'
+                            ? 'fill-[#6B4B2E] text-[#6B4B2E] scale-110'
+                            : 'fill-transparent text-[#6B4B2E] hover:fill-[#6B4B2E]/20'
                         }`} 
                         strokeWidth={1.8}
                       />
@@ -1291,8 +1291,8 @@ export default function Home({
                   <div className="mt-3.5 sm:mt-4 text-center">
                     <span className={`text-xs sm:text-[13px] font-sans font-bold tracking-wider uppercase transition-colors ${
                       card.active 
-                        ? 'text-[#571B3E] border-b-2 border-[#571B3E] pb-0.5' 
-                        : 'text-[#1F142B] group-hover:text-[#571B3E]'
+                        ? 'text-[#6B4B2E] border-b-2 border-[#6B4B2E] pb-0.5' 
+                        : 'text-[#0D2B4E] group-hover:text-[#6B4B2E]'
                     }`}>
                       {card.title}
                     </span>
@@ -1313,16 +1313,16 @@ export default function Home({
             
             {/* Section Header */}
             <div className="text-center mb-6 sm:mb-8">
-              <span className="text-[11px] sm:text-xs font-sans font-bold tracking-[0.25em] text-[#8C6D46] uppercase block mb-1.5">
+              <span className="text-[11px] sm:text-xs font-sans font-bold tracking-[0.25em] text-[#6B4B2E] uppercase block mb-1.5">
                 CURATED FOR EVERYONE
               </span>
               <h2 
-                className="text-2xl sm:text-3xl md:text-[34px] font-bold text-[#1F142B] tracking-tight"
+                className="text-2xl sm:text-3xl md:text-[34px] font-bold text-[#0D2B4E] tracking-tight"
                 style={{ fontFamily: "'Cormorant Garamond', 'Playfair Display', Georgia, serif" }}
               >
                 Shop By Recipient &amp; Style
               </h2>
-              <div className="w-12 h-[2px] bg-[#C8A646] mx-auto mt-2.5 rounded-full" />
+              <div className="w-12 h-[2px] bg-[#6B4B2E] mx-auto mt-2.5 rounded-full" />
             </div>
 
             {/* Audience Segmented Filter Tabs */}
@@ -1337,8 +1337,8 @@ export default function Home({
                   }}
                   className={`inline-flex items-center gap-2 px-4 sm:px-6 py-2 sm:py-2.5 rounded-full font-sans text-xs sm:text-[13px] font-bold tracking-wider uppercase transition-all duration-300 cursor-pointer border focus:outline-none ${
                     activeAudienceTab === sec.id
-                      ? 'bg-[#17131F] text-[#F3E5C8] border-[#17131F] shadow-md scale-102'
-                      : 'bg-[#FAF8F5] text-gray-700 border-gray-200 hover:border-[#8C6D46] hover:bg-white'
+                      ? 'bg-[#0D2B4E] text-white border-[#0D2B4E] shadow-md scale-102'
+                      : 'bg-white text-[#0D2B4E] border-gray-200 hover:border-[#6B4B2E] hover:text-[#6B4B2E]'
                   }`}
                 >
                   <span className="text-sm">{sec.icon}</span>
@@ -1397,7 +1397,7 @@ export default function Home({
                         </div>
 
                         <div className="mt-3 text-center w-full px-1">
-                          <h4 className="text-xs sm:text-[13.5px] font-sans font-bold text-[#1F142B] group-hover:text-[#8C6D46] transition-colors leading-tight uppercase tracking-tight">
+                          <h4 className="text-xs sm:text-[13.5px] font-sans font-bold text-[#0D2B4E] group-hover:text-[#6B4B2E] transition-colors leading-tight uppercase tracking-tight">
                             {item.name}
                           </h4>
                           <p className="text-[10px] sm:text-[11px] font-sans text-gray-500 font-medium mt-0.5 truncate">
@@ -1423,13 +1423,13 @@ export default function Home({
             
             {/* Header: 🎁 Eri's Best Picks 🎁 with fine luxury divider lines */}
             <div className="max-w-4xl mx-auto flex items-center justify-center mb-8 sm:mb-12 px-2 sm:px-4">
-              <div className="flex-1 h-[1.5px] sm:h-[2px] bg-[#E8C88A] rounded-full" />
-              <span className="px-2.5 sm:px-6 text-sm xs:text-base sm:text-[18px] md:text-[20px] font-serif font-bold text-[#1F142B] flex items-center gap-1.5 sm:gap-2 whitespace-nowrap tracking-wide">
+              <div className="flex-1 h-[1.5px] sm:h-[2px] bg-[#6B4B2E] rounded-full" />
+              <span className="px-2.5 sm:px-6 text-sm xs:text-base sm:text-[18px] md:text-[20px] font-serif font-bold text-[#0D2B4E] flex items-center gap-1.5 sm:gap-2 whitespace-nowrap tracking-wide">
                 <span>🎁</span>
                 <span>Eri’s Best Picks</span>
                 <span>🎁</span>
               </span>
-              <div className="flex-1 h-[1.5px] sm:h-[2px] bg-[#E8C88A] rounded-full" />
+              <div className="flex-1 h-[1.5px] sm:h-[2px] bg-[#6B4B2E] rounded-full" />
             </div>
 
             {/* 2 Arched Cards Grid */}
@@ -1445,12 +1445,12 @@ export default function Home({
                 className="flex flex-col items-center group cursor-pointer"
               >
                 {/* Arch Window Frame with Gold Gradient & Mandala Watermark */}
-                <div className="relative w-full max-w-[290px] xs:max-w-[330px] md:max-w-none mx-auto aspect-[4/5] sm:aspect-[3/4] rounded-t-full border-[3px] border-[#E8C88A] bg-gradient-to-b from-[#FFFDF9] via-[#FAF5EA] to-[#FFFFFF] p-6 sm:p-8 flex items-center justify-center overflow-hidden shadow-xs hover:shadow-xl transition-all duration-500 group-hover:-translate-y-1.5">
+                <div className="relative w-full max-w-[290px] xs:max-w-[330px] md:max-w-none mx-auto aspect-[4/5] sm:aspect-[3/4] rounded-t-full border-[3px] border-[#6B4B2E]/40 bg-gradient-to-b from-[#FFFDF9] via-[#FAF5EA] to-[#FFFFFF] p-6 sm:p-8 flex items-center justify-center overflow-hidden shadow-xs hover:shadow-xl transition-all duration-500 group-hover:-translate-y-1.5">
                   
                   {/* Sacred Mandala SVG Watermark Motif in Arch */}
                   <svg 
                     viewBox="0 0 200 200" 
-                    className="absolute -top-10 inset-x-0 mx-auto w-52 h-52 sm:w-60 sm:h-60 opacity-[0.22] pointer-events-none text-[#C8A646] group-hover:scale-105 transition-transform duration-700"
+                    className="absolute -top-10 inset-x-0 mx-auto w-52 h-52 sm:w-60 sm:h-60 opacity-[0.22] pointer-events-none text-[#6B4B2E] group-hover:scale-105 transition-transform duration-700"
                   >
                     <circle cx="100" cy="100" r="90" fill="none" stroke="currentColor" strokeWidth="1" strokeDasharray="3,3" />
                     <circle cx="100" cy="100" r="70" fill="none" stroke="currentColor" strokeWidth="0.8" />
@@ -1498,12 +1498,12 @@ export default function Home({
                 {/* Typography below arch: Infinity Ring */}
                 <div className="mt-4 sm:mt-5 text-center">
                   <h3 
-                    className="text-2xl sm:text-3xl text-[#1F142B] tracking-tight leading-none"
+                    className="text-2xl sm:text-3xl text-[#0D2B4E] tracking-tight leading-none"
                     style={{ fontFamily: "'Cormorant Garamond', 'Playfair Display', Georgia, serif" }}
                   >
-                    <span className="font-bold">Infinity</span> <span className="font-light italic text-[#8C6D46]">Ring</span>
+                    <span className="font-bold">Infinity</span> <span className="font-light italic text-[#6B4B2E]">Ring</span>
                   </h3>
-                  <span className="inline-flex items-center gap-1.5 text-xs sm:text-[13px] font-sans text-[#8C6D46] font-semibold tracking-wider uppercase mt-1.5 group-hover:text-[#0D2B4E] transition-colors">
+                  <span className="inline-flex items-center gap-1.5 text-xs sm:text-[13px] font-sans text-[#6B4B2E] font-semibold tracking-wider uppercase mt-1.5 group-hover:text-[#0D2B4E] transition-colors">
                     <span>Explore Ring</span>
                     <span className="text-sm">→</span>
                   </span>
@@ -1520,12 +1520,12 @@ export default function Home({
                 className="flex flex-col items-center group cursor-pointer"
               >
                 {/* Arch Window Frame with Gold Gradient & Mandala Watermark */}
-                <div className="relative w-full max-w-[290px] xs:max-w-[330px] md:max-w-none mx-auto aspect-[4/5] sm:aspect-[3/4] rounded-t-full border-[3px] border-[#E8C88A] bg-gradient-to-b from-[#FFFDF9] via-[#FAF5EA] to-[#FFFFFF] p-6 sm:p-8 flex items-center justify-center overflow-hidden shadow-xs hover:shadow-xl transition-all duration-500 group-hover:-translate-y-1.5">
+                <div className="relative w-full max-w-[290px] xs:max-w-[330px] md:max-w-none mx-auto aspect-[4/5] sm:aspect-[3/4] rounded-t-full border-[3px] border-[#6B4B2E]/40 bg-gradient-to-b from-[#FFFDF9] via-[#FAF5EA] to-[#FFFFFF] p-6 sm:p-8 flex items-center justify-center overflow-hidden shadow-xs hover:shadow-xl transition-all duration-500 group-hover:-translate-y-1.5">
                   
                   {/* Sacred Mandala SVG Watermark Motif in Arch */}
                   <svg 
                     viewBox="0 0 200 200" 
-                    className="absolute -top-10 inset-x-0 mx-auto w-52 h-52 sm:w-60 sm:h-60 opacity-[0.22] pointer-events-none text-[#C8A646] group-hover:scale-105 transition-transform duration-700"
+                    className="absolute -top-10 inset-x-0 mx-auto w-52 h-52 sm:w-60 sm:h-60 opacity-[0.22] pointer-events-none text-[#6B4B2E] group-hover:scale-105 transition-transform duration-700"
                   >
                     <circle cx="100" cy="100" r="90" fill="none" stroke="currentColor" strokeWidth="1" strokeDasharray="3,3" />
                     <circle cx="100" cy="100" r="70" fill="none" stroke="currentColor" strokeWidth="0.8" />
@@ -1573,12 +1573,12 @@ export default function Home({
                 {/* Typography below arch: Heart Pendant */}
                 <div className="mt-4 sm:mt-5 text-center">
                   <h3 
-                    className="text-2xl sm:text-3xl text-[#1F142B] tracking-tight leading-none"
+                    className="text-2xl sm:text-3xl text-[#0D2B4E] tracking-tight leading-none"
                     style={{ fontFamily: "'Cormorant Garamond', 'Playfair Display', Georgia, serif" }}
                   >
-                    <span className="font-bold">Heart</span> <span className="font-light italic text-[#8C6D46]">Pendant</span>
+                    <span className="font-bold">Heart</span> <span className="font-light italic text-[#6B4B2E]">Pendant</span>
                   </h3>
-                  <span className="inline-flex items-center gap-1.5 text-xs sm:text-[13px] font-sans text-[#8C6D46] font-semibold tracking-wider uppercase mt-1.5 group-hover:text-[#0D2B4E] transition-colors">
+                  <span className="inline-flex items-center gap-1.5 text-xs sm:text-[13px] font-sans text-[#6B4B2E] font-semibold tracking-wider uppercase mt-1.5 group-hover:text-[#0D2B4E] transition-colors">
                     <span>Explore Pendant</span>
                     <span className="text-sm">→</span>
                   </span>
@@ -1593,7 +1593,7 @@ export default function Home({
         {/* ==========================================================
           CLIENT FEEDBACK SECTION 4: GEMS COLLECTION (Feedback #10)
           ========================================================== */}
-        <section id="gems-collection-section" className="w-full py-14 sm:py-20 bg-[#050B14] border-b border-white/10 select-none text-left text-white">
+        <section id="gems-collection-section" className="w-full py-14 sm:py-20 bg-[#091B2B] border-b border-white/10 select-none text-left text-white">
           <div className="max-w-[1536px] mx-auto px-6 sm:px-10 lg:px-14">
 
             {/* Editorial Header */}
@@ -1692,17 +1692,17 @@ export default function Home({
         {/* ==========================================================
           CLIENT FEEDBACK SECTION 3: GOLD PLATING (Feedback #6.2)
           ========================================================== */}
-        <section id="gold-plating-section" className="w-full py-14 sm:py-20 bg-[#F5ECE4] border-b border-[#E8DFD5] select-none text-left">
+        <section id="gold-plating-section" className="w-full py-14 sm:py-20 bg-white border-b border-[#E8DFD5] select-none text-left">
           <div className="max-w-[1536px] mx-auto px-6 sm:px-10 lg:px-14">
 
             {/* Editorial Header */}
             <div className="flex flex-col lg:flex-row items-start lg:items-end justify-between gap-6 mb-10 sm:mb-12">
               <div>
-                <span className="inline-block text-[#8C6D46] text-xs sm:text-[13px] font-sans font-semibold tracking-[0.28em] uppercase mb-2">
+                <span className="inline-block text-[#6B4B2E] text-xs sm:text-[13px] font-sans font-semibold tracking-[0.28em] uppercase mb-2">
                   18K DUAL TONE ROYALTY
                 </span>
                 <h2
-                  className="text-3xl sm:text-4xl lg:text-[46px] font-bold text-[#1A1817] leading-tight"
+                  className="text-3xl sm:text-4xl lg:text-[46px] font-bold text-[#0D2B4E] leading-tight"
                   style={{ fontFamily: "'Cormorant Garamond', 'Playfair Display', Georgia, serif" }}
                 >
                   Gold Plating Collection
@@ -1717,7 +1717,7 @@ export default function Home({
                   changeCategoryTab?.('Collections');
                   navigateTo('collections');
                 }}
-                className="inline-flex items-center gap-2.5 px-8 py-3.5 bg-[#785B3C] hover:bg-[#8F6D48] active:scale-95 text-white font-sans text-xs sm:text-[12.5px] font-semibold tracking-[0.2em] uppercase transition-all duration-300 shadow-[0_4px_16px_rgba(120,91,60,0.25)] cursor-pointer rounded-none"
+                className="inline-flex items-center gap-2.5 px-8 py-3.5 bg-[#6B4B2E] hover:bg-[#0D2B4E] active:scale-95 text-white font-sans text-xs sm:text-[12.5px] font-semibold tracking-[0.2em] uppercase transition-all duration-300 shadow-[0_4px_16px_rgba(107,75,46,0.25)] cursor-pointer rounded-none"
               >
                 <span>SHOP GOLD PLATED</span>
                 <span className="text-sm font-light">→</span>
@@ -1757,20 +1757,20 @@ export default function Home({
           </div>
         </section>
 
-        <section id="our-collections" className="w-full py-12 sm:py-16 lg:py-20 bg-[#F5ECE4] border-b border-[#E8DFD5] select-none">
+        <section id="our-collections" className="w-full py-12 sm:py-16 lg:py-20 bg-white border-b border-[#E8DFD5] select-none">
           <div className="max-w-[1536px] mx-auto px-6 sm:px-10 lg:px-14">
             <div className="flex flex-col lg:flex-row items-center justify-between gap-10 lg:gap-14">
 
               {/* Left Column: Editorial Brand Headline */}
               <div className="w-full lg:w-[32%] xl:w-[28%] shrink-0 text-left">
                 {/* Eyebrow */}
-                <span className="inline-block text-[#8C6D46] text-xs sm:text-[13px] font-sans font-semibold tracking-[0.28em] uppercase mb-3 sm:mb-4">
+                <span className="inline-block text-[#6B4B2E] text-xs sm:text-[13px] font-sans font-semibold tracking-[0.28em] uppercase mb-3 sm:mb-4">
                   OUR COLLECTIONS
                 </span>
 
                 {/* Main Serif Headline */}
                 <h2
-                  className="text-3xl sm:text-4xl lg:text-[44px] xl:text-[48px] font-bold text-[#1A1817] leading-[1.08] mb-4 sm:mb-5"
+                  className="text-3xl sm:text-4xl lg:text-[44px] xl:text-[48px] font-bold text-[#0D2B4E] leading-[1.08] mb-4 sm:mb-5"
                   style={{ fontFamily: "'Cormorant Garamond', 'Playfair Display', Georgia, serif" }}
                 >
                   Crafted for<br />
@@ -1790,7 +1790,7 @@ export default function Home({
                       changeCategoryTab?.('Collections');
                       navigateTo('collections');
                     }}
-                    className="inline-flex items-center gap-2.5 px-8 py-3.5 bg-[#785B3C] hover:bg-[#8F6D48] active:scale-95 text-white font-sans text-xs sm:text-[12.5px] font-semibold tracking-[0.2em] uppercase transition-all duration-300 shadow-[0_4px_16px_rgba(120,91,60,0.25)] cursor-pointer rounded-none"
+                    className="inline-flex items-center gap-2.5 px-8 py-3.5 bg-[#6B4B2E] hover:bg-[#0D2B4E] active:scale-95 text-white font-sans text-xs sm:text-[12.5px] font-semibold tracking-[0.2em] uppercase transition-all duration-300 shadow-[0_4px_16px_rgba(107,75,46,0.25)] cursor-pointer rounded-none"
                   >
                     <span>SHOP ALL</span>
                     <span className="text-sm font-light">→</span>
@@ -1819,10 +1819,10 @@ export default function Home({
                     />
                     <div className="absolute inset-0 bg-black/0 group-hover:bg-black/10 transition-colors duration-300" />
                   </div>
-                  <h3 className="font-sans font-semibold text-xs sm:text-[13px] tracking-[0.22em] uppercase text-[#1A1817] mt-3 group-hover:text-[#8C6D46] transition-colors">
+                  <h3 className="font-sans font-semibold text-xs sm:text-[13px] tracking-[0.22em] uppercase text-[#0D2B4E] mt-3 group-hover:text-[#6B4B2E] transition-colors">
                     RINGS
                   </h3>
-                  <span className="text-[11px] sm:text-xs text-[#6F6862] group-hover:text-[#8C6D46] group-hover:translate-x-0.5 transition-all inline-flex items-center gap-1 mt-0.5 font-normal">
+                  <span className="text-[11px] sm:text-xs text-[#6F6862] group-hover:text-[#6B4B2E] group-hover:translate-x-0.5 transition-all inline-flex items-center gap-1 mt-0.5 font-normal">
                     <span>Shop Now</span>
                     <span className="text-xs">→</span>
                   </span>
@@ -1846,10 +1846,10 @@ export default function Home({
                     />
                     <div className="absolute inset-0 bg-black/0 group-hover:bg-black/10 transition-colors duration-300" />
                   </div>
-                  <h3 className="font-sans font-semibold text-xs sm:text-[13px] tracking-[0.22em] uppercase text-[#1A1817] mt-3 group-hover:text-[#8C6D46] transition-colors">
+                  <h3 className="font-sans font-semibold text-xs sm:text-[13px] tracking-[0.22em] uppercase text-[#0D2B4E] mt-3 group-hover:text-[#6B4B2E] transition-colors">
                     BRACELETS
                   </h3>
-                  <span className="text-[11px] sm:text-xs text-[#6F6862] group-hover:text-[#8C6D46] group-hover:translate-x-0.5 transition-all inline-flex items-center gap-1 mt-0.5 font-normal">
+                  <span className="text-[11px] sm:text-xs text-[#6F6862] group-hover:text-[#6B4B2E] group-hover:translate-x-0.5 transition-all inline-flex items-center gap-1 mt-0.5 font-normal">
                     <span>Shop Now</span>
                     <span className="text-xs">→</span>
                   </span>
@@ -1873,10 +1873,10 @@ export default function Home({
                     />
                     <div className="absolute inset-0 bg-black/0 group-hover:bg-black/10 transition-colors duration-300" />
                   </div>
-                  <h3 className="font-sans font-semibold text-xs sm:text-[13px] tracking-[0.22em] uppercase text-[#1A1817] mt-3 group-hover:text-[#8C6D46] transition-colors">
+                  <h3 className="font-sans font-semibold text-xs sm:text-[13px] tracking-[0.22em] uppercase text-[#0D2B4E] mt-3 group-hover:text-[#6B4B2E] transition-colors">
                     PENDANTS
                   </h3>
-                  <span className="text-[11px] sm:text-xs text-[#6F6862] group-hover:text-[#8C6D46] group-hover:translate-x-0.5 transition-all inline-flex items-center gap-1 mt-0.5 font-normal">
+                  <span className="text-[11px] sm:text-xs text-[#6F6862] group-hover:text-[#6B4B2E] group-hover:translate-x-0.5 transition-all inline-flex items-center gap-1 mt-0.5 font-normal">
                     <span>Shop Now</span>
                     <span className="text-xs">→</span>
                   </span>
@@ -1900,10 +1900,10 @@ export default function Home({
                     />
                     <div className="absolute inset-0 bg-black/0 group-hover:bg-black/10 transition-colors duration-300" />
                   </div>
-                  <h3 className="font-sans font-semibold text-xs sm:text-[13px] tracking-[0.22em] uppercase text-[#1A1817] mt-3 group-hover:text-[#8C6D46] transition-colors">
+                  <h3 className="font-sans font-semibold text-xs sm:text-[13px] tracking-[0.22em] uppercase text-[#0D2B4E] mt-3 group-hover:text-[#6B4B2E] transition-colors">
                     CHAINS
                   </h3>
-                  <span className="text-[11px] sm:text-xs text-[#6F6862] group-hover:text-[#8C6D46] group-hover:translate-x-0.5 transition-all inline-flex items-center gap-1 mt-0.5 font-normal">
+                  <span className="text-[11px] sm:text-xs text-[#6F6862] group-hover:text-[#6B4B2E] group-hover:translate-x-0.5 transition-all inline-flex items-center gap-1 mt-0.5 font-normal">
                     <span>Shop Now</span>
                     <span className="text-xs">→</span>
                   </span>
@@ -1918,17 +1918,17 @@ export default function Home({
         {/* ==========================================================
           CLIENT FEEDBACK SECTION 1: BEST SELLERS (Feedback #6.1)
           ========================================================== */}
-        <section id="best-sellers" className="w-full py-14 sm:py-20 bg-[#FDFBF7] border-b border-[#EAE3D9] select-none">
+        <section id="best-sellers" className="w-full py-14 sm:py-20 bg-white border-b border-[#EAE3D9] select-none">
           <div className="max-w-[1536px] mx-auto px-6 sm:px-10 lg:px-14">
 
             {/* Editorial Header */}
             <div className="flex flex-col sm:flex-row items-start sm:items-end justify-between gap-4 mb-10 sm:mb-12">
               <div className="text-left">
-                <span className="inline-block text-[#8C6D46] text-xs sm:text-[13px] font-sans font-semibold tracking-[0.28em] uppercase mb-2">
+                <span className="inline-block text-[#6B4B2E] text-xs sm:text-[13px] font-sans font-semibold tracking-[0.28em] uppercase mb-2">
                   CURATED PATRON FAVORITES
                 </span>
                 <h2
-                  className="text-3xl sm:text-4xl lg:text-[46px] font-bold text-[#1A1817] leading-tight"
+                  className="text-3xl sm:text-4xl lg:text-[46px] font-bold text-[#0D2B4E] leading-tight"
                   style={{ fontFamily: "'Cormorant Garamond', 'Playfair Display', Georgia, serif" }}
                 >
                   Best Sellers
@@ -1943,7 +1943,7 @@ export default function Home({
                   changeCategoryTab?.('Collections');
                   navigateTo('collections');
                 }}
-                className="text-[#1A1817] hover:text-[#8C6D46] font-sans text-xs sm:text-[13px] font-semibold tracking-[0.18em] uppercase inline-flex items-center gap-2 transition-colors cursor-pointer group shrink-0"
+                className="text-[#0D2B4E] hover:text-[#6B4B2E] font-sans text-xs sm:text-[13px] font-semibold tracking-[0.18em] uppercase inline-flex items-center gap-2 transition-colors cursor-pointer group shrink-0"
               >
                 <span>Explore All Icons</span>
                 <span className="text-sm font-light transition-transform duration-300 group-hover:translate-x-1.5">→</span>
@@ -2023,7 +2023,7 @@ export default function Home({
 
                     {/* Quick View Pill */}
                     <div className="absolute bottom-3 inset-x-3 opacity-0 group-hover:opacity-100 transition-opacity duration-300">
-                      <div className="w-full py-2 bg-[#8C6D46] text-white text-[10px] sm:text-[11px] font-sans font-bold tracking-[0.18em] uppercase text-center shadow-lg">
+                      <div className="w-full py-2 bg-[#6B4B2E] text-white text-[10px] sm:text-[11px] font-sans font-bold tracking-[0.18em] uppercase text-center shadow-lg">
                         VIEW PIECE →
                       </div>
                     </div>
@@ -2032,7 +2032,7 @@ export default function Home({
                   {/* Card Info */}
                   <div className="p-3.5 sm:p-5 flex flex-col flex-1 justify-between bg-white">
                     <div>
-                      <div className="flex items-center justify-between gap-1 text-[10px] sm:text-[11px] text-[#8C6D46] font-semibold tracking-wider uppercase mb-1">
+                      <div className="flex items-center justify-between gap-1 text-[10px] sm:text-[11px] text-[#6B4B2E] font-semibold tracking-wider uppercase mb-1">
                         <span>{item.purity}</span>
                         <span className="flex items-center gap-1 text-amber-600">
                           <Star className="w-3 h-3 fill-amber-500 text-amber-500" />
@@ -2040,7 +2040,7 @@ export default function Home({
                         </span>
                       </div>
                       <h3
-                        className="font-serif text-sm sm:text-base lg:text-[17px] font-bold text-[#1A1817] group-hover:text-[#8C6D46] transition-colors line-clamp-1"
+                        className="font-serif text-sm sm:text-base lg:text-[17px] font-bold text-[#0D2B4E] group-hover:text-[#6B4B2E] transition-colors line-clamp-1"
                         style={{ fontFamily: "'Cormorant Garamond', 'Playfair Display', Georgia, serif" }}
                       >
                         {item.title}
@@ -2048,10 +2048,10 @@ export default function Home({
                     </div>
 
                     <div className="flex items-center justify-between mt-3 pt-2.5 border-t border-[#F0EAE1]">
-                      <span className="font-serif text-base sm:text-lg font-bold text-[#1A1817]">
+                      <span className="font-serif text-base sm:text-lg font-bold text-[#0D2B4E]">
                         {item.price}
                       </span>
-                      <span className="text-[10px] sm:text-[11px] font-sans tracking-wider uppercase text-gray-500 group-hover:text-[#8C6D46] transition-colors font-medium">
+                      <span className="text-[10px] sm:text-[11px] font-sans tracking-wider uppercase text-gray-500 group-hover:text-[#6B4B2E] transition-colors font-medium">
                         Shop Now →
                       </span>
                     </div>
@@ -2071,7 +2071,7 @@ export default function Home({
           ========================================================== */}
         <section
           id="built-on-purity"
-          className="w-full relative overflow-hidden select-none bg-[#050B14] cursor-pointer group border-b border-white/10"
+          className="w-full relative overflow-hidden select-none bg-[#091B2B] cursor-pointer group border-b border-white/10"
           onClick={() => {
             triggerAudio('click');
             changeCategoryTab?.('Silver', 'silver', 'all');
@@ -2092,7 +2092,7 @@ export default function Home({
         {/* ==========================================================
           BRAND CAMPAIGN VIDEO
           ========================================================== */}
-        <section className="py-20 bg-[#F8F5EC] overflow-hidden text-center">
+        <section className="py-20 bg-white overflow-hidden text-center">
           <div className="max-w-[1836px] mx-auto px-6 sm:px-12 lg:px-16 text-center">
             <div className="grid grid-cols-1 lg:grid-cols-12 gap-12 items-stretch text-center">
 
@@ -2116,7 +2116,7 @@ export default function Home({
                     Your browser does not support HTML5 video.
                   </video>
                   <div className="absolute inset-0 bg-gradient-to-t from-[#091B2B]/80 via-transparent to-transparent flex items-end p-6 text-left pointer-events-none">
-                    <p className="text-[#F8F5EC] text-xs sm:text-sm font-serif tracking-wider drop-shadow-md">
+                    <p className="text-white text-xs sm:text-sm font-serif tracking-wider drop-shadow-md">
                       Handcrafted In Pure 925 Sterling Silver • Centuries of Indian Royal Silversmithing
                     </p>
                   </div>
@@ -2152,9 +2152,9 @@ export default function Home({
           <div className="w-full px-4 md:px-12 space-y-10 relative group/sect text-center">
 
             <div className="text-center space-y-2.5">
-              <span className="text-[10.5px] uppercase tracking-[0.35em] text-[#8C6D46] font-bold font-sans">TAILORED SELECTION</span>
-              <h2 className="serif-luxury text-3xl sm:text-4xl md:text-[42px] font-semibold text-[#1F142B]">Recommended for You</h2>
-              <div className="w-14 h-[2px] bg-[#C8A646] mx-auto mt-2 rounded-full"></div>
+              <span className="text-[10.5px] uppercase tracking-[0.35em] text-[#6B4B2E] font-bold font-sans">TAILORED SELECTION</span>
+              <h2 className="serif-luxury text-3xl sm:text-4xl md:text-[42px] font-semibold text-[#0D2B4E]">Recommended for You</h2>
+              <div className="w-14 h-[2px] bg-[#6B4B2E] mx-auto mt-2 rounded-full"></div>
             </div>
 
             <div
@@ -2169,7 +2169,7 @@ export default function Home({
               {/* Left Scroll button */}
               <button
                 onClick={() => scrollCategories('left')}
-                className="absolute left-2 md:left-4 z-10 p-2.5 rounded-full border border-solid shadow-lg transition-all duration-300 -translate-x-4 opacity-0 group-hover/sect:opacity-100 group-hover/sect:translate-x-0 cursor-pointer hidden md:flex items-center justify-center bg-white/95 backdrop-blur-sm border-[#E6DFD3] text-[#0D2B4E] hover:bg-[#F8F5EC]"
+                className="absolute left-2 md:left-4 z-10 p-2.5 rounded-full border border-solid shadow-lg transition-all duration-300 -translate-x-4 opacity-0 group-hover/sect:opacity-100 group-hover/sect:translate-x-0 cursor-pointer hidden md:flex items-center justify-center bg-white/95 backdrop-blur-sm border-[#E6DFD3] text-[#0D2B4E] hover:bg-[#F5EDE4]"
                 aria-label="Scroll left"
               >
                 <svg className="w-5 h-5 stroke-current fill-none stroke-2" viewBox="0 0 24 24">
@@ -2219,7 +2219,7 @@ export default function Home({
                         />
                       </div>
                       <span
-                        className="font-sans text-[11px] sm:text-xs tracking-wider uppercase font-semibold transition-colors duration-300 text-[#202329] group-hover:text-[#6B4B2E]"
+                        className="font-sans text-[11px] sm:text-xs tracking-wider uppercase font-semibold transition-colors duration-300 text-[#0D2B4E] group-hover:text-[#6B4B2E]"
                       >
                         {cat.name}
                       </span>
@@ -2231,7 +2231,7 @@ export default function Home({
               {/* Right Scroll button */}
               <button
                 onClick={() => scrollCategories('right')}
-                className="absolute right-2 md:right-4 z-10 p-2.5 rounded-full border border-solid shadow-lg transition-all duration-300 translate-x-4 opacity-0 group-hover/sect:opacity-100 group-hover/sect:-translate-x-0 cursor-pointer hidden md:flex items-center justify-center bg-white/95 backdrop-blur-sm border-[#E6DFD3] text-[#0D2B4E] hover:bg-[#F8F5EC]"
+                className="absolute right-2 md:right-4 z-10 p-2.5 rounded-full border border-solid shadow-lg transition-all duration-300 translate-x-4 opacity-0 group-hover/sect:opacity-100 group-hover/sect:-translate-x-0 cursor-pointer hidden md:flex items-center justify-center bg-white/95 backdrop-blur-sm border-[#E6DFD3] text-[#0D2B4E] hover:bg-[#F5EDE4]"
                 aria-label="Scroll right"
               >
                 <svg className="w-5 h-5 stroke-current fill-none stroke-2" viewBox="0 0 24 24">
@@ -2249,7 +2249,7 @@ export default function Home({
           ========================================================== */}
         <section
           id="craftsmanship-journey-banner"
-          className="w-full relative overflow-hidden select-none bg-[#050B14] cursor-pointer group border-y border-white/10"
+          className="w-full relative overflow-hidden select-none bg-[#091B2B] cursor-pointer group border-y border-white/10"
           onClick={() => {
             triggerAudio('click');
             navigateTo('heritage');
@@ -2613,68 +2613,68 @@ export default function Home({
         </section>
 
         {/* Promise Grid */}
-        <div className="w-full bg-[#FAF6F8] py-16 lg:py-24 px-6 sm:px-12 md:px-16 lg:px-24 border-t border-solid border-gray-200 select-none text-center">
+        <div className="w-full bg-white py-16 lg:py-24 px-6 sm:px-12 md:px-16 lg:px-24 border-t border-solid border-gray-200 select-none text-center">
           <div className="max-w-7xl mx-auto flex flex-col lg:flex-row justify-between items-center gap-12 lg:gap-20 text-center">
             <div className="w-full lg:w-1/2 flex flex-col justify-center items-center lg:items-start text-center lg:text-left shrink-0">
-              <h3 className="font-serif text-[#031838] text-[28px] sm:text-[36px] lg:text-[44px] font-normal tracking-[0.01em] leading-tight m-0">MANISH &amp; CO</h3>
-              <h2 className="font-serif text-[#031838] text-[56px] sm:text-[72px] lg:text-[84px] font-extrabold tracking-[0.02em] leading-none mt-1 sm:mt-2 mb-0">Promise</h2>
+              <h3 className="font-serif text-[#0D2B4E] text-[28px] sm:text-[36px] lg:text-[44px] font-normal tracking-[0.01em] leading-tight m-0">MANISH &amp; CO</h3>
+              <h2 className="font-serif text-[#6B4B2E] text-[56px] sm:text-[72px] lg:text-[84px] font-extrabold tracking-[0.02em] leading-none mt-1 sm:mt-2 mb-0">Promise</h2>
             </div>
 
             <div className="w-full lg:w-1/2 grid grid-cols-3 gap-y-10 sm:gap-y-12 gap-x-4 sm:gap-x-8 md:gap-x-12 justify-items-center text-center">
               <div className="flex flex-col items-center max-w-[120px] text-center">
-                <div className="w-20 h-20 sm:w-24 sm:h-24 md:w-28 md:h-28 rounded-full bg-[#031838] text-white flex flex-col justify-center items-center shadow-md hover:scale-105 transition-transform duration-300">
+                <div className="w-20 h-20 sm:w-24 sm:h-24 md:w-28 md:h-28 rounded-full bg-[#0D2B4E] border-2 border-[#6B4B2E] text-white flex flex-col justify-center items-center shadow-md hover:scale-105 transition-transform duration-300">
                   <span className="text-[8px] sm:text-[10px] tracking-widest uppercase opacity-75 font-semibold font-sans">SINCE</span>
                   <span className="text-lg sm:text-xl md:text-2xl font-bold font-serif tracking-wider mt-0.5">1996</span>
                 </div>
-                <p className="text-[9px] sm:text-[11px] text-[#2c3e50] font-sans font-medium tracking-wide text-center mt-3 leading-snug">Artisanal Heritage of Mau</p>
+                <p className="text-[9px] sm:text-[11px] text-[#0D2B4E] font-sans font-medium tracking-wide text-center mt-3 leading-snug">Artisanal Heritage of Mau</p>
               </div>
               <div className="flex flex-col items-center max-w-[120px] text-center">
-                <div className="w-20 h-20 sm:w-24 sm:h-24 md:w-28 md:h-28 rounded-full bg-[#031838] text-white flex flex-col justify-center items-center shadow-md hover:scale-105 transition-transform duration-300">
+                <div className="w-20 h-20 sm:w-24 sm:h-24 md:w-28 md:h-28 rounded-full bg-[#0D2B4E] border-2 border-[#6B4B2E] text-white flex flex-col justify-center items-center shadow-md hover:scale-105 transition-transform duration-300">
                   <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.2" className="w-8 h-8 sm:w-10 sm:h-10"><circle cx="12" cy="12" r="10" /><path d="M9 12l2 2 4-4" strokeLinecap="round" strokeLinejoin="round" /></svg>
                 </div>
-                <p className="text-[9px] sm:text-[11px] text-[#2c3e50] font-sans font-medium tracking-wide text-center mt-3 leading-snug">100% Certified Jewellery</p>
+                <p className="text-[9px] sm:text-[11px] text-[#0D2B4E] font-sans font-medium tracking-wide text-center mt-3 leading-snug">100% Certified Jewellery</p>
               </div>
               <div className="flex flex-col items-center max-w-[120px] text-center">
-                <div className="w-20 h-20 sm:w-24 sm:h-24 md:w-28 md:h-28 rounded-full bg-[#031838] text-white flex flex-col justify-center items-center shadow-md hover:scale-105 transition-transform duration-300">
+                <div className="w-20 h-20 sm:w-24 sm:h-24 md:w-28 md:h-28 rounded-full bg-[#0D2B4E] border-2 border-[#6B4B2E] text-white flex flex-col justify-center items-center shadow-md hover:scale-105 transition-transform duration-300">
                   <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.2" className="w-8 h-8 sm:w-10 sm:h-10"><path d="M21.5 2v6h-6M21.34 15.57a10 10 0 1 1-.57-8.38l5.67-5.67" strokeLinecap="round" strokeLinejoin="round" /></svg>
                 </div>
-                <p className="text-[9px] sm:text-[11px] text-[#2c3e50] font-sans font-medium tracking-wide text-center mt-3 leading-snug">Lifetime Exchange &amp; Buyback</p>
+                <p className="text-[9px] sm:text-[11px] text-[#0D2B4E] font-sans font-medium tracking-wide text-center mt-3 leading-snug">Lifetime Exchange &amp; Buyback</p>
               </div>
               <div className="flex flex-col items-center max-w-[120px] text-center">
-                <div className="w-20 h-20 sm:w-24 sm:h-24 md:w-28 md:h-28 rounded-full bg-[#031838] text-white flex flex-col justify-center items-center shadow-md hover:scale-105 transition-transform duration-300">
+                <div className="w-20 h-20 sm:w-24 sm:h-24 md:w-28 md:h-28 rounded-full bg-[#0D2B4E] border-2 border-[#6B4B2E] text-white flex flex-col justify-center items-center shadow-md hover:scale-105 transition-transform duration-300">
                   <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.2" className="w-8 h-8 sm:w-10 sm:h-10"><rect x="3" y="11" width="18" height="11" rx="2" ry="2" /><path d="M7 11V7a5 5 0 0 1 10 0v4" /></svg>
                 </div>
-                <p className="text-[9px] sm:text-[11px] text-[#2c3e50] font-sans font-medium tracking-wide text-center mt-3 leading-snug">Guaranteed Purity &amp; Value</p>
+                <p className="text-[9px] sm:text-[11px] text-[#0D2B4E] font-sans font-medium tracking-wide text-center mt-3 leading-snug">Guaranteed Purity &amp; Value</p>
               </div>
               <div className="flex flex-col items-center max-w-[120px] text-center">
-                <div className="w-20 h-20 sm:w-24 sm:h-24 md:w-28 md:h-28 rounded-full bg-[#031838] text-white flex flex-col justify-center items-center shadow-md hover:scale-105 transition-transform duration-300">
+                <div className="w-20 h-20 sm:w-24 sm:h-24 md:w-28 md:h-28 rounded-full bg-[#0D2B4E] border-2 border-[#6B4B2E] text-white flex flex-col justify-center items-center shadow-md hover:scale-105 transition-transform duration-300">
                   <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.2" className="w-8 h-8 sm:w-10 sm:h-10"><circle cx="11" cy="11" r="8" /><line x1="21" y1="21" x2="16.65" y2="16.65" strokeLinecap="round" strokeLinejoin="round" /></svg>
                 </div>
-                <p className="text-[9px] sm:text-[11px] text-[#2c3e50] font-sans font-medium tracking-wide text-center mt-3 leading-snug">100% Transparency</p>
+                <p className="text-[9px] sm:text-[11px] text-[#0D2B4E] font-sans font-medium tracking-wide text-center mt-3 leading-snug">100% Transparency</p>
               </div>
               <div className="flex flex-col items-center max-w-[120px] text-center">
-                <div className="w-20 h-20 sm:w-24 sm:h-24 md:w-28 md:h-28 rounded-full bg-[#031838] text-white flex flex-col justify-center items-center shadow-md hover:scale-105 transition-transform duration-300">
+                <div className="w-20 h-20 sm:w-24 sm:h-24 md:w-28 md:h-28 rounded-full bg-[#0D2B4E] border-2 border-[#6B4B2E] text-white flex flex-col justify-center items-center shadow-md hover:scale-105 transition-transform duration-300">
                   <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.2" className="w-8 h-8 sm:w-10 sm:h-10"><rect x="1" y="3" width="15" height="13" /><polygon points="16 8 20 8 23 11 23 16 16 16 16 8" /><circle cx="5.5" cy="18.5" r="2.5" /><circle cx="18.5" cy="18.5" r="2.5" /></svg>
                 </div>
-                <p className="text-[9px] sm:text-[11px] text-[#2c3e50] font-sans font-medium tracking-wide text-center mt-3 leading-snug">Free Shipping</p>
+                <p className="text-[9px] sm:text-[11px] text-[#0D2B4E] font-sans font-medium tracking-wide text-center mt-3 leading-snug">Free Shipping</p>
               </div>
               <div className="flex flex-col items-center max-w-[120px] text-center">
-                <div className="w-20 h-20 sm:w-24 sm:h-24 md:w-28 md:h-28 rounded-full bg-[#031838] text-white flex flex-col justify-center items-center shadow-md hover:scale-105 transition-transform duration-300">
+                <div className="w-20 h-20 sm:w-24 sm:h-24 md:w-28 md:h-28 rounded-full bg-[#0D2B4E] border-2 border-[#6B4B2E] text-white flex flex-col justify-center items-center shadow-md hover:scale-105 transition-transform duration-300">
                   <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.2" className="w-8 h-8 sm:w-10 sm:h-10"><path d="M12 2L2 7l10 5 10-5-10-5zM2 17l10 5 10-5M2 12l10 5 10-5" strokeLinecap="round" strokeLinejoin="round" /></svg>
                 </div>
-                <p className="text-[9px] sm:text-[11px] text-[#2c3e50] font-sans font-medium tracking-wide text-center mt-3 leading-snug">Authentic Rajputi Ornaments</p>
+                <p className="text-[9px] sm:text-[11px] text-[#0D2B4E] font-sans font-medium tracking-wide text-center mt-3 leading-snug">Authentic Rajputi Ornaments</p>
               </div>
               <div className="flex flex-col items-center max-w-[120px] text-center">
-                <div className="w-20 h-20 sm:w-24 sm:h-24 md:w-28 md:h-28 rounded-full bg-[#031838] text-white flex flex-col justify-center items-center shadow-md hover:scale-105 transition-transform duration-300">
+                <div className="w-20 h-20 sm:w-24 sm:h-24 md:w-28 md:h-28 rounded-full bg-[#0D2B4E] border-2 border-[#6B4B2E] text-white flex flex-col justify-center items-center shadow-md hover:scale-105 transition-transform duration-300">
                   <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.2" className="w-8 h-8 sm:w-10 sm:h-10"><polygon points="23 7 16 12 23 17 23 7" strokeLinecap="round" strokeLinejoin="round" /><rect x="1" y="5" width="15" height="14" rx="2" ry="2" /></svg>
                 </div>
-                <p className="text-[9px] sm:text-[11px] text-[#2c3e50] font-sans font-medium tracking-wide text-center mt-3 leading-snug">Personalised Video Consultations</p>
+                <p className="text-[9px] sm:text-[11px] text-[#0D2B4E] font-sans font-medium tracking-wide text-center mt-3 leading-snug">Personalised Video Consultations</p>
               </div>
               <div className="flex flex-col items-center max-w-[120px] text-center">
-                <div className="w-20 h-20 sm:w-24 sm:h-24 md:w-28 md:h-28 rounded-full bg-[#031838] text-white flex flex-col justify-center items-center shadow-md hover:scale-105 transition-transform duration-300">
+                <div className="w-20 h-20 sm:w-24 sm:h-24 md:w-28 md:h-28 rounded-full bg-[#0D2B4E] border-2 border-[#6B4B2E] text-white flex flex-col justify-center items-center shadow-md hover:scale-105 transition-transform duration-300">
                   <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.2" className="w-8 h-8 sm:w-10 sm:h-10"><path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z" strokeLinecap="round" strokeLinejoin="round" /></svg>
                 </div>
-                <p className="text-[9px] sm:text-[11px] text-[#2c3e50] font-sans font-medium tracking-wide text-center mt-3 leading-snug">BIS 916 Hallmarked Gold</p>
+                <p className="text-[9px] sm:text-[11px] text-[#0D2B4E] font-sans font-medium tracking-wide text-center mt-3 leading-snug">BIS 916 Hallmarked Gold</p>
               </div>
             </div>
           </div>

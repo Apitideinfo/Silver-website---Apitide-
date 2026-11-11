@@ -525,21 +525,21 @@ export default function Checkout({ navigateTo, triggerAudio }) {
         <div className="flex items-center space-x-4 text-xs font-semibold select-none">
           <div className="flex flex-col items-center">
             <span className={`${checkoutFlowStep === 1 ? 'text-[#0D2B4E]' : 'text-gray-400'}`}>Cart</span>
-            <div className={`w-3.5 h-3.5 rounded-full border-2 mt-1 flex items-center justify-center ${checkoutFlowStep >= 1 ? 'border-[#006361] bg-[#006361]' : 'border-gray-300 bg-white'}`}>
+            <div className={`w-3.5 h-3.5 rounded-full border-2 mt-1 flex items-center justify-center ${checkoutFlowStep >= 1 ? 'border-[#0D2B4E] bg-[#0D2B4E]' : 'border-gray-300 bg-white'}`}>
               {checkoutFlowStep > 1 && <span className="w-1.5 h-1.5 rounded-full bg-white" />}
             </div>
           </div>
-          <div className="w-16 h-[2px]" style={{ backgroundColor: checkoutFlowStep > 1 ? '#006361' : '#E5E7EB' }} />
+          <div className="w-16 h-[2px]" style={{ backgroundColor: checkoutFlowStep > 1 ? '#0D2B4E' : '#E5E7EB' }} />
           <div className="flex flex-col items-center">
             <span className={`${checkoutFlowStep === 2 ? 'text-[#0D2B4E]' : 'text-gray-400'}`}>Delivery</span>
-            <div className={`w-3.5 h-3.5 rounded-full border-2 mt-1 flex items-center justify-center ${checkoutFlowStep >= 2 ? 'border-[#006361] bg-[#006361]' : 'border-gray-300 bg-white'}`}>
+            <div className={`w-3.5 h-3.5 rounded-full border-2 mt-1 flex items-center justify-center ${checkoutFlowStep >= 2 ? 'border-[#0D2B4E] bg-[#0D2B4E]' : 'border-gray-300 bg-white'}`}>
               {checkoutFlowStep > 2 && <span className="w-1.5 h-1.5 rounded-full bg-white" />}
             </div>
           </div>
-          <div className="w-16 h-[2px]" style={{ backgroundColor: checkoutFlowStep > 2 ? '#006361' : '#E5E7EB' }} />
+          <div className="w-16 h-[2px]" style={{ backgroundColor: checkoutFlowStep > 2 ? '#0D2B4E' : '#E5E7EB' }} />
           <div className="flex flex-col items-center">
             <span className={`${checkoutFlowStep === 3 ? 'text-[#0D2B4E]' : 'text-gray-400'}`}>Payment</span>
-            <div className={`w-3.5 h-3.5 rounded-full border-2 mt-1 flex items-center justify-center ${checkoutFlowStep >= 3 ? 'border-[#006361] bg-[#006361]' : 'border-gray-300 bg-white'}`}>
+            <div className={`w-3.5 h-3.5 rounded-full border-2 mt-1 flex items-center justify-center ${checkoutFlowStep >= 3 ? 'border-[#0D2B4E] bg-[#0D2B4E]' : 'border-gray-300 bg-white'}`}>
               {checkoutFlowStep > 3 && <span className="w-1.5 h-1.5 rounded-full bg-white" />}
             </div>
           </div>
@@ -547,11 +547,11 @@ export default function Checkout({ navigateTo, triggerAudio }) {
 
         {/* Secure Badge */}
         <div className="flex items-center gap-1.5 text-xs text-gray-500 tracking-wide select-none">
-          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" className="w-4 h-4 text-[#006361]">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" className="w-4 h-4 text-[#0D2B4E]">
             <rect x="3" y="11" width="18" height="11" rx="2" ry="2" />
             <path d="M7 11V7a5 5 0 0 1 10 0v4" />
           </svg>
-          <span className="font-bold text-[#006361]">100% SECURE</span>
+          <span className="font-bold text-[#0D2B4E]">100% SECURE</span>
         </div>
       </header>
 
@@ -683,18 +683,18 @@ export default function Checkout({ navigateTo, triggerAudio }) {
                     <p className="text-xs text-gray-400 mt-1">Please choose preferred type of delivery.</p>
                   </div>
 
-                  <label className={`flex items-center justify-between border rounded-xl px-4 py-3.5 cursor-pointer transition-all ${deliveryType === 'home' ? 'border-[#006361] bg-[#006361]/5' : 'border-gray-200 hover:border-gray-300'}`}>
+                  <label className={`flex items-center justify-between border rounded-xl px-4 py-3.5 cursor-pointer transition-all ${deliveryType === 'home' ? 'border-[#0D2B4E] bg-[#0D2B4E]/5' : 'border-gray-200 hover:border-gray-300'}`}>
                     <span className="text-xs font-semibold text-[#0D2B4E]">Home Delivery</span>
-                    <input type="radio" name="deliveryType" value="home" checked={deliveryType === 'home'} onChange={() => setDeliveryType('home')} className="accent-[#006361]" />
+                    <input type="radio" name="deliveryType" value="home" checked={deliveryType === 'home'} onChange={() => setDeliveryType('home')} className="accent-[#0D2B4E]" />
                   </label>
 
-                  <label className={`flex flex-col border rounded-xl px-4 py-3.5 cursor-pointer transition-all ${deliveryType === 'store' ? 'border-[#006361] bg-[#006361]/5' : 'border-gray-200 hover:border-gray-300'}`}>
+                  <label className={`flex flex-col border rounded-xl px-4 py-3.5 cursor-pointer transition-all ${deliveryType === 'store' ? 'border-[#0D2B4E] bg-[#0D2B4E]/5' : 'border-gray-200 hover:border-gray-300'}`}>
                     <div className="flex items-center justify-between">
                       <div>
                         <span className="text-xs font-semibold text-[#0D2B4E]">Pick up from store</span>
                         <p className="text-[10px] text-gray-400 mt-0.5">Buy now, pick up from our store at your convenience.</p>
                       </div>
-                      <input type="radio" name="deliveryType" value="store" checked={deliveryType === 'store'} onChange={() => setDeliveryType('store')} className="accent-[#006361]" />
+                      <input type="radio" name="deliveryType" value="store" checked={deliveryType === 'store'} onChange={() => setDeliveryType('store')} className="accent-[#0D2B4E]" />
                     </div>
 
                     {/* Store Selection (shown when store is selected) */}
@@ -785,8 +785,8 @@ export default function Checkout({ navigateTo, triggerAudio }) {
 
                   {/* Billing same as shipping */}
                   <label className="flex items-center gap-2 text-xs text-gray-600 cursor-pointer select-none">
-                    <input type="checkbox" checked={deliveryForm.billingIsSameAsShipping} onChange={(e) => setDeliveryForm({ ...deliveryForm, billingIsSameAsShipping: e.target.checked })} className="accent-[#006361] rounded focus:outline-none" />
-                    <span>Billing address is <span className="text-[#006361] font-semibold">same as shipping address</span></span>
+                    <input type="checkbox" checked={deliveryForm.billingIsSameAsShipping} onChange={(e) => setDeliveryForm({ ...deliveryForm, billingIsSameAsShipping: e.target.checked })} className="accent-[#0D2B4E] rounded focus:outline-none" />
+                    <span>Billing address is <span className="text-[#0D2B4E] font-semibold">same as shipping address</span></span>
                   </label>
                 </div>
               </div>
@@ -920,7 +920,7 @@ export default function Checkout({ navigateTo, triggerAudio }) {
               <div className="border-t border-gray-100 pt-3">
                 <p className="text-[11px] text-gray-400 leading-relaxed font-sans">
                   Any Questions?<br />
-                  Please call us at <strong className="text-[#0D2B4E]">+91 94516 38680</strong> or <span className="text-[#006361] font-semibold cursor-pointer">Chat with us</span>
+                  Please call us at <strong className="text-[#0D2B4E]">+91 94516 38680</strong> or <span className="text-[#6B4B2E] font-semibold cursor-pointer">Chat with us</span>
                 </p>
               </div>
             </div>

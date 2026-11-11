@@ -259,19 +259,19 @@ export default function CustomerAccountModal({
         animate={{ opacity: 1, scale: 1, y: 0 }}
         exit={{ opacity: 0, scale: 0.95, y: 15 }}
         transition={{ duration: 0.25, ease: 'easeOut' }}
-        className="relative w-full max-w-2xl bg-white dark:bg-[#12071B] border border-solid border-[#C8A646]/30 rounded-3xl shadow-2xl overflow-hidden text-left my-auto flex flex-col max-h-[90vh]"
+        className="relative w-full max-w-2xl bg-white dark:bg-[#091B2B] border border-solid border-[#6B4B2E]/30 rounded-3xl shadow-2xl overflow-hidden text-left my-auto flex flex-col max-h-[90vh]"
       >
         {/* Modal Header */}
-        <div className="flex items-center justify-between px-6 py-4 border-b border-solid border-zinc-100 dark:border-white/10 bg-[#FAF8F5] dark:bg-[#1A0B26] shrink-0">
+        <div className="flex items-center justify-between px-6 py-4 border-b border-solid border-zinc-100 dark:border-white/10 bg-[#FAF8F5] dark:bg-[#0D2B4E] shrink-0">
           <div className="flex items-center gap-3">
-            <div className="w-10 h-10 rounded-2xl bg-gradient-to-br from-[#C8A646] to-[#E6C687] flex items-center justify-center text-white text-lg shadow-sm">
+            <div className="w-10 h-10 rounded-2xl bg-gradient-to-br from-[#0D2B4E] to-[#6B4B2E] flex items-center justify-center text-white text-lg shadow-sm">
               👤
             </div>
             <div>
-              <span className="serif-luxury text-base font-bold tracking-wider text-[#1A1A1A] dark:text-white uppercase block">
+              <span className="serif-luxury text-base font-bold tracking-wider text-[#0D2B4E] dark:text-white uppercase block">
                 Customer Lounge &amp; Orders
               </span>
-              <span className="text-[10px] text-[#C8A646] font-bold tracking-widest uppercase">
+              <span className="text-[10px] text-[#6B4B2E] font-bold tracking-widest uppercase">
                 {customerProfile.name ? `Welcome, ${customerProfile.name}` : 'MANISH & CO Client'}
               </span>
             </div>
@@ -281,7 +281,7 @@ export default function CustomerAccountModal({
             <button
               onClick={handleRefreshOrders}
               disabled={isRefreshing}
-              className="h-9 px-3.5 rounded-full bg-zinc-200/60 dark:bg-white/10 hover:bg-[#C8A646]/20 text-zinc-700 dark:text-zinc-200 hover:text-[#C8A646] flex items-center gap-1.5 border-none cursor-pointer text-xs font-bold font-sans transition-all active:scale-95 disabled:opacity-50"
+              className="h-9 px-3.5 rounded-full bg-zinc-200/60 dark:bg-white/10 hover:bg-[#6B4B2E]/20 text-zinc-700 dark:text-zinc-200 hover:text-[#6B4B2E] flex items-center gap-1.5 border-none cursor-pointer text-xs font-bold font-sans transition-all active:scale-95 disabled:opacity-50"
               title="Refresh Orders & Status"
             >
               <span className={`inline-block ${isRefreshing ? 'animate-spin' : ''}`}>🔄</span>
@@ -299,12 +299,12 @@ export default function CustomerAccountModal({
         </div>
 
         {/* Navigation Tabs */}
-        <div className="flex overflow-x-auto no-scrollbar whitespace-nowrap border-b border-solid border-zinc-100 dark:border-white/10 bg-white dark:bg-[#12071B] px-3 sm:px-6 shrink-0">
+        <div className="flex overflow-x-auto no-scrollbar whitespace-nowrap border-b border-solid border-zinc-100 dark:border-white/10 bg-white dark:bg-[#091B2B] px-3 sm:px-6 shrink-0">
           <button
             onClick={() => { triggerAudio?.('click'); setActiveTab('orders'); }}
             className={`py-3.5 px-3 border-b-2 font-sans text-xs font-bold uppercase tracking-wider flex items-center gap-2 cursor-pointer bg-transparent border-none transition-all ${
               activeTab === 'orders'
-                ? 'border-[#C8A646] text-[#C8A646]'
+                ? 'border-[#6B4B2E] text-[#6B4B2E]'
                 : 'border-transparent text-zinc-400 hover:text-zinc-700 dark:hover:text-zinc-200'
             }`}
           >
@@ -316,7 +316,7 @@ export default function CustomerAccountModal({
             onClick={() => { triggerAudio?.('click'); setActiveTab('track'); }}
             className={`py-3.5 px-3 border-b-2 font-sans text-xs font-bold uppercase tracking-wider flex items-center gap-2 cursor-pointer bg-transparent border-none transition-all ${
               activeTab === 'track'
-                ? 'border-[#C8A646] text-[#C8A646]'
+                ? 'border-[#6B4B2E] text-[#6B4B2E]'
                 : 'border-transparent text-zinc-400 hover:text-zinc-700 dark:hover:text-zinc-200'
             }`}
           >
@@ -328,7 +328,7 @@ export default function CustomerAccountModal({
             onClick={() => { triggerAudio?.('click'); setActiveTab('profile'); }}
             className={`py-3.5 px-3 border-b-2 font-sans text-xs font-bold uppercase tracking-wider flex items-center gap-2 cursor-pointer bg-transparent border-none transition-all ml-auto ${
               activeTab === 'profile'
-                ? 'border-[#C8A646] text-[#C8A646]'
+                ? 'border-[#6B4B2E] text-[#6B4B2E]'
                 : 'border-transparent text-zinc-400 hover:text-zinc-700 dark:hover:text-zinc-200'
             }`}
           >
@@ -355,7 +355,7 @@ export default function CustomerAccountModal({
                   </p>
                 </div>
                 {customerOrders.length > 0 && (
-                  <span className="text-[10px] font-extrabold text-[#C8A646] bg-[#C8A646]/10 px-2.5 py-1 rounded-full border border-solid border-[#C8A646]/20">
+                  <span className="text-[10px] font-extrabold text-[#6B4B2E] bg-[#6B4B2E]/10 px-2.5 py-1 rounded-full border border-solid border-[#6B4B2E]/20">
                     {customerOrders.length} {customerOrders.length === 1 ? 'Order' : 'Orders'} Recorded
                   </span>
                 )}
@@ -363,12 +363,12 @@ export default function CustomerAccountModal({
 
               {ordersLoading ? (
                 <div className="py-12 text-center space-y-3">
-                  <div className="w-8 h-8 border-2 border-[#C8A646] border-t-transparent rounded-full animate-spin mx-auto" />
+                  <div className="w-8 h-8 border-2 border-[#6B4B2E] border-t-transparent rounded-full animate-spin mx-auto" />
                   <p className="text-xs font-bold text-zinc-400 uppercase tracking-widest">Loading order history...</p>
                 </div>
               ) : customerOrders.length === 0 ? (
                 <div className="py-12 text-center space-y-4 bg-zinc-50 dark:bg-white/5 rounded-3xl p-6 border border-dashed border-zinc-200 dark:border-white/10">
-                  <div className="w-12 h-12 rounded-full bg-[#C8A646]/10 text-[#C8A646] flex items-center justify-center mx-auto">
+                  <div className="w-12 h-12 rounded-full bg-[#6B4B2E]/10 text-[#6B4B2E] flex items-center justify-center mx-auto">
                     <ShoppingBag className="w-6 h-6" />
                   </div>
                   <div className="space-y-1">
@@ -382,7 +382,7 @@ export default function CustomerAccountModal({
                       onClose();
                       navigateTo?.('collections');
                     }}
-                    className="px-6 py-2.5 rounded-full bg-gradient-to-r from-[#C8A646] to-[#E6C687] text-white text-xs font-extrabold uppercase tracking-wider shadow-md hover:brightness-105 cursor-pointer border-none"
+                    className="px-6 py-2.5 rounded-full bg-gradient-to-r from-[#6B4B2E] to-[#8C6D46] text-white text-xs font-extrabold uppercase tracking-wider shadow-md hover:brightness-105 cursor-pointer border-none"
                   >
                     Browse Collections
                   </button>
@@ -404,7 +404,7 @@ export default function CustomerAccountModal({
                     return (
                       <div
                         key={order.id}
-                        className="bg-white dark:bg-[#1A0B26] border border-solid border-zinc-200 dark:border-white/10 rounded-2xl p-4 sm:p-5 space-y-4 shadow-sm hover:shadow-md transition-all"
+                        className="bg-white dark:bg-[#0D2B4E] border border-solid border-zinc-200 dark:border-white/10 rounded-2xl p-4 sm:p-5 space-y-4 shadow-sm hover:shadow-md transition-all"
                       >
                         {/* Order Top Bar */}
                         <div className="flex flex-wrap items-center justify-between gap-2 border-b border-solid border-zinc-100 dark:border-white/10 pb-3">
@@ -431,7 +431,7 @@ export default function CustomerAccountModal({
 
                           <div className="text-right">
                             <span className="text-[10px] uppercase tracking-wider text-zinc-400 font-bold block">Total Amount</span>
-                            <span className="font-mono text-sm font-black text-[#C8A646]">
+                            <span className="font-mono text-sm font-black text-[#6B4B2E]">
                               ₹{Number(order.total || order.totalAmount || 0).toLocaleString('en-IN')}
                             </span>
                           </div>
@@ -470,12 +470,12 @@ export default function CustomerAccountModal({
                           <span className="text-[10px] text-zinc-400 font-medium inline-flex items-center gap-1">
                             {order.deliveryType === 'store' ? (
                               <>
-                                <Building2 className="w-3 h-3 text-[#C8A646]" />
+                                <Building2 className="w-3 h-3 text-[#6B4B2E]" />
                                 <span>Showroom Pickup</span>
                               </>
                             ) : (
                               <>
-                                <MapPin className="w-3 h-3 text-[#C8A646]" />
+                                <MapPin className="w-3 h-3 text-[#6B4B2E]" />
                                 <span>Deliver to {order.pincode || 'Address'}</span>
                               </>
                             )}
@@ -505,7 +505,7 @@ export default function CustomerAccountModal({
                                 setActiveTab('track');
                                 triggerAudio?.('click');
                               }}
-                              className="px-3.5 py-1.5 rounded-xl border border-solid border-[#C8A646]/30 text-[#C8A646] hover:bg-[#C8A646]/10 text-[11px] font-bold uppercase tracking-wider cursor-pointer bg-transparent transition-colors flex items-center gap-1.5"
+                              className="px-3.5 py-1.5 rounded-xl border border-solid border-[#6B4B2E]/30 text-[#6B4B2E] hover:bg-[#6B4B2E]/10 text-[11px] font-bold uppercase tracking-wider cursor-pointer bg-transparent transition-colors flex items-center gap-1.5"
                             >
                               <Truck className="w-3.5 h-3.5" />
                               <span>Track</span>
@@ -514,7 +514,7 @@ export default function CustomerAccountModal({
                             {/* 1-Click Reorder Button ("Again order kr ske") */}
                             <button
                               onClick={() => handleReorder(order)}
-                              className="px-4 py-1.5 rounded-xl bg-gradient-to-r from-[#C8A646] to-[#E6C687] text-white text-[11px] font-extrabold uppercase tracking-wider shadow-xs hover:brightness-105 cursor-pointer border-none transition-all flex items-center gap-1.5"
+                              className="px-4 py-1.5 rounded-xl bg-gradient-to-r from-[#6B4B2E] to-[#8C6D46] text-white text-[11px] font-extrabold uppercase tracking-wider shadow-xs hover:brightness-105 cursor-pointer border-none transition-all flex items-center gap-1.5"
                             >
                               <RotateCcw className="w-3.5 h-3.5" />
                               <span>Buy Again</span>
@@ -547,7 +547,7 @@ export default function CustomerAccountModal({
                   type="button"
                   onClick={handleRefreshOrders}
                   disabled={isRefreshing}
-                  className="px-2.5 py-1.5 rounded-xl bg-zinc-100 dark:bg-white/10 text-zinc-600 dark:text-zinc-300 hover:text-[#C8A646] text-[11px] font-bold border-none cursor-pointer flex items-center gap-1.5 transition-all shadow-2xs hover:bg-[#C8A646]/10"
+                  className="px-2.5 py-1.5 rounded-xl bg-zinc-100 dark:bg-white/10 text-zinc-600 dark:text-zinc-300 hover:text-[#6B4B2E] text-[11px] font-bold border-none cursor-pointer flex items-center gap-1.5 transition-all shadow-2xs hover:bg-[#6B4B2E]/10"
                   title="Refresh status"
                 >
                   <span className={`text-xs ${isRefreshing ? 'animate-spin' : ''}`}>🔄</span>
@@ -562,11 +562,11 @@ export default function CustomerAccountModal({
                   value={trackingQuery}
                   onChange={(e) => setTrackingQuery(e.target.value)}
                   placeholder="Enter Order ID or Mobile number..."
-                  className="flex-1 h-11 px-4 rounded-xl bg-zinc-50 dark:bg-white/5 border border-solid border-zinc-200 dark:border-white/15 text-sm font-medium text-zinc-900 dark:text-white focus:outline-none focus:border-[#C8A646]"
+                  className="flex-1 h-11 px-4 rounded-xl bg-zinc-50 dark:bg-white/5 border border-solid border-zinc-200 dark:border-white/15 text-sm font-medium text-zinc-900 dark:text-white focus:outline-none focus:border-[#6B4B2E]"
                 />
                 <button
                   type="submit"
-                  className="px-6 h-11 rounded-xl bg-gradient-to-r from-[#C8A646] to-[#E6C687] text-white text-xs font-extrabold uppercase tracking-wider shadow-sm hover:brightness-105 cursor-pointer border-none shrink-0"
+                  className="px-6 h-11 rounded-xl bg-gradient-to-r from-[#6B4B2E] to-[#8C6D46] text-white text-xs font-extrabold uppercase tracking-wider shadow-sm hover:brightness-105 cursor-pointer border-none shrink-0"
                 >
                   Track Now
                 </button>
@@ -583,11 +583,11 @@ export default function CustomerAccountModal({
                 const { steps, activeIndex, isCancelled } = getTrackingSteps(selectedTrackOrder.orderStatus);
 
                 return (
-                  <div className="bg-zinc-50 dark:bg-white/5 border border-solid border-[#C8A646]/30 rounded-3xl p-5 sm:p-6 space-y-6 shadow-sm animate-fade-in">
+                  <div className="bg-zinc-50 dark:bg-white/5 border border-solid border-[#6B4B2E]/30 rounded-3xl p-5 sm:p-6 space-y-6 shadow-sm animate-fade-in">
                     {/* Header */}
                     <div className="flex flex-wrap items-center justify-between gap-3 border-b border-solid border-zinc-200 dark:border-white/10 pb-4">
                       <div>
-                        <span className="text-[10px] uppercase font-bold text-[#C8A646] tracking-widest block">
+                        <span className="text-[10px] uppercase font-bold text-[#6B4B2E] tracking-widest block">
                           Tracking Details
                         </span>
                         <div className="flex items-center gap-2 mt-0.5">
@@ -596,7 +596,7 @@ export default function CustomerAccountModal({
                           </h4>
                           <button
                             onClick={() => handleCopyId(selectedTrackOrder.id)}
-                            className="px-2 py-0.5 rounded bg-[#C8A646]/15 hover:bg-[#C8A646]/25 text-[10px] font-bold text-[#C8A646] border-none cursor-pointer transition-colors"
+                            className="px-2 py-0.5 rounded bg-[#6B4B2E]/15 hover:bg-[#6B4B2E]/25 text-[10px] font-bold text-[#6B4B2E] border-none cursor-pointer transition-colors"
                           >
                             {copiedOrderId === selectedTrackOrder.id ? '✓ Copied ID' : '📋 Copy ID'}
                           </button>
@@ -611,7 +611,7 @@ export default function CustomerAccountModal({
 
                       <div className="text-right">
                         <span className="text-[9px] uppercase font-bold text-zinc-400 block">Current Status</span>
-                        <span className="text-xs font-extrabold uppercase text-[#C8A646]">
+                        <span className="text-xs font-extrabold uppercase text-[#6B4B2E]">
                           {selectedTrackOrder.orderStatus || 'Processing'}
                         </span>
                       </div>
@@ -635,7 +635,7 @@ export default function CustomerAccountModal({
                               {idx < steps.length - 1 && (
                                 <div
                                   className={`absolute left-4 top-8 w-0.5 h-8 transition-colors ${
-                                    idx < activeIndex ? 'bg-[#C8A646]' : 'bg-zinc-200 dark:bg-white/10'
+                                    idx < activeIndex ? 'bg-[#6B4B2E]' : 'bg-zinc-200 dark:bg-white/10'
                                   }`}
                                 />
                               )}
@@ -644,9 +644,9 @@ export default function CustomerAccountModal({
                               <div
                                 className={`w-8 h-8 rounded-full flex items-center justify-center text-xs font-bold shrink-0 transition-all ${
                                   isDone
-                                    ? 'bg-[#C8A646] text-white shadow-md'
+                                    ? 'bg-[#6B4B2E] text-white shadow-md'
                                     : 'bg-zinc-200 dark:bg-white/10 text-zinc-400'
-                                } ${isCurrent ? 'ring-4 ring-[#C8A646]/20 scale-110' : ''}`}
+                                } ${isCurrent ? 'ring-4 ring-[#6B4B2E]/20 scale-110' : ''}`}
                               >
                                 {step.icon}
                               </div>
@@ -656,7 +656,7 @@ export default function CustomerAccountModal({
                                 <h5 className={`text-xs font-bold ${isDone ? 'text-zinc-900 dark:text-white' : 'text-zinc-400'}`}>
                                   {step.title}
                                   {isCurrent && (
-                                    <span className="ml-2 text-[9px] font-extrabold uppercase tracking-widest text-[#C8A646] bg-[#C8A646]/10 px-2 py-0.5 rounded-full">
+                                    <span className="ml-2 text-[9px] font-extrabold uppercase tracking-widest text-[#6B4B2E] bg-[#6B4B2E]/10 px-2 py-0.5 rounded-full">
                                       Current Step
                                     </span>
                                   )}
@@ -672,7 +672,7 @@ export default function CustomerAccountModal({
                     )}
 
                     {/* Items & Delivery Info */}
-                    <div className="bg-white dark:bg-[#12071B] rounded-2xl p-4 border border-solid border-zinc-200 dark:border-white/10 space-y-3 text-xs">
+                    <div className="bg-white dark:bg-[#091B2B] rounded-2xl p-4 border border-solid border-zinc-200 dark:border-white/10 space-y-3 text-xs">
                       <div className="flex justify-between border-b border-solid border-zinc-100 dark:border-white/5 pb-2">
                         <span className="text-zinc-400 font-medium">Recipient:</span>
                         <span className="font-bold text-zinc-800 dark:text-zinc-200">{selectedTrackOrder.recipientName || 'Valued Client'}</span>
@@ -683,7 +683,7 @@ export default function CustomerAccountModal({
                       </div>
                       <div className="flex justify-between border-b border-solid border-zinc-100 dark:border-white/5 pb-2">
                         <span className="text-zinc-400 font-medium">Order Total:</span>
-                        <span className="font-mono font-extrabold text-[#C8A646]">
+                        <span className="font-mono font-extrabold text-[#6B4B2E]">
                           ₹{Number(selectedTrackOrder.total || selectedTrackOrder.totalAmount || 0).toLocaleString('en-IN')}
                         </span>
                       </div>
@@ -693,7 +693,7 @@ export default function CustomerAccountModal({
                         <button
                           onClick={() => handleDownloadOrderInvoice(selectedTrackOrder)}
                           disabled={downloadingOrderId === selectedTrackOrder.id}
-                          className="w-full py-2.5 rounded-xl bg-gradient-to-r from-[#C8A646] to-[#E6C687] text-white text-xs font-extrabold uppercase tracking-wider shadow-sm hover:brightness-105 cursor-pointer border-none flex items-center justify-center gap-2 disabled:opacity-60"
+                          className="w-full py-2.5 rounded-xl bg-gradient-to-r from-[#6B4B2E] to-[#8C6D46] text-white text-xs font-extrabold uppercase tracking-wider shadow-sm hover:brightness-105 cursor-pointer border-none flex items-center justify-center gap-2 disabled:opacity-60"
                         >
                           {downloadingOrderId === selectedTrackOrder.id ? (
                             <>
@@ -732,7 +732,7 @@ export default function CustomerAccountModal({
                 {!isEditingProfile && (
                   <button
                     onClick={() => setIsEditingProfile(true)}
-                    className="text-xs font-bold text-[#C8A646] hover:underline cursor-pointer bg-transparent border-none flex items-center gap-1.5"
+                    className="text-xs font-bold text-[#6B4B2E] hover:underline cursor-pointer bg-transparent border-none flex items-center gap-1.5"
                   >
                     <span>Edit Profile</span>
                     <Edit3 className="w-3.5 h-3.5" />
@@ -757,7 +757,7 @@ export default function CustomerAccountModal({
                         value={profileForm.name}
                         onChange={(e) => setProfileForm({ ...profileForm, name: e.target.value })}
                         placeholder="e.g. Taruna Soni"
-                        className="w-full h-10 px-3.5 rounded-xl bg-zinc-50 dark:bg-white/5 border border-zinc-200 dark:border-white/15 text-xs text-zinc-900 dark:text-white focus:outline-none focus:border-[#C8A646]"
+                        className="w-full h-10 px-3.5 rounded-xl bg-zinc-50 dark:bg-white/5 border border-zinc-200 dark:border-white/15 text-xs text-zinc-900 dark:text-white focus:outline-none focus:border-[#6B4B2E]"
                       />
                     </div>
 
@@ -769,7 +769,7 @@ export default function CustomerAccountModal({
                         value={profileForm.mobile}
                         onChange={(e) => setProfileForm({ ...profileForm, mobile: e.target.value })}
                         placeholder="e.g. 9451638680"
-                        className="w-full h-10 px-3.5 rounded-xl bg-zinc-50 dark:bg-white/5 border border-zinc-200 dark:border-white/15 text-xs text-zinc-900 dark:text-white focus:outline-none focus:border-[#C8A646]"
+                        className="w-full h-10 px-3.5 rounded-xl bg-zinc-50 dark:bg-white/5 border border-zinc-200 dark:border-white/15 text-xs text-zinc-900 dark:text-white focus:outline-none focus:border-[#6B4B2E]"
                       />
                     </div>
                   </div>
@@ -782,7 +782,7 @@ export default function CustomerAccountModal({
                         value={profileForm.email}
                         onChange={(e) => setProfileForm({ ...profileForm, email: e.target.value })}
                         placeholder="e.g. yourname@gmail.com"
-                        className="w-full h-10 px-3.5 rounded-xl bg-zinc-50 dark:bg-white/5 border border-zinc-200 dark:border-white/15 text-xs text-zinc-900 dark:text-white focus:outline-none focus:border-[#C8A646]"
+                        className="w-full h-10 px-3.5 rounded-xl bg-zinc-50 dark:bg-white/5 border border-zinc-200 dark:border-white/15 text-xs text-zinc-900 dark:text-white focus:outline-none focus:border-[#6B4B2E]"
                       />
                     </div>
 
@@ -793,7 +793,7 @@ export default function CustomerAccountModal({
                         value={profileForm.city}
                         onChange={(e) => setProfileForm({ ...profileForm, city: e.target.value })}
                         placeholder="e.g. Mau, Varanasi, Lucknow"
-                        className="w-full h-10 px-3.5 rounded-xl bg-zinc-50 dark:bg-white/5 border border-zinc-200 dark:border-white/15 text-xs text-zinc-900 dark:text-white focus:outline-none focus:border-[#C8A646]"
+                        className="w-full h-10 px-3.5 rounded-xl bg-zinc-50 dark:bg-white/5 border border-zinc-200 dark:border-white/15 text-xs text-zinc-900 dark:text-white focus:outline-none focus:border-[#6B4B2E]"
                       />
                     </div>
                   </div>
@@ -805,7 +805,7 @@ export default function CustomerAccountModal({
                       value={profileForm.address}
                       onChange={(e) => setProfileForm({ ...profileForm, address: e.target.value })}
                       placeholder="e.g. 4-D-37, Near Murti Circle, J.N.V. Colony"
-                      className="w-full p-3 rounded-xl bg-zinc-50 dark:bg-white/5 border border-zinc-200 dark:border-white/15 text-xs text-zinc-900 dark:text-white focus:outline-none focus:border-[#C8A646]"
+                      className="w-full p-3 rounded-xl bg-zinc-50 dark:bg-white/5 border border-zinc-200 dark:border-white/15 text-xs text-zinc-900 dark:text-white focus:outline-none focus:border-[#6B4B2E]"
                     />
                   </div>
 
@@ -821,7 +821,7 @@ export default function CustomerAccountModal({
                     )}
                     <button
                       type="submit"
-                      className="px-6 py-2.5 rounded-xl bg-gradient-to-r from-[#C8A646] to-[#E6C687] text-white text-xs font-extrabold uppercase tracking-wider shadow-sm hover:brightness-105 cursor-pointer border-none"
+                      className="px-6 py-2.5 rounded-xl bg-gradient-to-r from-[#6B4B2E] to-[#8C6D46] text-white text-xs font-extrabold uppercase tracking-wider shadow-sm hover:brightness-105 cursor-pointer border-none"
                     >
                       Save Account Profile
                     </button>
@@ -853,9 +853,9 @@ export default function CustomerAccountModal({
         </div>
 
         {/* Modal Footer */}
-        <div className="px-6 py-3.5 bg-[#FAF8F5] dark:bg-[#1A0B26] border-t border-solid border-zinc-100 dark:border-white/10 flex items-center justify-between text-xs shrink-0">
+        <div className="px-6 py-3.5 bg-[#FAF8F5] dark:bg-[#0D2B4E] border-t border-solid border-zinc-100 dark:border-white/10 flex items-center justify-between text-xs shrink-0">
           <span className="text-[10px] text-zinc-400 font-medium inline-flex items-center gap-1.5">
-            <Gem className="w-3 h-3 text-[#C8A646]" />
+            <Gem className="w-3 h-3 text-[#6B4B2E]" />
             <span>MANISH &amp; CO • Established 1996</span>
           </span>
           <button

@@ -51,12 +51,12 @@ export default function EditorialShowcaseSection({
 
 
   const isDark = dark;
-  const sectionBg = isDark ? 'bg-[#050B14]' : 'bg-[#FAF7F2]';
-  const sectionBorder = isDark ? 'border-white/10' : 'border-[#EAE3D9]';
-  const textColor = isDark ? 'text-white' : 'text-[#1A1817]';
-  const tagColor = isDark ? 'text-[#C5A880]' : 'text-[#8C6D46]';
+  const sectionBg = isDark ? 'bg-[#091B2B]' : 'bg-white';
+  const sectionBorder = isDark ? 'border-white/10' : 'border-[#E8DFD5]';
+  const textColor = isDark ? 'text-white' : 'text-[#0D2B4E]';
+  const tagColor = isDark ? 'text-[#B09A82]' : 'text-[#6B4B2E]';
   const subtextColor = isDark ? 'text-gray-400' : 'text-[#6F6862]';
-  const dividerColor = isDark ? 'bg-white/20' : 'bg-[#D6CABE]';
+  const dividerColor = isDark ? 'bg-white/20' : 'bg-[#6B4B2E]/30';
   const cardBorder = isDark ? 'border-white/10' : 'border-[#E8DFD5]';
   const cardBg = isDark ? 'bg-white/5' : 'bg-white';
 

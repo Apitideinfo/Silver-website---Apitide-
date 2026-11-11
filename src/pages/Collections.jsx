@@ -1310,7 +1310,7 @@ export default function Collections({
       </AnimatePresence>
 
       {/* CATALOG MAIN BODY */}
-      <div className={`transition-colors duration-500 min-h-screen pb-32 sm:pb-20 ${isCatalogDark ? 'bg-[#F2EDE4] text-[#0D2B4E]' : 'bg-[#F8F5EC] text-[#0D2B4E]'}`}>
+      <div className="transition-colors duration-500 min-h-screen pb-32 sm:pb-20 bg-white text-[#0D2B4E]">
 
         {/* Full-width Banner Carousel */}
         <BannerCarousel 

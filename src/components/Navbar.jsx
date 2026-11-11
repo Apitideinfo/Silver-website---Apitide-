@@ -190,19 +190,19 @@ export default function Navbar({
               aria-label="MANISH & CO Home"
             >
               <span 
-                className="font-serif text-[17px] xs:text-[19px] sm:text-[24px] md:text-[28px] lg:text-[31px] font-bold tracking-[0.06em] xs:tracking-[0.08em] sm:tracking-[0.12em] text-[#111111] uppercase leading-none group-hover:text-[#8C6D46] transition-colors whitespace-nowrap"
+                className="font-serif text-[17px] xs:text-[19px] sm:text-[24px] md:text-[28px] lg:text-[31px] font-bold tracking-[0.06em] xs:tracking-[0.08em] sm:tracking-[0.12em] text-[#0D2B4E] uppercase leading-none group-hover:text-[#6B4B2E] transition-colors whitespace-nowrap"
                 style={{ fontFamily: "'Cormorant Garamond', 'Playfair Display', Georgia, serif" }}
               >
                 MANISH &amp; CO
               </span>
               <div className="flex items-center justify-center gap-1 sm:gap-1.5 mt-0.5 sm:mt-1">
-                <span className="h-[0.5px] w-2.5 sm:w-5 bg-gray-300" />
+                <span className="h-[0.5px] w-2.5 sm:w-5 bg-[#6B4B2E]/30" />
                 <span 
-                  className="font-sans text-[7px] xs:text-[7.5px] sm:text-[9.5px] tracking-[0.2em] sm:tracking-[0.3em] text-[#8C6D46] uppercase font-semibold whitespace-nowrap"
+                  className="font-sans text-[7px] xs:text-[7.5px] sm:text-[9.5px] tracking-[0.2em] sm:tracking-[0.3em] text-[#6B4B2E] uppercase font-semibold whitespace-nowrap"
                 >
                   FINE JEWELLERY
                 </span>
-                <span className="h-[0.5px] w-2.5 sm:w-5 bg-gray-300" />
+                <span className="h-[0.5px] w-2.5 sm:w-5 bg-[#6B4B2E]/30" />
               </div>
             </button>
           </div>
@@ -297,11 +297,11 @@ export default function Navbar({
               }}
               aria-label="Wishlist"
               title="View Wishlist"
-              className="relative p-1.5 text-gray-800 hover:text-black transition-colors cursor-pointer focus:outline-none"
+              className="relative p-1.5 text-[#0D2B4E] hover:text-[#6B4B2E] transition-colors cursor-pointer focus:outline-none"
             >
               <Heart className="w-5 h-5 sm:w-5.5 sm:h-5.5" strokeWidth={1.5} />
               {wishlistItems?.length > 0 && (
-                <span className="absolute -top-0.5 -right-0.5 bg-[#8C6D46] text-white text-[9px] font-bold min-w-4 h-4 px-1 rounded-full flex items-center justify-center">
+                <span className="absolute -top-0.5 -right-0.5 bg-[#6B4B2E] text-white text-[9px] font-bold min-w-4 h-4 px-1 rounded-full flex items-center justify-center">
                   {wishlistItems.length}
                 </span>
               )}
@@ -315,10 +315,10 @@ export default function Navbar({
               }}
               aria-label="Shopping Cart"
               title="View Shopping Bag"
-              className="relative p-1.5 text-gray-800 hover:text-black transition-colors cursor-pointer focus:outline-none"
+              className="relative p-1.5 text-[#0D2B4E] hover:text-[#6B4B2E] transition-colors cursor-pointer focus:outline-none"
             >
               <ShoppingCart className="w-5 h-5 sm:w-5.5 sm:h-5.5" strokeWidth={1.5} />
-              <span className="absolute -top-1 -right-1 bg-[#1A1A1A] text-white text-[10px] font-bold min-w-4.5 h-4.5 px-1 rounded-full flex items-center justify-center shadow-xs">
+              <span className="absolute -top-1 -right-1 bg-[#0D2B4E] text-white text-[10px] font-bold min-w-4.5 h-4.5 px-1 rounded-full flex items-center justify-center shadow-xs">
                 {cartItemCount || 0}
               </span>
             </button>
@@ -340,11 +340,11 @@ export default function Navbar({
               onChange={(e) => setSearchVal(e.target.value)}
               placeholder="Search Rings, Earrings, Silver Jewellery..."
               autoFocus
-              className="w-full py-1.5 pl-3 pr-9 text-xs bg-white border border-gray-300 rounded-full focus:outline-none focus:border-gray-800 text-gray-800"
+              className="w-full py-1.5 pl-3 pr-9 text-xs bg-white border border-gray-300 rounded-full focus:outline-none focus:border-[#0D2B4E] text-[#0D2B4E]"
             />
             <button
               type="submit"
-              className="absolute right-3 text-gray-600 hover:text-black"
+              className="absolute right-3 text-gray-600 hover:text-[#0D2B4E]"
             >
               <Search className="w-4 h-4" />
             </button>
@@ -366,7 +366,7 @@ export default function Navbar({
                 triggerAudio('click');
                 item.action();
               }}
-              className="text-[13px] lg:text-[13.5px] font-medium text-[#222222] hover:text-[#8C6D46] transition-colors whitespace-nowrap cursor-pointer border-none bg-transparent py-1 tracking-tight"
+              className="text-[13px] lg:text-[13.5px] font-medium text-[#0D2B4E] hover:text-[#6B4B2E] transition-colors whitespace-nowrap cursor-pointer border-none bg-transparent py-1 tracking-tight"
             >
               {item.label}
             </button>
@@ -374,7 +374,7 @@ export default function Navbar({
         </div>
 
         {/* Mobile Horizontal Scroll Strip for Instant Access */}
-        <div className="md:hidden flex items-center overflow-x-auto no-scrollbar py-2 px-3 gap-3 text-xs font-medium text-gray-800 whitespace-nowrap scroll-smooth">
+        <div className="md:hidden flex items-center overflow-x-auto no-scrollbar py-2 px-3 gap-3 text-xs font-medium text-[#0D2B4E] whitespace-nowrap scroll-smooth">
           {navCategories.map((item, idx) => (
             <button
               key={idx}
@@ -382,7 +382,7 @@ export default function Navbar({
                 triggerAudio('click');
                 item.action();
               }}
-              className="px-2.5 py-1 rounded-full bg-gray-100 hover:bg-gray-200 text-gray-800 text-xs font-medium transition-colors shrink-0"
+              className="px-2.5 py-1 rounded-full bg-[#F5EDE4] hover:bg-[#6B4B2E] hover:text-white text-[#0D2B4E] text-xs font-medium transition-colors shrink-0"
             >
               {item.label}
             </button>
@@ -414,10 +414,10 @@ export default function Navbar({
                   item.action();
                   setMobileMenuOpen(false);
                 }}
-                className="w-full text-left py-2 text-sm font-medium text-gray-800 hover:text-[#8C6D46] border-b border-gray-50 flex items-center justify-between"
+                className="w-full text-left py-2 text-sm font-medium text-[#0D2B4E] hover:text-[#6B4B2E] border-b border-gray-50 flex items-center justify-between"
               >
                 <span>{item.label}</span>
-                <ChevronRight className="w-4 h-4 text-gray-400" />
+                <ChevronRight className="w-4 h-4 text-[#6B4B2E]/60" />
               </button>
             ))}
           </div>
@@ -429,7 +429,7 @@ export default function Navbar({
                 navigateTo('about-us');
                 setMobileMenuOpen(false);
               }}
-              className="w-full text-left py-1.5 text-xs font-medium text-gray-600 hover:text-black flex items-center justify-between"
+              className="w-full text-left py-1.5 text-xs font-medium text-gray-600 hover:text-[#0D2B4E] flex items-center justify-between"
             >
               <span>About MANISH &amp; CO</span>
               <ChevronRight className="w-3.5 h-3.5 text-gray-400" />
@@ -440,7 +440,7 @@ export default function Navbar({
                 navigateTo('showrooms');
                 setMobileMenuOpen(false);
               }}
-              className="w-full text-left py-1.5 text-xs font-medium text-gray-600 hover:text-black flex items-center justify-between"
+              className="w-full text-left py-1.5 text-xs font-medium text-gray-600 hover:text-[#0D2B4E] flex items-center justify-between"
             >
               <span>Our Showrooms &amp; Contact</span>
               <ChevronRight className="w-3.5 h-3.5 text-gray-400" />
@@ -451,7 +451,7 @@ export default function Navbar({
                 openCustomerAccount?.('orders');
                 setMobileMenuOpen(false);
               }}
-              className="w-full text-left py-1.5 text-xs font-medium text-gray-600 hover:text-black flex items-center justify-between"
+              className="w-full text-left py-1.5 text-xs font-medium text-gray-600 hover:text-[#0D2B4E] flex items-center justify-between"
             >
               <span>My Orders &amp; Tracking</span>
               <ChevronRight className="w-3.5 h-3.5 text-gray-400" />

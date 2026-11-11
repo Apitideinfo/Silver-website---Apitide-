@@ -52,30 +52,30 @@ export default function SavingsEnroll({
       {/* Enrollment Header */}
       <header className="w-full bg-white border-b border-gray-200 py-5 sm:py-5 px-6 sm:px-12 flex flex-col sm:flex-row justify-between items-center gap-4 shadow-xs">
         {/* Logo */}
-        <div onClick={() => navigateTo('home')} className="flex items-center space-x-2 font-serif text-lg font-bold text-[#031838] tracking-widest cursor-pointer select-none">
-          <span>HR JEWELLER &amp; SONS</span>
+        <div onClick={() => navigateTo('home')} className="flex items-center space-x-2 font-serif text-lg font-bold text-[#0D2B4E] tracking-widest cursor-pointer select-none">
+          <span>MANISH &amp; CO</span>
         </div>
 
-        {/* Progress Bar (Matching HR Jewellers & Sons style) */}
+        {/* Progress Bar */}
         {savingsEnrollStep <= 3 && (
           <div className="flex items-center space-x-4 text-xs font-semibold select-none">
             <div className="flex flex-col items-center">
-              <span className={`${savingsEnrollStep === 1 ? 'text-[#031838]' : 'text-gray-400'}`}>Personal Details</span>
-              <div className={`w-3.5 h-3.5 rounded-full border-2 mt-1 flex items-center justify-center ${savingsEnrollStep >= 1 ? 'border-[#006361] bg-[#006361]' : 'border-gray-300 bg-white'}`}>
+              <span className={`${savingsEnrollStep === 1 ? 'text-[#0D2B4E]' : 'text-gray-400'}`}>Personal Details</span>
+              <div className={`w-3.5 h-3.5 rounded-full border-2 mt-1 flex items-center justify-center ${savingsEnrollStep >= 1 ? 'border-[#0D2B4E] bg-[#0D2B4E]' : 'border-gray-300 bg-white'}`}>
                 {savingsEnrollStep > 1 && <span className="w-1.5 h-1.5 rounded-full bg-white" />}
               </div>
             </div>
-            <div className="w-12 h-[2px] bg-gray-200 mt-4 animate-pulse" style={{ backgroundColor: savingsEnrollStep > 1 ? '#006361' : '#E5E7EB' }} />
+            <div className="w-12 h-[2px] bg-gray-200 mt-4 animate-pulse" style={{ backgroundColor: savingsEnrollStep > 1 ? '#0D2B4E' : '#E5E7EB' }} />
             <div className="flex flex-col items-center">
-              <span className={`${savingsEnrollStep === 2 ? 'text-[#031838]' : 'text-gray-400'}`}>Nominee Details</span>
-              <div className={`w-3.5 h-3.5 rounded-full border-2 mt-1 flex items-center justify-center ${savingsEnrollStep >= 2 ? 'border-[#006361] bg-[#006361]' : 'border-gray-300 bg-white'}`}>
+              <span className={`${savingsEnrollStep === 2 ? 'text-[#0D2B4E]' : 'text-gray-400'}`}>Nominee Details</span>
+              <div className={`w-3.5 h-3.5 rounded-full border-2 mt-1 flex items-center justify-center ${savingsEnrollStep >= 2 ? 'border-[#0D2B4E] bg-[#0D2B4E]' : 'border-gray-300 bg-white'}`}>
                 {savingsEnrollStep > 2 && <span className="w-1.5 h-1.5 rounded-full bg-white" />}
               </div>
             </div>
-            <div className="w-12 h-[2px] bg-gray-200 mt-4" style={{ backgroundColor: savingsEnrollStep > 2 ? '#006361' : '#E5E7EB' }} />
+            <div className="w-12 h-[2px] bg-gray-200 mt-4" style={{ backgroundColor: savingsEnrollStep > 2 ? '#0D2B4E' : '#E5E7EB' }} />
             <div className="flex flex-col items-center">
-              <span className={`${savingsEnrollStep === 3 ? 'text-[#031838]' : 'text-gray-400'}`}>Payment Details</span>
-              <div className={`w-3.5 h-3.5 rounded-full border-2 mt-1 flex items-center justify-center ${savingsEnrollStep >= 3 ? 'border-[#006361] bg-[#006361]' : 'border-gray-300 bg-white'}`}>
+              <span className={`${savingsEnrollStep === 3 ? 'text-[#0D2B4E]' : 'text-gray-400'}`}>Payment Details</span>
+              <div className={`w-3.5 h-3.5 rounded-full border-2 mt-1 flex items-center justify-center ${savingsEnrollStep >= 3 ? 'border-[#0D2B4E] bg-[#0D2B4E]' : 'border-gray-300 bg-white'}`}>
                 {savingsEnrollStep > 3 && <span className="w-1.5 h-1.5 rounded-full bg-white" />}
               </div>
             </div>
@@ -84,11 +84,11 @@ export default function SavingsEnroll({
 
         {/* Secure Badge */}
         <div className="flex items-center gap-1.5 text-xs text-gray-500 tracking-wide select-none">
-          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" className="w-4 h-4 text-[#006361]">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" className="w-4 h-4 text-[#0D2B4E]">
             <rect x="3" y="11" width="18" height="11" rx="2" ry="2" />
             <path d="M7 11V7a5 5 0 0 1 10 0v4" />
           </svg>
-          <span className="font-bold text-[#006361]">100% SECURE</span>
+          <span className="font-bold text-[#0D2B4E]">100% SECURE</span>
         </div>
       </header>
 
@@ -116,8 +116,8 @@ export default function SavingsEnroll({
               <div className="flex justify-between text-xs text-gray-600"><span className="font-bold">Email Address</span><span>{savingsEnrollForm.email}</span></div>
               <div className="flex justify-between text-xs text-gray-600"><span className="font-bold">Nominee Name</span><span>{savingsEnrollForm.nomineeName} ({savingsEnrollForm.nomineeRelationship})</span></div>
               <div className="h-[1px] bg-gray-200 my-2" />
-              <div className="flex justify-between text-sm text-[#031838] font-bold"><span>Monthly Installment</span><span>₹ {monthlySavingsInput.toLocaleString('en-IN')}</span></div>
-              <div className="flex justify-between text-sm text-[#006361] font-bold"><span>12th Month Bonus (Showroom)</span><span>₹ {monthlySavingsInput.toLocaleString('en-IN')}</span></div>
+              <div className="flex justify-between text-sm text-[#0D2B4E] font-bold"><span>Monthly Installment</span><span>₹ {monthlySavingsInput.toLocaleString('en-IN')}</span></div>
+              <div className="flex justify-between text-sm text-[#6B4B2E] font-bold"><span>12th Month Bonus (Showroom)</span><span>₹ {monthlySavingsInput.toLocaleString('en-IN')}</span></div>
             </div>
 
             <button
