@@ -56,7 +56,9 @@ const broadcastCatalogChange = (type) => {
     // 3. StorageEvent trigger for all other tabs & windows
     try {
       localStorage.setItem('manish_sync_pulse', `${type}_${Date.now()}`);
-    } catch (e) {}
+    } catch (_e) {
+      // noop
+    }
   }
 };
 
@@ -115,17 +117,19 @@ export const productsApi = {
 
   // Read: Realtime subscription
   subscribeToCategories(onUpdate, onError) {
-    const deletedIds = StorageService.get(LOCAL_STORAGE_KEYS.DELETED, []);
-    const isAllCleared = StorageService.get(LOCAL_STORAGE_KEYS.ALL_CLEARED, false);
-    const isInit = StorageService.get(CATEGORIES_INIT_KEY, false);
+    const CURRENT_CATALOG_VERSION = 'v2026_11_14_pendant_story';
+    const storedVersion = StorageService.get('manish_catalog_version', null);
     let local = StorageService.get(LOCAL_STORAGE_KEYS.CATEGORIES, null);
 
-    if (!Array.isArray(local) && !isInit && !isAllCleared) {
+    const hasLegacy = Array.isArray(local) && local.some(c => 
+      c.id === 'bangles' || c.id === 'nath-nose-pin' || c.name === 'Bangles' || c.id === 'jhumka'
+    );
+
+    if (hasLegacy || !storedVersion || !Array.isArray(local) || local.length === 0) {
       local = INITIAL_CATEGORIES;
       StorageService.set(LOCAL_STORAGE_KEYS.CATEGORIES, INITIAL_CATEGORIES);
       StorageService.set(CATEGORIES_INIT_KEY, true);
-    } else if (!Array.isArray(local)) {
-      local = [];
+      StorageService.set('manish_catalog_version', CURRENT_CATALOG_VERSION);
     }
     onUpdate(local);
 
@@ -190,7 +194,8 @@ export const productsApi = {
             const rawRemote = snapshot.docs.map(d => ({ id: d.id, docId: d.id, ...d.data() }));
             const validRemote = rawRemote.filter(c => {
               const id = c.id || c.docId;
-              return id && !currentDeleted.includes(id) && !currentDeleted.includes(String(id).toLowerCase());
+              const isLegacy = id === 'bangles' || id === 'nath-nose-pin' || id === 'jhumka' || c.name === 'Bangles';
+              return id && !isLegacy && !currentDeleted.includes(id) && !currentDeleted.includes(String(id).toLowerCase());
             });
 
             if (validRemote.length > 0) {

@@ -55,9 +55,10 @@ export default function Navbar({
   // Sync external search query
   useEffect(() => {
     if (searchQuery !== undefined && searchQuery !== searchVal) {
-      setSearchVal(searchQuery);
+      const timer = setTimeout(() => setSearchVal(searchQuery), 0);
+      return () => clearTimeout(timer);
     }
-  }, [searchQuery]);
+  }, [searchQuery, searchVal]);
 
   // Click outside search container to close suggestions
   useEffect(() => {
@@ -99,14 +100,19 @@ export default function Navbar({
   };
 
   const navCategories = React.useMemo(() => {
-    const isInit = StorageService.get('manish_categories_initialized', false);
     const list = Array.isArray(categories) && categories.length > 0 
       ? categories 
-      : (!isInit ? INITIAL_CATEGORIES : []);
+      : INITIAL_CATEGORIES;
+    const cleanList = list.filter(c => {
+      const id = String(c.id || c.docId || c.name || '').toLowerCase();
+      return id !== 'bangles' && id !== 'nath-nose-pin' && id !== 'jhumka' && c.name !== 'Bangles';
+    });
+    const finalList = cleanList.length > 0 ? cleanList : INITIAL_CATEGORIES;
+
     return [
       { label: 'New Arrivals', action: () => { changeCategoryTab?.('Collections'); navigateTo('collections'); } },
       { label: 'Bestsellers', action: () => { changeCategoryTab?.('Collections'); navigateTo('collections'); } },
-      ...list.map((cat) => ({
+      ...finalList.map((cat) => ({
         label: cat.name,
         action: () => {
           changeCategoryTab?.(cat.id || cat.slug || cat.name);

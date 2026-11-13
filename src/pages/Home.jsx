@@ -247,11 +247,19 @@ export default function Home({
 
   // Dynamic Category Slider (populated live from Admin Categories)
   const dynamicStoryCategories = React.useMemo(() => {
-    const isInit = StorageService.get('manish_categories_initialized', false);
     const list = Array.isArray(categories) && categories.length > 0 
       ? categories 
-      : (!isInit ? INITIAL_CATEGORIES : []);
-    return list.map((cat) => {
+      : INITIAL_CATEGORIES;
+
+    // Filter out any stale legacy categories if present
+    const cleanList = list.filter(c => {
+      const id = String(c.id || c.docId || c.name || '').toLowerCase();
+      return id !== 'bangles' && id !== 'nath-nose-pin' && id !== 'jhumka' && c.name !== 'Bangles';
+    });
+
+    const finalList = cleanList.length > 0 ? cleanList : INITIAL_CATEGORIES;
+
+    return finalList.map((cat) => {
       const catId = cat.id || cat.docId || String(cat.name || '').toLowerCase().replace(/\s+/g, '-');
       // If Admin uploaded a real custom image, use it! Otherwise use high-res reference image
       const isCustomUploaded = (cat.img && typeof cat.img === 'string' && (cat.img.startsWith('http') || cat.img.startsWith('data:')))
