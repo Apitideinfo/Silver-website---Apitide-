@@ -110,7 +110,7 @@ export default function Offers({
               Step into our flagship lounge for private viewing sessions, customized bridal styling, and complimentary silver authentication.
             </p>
             <div>
-              <span className="inline-flex items-center gap-2 bg-[#6B4B2E] hover:bg-[#8C6226] text-white text-xs uppercase tracking-[0.18em] px-6 py-3 rounded-full font-medium transition-all shadow-md">
+              <span className="inline-flex items-center gap-2 bg-[#0D2B4E] hover:bg-[#081B32] text-white text-xs uppercase tracking-[0.18em] px-6 py-3 rounded-full font-medium transition-all shadow-md">
                 Locate Showroom
                 <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                   <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M17 8l4 4m0 0l-4 4m4-4H3" />

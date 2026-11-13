@@ -147,7 +147,7 @@ export default function BookingForm({
         <p className="text-xs text-zinc-500 mt-2">Our showroom representatives will reach out to you via WhatsApp shortly.</p>
         <button
           onClick={() => setFormSuccess(false)}
-          className="mt-6 px-5 py-2 bg-gradient-to-r from-[#6B4B2E] to-[#B09A82] text-white text-[10px] uppercase font-bold tracking-widest rounded-lg border-none cursor-pointer"
+          className="mt-6 px-5 py-2 bg-[#0D2B4E] hover:bg-[#081B32] text-white text-[10px] uppercase font-bold tracking-widest rounded-lg border-none cursor-pointer"
         >
           Book Another
         </button>
@@ -380,7 +380,7 @@ export default function BookingForm({
       <button
         type="submit"
         disabled={submitting || uploadProgress}
-        className="w-full py-3.5 bg-gradient-to-r from-[#6B4B2E] to-[#B09A82] text-white text-xs uppercase font-bold tracking-widest rounded-xl transition-all transform hover:-translate-y-0.5 hover:shadow-lg disabled:opacity-50 cursor-pointer border-none font-bold flex items-center justify-center gap-2"
+        className="w-full py-3.5 bg-[#0D2B4E] hover:bg-[#081B32] text-white text-xs uppercase font-bold tracking-widest rounded-xl transition-all transform hover:-translate-y-0.5 hover:shadow-lg disabled:opacity-50 cursor-pointer border-none font-bold flex items-center justify-center gap-2"
       >
         <svg className="w-4 h-4 shrink-0" fill="currentColor" viewBox="0 0 24 24">
           <path d="M12.012 2c-5.506 0-9.989 4.478-9.99 9.984a9.96 9.96 0 001.37 5.037L2 22l5.135-1.348a9.954 9.954 0 004.878 1.28c5.505 0 9.988-4.478 9.989-9.984 0-2.67-1.037-5.18-2.925-7.07C17.186 3.037 14.678 2 12.012 2zm5.727 14.153c-.313.882-1.554 1.61-2.148 1.666-.59.055-1.18.326-3.766-.694-2.585-1.02-4.237-3.663-4.364-3.834-.127-.171-1.03-1.374-1.03-2.623 0-1.25.654-1.862.887-2.102.233-.24.509-.3.678-.3.17 0 .34 0 .487.007.155.007.363-.058.567.442.204.5.7 1.713.76 1.838.06.126.1.272.017.438-.083.166-.124.272-.25.418-.125.146-.263.327-.375.44-.124.125-.253.26-.11.507.144.247.64 1.056 1.373 1.71.942.843 1.737 1.103 1.983 1.226.246.123.39.103.535-.062.145-.165.62-.72.787-.966.166-.247.33-.206.555-.124.225.083 1.427.674 1.674.8.247.124.412.185.472.289.06.103.06.6-.253 1.482z" />

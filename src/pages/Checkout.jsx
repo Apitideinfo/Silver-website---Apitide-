@@ -479,7 +479,7 @@ export default function Checkout({ navigateTo, triggerAudio }) {
             <button
               onClick={handleDownloadPlacedInvoice}
               disabled={downloadingInvoice}
-              className="w-full py-3.5 bg-gradient-to-r from-[#B8893C] to-[#E6C687] hover:brightness-110 text-white text-xs uppercase font-black tracking-widest rounded-xl transition-all shadow-md cursor-pointer border-none flex items-center justify-center gap-2 disabled:opacity-60"
+              className="w-full py-3.5 bg-[#0D2B4E] hover:bg-[#081B32] text-white text-xs uppercase font-black tracking-widest rounded-xl transition-all shadow-md cursor-pointer border-none flex items-center justify-center gap-2 disabled:opacity-60"
             >
               {downloadingInvoice ? (
                 <>
@@ -844,7 +844,7 @@ export default function Checkout({ navigateTo, triggerAudio }) {
                       <button
                         onClick={checkoutForm.method === 'cod' ? handleCartCheckoutSubmit : handleRazorpayPayment}
                         disabled={submittingOrder}
-                        className="w-full sm:w-auto px-16 py-3.5 rounded-lg bg-[#6B4B2E] hover:bg-[#8C6226] text-white text-xs uppercase font-black tracking-widest transition-all shadow-md cursor-pointer border-none font-bold disabled:opacity-55 disabled:cursor-not-allowed"
+                        className="w-full sm:w-auto px-16 py-3.5 rounded-lg bg-[#0D2B4E] hover:bg-[#081B32] text-white text-xs uppercase font-black tracking-widest transition-all shadow-md cursor-pointer border-none font-bold disabled:opacity-55 disabled:cursor-not-allowed"
                       >
                         {submittingOrder ? 'Processing...' : 'PROCEED TO PAY'}
                       </button>

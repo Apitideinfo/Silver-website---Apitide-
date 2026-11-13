@@ -178,7 +178,7 @@ export default function GoldCoins({
                   const el = document.getElementById('coins-catalogue-anchor');
                   if (el) el.scrollIntoView({ behavior: 'smooth' });
                 }}
-                className="px-8 py-3.5 bg-gradient-to-r from-gold to-[#6B4B2E] hover:from-[#6B4B2E] hover:to-gold text-navy text-xs uppercase font-bold tracking-widest rounded-xl transition-all duration-300 transform hover:-translate-y-0.5 hover:shadow-xl cursor-pointer border-none font-bold text-white"
+                className="px-8 py-3.5 bg-[#0D2B4E] hover:bg-[#081B32] text-white text-xs uppercase font-bold tracking-widest rounded-xl transition-all duration-300 transform hover:-translate-y-0.5 hover:shadow-xl cursor-pointer border-none font-bold"
               >
                 Explore Coins
               </button>
@@ -448,7 +448,7 @@ export default function GoldCoins({
                           carat: `${coin.purity} Gold Coin`
                         });
                       }}
-                      className="py-2 text-[8px] uppercase tracking-widest font-black rounded-lg bg-gradient-to-r from-gold to-[#6B4B2E] hover:from-[#6B4B2E] hover:to-gold text-[#0D2B4E] transition-all transform hover:-translate-y-0.5 hover:shadow-md cursor-pointer border-none font-bold flex items-center justify-center gap-1.5"
+                      className="py-2 text-[8px] uppercase tracking-widest font-black rounded-lg bg-[#0D2B4E] hover:bg-[#081B32] text-white transition-all transform hover:-translate-y-0.5 hover:shadow-md cursor-pointer border-none font-bold flex items-center justify-center gap-1.5"
                     >
                       <ShoppingBag className="w-3.5 h-3.5" />
                       <span>Add to Bag</span>
@@ -602,7 +602,7 @@ export default function GoldCoins({
                         });
                         setCoinDetailOpen(null);
                       }}
-                      className="flex-grow py-3.5 rounded-xl bg-gradient-to-r from-gold to-[#6B4B2E] hover:from-[#6B4B2E] hover:to-gold text-[#0D2B4E] text-xs uppercase font-bold tracking-widest transition-all transform hover:-translate-y-0.5 hover:shadow-xl cursor-pointer border-none font-bold flex items-center justify-center gap-2"
+                      className="flex-grow py-3.5 rounded-xl bg-[#0D2B4E] hover:bg-[#081B32] text-white text-xs uppercase font-bold tracking-widest transition-all transform hover:-translate-y-0.5 hover:shadow-xl cursor-pointer border-none font-bold flex items-center justify-center gap-2"
                     >
                       <ShoppingBag className="w-4 h-4" />
                       <span>Add to Bag / Lock Rate</span>

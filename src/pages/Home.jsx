@@ -738,51 +738,19 @@ export default function Home({
       {/* Divider */}
       <div className="w-full h-[1px] bg-[#E6DFD3] relative z-20" />
 
-      {/* ==========================================================
-          TOP CONCIERGE BAR: CUSTOM DESIGN & BOOK AN APPOINTMENT
-          Direct WhatsApp Connect (+91 94516 38680)
-          ========================================================== */}
-      <div className="w-full bg-[#0D2B4E] text-white py-2.5 sm:py-3 px-4 border-b border-[#6B4B2E]/40 shadow-xs relative z-20">
-        <div className="max-w-[1536px] mx-auto px-2 sm:px-6 flex flex-col md:flex-row items-center justify-between gap-2.5 sm:gap-4 text-center md:text-left">
-          
-          <div className="flex items-center gap-2 sm:gap-3">
-            <span className="w-2 h-2 rounded-full bg-[#6B4B2E] animate-pulse shrink-0" />
-            <p className="text-xs sm:text-[13px] font-sans text-white/90 tracking-wide m-0">
-              <strong className="text-[#B09A82] font-semibold">Bespoke Atelier:</strong> Share your custom design or meet our master silversmith for a private appointment.
-            </p>
-          </div>
-
-          <div className="grid grid-cols-2 gap-2 sm:flex sm:items-center sm:gap-3.5 w-full sm:w-auto shrink-0">
-            {/* 1. Custom Designs Button */}
-            <button
-              type="button"
-              onClick={() => {
-                triggerAudio('click');
-                setCustomDesignOpen(true);
-              }}
-              className="inline-flex items-center justify-center gap-1 sm:gap-2 px-2.5 sm:px-4 py-2 sm:py-2 rounded-full border border-[#6B4B2E] bg-white/5 hover:bg-[#6B4B2E] hover:text-white text-white font-sans text-[11px] sm:text-[12.5px] font-bold tracking-wider uppercase transition-all duration-300 shadow-xs cursor-pointer active:scale-95 focus:outline-none whitespace-nowrap"
-              title="Upload your design photo directly on WhatsApp"
-            >
-              <Sparkles className="w-3 h-3 sm:w-3.5 sm:h-3.5 text-[#B09A82] shrink-0" />
-              <span>Custom Design</span>
-            </button>
-
-            {/* 2. Book An Appointment Button */}
-            <button
-              type="button"
-              onClick={() => {
-                triggerAudio('click');
-                setConsultationModal(true);
-              }}
-              className="inline-flex items-center justify-center gap-1 sm:gap-2 px-2.5 sm:px-5 py-2 sm:py-2 rounded-full bg-gradient-to-r from-[#6B4B2E] to-[#8C6D46] hover:from-[#7B5534] hover:to-[#9D7D54] text-white font-sans text-[11px] sm:text-[12.5px] font-bold tracking-wider uppercase transition-all duration-300 shadow-[0_3px_12px_rgba(107,75,46,0.35)] cursor-pointer active:scale-95 focus:outline-none whitespace-nowrap"
-              title="Book a private visit or live consultation"
-            >
-              <Calendar className="w-3 h-3 sm:w-3.5 sm:h-3.5 text-white shrink-0" />
-              <span>Appointment</span>
-            </button>
-          </div>
-
-        </div>
+      {/* Centered Custom Design Action below Hero */}
+      <div className="w-full py-4 sm:py-5 px-4 bg-white flex justify-center items-center relative z-20 border-b border-[#E6DFD3]/60">
+        <button
+          type="button"
+          onClick={() => {
+            triggerAudio('click');
+            setCustomDesignOpen(true);
+          }}
+          className="inline-flex items-center justify-center gap-2 px-7 sm:px-9 py-3 sm:py-3.5 rounded-full bg-[#0D2B4E] hover:bg-[#081B32] text-white font-sans text-xs sm:text-[13px] font-bold tracking-widest uppercase transition-all duration-300 shadow-[0_4px_16px_rgba(13,43,78,0.28)] hover:shadow-[0_6px_20px_rgba(13,43,78,0.4)] cursor-pointer active:scale-95 focus:outline-none"
+        >
+          <Sparkles className="w-4 h-4 text-[#E6DFD3] shrink-0" />
+          <span>Custom Design</span>
+        </button>
       </div>
 
       {/* Main Content Area (Clean White background) */}
@@ -1028,9 +996,22 @@ export default function Home({
           </div>
         </section>
 
+        {/* Centered Custom Design Action below Story Section */}
+        <div className="w-full py-6 sm:py-8 px-4 bg-white flex justify-center items-center relative z-20">
+          <button
+            type="button"
+            onClick={() => {
+              triggerAudio('click');
+              setCustomDesignOpen(true);
+            }}
+            className="inline-flex items-center justify-center gap-2 px-7 sm:px-9 py-3 sm:py-3.5 rounded-full bg-[#0D2B4E] hover:bg-[#081B32] text-white font-sans text-xs sm:text-[13px] font-bold tracking-widest uppercase transition-all duration-300 shadow-[0_4px_16px_rgba(13,43,78,0.28)] hover:shadow-[0_6px_20px_rgba(13,43,78,0.4)] cursor-pointer active:scale-95 focus:outline-none"
+          >
+            <Sparkles className="w-4 h-4 text-[#E6DFD3] shrink-0" />
+            <span>Custom Design</span>
+          </button>
+        </div>
 
-
-                {/* ==========================================================
+        {/* ==========================================================
           SECTION: TRUST SEALS / BRAND ASSURANCES
           (BIS Hallmarked, Free Shipping, COD, 25,000+ Happy Customers)
           Size enlarged, luxury balanced, crystal clear badges
@@ -1268,7 +1249,7 @@ export default function Home({
                   changeCategoryTab?.('Collections');
                   navigateTo('collections');
                 }}
-                className="inline-flex items-center gap-2.5 px-8 py-3.5 bg-[#8C6D46] hover:bg-[#A37B4D] active:scale-95 text-white font-sans text-xs sm:text-[12.5px] font-semibold tracking-[0.2em] uppercase transition-all duration-300 shadow-[0_8px_25px_rgba(140,109,70,0.35)] cursor-pointer rounded-none"
+                className="inline-flex items-center gap-2.5 px-8 py-3.5 bg-[#0D2B4E] hover:bg-[#081B32] active:scale-95 text-white font-sans text-xs sm:text-[12.5px] font-semibold tracking-[0.2em] uppercase transition-all duration-300 shadow-[0_4px_16px_rgba(13,43,78,0.25)] cursor-pointer rounded-none"
               >
                 <span>EXPLORE ALL GEMS</span>
                 <span className="text-sm font-light">→</span>
@@ -1367,7 +1348,7 @@ export default function Home({
                   changeCategoryTab?.('Collections');
                   navigateTo('collections');
                 }}
-                className="inline-flex items-center gap-2.5 px-8 py-3.5 bg-[#6B4B2E] hover:bg-[#0D2B4E] active:scale-95 text-white font-sans text-xs sm:text-[12.5px] font-semibold tracking-[0.2em] uppercase transition-all duration-300 shadow-[0_4px_16px_rgba(107,75,46,0.25)] cursor-pointer rounded-none"
+                className="inline-flex items-center gap-2.5 px-8 py-3.5 bg-[#0D2B4E] hover:bg-[#081B32] active:scale-95 text-white font-sans text-xs sm:text-[12.5px] font-semibold tracking-[0.2em] uppercase transition-all duration-300 shadow-[0_4px_16px_rgba(13,43,78,0.25)] cursor-pointer rounded-none"
               >
                 <span>SHOP GOLD PLATED</span>
                 <span className="text-sm font-light">→</span>
@@ -1440,7 +1421,7 @@ export default function Home({
                       changeCategoryTab?.('Collections');
                       navigateTo('collections');
                     }}
-                    className="inline-flex items-center gap-2.5 px-8 py-3.5 bg-[#6B4B2E] hover:bg-[#0D2B4E] active:scale-95 text-white font-sans text-xs sm:text-[12.5px] font-semibold tracking-[0.2em] uppercase transition-all duration-300 shadow-[0_4px_16px_rgba(107,75,46,0.25)] cursor-pointer rounded-none"
+                    className="inline-flex items-center gap-2.5 px-8 py-3.5 bg-[#0D2B4E] hover:bg-[#081B32] active:scale-95 text-white font-sans text-xs sm:text-[12.5px] font-semibold tracking-[0.2em] uppercase transition-all duration-300 shadow-[0_4px_16px_rgba(13,43,78,0.25)] cursor-pointer rounded-none"
                   >
                     <span>SHOP ALL</span>
                     <span className="text-sm font-light">→</span>
@@ -1548,7 +1529,7 @@ export default function Home({
 
                       {/* Quick View Pill */}
                       <div className="absolute bottom-3 inset-x-3 opacity-0 group-hover:opacity-100 transition-opacity duration-300">
-                        <div className="w-full py-2 bg-[#6B4B2E] text-white text-[10px] sm:text-[11px] font-sans font-bold tracking-[0.18em] uppercase text-center shadow-lg">
+                        <div className="w-full py-2 bg-[#0D2B4E] text-white text-[10px] sm:text-[11px] font-sans font-bold tracking-[0.18em] uppercase text-center shadow-lg">
                           VIEW PIECE →
                         </div>
                       </div>

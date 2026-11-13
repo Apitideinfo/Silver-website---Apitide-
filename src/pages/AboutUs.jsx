@@ -120,7 +120,7 @@ export default function AboutUs({ navigateTo, triggerAudio: triggerAudioProp }) 
           <div className="pt-4 flex flex-wrap gap-4 justify-center items-center">
             <button
               onClick={() => { triggerAudio('click'); navigateTo('collections'); }}
-              className="px-8 py-3.5 rounded-full bg-gradient-to-r from-[#6B4B2E] via-[#8A6623] to-[#B09A82] text-white font-extrabold text-xs uppercase tracking-widest hover:brightness-110 active:scale-95 transition-all shadow-[0_8px_25px_rgba(107,75,46,0.45)] cursor-pointer border-none flex items-center gap-2"
+              className="px-8 py-3.5 rounded-full bg-[#0D2B4E] hover:bg-[#081B32] text-white font-extrabold text-xs uppercase tracking-widest active:scale-95 transition-all shadow-[0_8px_25px_rgba(13,43,78,0.45)] cursor-pointer border-none flex items-center gap-2"
             >
               <span>Explore Collections</span>
               <ArrowRight className="w-4 h-4" />
@@ -443,7 +443,7 @@ export default function AboutUs({ navigateTo, triggerAudio: triggerAudioProp }) 
                 href={BUSINESS.MAPS_URL}
                 target="_blank"
                 rel="noopener noreferrer"
-                className="px-6 py-3.5 rounded-xl bg-gradient-to-r from-[#6B4B2E] to-[#8A6623] text-white font-bold text-xs uppercase tracking-wider hover:brightness-110 transition-all flex items-center gap-2 shadow-lg"
+                className="px-6 py-3.5 rounded-xl bg-[#0D2B4E] hover:bg-[#081B32] text-white font-bold text-xs uppercase tracking-wider transition-all flex items-center gap-2 shadow-lg"
               >
                 <MapPin className="w-4 h-4" /> Get Directions
               </a>
@@ -582,7 +582,7 @@ export default function AboutUs({ navigateTo, triggerAudio: triggerAudioProp }) 
           <div className="flex flex-wrap gap-4 justify-center items-center relative z-10 pt-2">
             <button
               onClick={() => { triggerAudio('click'); navigateTo('collections'); }}
-              className="px-8 py-3.5 rounded-full bg-gradient-to-r from-[#6B4B2E] via-[#8A6623] to-[#D4AF37] text-white font-extrabold text-xs uppercase tracking-widest hover:scale-105 active:scale-95 transition-all shadow-lg cursor-pointer border-none"
+              className="px-8 py-3.5 rounded-full bg-[#0D2B4E] hover:bg-[#081B32] text-white font-extrabold text-xs uppercase tracking-widest hover:scale-105 active:scale-95 transition-all shadow-lg cursor-pointer border-none"
             >
               Browse Catalog
             </button>

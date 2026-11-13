@@ -151,8 +151,8 @@ export default function Navbar({
       <div className="w-full bg-white border-b border-gray-100">
         <div className="max-w-[1536px] mx-auto px-4 sm:px-6 lg:px-10 h-16 sm:h-[72px] flex items-center justify-between gap-4">
           
-          {/* LEFT: Hamburger Menu & Customer Care */}
-          <div className="flex items-center gap-1 sm:gap-3 shrink-0">
+          {/* LEFT: Mobile Hamburger & BRAND LOGO */}
+          <div className="flex items-center gap-2 sm:gap-4 shrink-0">
             {/* Mobile Hamburger Toggle */}
             <button
               onClick={() => {
@@ -165,51 +165,35 @@ export default function Navbar({
               {mobileMenuOpen ? <X className="w-6 h-6" /> : <Menu className="w-6 h-6" />}
             </button>
 
-            {/* Desktop Customer Care link */}
-            <a 
-              href="tel:+919451638680"
-              className="hidden md:inline-flex items-center text-[13px] lg:text-[13.5px] text-gray-700 hover:text-black font-sans tracking-tight transition-colors whitespace-nowrap"
-            >
-              Customer Care: <span className="font-medium ml-1 text-gray-900">+91 94516 38680</span>
-            </a>
-
-            {/* Mobile Phone Call Link */}
-            <a 
-              href="tel:+919451638680"
-              aria-label="Call Customer Care"
-              className="hidden xs:inline-flex md:hidden text-gray-700 hover:text-black p-1"
-            >
-              <Phone className="w-4 h-4" />
-            </a>
-          </div>
-
-          {/* CENTER: BRAND LOGO (Fluid width so search icon NEVER overlaps on mobile) */}
-          <div className="flex-1 min-w-0 flex items-center justify-center text-center px-1">
+            {/* BRAND LOGO (Left Aligned) */}
             <button
               onClick={() => {
                 triggerAudio('click');
                 navigateTo('home');
               }}
-              className="flex flex-col items-center justify-center focus:outline-none cursor-pointer group text-center border-none bg-transparent max-w-full"
+              className="flex flex-col items-start justify-center focus:outline-none cursor-pointer group text-left border-none bg-transparent"
               aria-label="MANISH & CO Home"
             >
               <span 
-                className="font-serif text-[17px] xs:text-[19px] sm:text-[24px] md:text-[28px] lg:text-[31px] font-bold tracking-[0.06em] xs:tracking-[0.08em] sm:tracking-[0.12em] text-[#0D2B4E] uppercase leading-none group-hover:text-[#6B4B2E] transition-colors whitespace-nowrap"
+                className="font-serif text-[18px] xs:text-[20px] sm:text-[24px] md:text-[26px] lg:text-[29px] font-bold tracking-[0.06em] xs:tracking-[0.08em] sm:tracking-[0.1em] text-[#0D2B4E] uppercase leading-none group-hover:text-[#6B4B2E] transition-colors whitespace-nowrap"
                 style={{ fontFamily: "'Cormorant Garamond', 'Playfair Display', Georgia, serif" }}
               >
                 MANISH &amp; CO
               </span>
-              <div className="flex items-center justify-center gap-1 sm:gap-1.5 mt-0.5 sm:mt-1">
-                <span className="h-[0.5px] w-2.5 sm:w-5 bg-[#6B4B2E]/30" />
+              <div className="flex items-center gap-1 sm:gap-1.5 mt-0.5 sm:mt-1">
+                <span className="h-[0.5px] w-2.5 sm:w-4 bg-[#6B4B2E]/30" />
                 <span 
-                  className="font-sans text-[7px] xs:text-[7.5px] sm:text-[9.5px] tracking-[0.2em] sm:tracking-[0.3em] text-[#6B4B2E] uppercase font-semibold whitespace-nowrap"
+                  className="font-sans text-[7px] xs:text-[7.5px] sm:text-[9px] tracking-[0.2em] sm:tracking-[0.25em] text-[#6B4B2E] uppercase font-semibold whitespace-nowrap"
                 >
                   FINE JEWELLERY
                 </span>
-                <span className="h-[0.5px] w-2.5 sm:w-5 bg-[#6B4B2E]/30" />
+                <span className="h-[0.5px] w-2.5 sm:w-4 bg-[#6B4B2E]/30" />
               </div>
             </button>
           </div>
+
+          {/* Center Spacer */}
+          <div className="flex-1" />
 
           {/* RIGHT: Search Bar + Profile + Wishlist + Cart (Clean spacing) */}
           <div className="flex items-center justify-end gap-1 xs:gap-1.5 sm:gap-4 md:gap-5 shrink-0" ref={searchContainerRef}>
