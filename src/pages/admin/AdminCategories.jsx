@@ -12,6 +12,7 @@ import { INITIAL_CATEGORIES } from '../../config/constants';
 
 import { silverStoryService, DEFAULT_SILVER_STORY_DATA } from '../../services/silverStoryService';
 import { giftingHampersService, DEFAULT_GIFTING_HAMPERS } from '../../services/giftingHampersService';
+import { heroBannerService, DEFAULT_HERO_BANNERS } from '../../services/heroBannerService';
 
 import { getOptimizedImageUrl } from '../../utils/imageOptimizer';
 // Fallback images for Silver Story Showcase Preview
@@ -425,6 +426,146 @@ export default function AdminCategories({
       await giftingHampersService.saveHampers(DEFAULT_GIFTING_HAMPERS);
       if (typeof setAdminNotification === 'function') {
         setAdminNotification({ message: '✓ Hampers reset to default!', type: 'success' });
+      }
+    }
+  };
+
+  // ─── DYNAMIC HERO BANNERS CAROUSEL STATE ──────────────────────────
+  const [heroBanners, setHeroBanners] = useState(() => heroBannerService.getStoredBanners());
+  const [heroBannerUploadProgress, setHeroBannerUploadProgress] = useState('');
+  const [savingHeroBanners, setSavingHeroBanners] = useState(false);
+  const [heroBannersSaveSuccess, setHeroBannersSaveSuccess] = useState(false);
+
+  useEffect(() => {
+    heroBannerService.fetchRemoteBanners().then(res => {
+      if (res && res.length > 0) setHeroBanners(res);
+    });
+
+    const handleHeroBannersSync = () => {
+      setHeroBanners(heroBannerService.getStoredBanners());
+    };
+
+    if (typeof window !== 'undefined') {
+      window.addEventListener('manish_hero_banners_updated', handleHeroBannersSync);
+    }
+    return () => {
+      if (typeof window !== 'undefined') {
+        window.removeEventListener('manish_hero_banners_updated', handleHeroBannersSync);
+      }
+    };
+  }, []);
+
+  const handleHeroBannerImageUpload = async (e, index) => {
+    const file = e.target.files?.[0];
+    if (!file) return;
+
+    setHeroBannerUploadProgress(`Uploading Slide #${index + 1} banner...`);
+    try {
+      const res = await ImageUploadService.uploadImage(file);
+      if (res && res.url) {
+        const next = [...heroBanners];
+        next[index] = { ...next[index], customImg: res.url };
+        setHeroBanners(next);
+        await heroBannerService.saveBanners(next);
+        setHeroBannerUploadProgress(`✓ Slide #${index + 1} banner uploaded and live on Homepage!`);
+        if (typeof setAdminNotification === 'function') {
+          setAdminNotification({
+            message: `✓ Slide #${index + 1} banner updated live on Homepage!`,
+            type: 'success'
+          });
+        }
+        setTimeout(() => setHeroBannerUploadProgress(''), 4000);
+      }
+    } catch (err) {
+      console.error(err);
+      setHeroBannerUploadProgress('Upload failed.');
+      setTimeout(() => setHeroBannerUploadProgress(''), 3000);
+    }
+  };
+
+  const handleResetSingleHeroBannerImage = async (idx) => {
+    const next = [...heroBanners];
+    next[idx] = { ...next[idx], customImg: '' };
+    setHeroBanners(next);
+    await heroBannerService.saveBanners(next);
+    if (typeof setAdminNotification === 'function') {
+      setAdminNotification({ message: `✓ Slide #${idx + 1} reset to brand default image!`, type: 'success' });
+    }
+  };
+
+  const handleHeroBannerFieldChange = (idx, field, val) => {
+    setHeroBanners(prev => {
+      const next = [...prev];
+      next[idx] = { ...next[idx], [field]: val };
+      return next;
+    });
+  };
+
+  const handleAddHeroSlide = () => {
+    const newSlide = {
+      id: `hero-${Date.now()}`,
+      title: 'New Featured Jewellery Banner',
+      customImg: '',
+      webp: '',
+      png: '',
+      alt: 'Fine Silver Jewellery - MANISH & CO',
+      page: 'collections',
+      category: 'Collections'
+    };
+    const next = [...heroBanners, newSlide];
+    setHeroBanners(next);
+    heroBannerService.saveBanners(next);
+    if (typeof setAdminNotification === 'function') {
+      setAdminNotification({ message: '✓ New slide added to carousel! Upload an image and save.', type: 'success' });
+    }
+  };
+
+  const handleRemoveHeroSlide = async (idx) => {
+    if (heroBanners.length <= 1) {
+      alert('You must have at least 1 hero banner slide in the carousel.');
+      return;
+    }
+    if (window.confirm(`Delete Hero Slide #${idx + 1}?`)) {
+      const next = heroBanners.filter((_, i) => i !== idx);
+      setHeroBanners(next);
+      await heroBannerService.saveBanners(next);
+      if (typeof setAdminNotification === 'function') {
+        setAdminNotification({ message: `✓ Hero Slide #${idx + 1} removed!`, type: 'success' });
+      }
+    }
+  };
+
+  const handleSaveHeroBanners = async (e) => {
+    if (e) e.preventDefault();
+    setSavingHeroBanners(true);
+    try {
+      await heroBannerService.saveBanners(heroBanners);
+      setHeroBannersSaveSuccess(true);
+      setTimeout(() => setHeroBannersSaveSuccess(false), 3000);
+      if (typeof setAdminNotification === 'function') {
+        setAdminNotification({
+          message: '✓ Hero Banners updated live on Homepage carousel!',
+          type: 'success'
+        });
+      }
+    } catch (err) {
+      console.error(err);
+      if (typeof setAdminNotification === 'function') {
+        setAdminNotification({ message: 'Saved locally, syncing to cloud...', type: 'info' });
+      }
+    } finally {
+      setTimeout(() => {
+        setSavingHeroBanners(false);
+      }, 350);
+    }
+  };
+
+  const handleResetHeroBanners = async () => {
+    if (window.confirm('Reset all Hero Carousel Banners to original brand defaults?')) {
+      setHeroBanners(DEFAULT_HERO_BANNERS);
+      await heroBannerService.saveBanners(DEFAULT_HERO_BANNERS);
+      if (typeof setAdminNotification === 'function') {
+        setAdminNotification({ message: '✓ Hero Banners reset to default!', type: 'success' });
       }
     }
   };
@@ -980,157 +1121,325 @@ export default function AdminCategories({
 
       
 
-      {/* Sub-Tab Navigation Bar */}
-
-      <div className="flex flex-col sm:flex-row items-stretch sm:items-center justify-between gap-3 bg-white dark:bg-[#15151A] p-2 sm:p-2.5 rounded-2xl border border-zinc-200 dark:border-zinc-800 shadow-xs">
-
-        <div className="flex flex-col xs:flex-row items-stretch sm:items-center gap-2 w-full sm:w-auto">
-
+      {/* Sub-Tab Navigation Bar - Responsive Horizontal Tabs */}
+      <div className="flex flex-col lg:flex-row items-stretch lg:items-center justify-between gap-3 bg-white dark:bg-[#15151A] p-2.5 sm:p-3 rounded-2xl border border-zinc-200 dark:border-zinc-800 shadow-xs">
+        <div className="flex items-center gap-2 overflow-x-auto pb-1 lg:pb-0 scrollbar-none w-full lg:w-auto">
+          {/* Tab 1: Categories */}
           <button
-
             type="button"
-
             onClick={() => setActiveSubTab('categories')}
-
-            className={`inline-flex items-center gap-2 px-4 py-2.5 rounded-xl text-xs font-bold transition-all cursor-pointer ${
-
+            className={`inline-flex items-center gap-2 px-4 py-2.5 rounded-xl text-xs font-bold transition-all cursor-pointer whitespace-nowrap shrink-0 ${
               activeSubTab === 'categories'
-
                 ? 'bg-[#15151A] text-white dark:bg-white dark:text-zinc-900 shadow-sm'
-
-                : 'text-zinc-500 hover:text-zinc-800 hover:bg-zinc-100 dark:hover:bg-zinc-800'
-
+                : 'text-zinc-500 hover:text-zinc-800 hover:bg-zinc-100 dark:hover:bg-zinc-800 dark:text-zinc-400 dark:hover:text-white'
             }`}
-
           >
-
             <Layers className="w-4 h-4 text-[#C8A646]" />
-
             <span>Jewellery Categories</span>
-
-            <span className="text-[10px] px-2 py-0.5 rounded-full bg-zinc-200/60 dark:bg-zinc-700 text-zinc-700 dark:text-zinc-300">
-
+            <span className="text-[10px] px-2 py-0.5 rounded-full bg-zinc-200/60 dark:bg-zinc-700 text-zinc-700 dark:text-zinc-300 font-bold">
               {categories.length}
-
             </span>
-
           </button>
 
-
-
-
-
+          {/* Tab 2: Hero Banners */}
           <button
-
             type="button"
+            onClick={() => setActiveSubTab('hero-banners')}
+            className={`inline-flex items-center gap-2 px-4 py-2.5 rounded-xl text-xs font-bold transition-all cursor-pointer whitespace-nowrap shrink-0 ${
+              activeSubTab === 'hero-banners'
+                ? 'bg-[#15151A] text-white dark:bg-white dark:text-zinc-900 shadow-sm'
+                : 'text-zinc-500 hover:text-zinc-800 hover:bg-zinc-100 dark:hover:bg-zinc-800 dark:text-zinc-400 dark:hover:text-white'
+            }`}
+          >
+            <Sparkles className="w-4 h-4 text-blue-500" />
+            <span>Hero Banners</span>
+            <span className="text-[10px] px-2 py-0.5 rounded-full bg-blue-100 dark:bg-blue-900/40 text-blue-800 dark:text-blue-300 font-bold">
+              Carousel
+            </span>
+          </button>
 
+          {/* Tab 3: Silver Story */}
+          <button
+            type="button"
             onClick={() => setActiveSubTab('silver-story')}
-
-            className={`inline-flex items-center gap-2 px-4 py-2.5 rounded-xl text-xs font-bold transition-all cursor-pointer ${
-
+            className={`inline-flex items-center gap-2 px-4 py-2.5 rounded-xl text-xs font-bold transition-all cursor-pointer whitespace-nowrap shrink-0 ${
               activeSubTab === 'silver-story'
-
                 ? 'bg-[#15151A] text-white dark:bg-white dark:text-zinc-900 shadow-sm'
-
-                : 'text-zinc-500 hover:text-zinc-800 hover:bg-zinc-100 dark:hover:bg-zinc-800'
-
+                : 'text-zinc-500 hover:text-zinc-800 hover:bg-zinc-100 dark:hover:bg-zinc-800 dark:text-zinc-400 dark:hover:text-white'
             }`}
-
           >
-
             <Heart className="w-4 h-4 text-rose-500 fill-rose-500" />
-
             <span>Silver For Every Story</span>
-
             <span className="text-[10px] px-2 py-0.5 rounded-full bg-amber-100 dark:bg-amber-900/40 text-amber-800 dark:text-amber-300 font-bold">
-
               Showcase
-
             </span>
-
           </button>
 
+          {/* Tab 4: Gifting Hampers */}
           <button
-
             type="button"
-
             onClick={() => setActiveSubTab('gifting-hampers')}
-
-            className={`inline-flex items-center gap-2 px-4 py-2.5 rounded-xl text-xs font-bold transition-all cursor-pointer ${
-
+            className={`inline-flex items-center gap-2 px-4 py-2.5 rounded-xl text-xs font-bold transition-all cursor-pointer whitespace-nowrap shrink-0 ${
               activeSubTab === 'gifting-hampers'
-
                 ? 'bg-[#15151A] text-white dark:bg-white dark:text-zinc-900 shadow-sm'
-
-                : 'text-zinc-500 hover:text-zinc-800 hover:bg-zinc-100 dark:hover:bg-zinc-800'
-
+                : 'text-zinc-500 hover:text-zinc-800 hover:bg-zinc-100 dark:hover:bg-zinc-800 dark:text-zinc-400 dark:hover:text-white'
             }`}
-
           >
-
             <Gift className="w-4 h-4 text-emerald-500" />
-
             <span>Gifting Hampers</span>
-
             <span className="text-[10px] px-2 py-0.5 rounded-full bg-emerald-100 dark:bg-emerald-900/40 text-emerald-800 dark:text-emerald-300 font-bold">
-
               Festive
-
             </span>
-
           </button>
-
         </div>
 
+        {/* Right Side Quick Actions / Resets */}
+        <div className="flex items-center gap-2 shrink-0">
+          {activeSubTab === 'hero-banners' && (
+            <button
+              type="button"
+              onClick={handleResetHeroBanners}
+              className="inline-flex items-center gap-1.5 px-3 py-1.5 text-[11px] font-semibold text-zinc-500 hover:text-zinc-800 dark:text-zinc-400 dark:hover:text-white transition-colors cursor-pointer"
+            >
+              <RotateCcw className="w-3.5 h-3.5" />
+              <span>Reset Default Banners</span>
+            </button>
+          )}
 
+          {activeSubTab === 'silver-story' && (
+            <button
+              type="button"
+              onClick={handleResetSilverStory}
+              className="inline-flex items-center gap-1.5 px-3 py-1.5 text-[11px] font-semibold text-zinc-500 hover:text-zinc-800 dark:text-zinc-400 dark:hover:text-white transition-colors cursor-pointer"
+            >
+              <RotateCcw className="w-3.5 h-3.5" />
+              <span>Reset Reference Showcase</span>
+            </button>
+          )}
 
-        {activeSubTab === 'silver-story' && (
-
-          <button
-
-            type="button"
-
-            onClick={handleResetSilverStory}
-
-            className="inline-flex items-center gap-1.5 px-3 py-1.5 text-[11px] font-semibold text-zinc-500 hover:text-zinc-800 dark:text-zinc-400 dark:hover:text-white transition-colors cursor-pointer"
-
-          >
-
-            <RotateCcw className="w-3.5 h-3.5" />
-
-            <span>Reset Reference Showcase</span>
-
-          </button>
-
-        )}
-
-        {activeSubTab === 'gifting-hampers' && (
-
-          <button
-
-            type="button"
-
-            onClick={handleResetHampers}
-
-            className="inline-flex items-center gap-1.5 px-3 py-1.5 text-[11px] font-semibold text-zinc-500 hover:text-zinc-800 dark:text-zinc-400 dark:hover:text-white transition-colors cursor-pointer"
-
-          >
-
-            <RotateCcw className="w-3.5 h-3.5" />
-
-            <span>Reset Default Hampers</span>
-
-          </button>
-
-        )}
-
-
-
+          {activeSubTab === 'gifting-hampers' && (
+            <button
+              type="button"
+              onClick={handleResetHampers}
+              className="inline-flex items-center gap-1.5 px-3 py-1.5 text-[11px] font-semibold text-zinc-500 hover:text-zinc-800 dark:text-zinc-400 dark:hover:text-white transition-colors cursor-pointer"
+            >
+              <RotateCcw className="w-3.5 h-3.5" />
+              <span>Reset Default Hampers</span>
+            </button>
+          )}
+        </div>
       </div>
 
 
 
       
+      {/* =========================================================
+          VIEW: HERO BANNERS CAROUSEL (HOMEPAGE HERO)
+          ========================================================= */}
+      {activeSubTab === 'hero-banners' && (
+        <div className="space-y-6">
+          {/* Top Info & Action Banner */}
+          <div className="bg-gradient-to-r from-blue-500/10 via-indigo-500/10 to-amber-500/10 border border-blue-500/20 rounded-2xl p-5 sm:p-6 text-left flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4">
+            <div>
+              <span className="text-[10px] font-extrabold uppercase tracking-widest text-blue-600 dark:text-blue-400 block mb-1">
+                HOMEPAGE HERO SECTION
+              </span>
+              <h3 className="text-lg sm:text-xl font-black text-zinc-900 dark:text-white tracking-tight flex items-center gap-2">
+                <Sparkles className="w-5 h-5 text-blue-500" />
+                Hero Carousel Banners Manager
+              </h3>
+              <p className="text-xs text-zinc-500 dark:text-zinc-400 mt-1 max-w-2xl">
+                Manage the sliding banners at the top of your homepage. Upload custom banners or paste image URLs. Changes update immediately across all devices and customers.
+              </p>
+            </div>
+
+            <div className="flex items-center gap-2.5 w-full sm:w-auto">
+              <button
+                type="button"
+                onClick={handleAddHeroSlide}
+                className="flex-1 sm:flex-initial inline-flex items-center justify-center gap-2 px-4 py-2.5 bg-white dark:bg-zinc-800 hover:bg-zinc-100 dark:hover:bg-zinc-700 text-zinc-900 dark:text-white border border-zinc-200 dark:border-zinc-700 text-xs font-bold rounded-xl shadow-xs transition-all cursor-pointer"
+              >
+                <Plus className="w-4 h-4 text-blue-500" />
+                <span>Add Slide</span>
+              </button>
+
+              <button
+                type="button"
+                onClick={handleSaveHeroBanners}
+                disabled={savingHeroBanners}
+                className="flex-1 sm:flex-initial inline-flex items-center justify-center gap-2 px-5 py-2.5 bg-[#0D2B4E] hover:bg-[#143B66] text-white text-xs font-bold rounded-xl shadow-sm transition-all cursor-pointer disabled:opacity-50"
+              >
+                {savingHeroBanners ? (
+                  <>
+                    <RefreshCw className="w-4 h-4 animate-spin text-[#C8A646]" />
+                    <span>Saving...</span>
+                  </>
+                ) : heroBannersSaveSuccess ? (
+                  <>
+                    <Check className="w-4 h-4 text-emerald-400" />
+                    <span>Saved Live!</span>
+                  </>
+                ) : (
+                  <>
+                    <Sparkles className="w-4 h-4 text-[#C8A646]" />
+                    <span>Save Banners Live</span>
+                  </>
+                )}
+              </button>
+            </div>
+          </div>
+
+          {/* Hero Slides Grid */}
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-5">
+            {heroBanners.map((slide, index) => {
+              const currentImg = slide.customImg || slide.png || slide.webp;
+              const isCustom = Boolean(slide.customImg);
+
+              return (
+                <div
+                  key={slide.id || index}
+                  className="bg-white dark:bg-[#15151A] border border-zinc-200 dark:border-zinc-800 rounded-2xl p-5 shadow-xs flex flex-col justify-between gap-4 text-left transition-all hover:border-blue-500/30"
+                >
+                  <div>
+                    {/* Header */}
+                    <div className="flex items-center justify-between gap-2 mb-3">
+                      <div className="flex items-center gap-2">
+                        <span className="text-xs font-black uppercase tracking-wider text-blue-600 dark:text-blue-400">
+                          SLIDE #{index + 1}
+                        </span>
+                        {isCustom ? (
+                          <span className="text-[10px] font-bold px-2 py-0.5 rounded-full bg-emerald-100 dark:bg-emerald-900/40 text-emerald-700 dark:text-emerald-300">
+                            Custom Image
+                          </span>
+                        ) : (
+                          <span className="text-[10px] font-bold px-2 py-0.5 rounded-full bg-zinc-100 dark:bg-zinc-800 text-zinc-600 dark:text-zinc-400">
+                            Brand Default
+                          </span>
+                        )}
+                      </div>
+
+                      <div className="flex items-center gap-1.5">
+                        {isCustom && (
+                          <button
+                            type="button"
+                            onClick={() => handleResetSingleHeroBannerImage(index)}
+                            className="p-1.5 text-zinc-400 hover:text-amber-600 dark:hover:text-amber-400 transition-colors"
+                            title="Reset to brand default banner"
+                          >
+                            <RotateCcw className="w-3.5 h-3.5" />
+                          </button>
+                        )}
+                        {heroBanners.length > 1 && (
+                          <button
+                            type="button"
+                            onClick={() => handleRemoveHeroSlide(index)}
+                            className="p-1.5 text-zinc-400 hover:text-red-600 dark:hover:text-red-400 transition-colors"
+                            title="Delete this slide"
+                          >
+                            <Trash2 className="w-3.5 h-3.5" />
+                          </button>
+                        )}
+                      </div>
+                    </div>
+
+                    {/* Image Preview Container (aspect-[2200/715]) */}
+                    <div className="relative aspect-[2200/715] w-full rounded-xl overflow-hidden bg-zinc-900 border border-zinc-200 dark:border-zinc-800 mb-4 group">
+                      {currentImg ? (
+                        <img
+                          src={currentImg}
+                          alt={slide.title || `Hero Slide ${index + 1}`}
+                          className="w-full h-full object-cover object-center"
+                        />
+                      ) : (
+                        <div className="w-full h-full flex items-center justify-center text-zinc-500 text-xs">
+                          No Image Uploaded
+                        </div>
+                      )}
+
+                      {/* Overlay upload button */}
+                      <label className="absolute inset-0 bg-black/50 opacity-0 group-hover:opacity-100 transition-opacity flex flex-col items-center justify-center gap-1 cursor-pointer text-white">
+                        <ImageIcon className="w-6 h-6 text-white drop-shadow" />
+                        <span className="text-xs font-bold drop-shadow">Click to Upload Banner Image</span>
+                        <span className="text-[10px] text-zinc-300">Recommended: 2200 x 715 px</span>
+                        <input
+                          type="file"
+                          accept="image/*"
+                          className="hidden"
+                          onChange={(e) => handleHeroBannerImageUpload(e, index)}
+                        />
+                      </label>
+                    </div>
+
+                    {/* Slide Fields */}
+                    <div className="space-y-3">
+                      <div>
+                        <label className="block text-[11px] font-bold uppercase tracking-wider text-zinc-600 dark:text-zinc-400 mb-1">
+                          Slide Title / Headline
+                        </label>
+                        <input
+                          type="text"
+                          value={slide.title || ''}
+                          onChange={(e) => handleHeroBannerFieldChange(index, 'title', e.target.value)}
+                          placeholder="e.g. Timeless Silver Jewellery Collection"
+                          className="w-full px-3 py-2 text-xs font-semibold rounded-xl border border-zinc-200 dark:border-zinc-700 bg-white dark:bg-zinc-900 text-zinc-900 dark:text-white focus:outline-none focus:border-[#0D2B4E]"
+                        />
+                      </div>
+
+                      <div className="grid grid-cols-2 gap-3">
+                        <div>
+                          <label className="block text-[11px] font-bold uppercase tracking-wider text-zinc-600 dark:text-zinc-400 mb-1">
+                            Destination Page
+                          </label>
+                          <input
+                            type="text"
+                            value={slide.page || ''}
+                            onChange={(e) => handleHeroBannerFieldChange(index, 'page', e.target.value)}
+                            placeholder="e.g. collections"
+                            className="w-full px-3 py-1.5 text-xs font-medium rounded-xl border border-zinc-200 dark:border-zinc-700 bg-white dark:bg-zinc-900 text-zinc-900 dark:text-white focus:outline-none focus:border-[#0D2B4E]"
+                          />
+                        </div>
+
+                        <div>
+                          <label className="block text-[11px] font-bold uppercase tracking-wider text-zinc-600 dark:text-zinc-400 mb-1">
+                            Category Filter
+                          </label>
+                          <input
+                            type="text"
+                            value={slide.category || ''}
+                            onChange={(e) => handleHeroBannerFieldChange(index, 'category', e.target.value)}
+                            placeholder="e.g. Collections or earrings"
+                            className="w-full px-3 py-1.5 text-xs font-medium rounded-xl border border-zinc-200 dark:border-zinc-700 bg-white dark:bg-zinc-900 text-zinc-900 dark:text-white focus:outline-none focus:border-[#0D2B4E]"
+                          />
+                        </div>
+                      </div>
+
+                      <div>
+                        <label className="block text-[10px] font-bold uppercase tracking-wider text-zinc-500 mb-1">
+                          Direct Banner Image URL (or use file upload above)
+                        </label>
+                        <input
+                          type="text"
+                          value={slide.customImg || ''}
+                          onChange={(e) => handleHeroBannerFieldChange(index, 'customImg', e.target.value)}
+                          placeholder="https://... or paste image link"
+                          className="w-full px-3 py-1.5 text-[11px] font-mono rounded-xl border border-zinc-200 dark:border-zinc-700 bg-white dark:bg-zinc-900 text-zinc-700 dark:text-zinc-300 focus:outline-none focus:border-[#0D2B4E]"
+                        />
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              );
+            })}
+          </div>
+
+          {heroBannerUploadProgress && (
+            <div className="p-3 bg-blue-50 dark:bg-blue-900/30 text-blue-700 dark:text-blue-300 rounded-xl text-xs font-semibold text-center">
+              {heroBannerUploadProgress}
+            </div>
+          )}
+        </div>
+      )}
+
       {/* =========================================================
         VIEW: SILVER FOR EVERY STORY SPOTLIGHT & FESTIVE BANNER
         ========================================================= */}

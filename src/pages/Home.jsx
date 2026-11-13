@@ -84,6 +84,9 @@ import { silverStoryService, DEFAULT_SILVER_STORY_DATA } from '../services/silve
 // Dynamic Gifting Hampers Service
 import { giftingHampersService, DEFAULT_GIFTING_HAMPERS } from '../services/giftingHampersService';
 
+// Dynamic Hero Banners Service
+import { heroBannerService, DEFAULT_HERO_BANNERS } from '../services/heroBannerService';
+
 // Craft Your Bespoke Jewellery Assets
 import craftYourBespokeJewelleryPng from '../assets/craft_your_bespoke_jewellery.png';
 import craftYourBespokeJewelleryWebp from '../assets/craft_your_bespoke_jewellery.webp';
@@ -254,45 +257,40 @@ export default function Home({
     );
   };
 
-  // Hero Carousel State (Auto slide every 5 sec)
-  const heroBanners = [
-    {
-      id: 1,
-      title: 'Timeless Silver Jewellery Collection',
-      webp: heroBannerTimelessSilverWebp,
-      png: heroBannerTimelessSilverPng,
-      alt: 'Timeless Silver Jewellery Collection - MANISH & CO',
-      page: 'collections',
-      category: 'Collections'
-    },
-    {
-      id: 2,
-      title: 'Luxury Navy Blue Earring Collection',
-      webp: heroBannerLuxuryEarringWebp,
-      png: heroBannerLuxuryEarringPng,
-      alt: 'Luxury Navy Blue Earring Collection - MANISH & CO',
-      page: 'collections',
-      category: 'earrings'
-    },
-    {
-      id: 3,
-      title: 'Manish & Co. Brand Promise',
-      webp: heroBannerBrandPromiseWebp,
-      png: heroBannerBrandPromisePng,
-      alt: 'Manish & Co. Brand Promise - 925 Hallmarked Sterling Silver',
-      page: 'about-us',
-      category: null
-    },
-    {
-      id: 4,
-      title: 'Navy Silver Diwali Glow',
-      webp: heroBannerDiwaliGlowWebp,
-      png: heroBannerDiwaliGlowPng,
-      alt: 'Navy Silver Diwali Glow - Festive Fine Jewellery Collection',
-      page: 'collections',
-      category: 'Collections'
+  // Dynamic Hero Carousel State (Synchronized with Admin updates & auto-slide)
+  const [heroBanners, setHeroBanners] = useState(() => heroBannerService.getStoredBanners());
+
+  useEffect(() => {
+    heroBannerService.fetchRemoteBanners().then((res) => {
+      if (res && res.length > 0) setHeroBanners(res);
+    });
+
+    const handleHeroBannersUpdate = () => {
+      setHeroBanners(heroBannerService.getStoredBanners());
+    };
+
+    window.addEventListener('manish_hero_banners_updated', handleHeroBannersUpdate);
+    const storageHandler = (e) => {
+      if (e.key === 'manish_hero_banners_data') {
+        handleHeroBannersUpdate();
+      }
+    };
+    window.addEventListener('storage', storageHandler);
+    let bc = null;
+    if (typeof window !== 'undefined' && 'BroadcastChannel' in window) {
+      bc = new BroadcastChannel('manish_store_sync');
+      bc.onmessage = (msg) => {
+        if (msg?.data?.type === 'hero_banners') {
+          handleHeroBannersUpdate();
+        }
+      };
     }
-  ];
+    return () => {
+      window.removeEventListener('manish_hero_banners_updated', handleHeroBannersUpdate);
+      window.removeEventListener('storage', storageHandler);
+      if (bc) bc.close();
+    };
+  }, []);
 
   const [currentHeroSlide, setCurrentHeroSlide] = useState(0);
   const [isHeroPaused, setIsHeroPaused] = useState(false);
@@ -662,24 +660,37 @@ export default function Home({
               transition={{ duration: 0.65, ease: "easeInOut" }}
               className="absolute inset-0 w-full h-full cursor-pointer"
               onClick={() => {
-                const banner = heroBanners[currentHeroSlide];
-                if (banner.category && typeof changeCategoryTab === 'function') {
+                const banner = heroBanners[currentHeroSlide] || heroBanners[0];
+                if (banner?.category && typeof changeCategoryTab === 'function') {
                   changeCategoryTab(banner.category);
                 }
-                navigateTo(banner.page || 'collections');
+                navigateTo(banner?.page || 'collections');
               }}
             >
-              <picture className="w-full h-full block">
-                <source srcSet={heroBanners[currentHeroSlide].webp} type="image/webp" />
+              {heroBanners[currentHeroSlide]?.customImg ? (
                 <img
-                  src={heroBanners[currentHeroSlide].png}
-                  alt={heroBanners[currentHeroSlide].alt}
+                  src={heroBanners[currentHeroSlide].customImg}
+                  alt={heroBanners[currentHeroSlide]?.alt || heroBanners[currentHeroSlide]?.title || 'MANISH & CO Hero Banner'}
                   className="w-full h-full object-contain sm:object-cover object-center select-none"
                   loading="eager"
                   fetchPriority="high"
                   decoding="async"
                 />
-              </picture>
+              ) : (
+                <picture className="w-full h-full block">
+                  {heroBanners[currentHeroSlide]?.webp && (
+                    <source srcSet={heroBanners[currentHeroSlide].webp} type="image/webp" />
+                  )}
+                  <img
+                    src={heroBanners[currentHeroSlide]?.png || heroBanners[currentHeroSlide]?.webp}
+                    alt={heroBanners[currentHeroSlide]?.alt || heroBanners[currentHeroSlide]?.title || 'MANISH & CO Hero Banner'}
+                    className="w-full h-full object-contain sm:object-cover object-center select-none"
+                    loading="eager"
+                    fetchPriority="high"
+                    decoding="async"
+                  />
+                </picture>
+              )}
             </motion.div>
           </AnimatePresence>
 
@@ -991,18 +1002,18 @@ export default function Home({
               {/* 4 Trust Circular Seals - Horizontal Smooth Swipe on Mobile, Centered on Desktop */}
               <div 
                 ref={trustSealsScrollRef}
-                className="w-full max-w-[1040px] flex items-center justify-start sm:justify-between gap-2.5 sm:gap-4 px-2 sm:px-4 overflow-x-auto no-scrollbar scroll-smooth"
+                className="w-full max-w-[1200px] flex items-center justify-start sm:justify-between gap-3 sm:gap-6 px-2 sm:px-4 overflow-x-auto no-scrollbar scroll-smooth"
               >
                 {TRUST_SEALS_DATA.map((seal) => (
-                  <div key={seal.id} className="w-[130px] xs:w-[150px] sm:w-[240px] shrink-0 sm:shrink h-[85px] sm:h-[95px] flex items-center justify-center group cursor-pointer select-none">
-                    <div className="w-[80px] h-[80px] sm:w-[95px] sm:h-[95px] flex items-center justify-center transition-all duration-300 group-hover:scale-105 group-hover:drop-shadow-xs">
+                  <div key={seal.id} className="w-[140px] xs:w-[160px] sm:w-[250px] shrink-0 sm:shrink h-[115px] sm:h-[135px] flex items-center justify-center group cursor-pointer select-none">
+                    <div className="w-[105px] h-[105px] sm:w-[130px] sm:h-[130px] flex items-center justify-center transition-all duration-300 group-hover:scale-106 group-hover:drop-shadow-md">
                       <picture className="w-full h-full flex items-center justify-center">
                         <source srcSet={seal.imgWebp} type="image/webp" />
                         <img 
                           src={seal.imgPng} 
                           alt={seal.label} 
                           className="w-full h-full object-contain"
-                          style={{ maxHeight: '95px', maxWidth: '100%' }}
+                          style={{ maxHeight: '130px', maxWidth: '100%' }}
                           loading="lazy"
                         />
                       </picture>
@@ -1194,25 +1205,33 @@ export default function Home({
         </section>
 
         {/* ==========================================================
-          CLIENT FEEDBACK SECTION 4: GEMS COLLECTION (Feedback #10)
+          CLIENT FEEDBACK SECTION 4: GEMS COLLECTION (Ultra-Premium Redesign)
           ========================================================== */}
-        <section id="gems-collection-section" className="w-full py-14 sm:py-20 bg-[#091B2B] border-b border-white/10 select-none text-left text-white">
-          <div className="max-w-[1536px] mx-auto px-6 sm:px-10 lg:px-14">
+        <section id="gems-collection-section" className="relative w-full py-16 sm:py-24 bg-gradient-to-b from-[#030911] via-[#061424] to-[#040C16] border-b border-[#C5A880]/20 select-none text-left text-white overflow-hidden">
+          {/* Subtle Ambient Radial Glows */}
+          <div className="absolute top-0 left-1/4 w-96 h-96 bg-[#C5A880]/5 rounded-full blur-3xl pointer-events-none" />
+          <div className="absolute bottom-0 right-1/4 w-96 h-96 bg-[#3B82F6]/5 rounded-full blur-3xl pointer-events-none" />
 
-            {/* Editorial Header */}
-            <div className="flex flex-col lg:flex-row items-start lg:items-end justify-between gap-6 mb-10 sm:mb-12">
+          <div className="relative max-w-[1536px] mx-auto px-6 sm:px-10 lg:px-14 z-10">
+
+            {/* Editorial Luxury Header */}
+            <div className="flex flex-col lg:flex-row items-start lg:items-end justify-between gap-6 mb-12 sm:mb-14">
               <div>
-                <span className="inline-block text-[#C5A880] text-xs sm:text-[13px] font-sans font-semibold tracking-[0.28em] uppercase mb-2">
-                  PRECIOUS &amp; NATURAL STONES
-                </span>
+                <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-white/[0.06] border border-[#C5A880]/30 backdrop-blur-md mb-3">
+                  <Sparkles className="w-3.5 h-3.5 text-[#E5C396]" />
+                  <span className="text-[#E5C396] text-[11px] font-sans font-bold tracking-[0.28em] uppercase">
+                    CERTIFIED NATURAL GEMSTONES
+                  </span>
+                </div>
                 <h2
-                  className="text-3xl sm:text-4xl lg:text-[46px] font-bold text-white leading-tight"
+                  className="text-3xl sm:text-4xl lg:text-[50px] font-bold leading-tight tracking-tight text-transparent bg-clip-text bg-gradient-to-r from-[#FFF5DC] via-[#E8D1A7] to-[#C8A265]"
                   style={{ fontFamily: "'Cormorant Garamond', 'Playfair Display', Georgia, serif" }}
                 >
                   Gems Collection
                 </h2>
-                <p className="text-gray-300 text-xs sm:text-sm font-sans mt-2 max-w-xl font-normal leading-relaxed">
-                  Certified Royal Blue Sapphires, Zambian Emeralds, Burmese Rubies, and Tanzanites hand-set in hallmarked 925 sterling silver.
+                <div className="w-20 h-[2px] bg-gradient-to-r from-[#C5A880] to-transparent my-3.5" />
+                <p className="text-gray-300 text-xs sm:text-sm font-sans max-w-2xl font-light leading-relaxed">
+                  Certified Royal Blue Sapphires, Zambian Emeralds, Burmese Rubies, and Tanzanites hand-set in hallmarked 925 sterling silver. Forged for timeless royalty and astrological radiance.
                 </p>
               </div>
 
@@ -1221,45 +1240,84 @@ export default function Home({
                   changeCategoryTab?.('Collections');
                   navigateTo('collections');
                 }}
-                className="inline-flex items-center gap-2.5 px-8 py-3.5 bg-[#0D2B4E] hover:bg-[#081B32] active:scale-95 text-white font-sans text-xs sm:text-[12.5px] font-semibold tracking-[0.2em] uppercase transition-all duration-300 shadow-[0_4px_16px_rgba(13,43,78,0.25)] cursor-pointer rounded-none"
+                className="inline-flex items-center gap-3 px-8 py-3.5 bg-[#0D2B4E] hover:bg-[#143B66] active:scale-95 text-white font-sans text-xs sm:text-[12.5px] font-semibold tracking-[0.22em] uppercase transition-all duration-300 shadow-[0_8px_25px_rgba(0,0,0,0.4)] border border-[#C5A880]/40 rounded-sm cursor-pointer group"
               >
                 <span>EXPLORE ALL GEMS</span>
-                <span className="text-sm font-light">→</span>
+                <ArrowRight className="w-4 h-4 text-[#E5C396] group-hover:translate-x-1 transition-transform" />
               </button>
             </div>
 
-            {/* Gems Showcase Banner with 4 Gem Types */}
-            <div className="relative rounded-[2px] overflow-hidden border border-white/15 shadow-2xl group mb-8">
+            {/* Gems Showcase Banner with Dual-tone Luxury Border */}
+            <div className="relative rounded-lg overflow-hidden border border-[#C5A880]/25 shadow-[0_25px_60px_rgba(0,0,0,0.7)] group mb-10 bg-black/40">
               <img
                 src={gemsCollectionBanner}
                 alt="Sapphire, Emerald, Ruby & Tanzanite 925 Silver Jewellery"
                 className="w-full h-auto max-h-[460px] object-cover transition-transform duration-700 ease-out group-hover:scale-102"
                 loading="lazy"
               />
-              <div className="absolute inset-0 bg-gradient-to-t from-[#050B14]/85 via-transparent to-transparent pointer-events-none" />
+              <div className="absolute inset-0 bg-gradient-to-t from-[#02060C]/90 via-[#02060C]/35 to-transparent pointer-events-none" />
 
               <div className="absolute bottom-6 left-6 right-6 sm:bottom-8 sm:left-10 sm:right-10 flex flex-col sm:flex-row items-start sm:items-end justify-between gap-4">
                 <div>
-                  <span className="text-[#E5C396] text-xs font-sans font-bold tracking-[0.25em] uppercase block mb-1">
-                    ✦ CERTIFIED NATURAL GEMSTONES
-                  </span>
+                  <div className="flex items-center gap-2 mb-1.5">
+                    <span className="w-2 h-2 rounded-full bg-[#10B981] animate-pulse" />
+                    <span className="text-[#E5C396] text-[11px] font-sans font-bold tracking-[0.25em] uppercase">
+                      100% ETHICALLY SOURCED • BIS HALLMARKED 925 SILVER
+                    </span>
+                  </div>
                   <h3
-                    className="font-serif text-2xl sm:text-3xl lg:text-4xl font-bold leading-tight drop-shadow-md text-white"
+                    className="font-serif text-2xl sm:text-3xl lg:text-4xl font-bold leading-tight drop-shadow-lg text-white"
                     style={{ fontFamily: "'Cormorant Garamond', 'Playfair Display', Georgia, serif" }}
                   >
                     Earth's Rarest Hues. Forged in Pure Silver.
                   </h3>
                 </div>
+
+                <div className="hidden sm:flex items-center gap-2 px-4 py-2 rounded-full bg-black/60 backdrop-blur-md border border-[#C5A880]/30 text-xs font-sans font-medium text-[#E5C396]">
+                  <span>IGI / SGL Certified Gemstones</span>
+                </div>
               </div>
             </div>
 
-            {/* 4 Gemstone Cards */}
-            <div className="grid grid-cols-2 md:grid-cols-4 gap-4 sm:gap-6">
+            {/* 4 Premium Gemstone Cards */}
+            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 sm:gap-6">
               {[
-                { name: 'Royal Sapphire', stone: 'Neelam', desc: 'Symbol of wisdom, regal grace & focus' },
-                { name: 'Zambian Emerald', stone: 'Panna', desc: 'Lush green harmony & prosperous clarity' },
-                { name: 'Burmese Ruby', stone: 'Manik', desc: 'Fiery passion, courage & noble power' },
-                { name: 'Royal Tanzanite', stone: 'Tanzanite', desc: 'Rare deep indigo African treasure' }
+                { 
+                  name: 'Royal Sapphire', 
+                  stone: 'Neelam', 
+                  origin: 'Ceylon • AAA Grade', 
+                  desc: 'Symbol of wisdom, regal grace & serene mental focus.',
+                  accentGlow: 'hover:border-[#3B82F6]/60 hover:shadow-[0_12px_32px_rgba(59,130,246,0.22)]',
+                  badgeBg: 'bg-[#3B82F6]/15 text-[#93C5FD] border-[#3B82F6]/30',
+                  gemDot: 'bg-[#3B82F6]'
+                },
+                { 
+                  name: 'Zambian Emerald', 
+                  stone: 'Panna', 
+                  origin: 'Zambia • AAA Grade', 
+                  desc: 'Lush green harmony, flourishing prosperity & crisp clarity.',
+                  accentGlow: 'hover:border-[#10B981]/60 hover:shadow-[0_12px_32px_rgba(16,185,129,0.22)]',
+                  badgeBg: 'bg-[#10B981]/15 text-[#6EE7B7] border-[#10B981]/30',
+                  gemDot: 'bg-[#10B981]'
+                },
+                { 
+                  name: 'Burmese Ruby', 
+                  stone: 'Manik', 
+                  origin: 'Burma • AAA Grade', 
+                  desc: 'Fiery passion, invictus courage & noble self-confidence.',
+                  accentGlow: 'hover:border-[#F43F5E]/60 hover:shadow-[0_12px_32px_rgba(244,63,94,0.22)]',
+                  badgeBg: 'bg-[#F43F5E]/15 text-[#FDA4AF] border-[#F43F5E]/30',
+                  gemDot: 'bg-[#F43F5E]'
+                },
+                { 
+                  name: 'Royal Tanzanite', 
+                  stone: 'Tanzanite', 
+                  origin: 'Merelani • AAAA Grade', 
+                  desc: 'Rare deep indigo African treasure with mystical brilliance.',
+                  accentGlow: 'hover:border-[#8B5CF6]/60 hover:shadow-[0_12px_32px_rgba(139,92,246,0.22)]',
+                  badgeBg: 'bg-[#8B5CF6]/15 text-[#C4B5FD] border-[#8B5CF6]/30',
+                  gemDot: 'bg-[#8B5CF6]'
+                }
               ].map((gem, idx) => (
                 <div
                   key={idx}
@@ -1267,24 +1325,39 @@ export default function Home({
                     changeCategoryTab?.('Collections');
                     navigateTo('collections');
                   }}
-                  className="p-4 sm:p-5 bg-white/5 border border-white/10 hover:border-[#C5A880]/60 transition-all duration-300 cursor-pointer group hover:bg-white/10"
+                  className={`relative p-5 sm:p-6 rounded-lg bg-white/[0.03] backdrop-blur-md border border-white/10 transition-all duration-300 cursor-pointer group hover:bg-white/[0.07] ${gem.accentGlow}`}
                 >
-                  <span className="text-[#C5A880] text-[10px] font-sans font-bold tracking-[0.2em] uppercase block mb-1">
-                    {gem.stone}
-                  </span>
-                  <h4
-                    className="font-serif text-base sm:text-lg font-bold text-white group-hover:text-[#E5C396] transition-colors"
-                    style={{ fontFamily: "'Cormorant Garamond', 'Playfair Display', Georgia, serif" }}
-                  >
-                    {gem.name}
-                  </h4>
-                  <p className="text-gray-400 text-xs font-sans mt-1.5 leading-relaxed">
+                  <div className="flex items-center justify-between gap-2 mb-3">
+                    <span className="text-[#C5A880] text-[11px] font-sans font-bold tracking-[0.2em] uppercase">
+                      {gem.stone}
+                    </span>
+                    <span className={`text-[9.5px] font-sans font-semibold px-2 py-0.5 rounded-full border ${gem.badgeBg}`}>
+                      {gem.origin}
+                    </span>
+                  </div>
+
+                  <div className="flex items-center gap-2 mb-2">
+                    <span className={`w-2.5 h-2.5 rounded-full shadow-sm ${gem.gemDot}`} />
+                    <h4
+                      className="font-serif text-lg sm:text-xl font-bold text-white group-hover:text-[#FFF5DC] transition-colors"
+                      style={{ fontFamily: "'Cormorant Garamond', 'Playfair Display', Georgia, serif" }}
+                    >
+                      {gem.name}
+                    </h4>
+                  </div>
+
+                  <p className="text-gray-400 text-xs font-sans mt-2 leading-relaxed min-h-[36px]">
                     {gem.desc}
                   </p>
-                  <span className="text-[#C5A880] text-[11px] font-sans font-semibold tracking-wider uppercase mt-3 inline-flex items-center gap-1 group-hover:translate-x-1 transition-transform">
-                    <span>Shop Jewels</span>
-                    <span>→</span>
-                  </span>
+
+                  <div className="mt-4 pt-3 border-t border-white/10 flex items-center justify-between">
+                    <span className="text-xs font-sans font-bold tracking-wider uppercase text-[#E5C396] group-hover:text-white transition-colors">
+                      Shop Jewels
+                    </span>
+                    <span className="w-7 h-7 rounded-full bg-[#0D2B4E] group-hover:bg-[#143B66] text-white flex items-center justify-center transition-all duration-300 group-hover:translate-x-1 shadow-sm">
+                      →
+                    </span>
+                  </div>
                 </div>
               ))}
             </div>
