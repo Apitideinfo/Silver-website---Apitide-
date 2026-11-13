@@ -10,8 +10,11 @@ export function ProductProvider({ children }) {
     return StorageService.get('manish_products_store', []);
   });
   const [categories, setCategories] = useState(() => {
-    const cached = StorageService.get('manish_categories_store', []);
-    return (Array.isArray(cached) && cached.length > 0) ? cached : INITIAL_CATEGORIES;
+    const cached = StorageService.get('manish_categories_store', null);
+    if (Array.isArray(cached)) return cached;
+    const isInit = StorageService.get('manish_categories_initialized', false);
+    if (!isInit) return INITIAL_CATEGORIES;
+    return [];
   });
   const [loading, setLoading] = useState(false);
   const [categoriesLoaded, setCategoriesLoaded] = useState(true);
@@ -24,7 +27,7 @@ export function ProductProvider({ children }) {
 
     const handleCatalogUpdate = () => {
       const updatedCats = StorageService.get('manish_categories_store', null);
-      if (Array.isArray(updatedCats) && updatedCats.length > 0) {
+      if (Array.isArray(updatedCats)) {
         setCategories(updatedCats);
       }
       const updatedProds = StorageService.get('manish_products_store', null);
@@ -74,7 +77,7 @@ export function ProductProvider({ children }) {
     // 3. Subscribe to categories
     const unsubscribeCategories = productsApi.subscribeToCategories(
       (data) => {
-        if (Array.isArray(data) && data.length > 0) {
+        if (Array.isArray(data)) {
           setCategories(data);
         }
         setCategoriesLoaded(true);

@@ -15,6 +15,7 @@ import { useRates } from '../hooks/useRates';
 import { useProducts } from '../hooks/useProducts';
 import { getOptimizedImageUrl } from '../utils/imageOptimizer';
 import { INITIAL_CATEGORIES } from '../config/constants';
+import { StorageService } from '../services/StorageService';
 
 export default function Navbar({
   currentPage,
@@ -98,7 +99,10 @@ export default function Navbar({
   };
 
   const navCategories = React.useMemo(() => {
-    const list = Array.isArray(categories) && categories.length > 0 ? categories : INITIAL_CATEGORIES;
+    const isInit = StorageService.get('manish_categories_initialized', false);
+    const list = Array.isArray(categories) && categories.length > 0 
+      ? categories 
+      : (!isInit ? INITIAL_CATEGORIES : []);
     return [
       { label: 'New Arrivals', action: () => { changeCategoryTab?.('Collections'); navigateTo('collections'); } },
       { label: 'Bestsellers', action: () => { changeCategoryTab?.('Collections'); navigateTo('collections'); } },

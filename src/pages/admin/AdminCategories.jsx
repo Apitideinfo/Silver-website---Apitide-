@@ -82,63 +82,38 @@ export default function AdminCategories({
 }) {
 
   // Synchronized Reactive Categories State
-
   const [categories, setCategories] = useState(() => {
-
-    const cached = StorageService.get('manish_categories_store', []);
-
-    if (Array.isArray(cached) && cached.length > 0) return cached;
-
-    if (Array.isArray(propCategories) && propCategories.length > 0) return propCategories;
-
-    return INITIAL_CATEGORIES;
-
+    const cached = StorageService.get('manish_categories_store', null);
+    if (Array.isArray(cached)) return cached;
+    if (Array.isArray(propCategories)) return propCategories;
+    const isInit = StorageService.get('manish_categories_initialized', false);
+    if (!isInit) return INITIAL_CATEGORIES;
+    return [];
   });
 
-
-
   useEffect(() => {
-
-    if (Array.isArray(propCategories) && propCategories.length > 0) {
-
+    if (Array.isArray(propCategories)) {
       setCategories(propCategories);
-
     }
-
   }, [propCategories]);
 
-
-
   useEffect(() => {
-
     const handleSync = () => {
-
-      const cached = StorageService.get('manish_categories_store', []);
-
-      if (Array.isArray(cached) && cached.length > 0) {
-
+      const cached = StorageService.get('manish_categories_store', null);
+      if (Array.isArray(cached)) {
         setCategories(cached);
-
       }
-
     };
 
     if (typeof window !== 'undefined') {
-
       window.addEventListener('manish_catalog_updated', handleSync);
-
     }
 
     return () => {
-
       if (typeof window !== 'undefined') {
-
         window.removeEventListener('manish_catalog_updated', handleSync);
-
       }
-
     };
-
   }, []);
 
 
@@ -826,37 +801,62 @@ export default function AdminCategories({
 
 
   // Delete category
-
   const handleDeleteCategory = async (catDocId, catName) => {
-
     if (window.confirm(`Are you sure you want to remove "${catName || catDocId}" from published categories?`)) {
-
       try {
-
-        setCategories(prev => prev.filter(c => c.id !== catDocId && c.docId !== catDocId));
-
-        await productsApi.deleteCategory(catDocId);
-
+        const idToDelete = String(catDocId).trim();
+        setCategories(prev => (Array.isArray(prev) ? prev : []).filter(c => 
+          c.id !== idToDelete && c.docId !== idToDelete &&
+          String(c.id || '').toLowerCase() !== idToDelete.toLowerCase() &&
+          String(c.docId || '').toLowerCase() !== idToDelete.toLowerCase()
+        ));
+        await productsApi.deleteCategory(idToDelete);
         if (typeof setAdminNotification === 'function') {
-
-          setAdminNotification({ message: 'Category removed.', type: 'success' });
-
+          setAdminNotification({ message: `Category "${catName || catDocId}" removed.`, type: 'success' });
         }
-
       } catch (err) {
-
         console.error(err);
-
         if (typeof setAdminNotification === 'function') {
-
           setAdminNotification({ message: 'Failed to remove category.', type: 'error' });
-
         }
-
       }
-
     }
+  };
 
+  // Delete all categories (bulk clear)
+  const handleDeleteAllCategories = async () => {
+    if (window.confirm('Are you sure you want to delete ALL categories from the directory? This action cannot be undone.')) {
+      try {
+        setCategories([]);
+        await productsApi.deleteAllCategories();
+        if (typeof setAdminNotification === 'function') {
+          setAdminNotification({ message: 'All categories deleted successfully.', type: 'success' });
+        }
+      } catch (err) {
+        console.error(err);
+        if (typeof setAdminNotification === 'function') {
+          setAdminNotification({ message: 'Failed to delete all categories: ' + err.message, type: 'error' });
+        }
+      }
+    }
+  };
+
+  // Reset to initial baseline categories
+  const handleResetDefaultCategories = async () => {
+    if (window.confirm('Reset categories back to initial baseline catalog?')) {
+      try {
+        setCategories(INITIAL_CATEGORIES);
+        await productsApi.resetCategoriesToDefault();
+        if (typeof setAdminNotification === 'function') {
+          setAdminNotification({ message: '✓ Restored default category catalog!', type: 'success' });
+        }
+      } catch (err) {
+        console.error(err);
+        if (typeof setAdminNotification === 'function') {
+          setAdminNotification({ message: 'Failed to restore default categories.', type: 'error' });
+        }
+      }
+    }
   };
 
 
@@ -1659,49 +1659,63 @@ export default function AdminCategories({
             </h3>
 
             <p className="text-[10px] text-zinc-400 dark:text-zinc-500 font-medium mt-0.5">
-
               Live catalog structure tabs displayed on showroom storefront lists.
-
             </p>
-
           </div>
 
+          <div className="flex flex-wrap items-center gap-2">
+            {categories.length > 0 && (
+              <button
+                type="button"
+                onClick={handleDeleteAllCategories}
+                className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-xl text-[11px] font-bold bg-red-50 hover:bg-red-100 text-red-600 border border-red-200 transition-all cursor-pointer"
+                title="Delete all categories from directory"
+              >
+                <Trash2 className="w-3.5 h-3.5" />
+                <span>Delete All</span>
+              </button>
+            )}
 
+            <button
+              type="button"
+              onClick={handleResetDefaultCategories}
+              className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-xl text-[11px] font-bold bg-zinc-100 hover:bg-zinc-200 text-zinc-700 dark:bg-zinc-800 dark:hover:bg-zinc-700 dark:text-zinc-300 border border-zinc-200 dark:border-zinc-700 transition-all cursor-pointer"
+              title="Restore default sample categories"
+            >
+              <RotateCcw className="w-3.5 h-3.5 text-[#C8A646]" />
+              <span>Reset Defaults</span>
+            </button>
 
-          <div className="relative w-full sm:w-64">
-
-            <Search className="w-4 h-4 text-zinc-400 absolute left-3 top-1/2 -translate-y-1/2 pointer-events-none" />
-
-            <input
-
-              type="text"
-
-              placeholder="Search category name..."
-
-              value={categorySearch}
-
-              onChange={(e) => setCategorySearch(e.target.value)}
-
-              className="w-full h-9 pl-9 pr-3 rounded-xl bg-zinc-50 dark:bg-zinc-900 border border-zinc-200 dark:border-zinc-800 text-xs text-zinc-900 dark:text-zinc-100 outline-none focus:border-[#D5A529]"
-
-            />
-
+            <div className="relative w-full sm:w-56">
+              <Search className="w-4 h-4 text-zinc-400 absolute left-3 top-1/2 -translate-y-1/2 pointer-events-none" />
+              <input
+                type="text"
+                placeholder="Search category name..."
+                value={categorySearch}
+                onChange={(e) => setCategorySearch(e.target.value)}
+                className="w-full h-9 pl-9 pr-3 rounded-xl bg-zinc-50 dark:bg-zinc-900 border border-zinc-200 dark:border-zinc-800 text-xs text-zinc-900 dark:text-zinc-100 outline-none focus:border-[#D5A529]"
+              />
+            </div>
           </div>
-
         </div>
 
-
-
         <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-6">
-
           {filteredCategories.length === 0 ? (
-
-            <p className="text-xs text-zinc-455 py-8 text-center sm:col-span-3">
-
-              {categories.length === 0 ? 'No categories catalog created yet.' : 'No matching categories found.'}
-
-            </p>
-
+            <div className="text-center py-12 sm:col-span-3 border border-dashed border-zinc-200 dark:border-zinc-800 rounded-2xl p-6 bg-zinc-50/50 dark:bg-zinc-900/30">
+              <p className="text-xs font-semibold text-zinc-500 mb-2">
+                {categories.length === 0 ? 'No categories in directory. All categories have been deleted.' : 'No matching categories found.'}
+              </p>
+              {categories.length === 0 && (
+                <button
+                  type="button"
+                  onClick={handleResetDefaultCategories}
+                  className="inline-flex items-center gap-1.5 px-4 py-2 rounded-xl text-xs font-bold bg-[#C8A646] hover:bg-[#b09038] text-white shadow-xs transition-all cursor-pointer mt-2"
+                >
+                  <RotateCcw className="w-3.5 h-3.5" />
+                  <span>Restore Default Categories</span>
+                </button>
+              )}
+            </div>
           ) : (
 
             filteredCategories.map(cat => (

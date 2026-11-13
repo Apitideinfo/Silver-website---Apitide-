@@ -747,7 +747,7 @@ export default function Collections({
 
   // Primary Category options list with luxury SVG icons
   const primaryCategories = useMemo(() => {
-    const list = Array.isArray(categories) && categories.length > 0 ? categories : INITIAL_CATEGORIES;
+    const list = Array.isArray(categories) ? categories : [];
     const base = [
       { id: 'Collections', label: 'All Collections', icon: <Sparkles className="w-3.5 h-3.5" /> },
       { id: 'Silver', label: 'Silver Collection', icon: <Award className="w-3.5 h-3.5" /> },

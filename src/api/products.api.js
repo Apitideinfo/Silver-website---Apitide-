@@ -21,6 +21,7 @@ const LOCAL_STORAGE_KEYS = {
   CATEGORIES: 'manish_categories_store',
   PRODUCTS: 'manish_products_store'
 };
+const CATEGORIES_INIT_KEY = 'manish_categories_initialized';
 
 // Safe timeout wrapper so Firestore network stalls never freeze the admin UI
 const withTimeout = (promise, ms = 3500) => {
@@ -64,30 +65,48 @@ export const productsApi = {
   // Read: Fetch all categories
   async fetchAllCategories() {
     try {
-      const querySnapshot = await withTimeout(getDocs(collection(db, CATEGORIES_COLLECTION)), 2500);
-      if (!querySnapshot.empty) {
+      const querySnapshot = await withTimeout(getDocs(collection(db, CATEGORIES_COLLECTION)), 3000);
+      if (querySnapshot) {
         const remote = querySnapshot.docs.map(d => ({ id: d.id, docId: d.id, ...d.data() }));
-        StorageService.set(LOCAL_STORAGE_KEYS.CATEGORIES, remote);
-        return remote;
+        if (remote.length > 0) {
+          StorageService.set(LOCAL_STORAGE_KEYS.CATEGORIES, remote);
+          StorageService.set(CATEGORIES_INIT_KEY, true);
+          return remote;
+        } else {
+          // If Firestore is reachable and empty, check if store has already been initialized
+          const isInitialized = StorageService.get(CATEGORIES_INIT_KEY, false);
+          if (isInitialized) {
+            StorageService.set(LOCAL_STORAGE_KEYS.CATEGORIES, []);
+            return [];
+          }
+        }
       }
     } catch (e) {
       console.warn("Using local categories cache:", e.message);
     }
-    const cached = StorageService.get(LOCAL_STORAGE_KEYS.CATEGORIES, []);
-    if (!cached || cached.length === 0) {
+    const isInit = StorageService.get(CATEGORIES_INIT_KEY, false);
+    const cached = StorageService.get(LOCAL_STORAGE_KEYS.CATEGORIES, null);
+    if (Array.isArray(cached)) {
+      return cached;
+    }
+    if (!isInit) {
       StorageService.set(LOCAL_STORAGE_KEYS.CATEGORIES, INITIAL_CATEGORIES);
+      StorageService.set(CATEGORIES_INIT_KEY, true);
       return INITIAL_CATEGORIES;
     }
-    return cached;
+    return [];
   },
 
   // Read: Realtime subscription
   subscribeToCategories(onUpdate, onError) {
-    // 1. Immediately emit local cache or initial baseline
-    let local = StorageService.get(LOCAL_STORAGE_KEYS.CATEGORIES, []);
-    if (!local || local.length === 0) {
+    const isInit = StorageService.get(CATEGORIES_INIT_KEY, false);
+    let local = StorageService.get(LOCAL_STORAGE_KEYS.CATEGORIES, null);
+    if (!Array.isArray(local) && !isInit) {
       local = INITIAL_CATEGORIES;
       StorageService.set(LOCAL_STORAGE_KEYS.CATEGORIES, INITIAL_CATEGORIES);
+      StorageService.set(CATEGORIES_INIT_KEY, true);
+    } else if (!Array.isArray(local)) {
+      local = [];
     }
     onUpdate(local);
 
@@ -98,7 +117,7 @@ export const productsApi = {
       const str = JSON.stringify(updated);
       if (str !== lastJson) {
         lastJson = str;
-        onUpdate(updated);
+        onUpdate(Array.isArray(updated) ? updated : []);
       }
     };
 
@@ -144,16 +163,20 @@ export const productsApi = {
       unsubscribeFirestore = onSnapshot(
         q, 
         (snapshot) => {
-          if (snapshot && !snapshot.empty) {
+          if (snapshot) {
             const categories = snapshot.docs.map(d => ({ id: d.id, docId: d.id, ...d.data() }));
-            StorageService.set(LOCAL_STORAGE_KEYS.CATEGORIES, categories);
-            onUpdate(categories);
+            const isInitialized = StorageService.get(CATEGORIES_INIT_KEY, false);
+            if (categories.length > 0 || isInitialized) {
+              StorageService.set(LOCAL_STORAGE_KEYS.CATEGORIES, categories);
+              StorageService.set(CATEGORIES_INIT_KEY, true);
+              onUpdate(categories);
+            }
           }
         }, 
         (err) => {
           console.warn("Categories realtime subscription notice (operating offline-resilient):", err?.message);
           const safeData = StorageService.get(LOCAL_STORAGE_KEYS.CATEGORIES, local);
-          onUpdate(safeData);
+          onUpdate(Array.isArray(safeData) ? safeData : []);
         }
       );
     } catch (err) {
@@ -191,17 +214,18 @@ export const productsApi = {
     };
 
     // 1. Instant Optimistic Local Save
-    const existing = StorageService.get(LOCAL_STORAGE_KEYS.CATEGORIES, INITIAL_CATEGORIES);
-    const filtered = existing.filter(c => c.id !== catId && c.docId !== catId);
+    const existing = StorageService.get(LOCAL_STORAGE_KEYS.CATEGORIES, []);
+    const filtered = (Array.isArray(existing) ? existing : []).filter(c => c.id !== catId && c.docId !== catId);
     const updated = [payload, ...filtered];
     StorageService.set(LOCAL_STORAGE_KEYS.CATEGORIES, updated);
+    StorageService.set(CATEGORIES_INIT_KEY, true);
     broadcastCatalogChange('categories');
 
     // 2. Background Firestore write (non-blocking)
     (async () => {
       try {
         const docRef = doc(db, CATEGORIES_COLLECTION, catId);
-        await withTimeout(setDoc(docRef, payload, { merge: true }), 2000);
+        await withTimeout(setDoc(docRef, payload, { merge: true }), 3000);
       } catch (err) {
         console.warn("Background Firestore sync skipped/offline; category safely stored:", err.message);
       }
@@ -217,7 +241,8 @@ export const productsApi = {
 
   // Update: Edit category
   async updateCategory(categoryId, categoryData) {
-    const id = String(categoryId).trim().toLowerCase();
+    const id = String(categoryId).trim();
+    const lowerId = id.toLowerCase();
     const payload = {
       ...categoryData,
       id,
@@ -226,16 +251,21 @@ export const productsApi = {
     };
 
     // 1. Instant Optimistic Local Update
-    const existing = StorageService.get(LOCAL_STORAGE_KEYS.CATEGORIES, INITIAL_CATEGORIES);
-    const updated = existing.map(c => (c.id === id || c.docId === id) ? { ...c, ...payload } : c);
+    const existing = StorageService.get(LOCAL_STORAGE_KEYS.CATEGORIES, []);
+    const updated = (Array.isArray(existing) ? existing : []).map(c => 
+      (c.id === id || c.docId === id || String(c.id || '').toLowerCase() === lowerId || String(c.docId || '').toLowerCase() === lowerId)
+        ? { ...c, ...payload }
+        : c
+    );
     StorageService.set(LOCAL_STORAGE_KEYS.CATEGORIES, updated);
+    StorageService.set(CATEGORIES_INIT_KEY, true);
     broadcastCatalogChange('categories');
 
     // 2. Background Firestore sync (non-blocking)
     (async () => {
       try {
         const docRef = doc(db, CATEGORIES_COLLECTION, id);
-        await withTimeout(setDoc(docRef, payload, { merge: true }), 2000);
+        await withTimeout(setDoc(docRef, payload, { merge: true }), 3000);
       } catch (err) {
         console.warn("Background Firestore update skipped/offline; stored locally:", err.message);
       }
@@ -246,25 +276,87 @@ export const productsApi = {
 
   // Delete: Remove category
   async deleteCategory(categoryId) {
-    const id = String(categoryId).trim().toLowerCase();
+    const id = String(categoryId).trim();
+    const lowerId = id.toLowerCase();
 
     // 1. Instant Optimistic Local Delete
-    const existing = StorageService.get(LOCAL_STORAGE_KEYS.CATEGORIES, INITIAL_CATEGORIES);
-    const updated = existing.filter(c => c.id !== id && c.docId !== id);
+    const existing = StorageService.get(LOCAL_STORAGE_KEYS.CATEGORIES, []);
+    const updated = (Array.isArray(existing) ? existing : []).filter(c => 
+      c.id !== id && c.docId !== id &&
+      String(c.id || '').toLowerCase() !== lowerId &&
+      String(c.docId || '').toLowerCase() !== lowerId
+    );
     StorageService.set(LOCAL_STORAGE_KEYS.CATEGORIES, updated);
+    StorageService.set(CATEGORIES_INIT_KEY, true);
     broadcastCatalogChange('categories');
 
     // 2. Background Firestore sync (non-blocking)
     (async () => {
       try {
         const docRef = doc(db, CATEGORIES_COLLECTION, id);
-        await withTimeout(deleteDoc(docRef), 2000);
+        await withTimeout(deleteDoc(docRef), 3000);
+        if (lowerId !== id) {
+          const lowerDocRef = doc(db, CATEGORIES_COLLECTION, lowerId);
+          await withTimeout(deleteDoc(lowerDocRef), 3000);
+        }
       } catch (err) {
         console.warn("Background Firestore delete skipped/offline; removed locally:", err.message);
       }
     })();
 
     return id;
+  },
+
+  // Delete All: Clear all categories
+  async deleteAllCategories() {
+    const existing = StorageService.get(LOCAL_STORAGE_KEYS.CATEGORIES, []);
+    StorageService.set(LOCAL_STORAGE_KEYS.CATEGORIES, []);
+    StorageService.set(CATEGORIES_INIT_KEY, true);
+    broadcastCatalogChange('categories');
+
+    (async () => {
+      try {
+        const { writeBatch } = await import('firebase/firestore');
+        const batch = writeBatch(db);
+        for (const cat of (Array.isArray(existing) ? existing : [])) {
+          const catId = cat.docId || cat.id;
+          if (catId) {
+            batch.delete(doc(db, CATEGORIES_COLLECTION, String(catId).trim()));
+            if (String(catId).trim().toLowerCase() !== String(catId).trim()) {
+              batch.delete(doc(db, CATEGORIES_COLLECTION, String(catId).trim().toLowerCase()));
+            }
+          }
+        }
+        await withTimeout(batch.commit(), 4000);
+      } catch (err) {
+        console.warn("Background Firestore deleteAllCategories notice:", err.message);
+      }
+    })();
+
+    return [];
+  },
+
+  // Reset to default baseline categories
+  async resetCategoriesToDefault() {
+    StorageService.set(LOCAL_STORAGE_KEYS.CATEGORIES, INITIAL_CATEGORIES);
+    StorageService.set(CATEGORIES_INIT_KEY, true);
+    broadcastCatalogChange('categories');
+
+    (async () => {
+      try {
+        const { writeBatch } = await import('firebase/firestore');
+        const batch = writeBatch(db);
+        for (const cat of INITIAL_CATEGORIES) {
+          const docRef = doc(db, CATEGORIES_COLLECTION, cat.id);
+          batch.set(docRef, { ...cat, docId: cat.id }, { merge: true });
+        }
+        await withTimeout(batch.commit(), 4000);
+      } catch (err) {
+        console.warn("Background Firestore reset sync error:", err.message);
+      }
+    })();
+
+    return INITIAL_CATEGORIES;
   },
 
   // ─── PRODUCTS CRUD ────────────────────────────────────────────

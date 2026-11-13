@@ -32,6 +32,7 @@ import jhumkasImg from '../assets/jhumkas.png';
 import EditorialShowcaseSection from '../components/EditorialShowcaseSection';
 import { getShowcaseSectionsConfig } from '../config/showcaseSections';
 import { INITIAL_CATEGORIES } from '../config/constants';
+import { StorageService } from '../services/StorageService';
 import { priceCategoryService, getColorStyles } from '../services/priceCategoryService';
 
 
@@ -332,7 +333,10 @@ export default function Home({
 
   // Dynamic Category Slider (populated live from Admin Categories)
   const dynamicStoryCategories = React.useMemo(() => {
-    const list = Array.isArray(categories) && categories.length > 0 ? categories : INITIAL_CATEGORIES;
+    const isInit = StorageService.get('manish_categories_initialized', false);
+    const list = Array.isArray(categories) && categories.length > 0 
+      ? categories 
+      : (!isInit ? INITIAL_CATEGORIES : []);
     return list.map((cat) => {
       const catId = cat.id || cat.docId || String(cat.name || '').toLowerCase().replace(/\s+/g, '-');
       // If Admin uploaded or set an image, use it directly! Otherwise fall back cleanly
@@ -478,7 +482,11 @@ export default function Home({
     if (Array.isArray(categories) && categories.length > 0) {
       return categories;
     }
-    return INITIAL_CATEGORIES;
+    const isInit = StorageService.get('manish_categories_initialized', false);
+    if (!isInit) {
+      return INITIAL_CATEGORIES;
+    }
+    return [];
   }, [categories]);
 
   // Dynamic Best Sellers from live store products (replaces hardcoded products)
