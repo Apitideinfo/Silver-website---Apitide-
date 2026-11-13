@@ -649,8 +649,8 @@ export default function Home({
           else if (diff < -45) prevHeroSlide();
         }}
       >
-        {/* Banner Images Carousel Container - Full Image Visible with Zero Cropping */}
-        <div className="relative w-full aspect-[2200/715] min-h-[125px] sm:min-h-[260px] md:min-h-[360px] lg:min-h-[460px] xl:min-h-[520px] overflow-hidden bg-[#091B2B]">
+        {/* Banner Images Carousel Container - Responsive Mobile-to-Desktop Ratio */}
+        <div className="relative w-full aspect-[16/9] xs:aspect-[18/9] sm:aspect-[2200/715] min-h-[175px] xs:min-h-[205px] sm:min-h-[260px] md:min-h-[360px] lg:min-h-[460px] xl:min-h-[520px] overflow-hidden bg-[#091B2B]">
           <AnimatePresence initial={false} mode="wait">
             <motion.div
               key={currentHeroSlide}
@@ -671,7 +671,7 @@ export default function Home({
                 <img
                   src={heroBanners[currentHeroSlide].customImg}
                   alt={heroBanners[currentHeroSlide]?.alt || heroBanners[currentHeroSlide]?.title || 'MANISH & CO Hero Banner'}
-                  className="w-full h-full object-contain sm:object-cover object-center select-none"
+                  className="w-full h-full object-cover object-center select-none"
                   loading="eager"
                   fetchPriority="high"
                   decoding="async"
@@ -684,7 +684,7 @@ export default function Home({
                   <img
                     src={heroBanners[currentHeroSlide]?.png || heroBanners[currentHeroSlide]?.webp}
                     alt={heroBanners[currentHeroSlide]?.alt || heroBanners[currentHeroSlide]?.title || 'MANISH & CO Hero Banner'}
-                    className="w-full h-full object-contain sm:object-cover object-center select-none"
+                    className="w-full h-full object-cover object-center select-none"
                     loading="eager"
                     fetchPriority="high"
                     decoding="async"
@@ -781,13 +781,14 @@ export default function Home({
               onMouseMove={handleStoryMouseMove}
               onMouseUp={handleStoryMouseUp}
               onMouseLeave={handleStoryMouseUp}
-              className="flex items-center gap-4 sm:gap-5 md:gap-6 lg:gap-7 overflow-x-auto no-scrollbar scroll-smooth justify-start py-2 px-1 sm:px-3 cursor-grab active:cursor-grabbing select-none"
+              className="flex items-center gap-3 sm:gap-5 md:gap-6 lg:gap-7 overflow-x-auto no-scrollbar scroll-smooth justify-start py-2 px-1 sm:px-3 cursor-grab active:cursor-grabbing select-none touch-pan-x"
+              style={{ WebkitOverflowScrolling: 'touch' }}
             >
               {dynamicStoryCategories.map((cat) => (
                 <button
                   key={cat.id}
                   onClick={() => handleStoryCardClick(cat)}
-                  className="w-[115px] sm:w-[135px] md:w-[150px] lg:w-[160px] group cursor-pointer flex flex-col items-center shrink-0 focus:outline-none bg-transparent border-0 p-0 transition-transform duration-300 hover:-translate-y-1"
+                  className="w-[102px] xs:w-[115px] sm:w-[135px] md:w-[150px] lg:w-[160px] group cursor-pointer flex flex-col items-center shrink-0 focus:outline-none bg-transparent border-0 p-0 transition-transform duration-300 hover:-translate-y-1"
                 >
                   {/* Clean Square Card Image matching reference screenshot */}
                   <div className="relative w-full aspect-square rounded-xl overflow-hidden bg-gray-50 border border-gray-200/80 shadow-xs group-hover:shadow-md group-hover:border-[#0D2B4E]/40 transition-all duration-300 pointer-events-none">
@@ -1004,14 +1005,14 @@ export default function Home({
         <section id="trust-seals-section" className="w-full bg-[#FFFFFF] py-6 sm:py-8 border-b border-gray-100 select-none">
           <div className="max-w-[1536px] mx-auto px-4 sm:px-8 lg:px-12 relative">
             <div className="relative flex items-center justify-center">
-              {/* 4 Trust Circular Seals - Horizontal Smooth Swipe on Mobile, Centered on Desktop */}
+              {/* 4 Trust Circular Seals - Clean 4-Col on Mobile, Spacious Flex on Desktop */}
               <div 
                 ref={trustSealsScrollRef}
-                className="w-full max-w-[1200px] flex items-center justify-around gap-3 sm:gap-6 px-2 sm:px-4 overflow-x-auto no-scrollbar scroll-smooth"
+                className="w-full max-w-[1200px] grid grid-cols-4 sm:flex sm:items-center sm:justify-around gap-1.5 xs:gap-3 sm:gap-6 px-1 sm:px-4"
               >
                 {TRUST_SEALS_DATA.map((seal) => (
-                  <div key={seal.id} className="w-[140px] xs:w-[160px] sm:w-[250px] shrink-0 sm:shrink h-[115px] sm:h-[135px] flex items-center justify-center group cursor-pointer select-none">
-                    <div className="w-[105px] h-[105px] sm:w-[130px] sm:h-[130px] flex items-center justify-center transition-all duration-300 group-hover:scale-106 group-hover:drop-shadow-md">
+                  <div key={seal.id} className="w-full sm:w-[220px] md:w-[250px] h-[78px] xs:h-[95px] sm:h-[135px] flex items-center justify-center group cursor-pointer select-none">
+                    <div className="w-[64px] h-[64px] xs:w-[82px] xs:h-[82px] sm:w-[130px] sm:h-[130px] flex items-center justify-center transition-all duration-300 group-hover:scale-106 group-hover:drop-shadow-md">
                       <picture className="w-full h-full flex items-center justify-center">
                         <source srcSet={seal.imgWebp} type="image/webp" />
                         <img 
@@ -1181,29 +1182,29 @@ export default function Home({
         {/* ==========================================================
           CLIENT FEEDBACK SECTION 4: GEMS COLLECTION (Ultra-Premium Redesign)
           ========================================================== */}
-        <section id="gems-collection-section" className="relative w-full py-16 sm:py-24 bg-gradient-to-b from-[#030911] via-[#061424] to-[#040C16] border-b border-[#C5A880]/20 select-none text-left text-white overflow-hidden">
+        <section id="gems-collection-section" className="relative w-full py-12 sm:py-20 lg:py-24 bg-gradient-to-b from-[#030911] via-[#061424] to-[#040C16] border-b border-[#C5A880]/20 select-none text-left text-white overflow-hidden">
           {/* Subtle Ambient Radial Glows */}
           <div className="absolute top-0 left-1/4 w-96 h-96 bg-[#C5A880]/5 rounded-full blur-3xl pointer-events-none" />
           <div className="absolute bottom-0 right-1/4 w-96 h-96 bg-[#3B82F6]/5 rounded-full blur-3xl pointer-events-none" />
 
-          <div className="relative max-w-[1536px] mx-auto px-6 sm:px-10 lg:px-14 z-10">
+          <div className="relative max-w-[1536px] mx-auto px-4 sm:px-8 lg:px-14 z-10">
 
             {/* Editorial Luxury Header */}
-            <div className="flex flex-col lg:flex-row items-start lg:items-end justify-between gap-6 mb-12 sm:mb-14">
+            <div className="flex flex-col lg:flex-row items-start lg:items-end justify-between gap-5 sm:gap-6 mb-8 sm:mb-14">
               <div>
-                <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-white/[0.06] border border-[#C5A880]/30 backdrop-blur-md mb-3">
-                  <Sparkles className="w-3.5 h-3.5 text-[#E5C396]" />
-                  <span className="text-[#E5C396] text-[11px] font-sans font-bold tracking-[0.28em] uppercase">
+                <div className="inline-flex items-center gap-1.5 sm:gap-2 px-2.5 sm:px-3 py-1 rounded-full bg-white/[0.06] border border-[#C5A880]/30 backdrop-blur-md mb-2.5 sm:mb-3">
+                  <Sparkles className="w-3 h-3 sm:w-3.5 sm:h-3.5 text-[#E5C396]" />
+                  <span className="text-[#E5C396] text-[10px] sm:text-[11px] font-sans font-bold tracking-[0.25em] uppercase">
                     CERTIFIED NATURAL GEMSTONES
                   </span>
                 </div>
                 <h2
-                  className="text-3xl sm:text-4xl lg:text-[50px] font-bold leading-tight tracking-tight text-transparent bg-clip-text bg-gradient-to-r from-[#FFF5DC] via-[#E8D1A7] to-[#C8A265]"
+                  className="text-2xl xs:text-3xl sm:text-4xl lg:text-[50px] font-bold leading-tight tracking-tight text-transparent bg-clip-text bg-gradient-to-r from-[#FFF5DC] via-[#E8D1A7] to-[#C8A265]"
                   style={{ fontFamily: "'Cormorant Garamond', 'Playfair Display', Georgia, serif" }}
                 >
                   Gems Collection
                 </h2>
-                <div className="w-20 h-[2px] bg-gradient-to-r from-[#C5A880] to-transparent my-3.5" />
+                <div className="w-16 sm:w-20 h-[2px] bg-gradient-to-r from-[#C5A880] to-transparent my-2.5 sm:my-3.5" />
                 <p className="text-gray-300 text-xs sm:text-sm font-sans max-w-2xl font-light leading-relaxed">
                   Certified Royal Blue Sapphires, Zambian Emeralds, Burmese Rubies, and Tanzanites hand-set in hallmarked 925 sterling silver. Forged for timeless royalty and astrological radiance.
                 </p>
@@ -1214,7 +1215,7 @@ export default function Home({
                   changeCategoryTab?.('Collections');
                   navigateTo('collections');
                 }}
-                className="inline-flex items-center gap-3 px-8 py-3.5 bg-[#0D2B4E] hover:bg-[#143B66] active:scale-95 text-white font-sans text-xs sm:text-[12.5px] font-semibold tracking-[0.22em] uppercase transition-all duration-300 shadow-[0_8px_25px_rgba(0,0,0,0.4)] border border-[#C5A880]/40 rounded-sm cursor-pointer group"
+                className="w-full sm:w-auto inline-flex items-center justify-center gap-3 px-7 sm:px-8 py-3 sm:py-3.5 bg-[#0D2B4E] hover:bg-[#143B66] active:scale-95 text-white font-sans text-xs sm:text-[12.5px] font-semibold tracking-[0.22em] uppercase transition-all duration-300 shadow-[0_8px_25px_rgba(0,0,0,0.4)] border border-[#C5A880]/40 rounded-sm cursor-pointer group"
               >
                 <span>EXPLORE ALL GEMS</span>
                 <ArrowRight className="w-4 h-4 text-[#E5C396] group-hover:translate-x-1 transition-transform" />
@@ -1222,7 +1223,7 @@ export default function Home({
             </div>
 
             {/* Gems Showcase Banner with Dual-tone Luxury Border */}
-            <div className="relative rounded-lg overflow-hidden border border-[#C5A880]/25 shadow-[0_25px_60px_rgba(0,0,0,0.7)] group mb-10 bg-black/40">
+            <div className="relative rounded-lg overflow-hidden border border-[#C5A880]/25 shadow-[0_25px_60px_rgba(0,0,0,0.7)] group mb-6 sm:mb-10 bg-black/40">
               <img
                 src={gemsCollectionBanner}
                 alt="Sapphire, Emerald, Ruby & Tanzanite 925 Silver Jewellery"
@@ -1231,16 +1232,16 @@ export default function Home({
               />
               <div className="absolute inset-0 bg-gradient-to-t from-[#02060C]/90 via-[#02060C]/35 to-transparent pointer-events-none" />
 
-              <div className="absolute bottom-6 left-6 right-6 sm:bottom-8 sm:left-10 sm:right-10 flex flex-col sm:flex-row items-start sm:items-end justify-between gap-4">
+              <div className="absolute bottom-4 left-4 right-4 sm:bottom-8 sm:left-10 sm:right-10 flex flex-col sm:flex-row items-start sm:items-end justify-between gap-3 sm:gap-4">
                 <div>
-                  <div className="flex items-center gap-2 mb-1.5">
+                  <div className="flex items-center gap-2 mb-1 sm:mb-1.5">
                     <span className="w-2 h-2 rounded-full bg-[#10B981] animate-pulse" />
-                    <span className="text-[#E5C396] text-[11px] font-sans font-bold tracking-[0.25em] uppercase">
+                    <span className="text-[#E5C396] text-[9.5px] sm:text-[11px] font-sans font-bold tracking-[0.22em] uppercase">
                       100% ETHICALLY SOURCED • BIS HALLMARKED 925 SILVER
                     </span>
                   </div>
                   <h3
-                    className="font-serif text-2xl sm:text-3xl lg:text-4xl font-bold leading-tight drop-shadow-lg text-white"
+                    className="font-serif text-lg xs:text-2xl sm:text-3xl lg:text-4xl font-bold leading-tight drop-shadow-lg text-white"
                     style={{ fontFamily: "'Cormorant Garamond', 'Playfair Display', Georgia, serif" }}
                   >
                     Earth's Rarest Hues. Forged in Pure Silver.
@@ -1253,13 +1254,13 @@ export default function Home({
               </div>
             </div>
 
-            {/* 4 Premium Gemstone Cards */}
-            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 sm:gap-6">
+            {/* 4 Premium Gemstone Cards - 2x2 Grid on Mobile */}
+            <div className="grid grid-cols-2 lg:grid-cols-4 gap-3 sm:gap-6">
               {[
                 { 
                   name: 'Royal Sapphire', 
                   stone: 'Neelam', 
-                  origin: 'Ceylon • AAA Grade', 
+                  origin: 'Ceylon • AAA', 
                   desc: 'Symbol of wisdom, regal grace & serene mental focus.',
                   accentGlow: 'hover:border-[#3B82F6]/60 hover:shadow-[0_12px_32px_rgba(59,130,246,0.22)]',
                   badgeBg: 'bg-[#3B82F6]/15 text-[#93C5FD] border-[#3B82F6]/30',
@@ -1268,7 +1269,7 @@ export default function Home({
                 { 
                   name: 'Zambian Emerald', 
                   stone: 'Panna', 
-                  origin: 'Zambia • AAA Grade', 
+                  origin: 'Zambia • AAA', 
                   desc: 'Lush green harmony, flourishing prosperity & crisp clarity.',
                   accentGlow: 'hover:border-[#10B981]/60 hover:shadow-[0_12px_32px_rgba(16,185,129,0.22)]',
                   badgeBg: 'bg-[#10B981]/15 text-[#6EE7B7] border-[#10B981]/30',
@@ -1277,7 +1278,7 @@ export default function Home({
                 { 
                   name: 'Burmese Ruby', 
                   stone: 'Manik', 
-                  origin: 'Burma • AAA Grade', 
+                  origin: 'Burma • AAA', 
                   desc: 'Fiery passion, invictus courage & noble self-confidence.',
                   accentGlow: 'hover:border-[#F43F5E]/60 hover:shadow-[0_12px_32px_rgba(244,63,94,0.22)]',
                   badgeBg: 'bg-[#F43F5E]/15 text-[#FDA4AF] border-[#F43F5E]/30',
@@ -1286,7 +1287,7 @@ export default function Home({
                 { 
                   name: 'Royal Tanzanite', 
                   stone: 'Tanzanite', 
-                  origin: 'Merelani • AAAA Grade', 
+                  origin: 'Merelani • AAAA', 
                   desc: 'Rare deep indigo African treasure with mystical brilliance.',
                   accentGlow: 'hover:border-[#8B5CF6]/60 hover:shadow-[0_12px_32px_rgba(139,92,246,0.22)]',
                   badgeBg: 'bg-[#8B5CF6]/15 text-[#C4B5FD] border-[#8B5CF6]/30',
@@ -1299,36 +1300,36 @@ export default function Home({
                     changeCategoryTab?.('Collections');
                     navigateTo('collections');
                   }}
-                  className={`relative p-5 sm:p-6 rounded-lg bg-white/[0.03] backdrop-blur-md border border-white/10 transition-all duration-300 cursor-pointer group hover:bg-white/[0.07] ${gem.accentGlow}`}
+                  className={`relative p-3.5 sm:p-5 lg:p-6 rounded-lg bg-white/[0.03] backdrop-blur-md border border-white/10 transition-all duration-300 cursor-pointer group hover:bg-white/[0.07] ${gem.accentGlow}`}
                 >
-                  <div className="flex items-center justify-between gap-2 mb-3">
-                    <span className="text-[#C5A880] text-[11px] font-sans font-bold tracking-[0.2em] uppercase">
+                  <div className="flex flex-col xs:flex-row xs:items-center justify-between gap-1 xs:gap-2 mb-2 sm:mb-3">
+                    <span className="text-[#C5A880] text-[10px] sm:text-[11px] font-sans font-bold tracking-[0.2em] uppercase">
                       {gem.stone}
                     </span>
-                    <span className={`text-[9.5px] font-sans font-semibold px-2 py-0.5 rounded-full border ${gem.badgeBg}`}>
+                    <span className={`text-[8.5px] sm:text-[9.5px] font-sans font-semibold px-1.5 sm:px-2 py-0.5 rounded-full border self-start xs:self-auto ${gem.badgeBg}`}>
                       {gem.origin}
                     </span>
                   </div>
 
-                  <div className="flex items-center gap-2 mb-2">
-                    <span className={`w-2.5 h-2.5 rounded-full shadow-sm ${gem.gemDot}`} />
+                  <div className="flex items-center gap-1.5 sm:gap-2 mb-1.5 sm:mb-2">
+                    <span className={`w-2 h-2 sm:w-2.5 sm:h-2.5 rounded-full shadow-sm shrink-0 ${gem.gemDot}`} />
                     <h4
-                      className="font-serif text-lg sm:text-xl font-bold text-white group-hover:text-[#FFF5DC] transition-colors"
+                      className="font-serif text-sm xs:text-base sm:text-lg lg:text-xl font-bold text-white group-hover:text-[#FFF5DC] transition-colors truncate"
                       style={{ fontFamily: "'Cormorant Garamond', 'Playfair Display', Georgia, serif" }}
                     >
                       {gem.name}
                     </h4>
                   </div>
 
-                  <p className="text-gray-400 text-xs font-sans mt-2 leading-relaxed min-h-[36px]">
+                  <p className="text-gray-400 text-[10.5px] sm:text-xs font-sans mt-1 sm:mt-2 leading-relaxed line-clamp-2 min-h-[30px] sm:min-h-[36px]">
                     {gem.desc}
                   </p>
 
-                  <div className="mt-4 pt-3 border-t border-white/10 flex items-center justify-between">
-                    <span className="text-xs font-sans font-bold tracking-wider uppercase text-[#E5C396] group-hover:text-white transition-colors">
-                      Shop Jewels
+                  <div className="mt-3 sm:mt-4 pt-2.5 sm:pt-3 border-t border-white/10 flex items-center justify-between">
+                    <span className="text-[10px] sm:text-xs font-sans font-bold tracking-wider uppercase text-[#E5C396] group-hover:text-white transition-colors">
+                      Shop
                     </span>
-                    <span className="w-7 h-7 rounded-full bg-[#0D2B4E] group-hover:bg-[#143B66] text-white flex items-center justify-center transition-all duration-300 group-hover:translate-x-1 shadow-sm">
+                    <span className="w-5.5 h-5.5 sm:w-7 sm:h-7 rounded-full bg-[#0D2B4E] group-hover:bg-[#143B66] text-white flex items-center justify-center transition-all duration-300 group-hover:translate-x-1 shadow-sm text-xs sm:text-sm">
                       →
                     </span>
                   </div>
@@ -1745,9 +1746,10 @@ export default function Home({
           <div
             ref={polaroidScrollRef}
             onScroll={handlePolaroidScroll}
-            className="w-full overflow-x-auto no-scrollbar py-6 snap-x"
+            className="w-full overflow-x-auto no-scrollbar py-6 snap-x touch-pan-x"
+            style={{ WebkitOverflowScrolling: 'touch' }}
           >
-            <div className="relative w-full min-w-[1400px] xl:min-w-0 xl:w-full h-[480px]">
+            <div className="relative w-full min-w-[1100px] sm:min-w-[1250px] lg:min-w-[1400px] xl:min-w-0 xl:w-full h-[460px] sm:h-[480px]">
               <svg className="absolute left-0 top-0 w-full h-[120px] pointer-events-none z-0" viewBox="0 0 100 120" fill="none" preserveAspectRatio="none">
                 <path
                   d="M 0,30 Q 5,50 10,50 Q 23.3,85 36.6,50 Q 50,85 63.3,50 Q 76.7,85 90,50 Q 95,50 100,30"
