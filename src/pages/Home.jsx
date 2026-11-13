@@ -1,12 +1,11 @@
 import { Helmet } from 'react-helmet-async';
-import React, { useState, useEffect, useRef, useMemo } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { useProducts } from '../hooks/useProducts';
-import { useRates } from '../hooks/useRates';
 import Modal from '../components/Modal';
 import BookingForm from '../forms/BookingForm';
 import { getOptimizedImageUrl } from '../utils/imageOptimizer';
-import { ShieldCheck, Gem, Truck, Package, ArrowRight, Star, Sparkles, CheckCircle2, ChevronRight, ChevronLeft, Heart, Calendar } from 'lucide-react';
+import { ArrowRight, Star, Sparkles, ChevronRight, ChevronLeft } from 'lucide-react';
 
 // Category Image Fallbacks
 import solitariesImg from '../assets/solitaries.png';
@@ -16,27 +15,12 @@ import mangalsutrasImg from '../assets/mangalsutras.png';
 import nosePinsImg from '../assets/nose_pins.png';
 import kidsJewelleryImg from '../assets/kids_jewellery.png';
 import goldCoinsImg from '../assets/gold_coins.png';
-import ankletsImg from '../assets/anklets.png';
-import pendantsImg from '../assets/pendants.png';
-import ringsImg from '../assets/rings.png';
-import necklacesImg from '../assets/necklaces.png';
-import sapphireHeritageSet from '../assets/sapphire_heritage_set.png';
-import goldKada from '../assets/gold_kada.png';
-import diamondBracelet from '../assets/diamond_bracelet.png';
 import goldChainsImg from '../assets/gold_chains.png';
 import kadaImg from '../assets/kada.png';
 import silverPayalsImg from '../assets/silver_payals.png';
-import citrineFloralSet from '../assets/citrine_floral_set.png';
-import nathNosePinImg from '../assets/nath_nose_pin.png';
-import jhumkasImg from '../assets/jhumkas.png';
 import EditorialShowcaseSection from '../components/EditorialShowcaseSection';
-import { getShowcaseSectionsConfig } from '../config/showcaseSections';
 import { INITIAL_CATEGORIES } from '../config/constants';
 import { StorageService } from '../services/StorageService';
-import { priceCategoryService, getColorStyles } from '../services/priceCategoryService';
-
-
-// Editorial Collection Showcase (01 Men's, 02 Women's, 03 Kid's, 04 Gift's)
 
 // Testimonial Images
 import testimonial1 from '../assets/testimonial_1.png';
@@ -45,16 +29,6 @@ import testimonial3 from '../assets/testimonial_3.png';
 import testimonial4 from '../assets/testimonial_4.png';
 
 // Banners & Collections
-import heroBannerTimelessSilverPng from '../assets/hero_banner_timeless_silver.png';
-import heroBannerTimelessSilverWebp from '../assets/hero_banner_timeless_silver.webp';
-import heroBannerLuxuryEarringPng from '../assets/hero_banner_luxury_earring.png';
-import heroBannerLuxuryEarringWebp from '../assets/hero_banner_luxury_earring.webp';
-import heroBannerBrandPromisePng from '../assets/hero_banner_brand_promise.png';
-import heroBannerBrandPromiseWebp from '../assets/hero_banner_brand_promise.webp';
-import heroBannerDiwaliGlowPng from '../assets/hero_banner_diwali_glow.png';
-import heroBannerDiwaliGlowWebp from '../assets/hero_banner_diwali_glow.webp';
-import midnightSapphireHero from '../assets/midnight_sapphire_hero.png';
-import midnightSapphireHeroWebp from '../assets/midnight_sapphire_hero.webp';
 import catRefRings from '../assets/cat_ref_rings.png';
 import catRefRingsWebp from '../assets/cat_ref_rings.webp';
 import catRefStoneBracelets from '../assets/cat_ref_stone_bracelets.png';
@@ -79,13 +53,13 @@ import diwaliFestiveManishAndCoJpg from '../assets/diwali_festive_manish_and_co.
 import diwaliFestiveManishAndCoWebp from '../assets/diwali_festive_manish_and_co.webp';
 
 // Dynamic Silver Story Showcase Service
-import { silverStoryService, DEFAULT_SILVER_STORY_DATA } from '../services/silverStoryService';
+import { silverStoryService } from '../services/silverStoryService';
 
 // Dynamic Gifting Hampers Service
-import { giftingHampersService, DEFAULT_GIFTING_HAMPERS } from '../services/giftingHampersService';
+import { giftingHampersService } from '../services/giftingHampersService';
 
 // Dynamic Hero Banners Service
-import { heroBannerService, DEFAULT_HERO_BANNERS } from '../services/heroBannerService';
+import { heroBannerService } from '../services/heroBannerService';
 
 // Craft Your Bespoke Jewellery Assets
 import craftYourBespokeJewelleryPng from '../assets/craft_your_bespoke_jewellery.png';
@@ -101,16 +75,6 @@ import trustSealCodPng from '../assets/trust_seal_cod.png';
 import trustSealCustomersWebp from '../assets/trust_seal_customers.webp';
 import trustSealCustomersPng from '../assets/trust_seal_customers.png';
 
-// Silver Gifting Hampers Assets
-import giftPick1499Webp from '../assets/gift_pick_1499.webp';
-import giftPick1499Png from '../assets/gift_pick_1499.png';
-import giftPick1999Webp from '../assets/gift_pick_1999.webp';
-import giftPick1999Png from '../assets/gift_pick_1999.png';
-import giftPick2999Webp from '../assets/gift_pick_2999.webp';
-import giftPick2999Png from '../assets/gift_pick_2999.png';
-import giftPickPremiumWebp from '../assets/gift_pick_premium.webp';
-import giftPickPremiumPng from '../assets/gift_pick_premium.png';
-
 // Made for Every Kind of Love Assets
 import loveStory1Webp from '../assets/love_story_1.webp';
 import loveStory1Png from '../assets/love_story_1.png';
@@ -121,18 +85,10 @@ import loveStory3Png from '../assets/love_story_3.png';
 import loveStory4Webp from '../assets/love_story_4.webp';
 import loveStory4Png from '../assets/love_story_4.png';
 
-
-import colRings from '../assets/col_rings.png';
-import colBracelets from '../assets/col_bracelets.png';
-import colPendants from '../assets/col_pendants.png';
-import colChains from '../assets/col_chains.png';
 import bannerBuiltOnPurity from '../assets/built_on_purity_925_fine_silver.png';
 import bannerCraftsmanshipJourney from '../assets/craftsmanship_in_every_silver_detail.png';
 import bannerStoreBanner from '../assets/banner_store_banner.png';
-import bannerPureSilverCollection from '../assets/banner_pure_silver_collection.png';
-import madePersonalSketch from '../assets/made_personal_sketch.jpg';
 import gemsCollectionBanner from '../assets/gems_collection_banner.jpg';
-import goldPlatingBanner from '../assets/gold_plating_banner.jpg';
 
 
 
@@ -226,36 +182,18 @@ export default function Home({
   navigateToPDP,
   changeCategoryTab,
   triggerAudio: triggerAudioProp,
-  setMaxPriceFilter,
-  setGenderFilter,
   setMetalFilter,
 }) {
   // Self-contained data from context
-  const { products = [], categories = [], loading } = useProducts();
-  const { goldRate24k = 78500, silverRate1g: silverRate = 92 } = useRates();
+  const { products = [], categories = [] } = useProducts();
 
-  const categoriesLoaded = !loading;
   const isCatalogDark = false;
   const triggerAudio = (type) => { try { triggerAudioProp?.(type); } catch { /* noop */ } };
 
   // Local modal state
   const [consultationModal, setConsultationModal] = useState(false);
   const [customDesignOpen, setCustomDesignOpen] = useState(false);
-  const [wishlistLoveCards, setWishlistLoveCards] = useState(['everyday-love']);
   const trustSealsScrollRef = useRef(null);
-
-  const scrollTrustSeals = (dir) => {
-    if (trustSealsScrollRef.current) {
-      const step = trustSealsScrollRef.current.clientWidth > 768 ? 240 : 150;
-      trustSealsScrollRef.current.scrollBy({ left: dir === 'left' ? -step : step, behavior: 'smooth' });
-    }
-  };
-
-  const toggleWishlistLoveCard = (id) => {
-    setWishlistLoveCards((prev) => 
-      prev.includes(id) ? prev.filter(x => x !== id) : [...prev, id]
-    );
-  };
 
   // Dynamic Hero Carousel State (Synchronized with Admin updates & auto-slide)
   const [heroBanners, setHeroBanners] = useState(() => heroBannerService.getStoredBanners());
@@ -325,16 +263,6 @@ export default function Home({
       };
     });
   }, [categories]);
-
-  const scrollStoryCarousel = (direction) => {
-    if (storyCarouselRef.current) {
-      const scrollStep = Math.max(260, Math.floor(storyCarouselRef.current.clientWidth * 0.55));
-      storyCarouselRef.current.scrollBy({
-        left: direction === 'left' ? -scrollStep : scrollStep,
-        behavior: 'smooth'
-      });
-    }
-  };
 
   const handleStoryMouseDown = (e) => {
     if (!storyCarouselRef.current) return;
@@ -434,41 +362,6 @@ export default function Home({
     };
   }, []);
 
-  const [priceCategories, setPriceCategories] = useState(() => priceCategoryService.getStoredCategories());
-
-  useEffect(() => {
-    priceCategoryService.fetchRemoteCategories().then((res) => {
-      if (res && res.length > 0) setPriceCategories(res);
-    });
-
-    const handlePriceCategoriesUpdate = () => {
-      setPriceCategories(priceCategoryService.getStoredCategories());
-    };
-
-    window.addEventListener('manish_price_categories_updated', handlePriceCategoriesUpdate);
-    const storageHandler = (e) => {
-      if (e.key === 'manish_price_categories' || e.key === 'manish_price_pulse') {
-        handlePriceCategoriesUpdate();
-      }
-    };
-    window.addEventListener('storage', storageHandler);
-    let bc = null;
-    if (typeof window !== 'undefined' && 'BroadcastChannel' in window) {
-      bc = new BroadcastChannel('manish_store_sync');
-      bc.onmessage = (msg) => {
-        if (msg?.data?.type === 'price_categories') {
-          handlePriceCategoriesUpdate();
-        }
-      };
-    }
-    return () => {
-      window.removeEventListener('manish_price_categories_updated', handlePriceCategoriesUpdate);
-      window.removeEventListener('storage', storageHandler);
-      if (bc) bc.close();
-    };
-  }, []);
-
-
   // Combined dynamic categories with baseline reference set (all 10+ reference categories)
   const displayCategories = React.useMemo(() => {
     if (Array.isArray(categories) && categories.length > 0) {
@@ -553,39 +446,19 @@ export default function Home({
 
   // Testimonials Observer Setup
   useEffect(() => {
+    const el = testimonialsRef.current;
+    if (!el) return;
     const observer = new IntersectionObserver(
       ([entry]) => {
         setTestimonialsInView(entry.isIntersecting);
       },
       { threshold: 0.1 }
     );
-    if (testimonialsRef.current) {
-      observer.observe(testimonialsRef.current);
-    }
+    observer.observe(el);
     return () => {
-      if (testimonialsRef.current) {
-        observer.unobserve(testimonialsRef.current);
-      }
+      observer.unobserve(el);
     };
   }, []);
-
-  const testimonialsData = [
-    {
-      patron: "Maharani Gayatri Devi",
-      city: "Jaipur Legacy",
-      quote: "The Kundan Aad carries the exact weight and majesty of our family heirlooms. Their master artisans preserved the 18th-century reverse Meenakari detail with breathtaking precision. A stellar testament to Rajasthan's living history."
-    },
-    {
-      patron: "Suryaveer Singh Rathore",
-      city: "Uttar Pradesh Royal Lineage",
-      quote: "The Chitai hand-hammered sterling silver sets represent craftsmanship that is virtually extinct today. Standard commercial brands sell machine-pressed copies, but MANISH & CO delivers a heavy, resonant masterpiece forged entirely by hand."
-    },
-    {
-      patron: "Aishwarya Sen",
-      city: "Delhi High-Fashion",
-      quote: "Their bespoke bridal consultation allowed us to custom-craft our wedding jewellery with certified 925 sterling silver and uncompromised craftsmanship. Exceptional trust, transparent pricing, and their showroom experience was pure luxury."
-    }
-  ];
 
   const faqData = [
     {
