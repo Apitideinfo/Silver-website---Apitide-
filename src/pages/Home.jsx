@@ -11,13 +11,10 @@ import { ArrowRight, Star, Sparkles, ChevronRight, ChevronLeft } from 'lucide-re
 import solitariesImg from '../assets/solitaries.png';
 import watchJewelleryImg from '../assets/watch_jewellery.png';
 import mensJewelleryImg from '../assets/mens_jewellery.png';
-import mangalsutrasImg from '../assets/mangalsutras.png';
 import nosePinsImg from '../assets/nose_pins.png';
 import kidsJewelleryImg from '../assets/kids_jewellery.png';
 import goldCoinsImg from '../assets/gold_coins.png';
-import goldChainsImg from '../assets/gold_chains.png';
 import kadaImg from '../assets/kada.png';
-import silverPayalsImg from '../assets/silver_payals.png';
 import EditorialShowcaseSection from '../components/EditorialShowcaseSection';
 import { INITIAL_CATEGORIES } from '../config/constants';
 import { StorageService } from '../services/StorageService';
@@ -29,18 +26,26 @@ import testimonial3 from '../assets/testimonial_3.png';
 import testimonial4 from '../assets/testimonial_4.png';
 
 // Banners & Collections
-import catRefRings from '../assets/cat_ref_rings.png';
-import catRefRingsWebp from '../assets/cat_ref_rings.webp';
-import catRefStoneBracelets from '../assets/cat_ref_stone_bracelets.png';
-import catRefStoneBraceletsWebp from '../assets/cat_ref_stone_bracelets.webp';
-import catRefEarring from '../assets/cat_ref_earring.png';
-import catRefEarringWebp from '../assets/cat_ref_earring.webp';
-import catRefBracelets from '../assets/cat_ref_bracelets.png';
-import catRefBraceletsWebp from '../assets/cat_ref_bracelets.webp';
 import catRefPendant from '../assets/cat_ref_pendant.png';
 import catRefPendantWebp from '../assets/cat_ref_pendant.webp';
 import catRefNecklaces from '../assets/cat_ref_necklaces.png';
 import catRefNecklacesWebp from '../assets/cat_ref_necklaces.webp';
+import catRefMangalsutra from '../assets/cat_ref_mangalsutra.png';
+import catRefMangalsutraWebp from '../assets/cat_ref_mangalsutra.webp';
+import catRefToeRing from '../assets/cat_ref_toe_ring.png';
+import catRefToeRingWebp from '../assets/cat_ref_toe_ring.webp';
+import catRefAnklets from '../assets/cat_ref_anklets.png';
+import catRefAnkletsWebp from '../assets/cat_ref_anklets.webp';
+import catRefChain from '../assets/cat_ref_chain.png';
+import catRefChainWebp from '../assets/cat_ref_chain.webp';
+import catRefRings from '../assets/cat_ref_rings.png';
+import catRefRingsWebp from '../assets/cat_ref_rings.webp';
+import catRefEarring from '../assets/cat_ref_earring.png';
+import catRefEarringWebp from '../assets/cat_ref_earring.webp';
+import catRefBracelets from '../assets/cat_ref_bracelets.png';
+import catRefBraceletsWebp from '../assets/cat_ref_bracelets.webp';
+import catRefStoneBracelets from '../assets/cat_ref_stone_bracelets.png';
+import catRefStoneBraceletsWebp from '../assets/cat_ref_stone_bracelets.webp';
 import colTennisPng from '../assets/col_tennis.png';
 import colTennisWebp from '../assets/col_tennis.webp';
 import colToeRingPng from '../assets/col_toe_ring.png';
@@ -94,16 +99,17 @@ import gemsCollectionBanner from '../assets/gems_collection_banner.jpg';
 
 const getCategoryFallbackImage = (catNameOrId) => {
   const norm = String(catNameOrId || '').toLowerCase().replace(/\s+/g, '');
-  if (norm.includes('stone') || (norm.includes('bracelet') && norm.includes('stone'))) return catRefStoneBraceletsWebp || catRefStoneBracelets;
-  if (norm.includes('ring') && !norm.includes('ear') && !norm.includes('toe')) return catRefRingsWebp || catRefRings;
-  if (norm.includes('toering') || norm.includes('toe-ring') || norm.includes('toe')) return colToeRingWebp || colToeRingPng;
-  if (norm.includes('earring') || norm.includes('jhumka') || norm.includes('top') || norm.includes('stud')) return catRefEarringWebp || catRefEarring;
-  if (norm.includes('bracelet')) return catRefBraceletsWebp || catRefBracelets;
   if (norm.includes('pendant') || norm.includes('locket')) return catRefPendantWebp || catRefPendant;
   if (norm.includes('necklace') || norm.includes('choker') || norm.includes('haar')) return catRefNecklacesWebp || catRefNecklaces;
-  if (norm.includes('payal') || norm.includes('anklet')) return silverPayalsImg;
-  if (norm.includes('mangal')) return mangalsutrasImg;
-  if (norm.includes('chain')) return goldChainsImg;
+  if (norm.includes('mangal')) return catRefMangalsutraWebp || catRefMangalsutra;
+  if (norm.includes('toering') || norm.includes('toe-ring') || norm.includes('toe') || norm.includes('bichiya')) return catRefToeRingWebp || catRefToeRing;
+  if (norm.includes('anklet') || norm.includes('payal')) return catRefAnkletsWebp || catRefAnklets;
+  if (norm.includes('chain')) return catRefChainWebp || catRefChain;
+  if (norm.includes('stone') || (norm.includes('bracelet') && norm.includes('stone'))) return catRefStoneBraceletsWebp || catRefStoneBracelets;
+  if (norm.includes('ring') && !norm.includes('ear') && !norm.includes('toe')) return catRefRingsWebp || catRefRings;
+  if (norm.includes('earring') || norm.includes('jhumka') || norm.includes('top') || norm.includes('stud')) return catRefEarringWebp || catRefEarring;
+  if (norm.includes('bracelet')) return catRefBraceletsWebp || catRefBracelets;
+  if (norm.includes('payal')) return catRefAnkletsWebp || catRefAnklets;
   if (norm.includes('bangle') || norm.includes('kada')) return kadaImg;
   if (norm.includes('nath') || norm.includes('nose')) return nosePinsImg;
   if (norm.includes('coin') || norm.includes('bullion')) return goldCoinsImg;
@@ -111,7 +117,7 @@ const getCategoryFallbackImage = (catNameOrId) => {
   if (norm.includes('watch')) return watchJewelleryImg;
   if (norm.includes('men')) return mensJewelleryImg;
   if (norm.includes('kids') || norm.includes('child')) return kidsJewelleryImg;
-  return catRefRingsWebp || catRefRings;
+  return catRefPendantWebp || catRefPendant;
 };
 
 
@@ -247,12 +253,12 @@ export default function Home({
       : (!isInit ? INITIAL_CATEGORIES : []);
     return list.map((cat) => {
       const catId = cat.id || cat.docId || String(cat.name || '').toLowerCase().replace(/\s+/g, '-');
-      // If Admin uploaded or set an image, use it directly! Otherwise fall back cleanly
-      const catImg = (cat.img && typeof cat.img === 'string' && cat.img.trim())
-        ? cat.img.trim()
-        : (cat.image && typeof cat.image === 'string' && cat.image.trim())
-          ? cat.image.trim()
-          : getCategoryFallbackImage(cat.name || catId);
+      // If Admin uploaded a real custom image, use it! Otherwise use high-res reference image
+      const isCustomUploaded = (cat.img && typeof cat.img === 'string' && (cat.img.startsWith('http') || cat.img.startsWith('data:')))
+        || (cat.image && typeof cat.image === 'string' && (cat.image.startsWith('http') || cat.image.startsWith('data:')));
+      const catImg = isCustomUploaded
+        ? (cat.img || cat.image).trim()
+        : getCategoryFallbackImage(cat.name || catId);
 
       return {
         id: catId,
@@ -522,8 +528,8 @@ export default function Home({
           else if (diff < -45) prevHeroSlide();
         }}
       >
-        {/* Banner Images Carousel Container - Responsive Mobile-to-Desktop Ratio */}
-        <div className="relative w-full aspect-[16/9] xs:aspect-[18/9] sm:aspect-[2200/715] min-h-[175px] xs:min-h-[205px] sm:min-h-[260px] md:min-h-[360px] lg:min-h-[460px] xl:min-h-[520px] overflow-hidden bg-[#091B2B]">
+        {/* Banner Images Carousel Container - Proportional 2200x715 across all viewports to ensure zero clipping on mobile */}
+        <div className="relative w-full aspect-[2200/715] overflow-hidden bg-[#091B2B]">
           <AnimatePresence initial={false} mode="wait">
             <motion.div
               key={currentHeroSlide}
@@ -592,7 +598,7 @@ export default function Home({
           </button>
 
           {/* Slide Indicator Dots */}
-          <div className="absolute bottom-2.5 sm:bottom-4 lg:bottom-6 left-1/2 -translate-x-1/2 z-20 flex items-center gap-2 sm:gap-2.5 px-3 py-1.5 rounded-full bg-black/35 backdrop-blur-md border border-white/10">
+          <div className="absolute bottom-1 sm:bottom-3 lg:bottom-5 left-1/2 -translate-x-1/2 z-20 flex items-center gap-1 sm:gap-2 px-2 sm:px-3 py-0.5 sm:py-1 rounded-full bg-black/35 backdrop-blur-md border border-white/10">
             {heroBanners.map((banner, index) => (
               <button
                 key={banner.id}
@@ -604,8 +610,8 @@ export default function Home({
                 aria-label={'Go to slide ' + (index + 1)}
                 className={'transition-all duration-300 rounded-full cursor-pointer focus:outline-none ' + (
                   currentHeroSlide === index
-                    ? 'w-6 sm:w-8 h-2 sm:h-2.5 bg-gradient-to-r from-[#D4AF37] to-[#FFF5DC] shadow-[0_0_8px_rgba(212,175,55,0.7)]'
-                    : 'w-2 sm:w-2.5 h-2 sm:h-2.5 bg-white/40 hover:bg-white/80'
+                    ? 'w-4 sm:w-8 h-1 sm:h-2 bg-gradient-to-r from-[#D4AF37] to-[#FFF5DC] shadow-[0_0_8px_rgba(212,175,55,0.7)]'
+                    : 'w-1 sm:w-2 h-1 sm:h-2 bg-white/40 hover:bg-white/80'
                 )}
               />
             ))}

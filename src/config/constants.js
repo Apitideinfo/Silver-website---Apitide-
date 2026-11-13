@@ -98,34 +98,6 @@ export const ROUTES = Object.freeze({
 // ─── INITIAL BASELINE CATEGORIES ──────────────────────────────
 export const INITIAL_CATEGORIES = Object.freeze([
   {
-    id: 'rings',
-    name: 'Rings',
-    desc: 'Handcrafted 925 sterling silver rings, solitaires, and band rings.',
-    img: '',
-    createdDate: '2026-01-01T00:00:00.000Z'
-  },
-  {
-    id: 'stone-bracelets',
-    name: 'Stone Bracelets',
-    desc: 'Healing gemstones and vibrant beaded stone bracelets in 925 sterling silver.',
-    img: '',
-    createdDate: '2026-01-01T00:00:00.000Z'
-  },
-  {
-    id: 'earring',
-    name: 'Earring',
-    desc: 'Designer silver drops, hoops, chandbalis, and daily wear studs.',
-    img: '',
-    createdDate: '2026-01-01T00:00:00.000Z'
-  },
-  {
-    id: 'bracelets',
-    name: 'Bracelets',
-    desc: 'Sparkling diamond infinity bracelets and tennis chains in 925 sterling silver.',
-    img: '',
-    createdDate: '2026-01-01T00:00:00.000Z'
-  },
-  {
     id: 'pendant',
     name: 'Pendant',
     desc: 'Sacred deity lockets, solitaires, and vintage filigree everyday pendants.',
@@ -164,6 +136,34 @@ export const INITIAL_CATEGORIES = Object.freeze([
     id: 'chain',
     name: 'Chain',
     desc: 'Italian curb, rope, and box chains in 925 sterling silver and 22K gold.',
+    img: '',
+    createdDate: '2026-01-01T00:00:00.000Z'
+  },
+  {
+    id: 'rings',
+    name: 'Rings',
+    desc: 'Handcrafted 925 sterling silver rings, solitaires, and band rings.',
+    img: '',
+    createdDate: '2026-01-01T00:00:00.000Z'
+  },
+  {
+    id: 'earring',
+    name: 'Earring',
+    desc: 'Designer silver drops, hoops, chandbalis, and daily wear studs.',
+    img: '',
+    createdDate: '2026-01-01T00:00:00.000Z'
+  },
+  {
+    id: 'bracelets',
+    name: 'Bracelets',
+    desc: 'Sparkling diamond infinity bracelets and tennis chains in 925 sterling silver.',
+    img: '',
+    createdDate: '2026-01-01T00:00:00.000Z'
+  },
+  {
+    id: 'stone-bracelets',
+    name: 'Stone Bracelets',
+    desc: 'Healing gemstones and vibrant beaded stone bracelets in 925 sterling silver.',
     img: '',
     createdDate: '2026-01-01T00:00:00.000Z'
   }
