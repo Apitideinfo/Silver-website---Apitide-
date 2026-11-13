@@ -103,16 +103,6 @@ import giftPick2999Webp from '../assets/gift_pick_2999.webp';
 import giftPick2999Png from '../assets/gift_pick_2999.png';
 import giftPickPremiumWebp from '../assets/gift_pick_premium.webp';
 import giftPickPremiumPng from '../assets/gift_pick_premium.png';
-// Eri's Best Picks Assets
-import erisInfinityRingWebp from '../assets/eris_infinity_ring.webp';
-import erisInfinityRingPng from '../assets/eris_infinity_ring.png';
-import erisHeartPendantWebp from '../assets/eris_heart_pendant.webp';
-import erisHeartPendantPng from '../assets/eris_heart_pendant.png';
-
-// Curated Category Extra Assets
-import catRefAnkletsWebp from '../assets/cat_ref_anklets.webp';
-import catRefChainWebp from '../assets/cat_ref_chain.webp';
-import catRefToeRingWebp from '../assets/cat_ref_toe_ring.webp';
 
 // Made for Every Kind of Love Assets
 import loveStory1Webp from '../assets/love_story_1.webp';
@@ -220,65 +210,6 @@ const GIFT_HAMPERS_DATA = [
   }
 ];
 
-const CURATED_AUDIENCE_SECTIONS = [
-  {
-    id: 'for-her',
-    label: 'FOR HER',
-    icon: '👸',
-    subtitle: 'Bracelets, Anklets, Rings, Ear rings, Toe Rings & Necklaces',
-    items: [
-      { id: 'her-bracelets', name: 'Bracelets', sub: '925 Italian & Tennis', img: catRefBraceletsWebp, tab: 'bracelets' },
-      { id: 'her-anklets', name: 'Anklets', sub: 'Traditional & Minimal', img: catRefAnkletsWebp, tab: 'anklets' },
-      { id: 'her-rings', name: 'Rings', sub: 'Pavé Solitaires & Bands', img: catRefRingsWebp, tab: 'rings' },
-      { id: 'her-earrings', name: 'Ear Rings', sub: 'Studs, Drops & Jhumkas', img: catRefEarringWebp, tab: 'earrings' },
-      { id: 'her-toe-rings', name: 'Toe Rings', sub: 'Hallmarked 925 Silver', img: catRefToeRingWebp, tab: 'rings' },
-      { id: 'her-chains', name: 'Chains', sub: 'Delicate Link Chains', img: catRefChainWebp, tab: 'chains' },
-      { id: 'her-necklaces', name: 'Necklaces', sub: 'Chokers & Layered Chains', img: catRefNecklacesWebp, tab: 'necklaces' },
-      { id: 'her-pendants', name: 'Pendants', sub: 'Evil Eye & Symbolic Charms', img: catRefPendantWebp, tab: 'pendants' },
-      { id: 'her-other', name: 'Other Jewellery', sub: 'Explore Complete Range', img: colBracelets, tab: 'Collections' },
-    ]
-  },
-  {
-    id: 'for-him',
-    label: 'FOR HIM',
-    icon: '🤴',
-    subtitle: 'Bracelets & Kada, Chains, Signet Rings & Regal Pendants',
-    items: [
-      { id: 'him-kadas', name: 'Bracelets & Kada', sub: 'Chitai & Heavy 925 Kada', img: kadaImg, tab: 'bracelets' },
-      { id: 'him-chains', name: 'Chains', sub: 'Curb, Figaro & Rope', img: catRefChainWebp, tab: 'chains' },
-      { id: 'him-rings', name: 'Rings', sub: 'Bold Signet & Sovereign Rings', img: catRefRingsWebp, tab: 'rings' },
-      { id: 'him-pendants', name: 'Pendants', sub: 'Om, Trishul, Shield Pendants', img: catRefPendantWebp, tab: 'pendants' },
-      { id: 'him-other', name: 'Other Essentials', sub: 'Men’s Silver Brooches & Sets', img: kadaImg, tab: 'Collections' },
-    ]
-  },
-  {
-    id: 'for-kids',
-    label: 'KIDS COLLECTION',
-    icon: '👶',
-    subtitle: 'Born Baby Kit, Gentle Chains, Cute Pendants & Nazariya Berwa',
-    items: [
-      { id: 'kids-kit', name: 'Bornbaby Kit', sub: 'Silver Spoon, Bowl & Glass', img: kidsJewelleryImg, tab: 'Collections' },
-      { id: 'kids-chains', name: 'Chains', sub: 'Lightweight & Safe Silver', img: catRefChainWebp, tab: 'chains' },
-      { id: 'kids-pendants', name: 'Pendants', sub: 'Cute Animal & Star Charms', img: catRefPendantWebp, tab: 'pendants' },
-      { id: 'kids-berwa', name: 'Bracelets & Berwa', sub: 'Hypoallergenic Silver Nazariya', img: kidsJewelleryImg, tab: 'bracelets' },
-      { id: 'kids-other', name: 'Other Keepsakes', sub: 'Silver Rattles & Silver Coins', img: kidsJewelleryImg, tab: 'Collections' },
-    ]
-  },
-  {
-    id: 'couples-gifts',
-    label: 'COUPLES & GIFTS',
-    icon: '🎁',
-    subtitle: 'Couple Rings, Couple Chains, Secret Sets & Curated Hampers',
-    items: [
-      { id: 'couple-rings', name: 'Couple Rings', sub: 'Matching Forever Bands', img: catRefRingsWebp, tab: 'rings' },
-      { id: 'couple-chains', name: 'Couple Chains', sub: 'Interlocking Infinity Chains', img: catRefChainWebp, tab: 'chains' },
-      { id: 'couple-bracelets', name: 'Couple Bracelets', sub: 'His & Hers Silver Pair', img: catRefBraceletsWebp, tab: 'bracelets' },
-      { id: 'couple-secret-sets', name: 'Secret Sets', sub: 'Hidden Message Pendants', img: giftPickPremiumWebp, tab: 'Collections' },
-      { id: 'couple-gifts', name: 'Gifts Section', sub: 'Born Baby Kit & Romantic Hampers', img: giftPick1999Webp, tab: 'Collections' },
-    ]
-  }
-];
-
 const LOVE_STORY_CARDS = [
   {
     id: 'first-glance',
@@ -335,8 +266,6 @@ export default function Home({
   const [consultationModal, setConsultationModal] = useState(false);
   const [customDesignOpen, setCustomDesignOpen] = useState(false);
   const [wishlistLoveCards, setWishlistLoveCards] = useState(['everyday-love']);
-  const [activeAudienceTab, setActiveAudienceTab] = useState('for-her');
-  const audienceCarouselRef = useRef(null);
   const trustSealsScrollRef = useRef(null);
 
   const scrollTrustSeals = (dir) => {
@@ -350,13 +279,6 @@ export default function Home({
     setWishlistLoveCards((prev) => 
       prev.includes(id) ? prev.filter(x => x !== id) : [...prev, id]
     );
-  };
-
-  const scrollAudienceCarousel = (dir) => {
-    if (audienceCarouselRef.current) {
-      const step = audienceCarouselRef.current.clientWidth > 768 ? 320 : 200;
-      audienceCarouselRef.current.scrollBy({ left: dir === 'left' ? -step : step, behavior: 'smooth' });
-    }
   };
 
   // Hero Carousel State (Auto slide every 5 sec)
@@ -558,6 +480,12 @@ export default function Home({
     }
     return INITIAL_CATEGORIES;
   }, [categories]);
+
+  // Dynamic Best Sellers from live store products (replaces hardcoded products)
+  const dynamicBestSellers = React.useMemo(() => {
+    if (!Array.isArray(products) || products.length === 0) return [];
+    return products.slice(0, 4);
+  }, [products]);
 
   // Lower Recommendations Carousel Scrolling Refs & Autoplay
   const categoriesScrollRef = useRef(null);
@@ -1305,292 +1233,6 @@ export default function Home({
         </section>
 
         {/* ==========================================================
-          SECTION: CURATED COLLECTIONS FOR HER, HIM, KIDS & COUPLES
-          Interactive Tabbed Carousel Slider
-          ========================================================== */}
-        <section id="curated-audience-section" className="w-full bg-[#FFFFFF] py-10 sm:py-14 border-b border-gray-100 select-none">
-          <div className="max-w-[1536px] mx-auto px-4 sm:px-8 lg:px-12">
-            
-            {/* Section Header */}
-            <div className="text-center mb-6 sm:mb-8">
-              <span className="text-[11px] sm:text-xs font-sans font-bold tracking-[0.25em] text-[#6B4B2E] uppercase block mb-1.5">
-                CURATED FOR EVERYONE
-              </span>
-              <h2 
-                className="text-2xl sm:text-3xl md:text-[34px] font-bold text-[#0D2B4E] tracking-tight"
-                style={{ fontFamily: "'Cormorant Garamond', 'Playfair Display', Georgia, serif" }}
-              >
-                Shop By Recipient &amp; Style
-              </h2>
-              <div className="w-12 h-[2px] bg-[#6B4B2E] mx-auto mt-2.5 rounded-full" />
-            </div>
-
-            {/* Audience Segmented Filter Tabs */}
-            <div className="flex items-center justify-center gap-2 sm:gap-3 flex-wrap mb-7 sm:mb-9">
-              {CURATED_AUDIENCE_SECTIONS.map((sec) => (
-                <button
-                  key={sec.id}
-                  type="button"
-                  onClick={() => {
-                    triggerAudio('click');
-                    setActiveAudienceTab(sec.id);
-                  }}
-                  className={`inline-flex items-center gap-2 px-4 sm:px-6 py-2 sm:py-2.5 rounded-full font-sans text-xs sm:text-[13px] font-bold tracking-wider uppercase transition-all duration-300 cursor-pointer border focus:outline-none ${
-                    activeAudienceTab === sec.id
-                      ? 'bg-[#0D2B4E] text-white border-[#0D2B4E] shadow-md scale-102'
-                      : 'bg-white text-[#0D2B4E] border-gray-200 hover:border-[#6B4B2E] hover:text-[#6B4B2E]'
-                  }`}
-                >
-                  <span className="text-sm">{sec.icon}</span>
-                  <span>{sec.label}</span>
-                </button>
-              ))}
-            </div>
-
-            {/* Active Audience Items Carousel */}
-            {(() => {
-              const currentSection = CURATED_AUDIENCE_SECTIONS.find(s => s.id === activeAudienceTab) || CURATED_AUDIENCE_SECTIONS[0];
-              return (
-                <div className="relative">
-                  {/* Left Carousel Arrow */}
-                  <button
-                    type="button"
-                    onClick={() => scrollAudienceCarousel('left')}
-                    aria-label="Previous categories"
-                    className="hidden sm:flex absolute -left-2 sm:left-0 top-[38%] -translate-y-1/2 w-8 h-8 sm:w-10 sm:h-10 rounded-full bg-white/95 backdrop-blur-xs border border-gray-200 shadow-md hover:shadow-xl hover:bg-[#0D2B4E] hover:text-white items-center justify-center text-gray-700 transition-all z-20 cursor-pointer focus:outline-none"
-                  >
-                    <ChevronLeft className="w-4 h-4 sm:w-5 sm:h-5" />
-                  </button>
-
-                  {/* Right Carousel Arrow */}
-                  <button
-                    type="button"
-                    onClick={() => scrollAudienceCarousel('right')}
-                    aria-label="Next categories"
-                    className="hidden sm:flex absolute -right-2 sm:right-0 top-[38%] -translate-y-1/2 w-8 h-8 sm:w-10 sm:h-10 rounded-full bg-white/95 backdrop-blur-xs border border-gray-200 shadow-md hover:shadow-xl hover:bg-[#0D2B4E] hover:text-white items-center justify-center text-gray-700 transition-all z-20 cursor-pointer focus:outline-none"
-                  >
-                    <ChevronRight className="w-4 h-4 sm:w-5 sm:h-5" />
-                  </button>
-
-                  {/* Horizontal Scroll Track */}
-                  <div
-                    ref={audienceCarouselRef}
-                    className="flex items-stretch gap-4 sm:gap-6 overflow-x-auto no-scrollbar scroll-smooth py-2 px-2 sm:px-8 select-none"
-                  >
-                    {currentSection.items.map((item) => (
-                      <div
-                        key={item.id}
-                        onClick={() => {
-                          triggerAudio('click');
-                          if (item.tab) changeCategoryTab?.(item.tab);
-                          navigateTo('collections');
-                        }}
-                        className="w-[145px] sm:w-[175px] md:w-[195px] shrink-0 bg-[#FFFDFB] rounded-2xl border border-[#EADBCE]/70 hover:border-[#8C6D46] shadow-xs hover:shadow-lg transition-all duration-300 p-2.5 sm:p-3 flex flex-col items-center group cursor-pointer hover:-translate-y-1"
-                      >
-                        <div className="relative w-full aspect-square rounded-xl overflow-hidden bg-[#FAF6F0] border border-[#EADBCE]/40">
-                          <img
-                            src={item.img}
-                            alt={item.name}
-                            className="w-full h-full object-cover group-hover:scale-108 transition-transform duration-500 ease-out"
-                            loading="lazy"
-                          />
-                        </div>
-
-                        <div className="mt-3 text-center w-full px-1">
-                          <h4 className="text-xs sm:text-[13.5px] font-sans font-bold text-[#0D2B4E] group-hover:text-[#6B4B2E] transition-colors leading-tight uppercase tracking-tight">
-                            {item.name}
-                          </h4>
-                          <p className="text-[10px] sm:text-[11px] font-sans text-gray-500 font-medium mt-0.5 truncate">
-                            {item.sub}
-                          </p>
-                        </div>
-                      </div>
-                    ))}
-                  </div>
-                </div>
-              );
-            })()}
-
-          </div>
-        </section>
-
-        {/* ==========================================================
-          SECTION: 🎁 ERI'S BEST PICKS 🎁 (Screenshot 02 Exact)
-          Two Arched Royal Showcase Cards: Infinity Ring & Heart Pendant
-          ========================================================== */}
-        <section id="eris-best-picks-section" className="w-full bg-[#FFFFFF] py-10 sm:py-16 border-b border-gray-100 select-none">
-          <div className="max-w-[1536px] mx-auto px-4 sm:px-8 lg:px-12">
-            
-            {/* Header: 🎁 Eri's Best Picks 🎁 with fine luxury divider lines */}
-            <div className="max-w-4xl mx-auto flex items-center justify-center mb-8 sm:mb-12 px-2 sm:px-4">
-              <div className="flex-1 h-[1.5px] sm:h-[2px] bg-[#6B4B2E] rounded-full" />
-              <span className="px-2.5 sm:px-6 text-sm xs:text-base sm:text-[18px] md:text-[20px] font-serif font-bold text-[#0D2B4E] flex items-center gap-1.5 sm:gap-2 whitespace-nowrap tracking-wide">
-                <span>🎁</span>
-                <span>Eri’s Best Picks</span>
-                <span>🎁</span>
-              </span>
-              <div className="flex-1 h-[1.5px] sm:h-[2px] bg-[#6B4B2E] rounded-full" />
-            </div>
-
-            {/* 2 Arched Cards Grid */}
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-6 sm:gap-10 max-w-4xl mx-auto px-2 sm:px-6">
-
-              {/* CARD 1: INFINITY RING */}
-              <div 
-                onClick={() => {
-                  triggerAudio('click');
-                  changeCategoryTab?.('rings');
-                  navigateTo('collections');
-                }}
-                className="flex flex-col items-center group cursor-pointer"
-              >
-                {/* Arch Window Frame with Gold Gradient & Mandala Watermark */}
-                <div className="relative w-full max-w-[290px] xs:max-w-[330px] md:max-w-none mx-auto aspect-[4/5] sm:aspect-[3/4] rounded-t-full border-[3px] border-[#6B4B2E]/40 bg-gradient-to-b from-[#FFFDF9] via-[#FAF5EA] to-[#FFFFFF] p-6 sm:p-8 flex items-center justify-center overflow-hidden shadow-xs hover:shadow-xl transition-all duration-500 group-hover:-translate-y-1.5">
-                  
-                  {/* Sacred Mandala SVG Watermark Motif in Arch */}
-                  <svg 
-                    viewBox="0 0 200 200" 
-                    className="absolute -top-10 inset-x-0 mx-auto w-52 h-52 sm:w-60 sm:h-60 opacity-[0.22] pointer-events-none text-[#6B4B2E] group-hover:scale-105 transition-transform duration-700"
-                  >
-                    <circle cx="100" cy="100" r="90" fill="none" stroke="currentColor" strokeWidth="1" strokeDasharray="3,3" />
-                    <circle cx="100" cy="100" r="70" fill="none" stroke="currentColor" strokeWidth="0.8" />
-                    <circle cx="100" cy="100" r="50" fill="none" stroke="currentColor" strokeWidth="0.8" />
-                    <circle cx="100" cy="100" r="30" fill="none" stroke="currentColor" strokeWidth="0.8" />
-                    {[0, 15, 30, 45, 60, 75, 90, 105, 120, 135, 150, 165].map((deg) => (
-                      <line
-                        key={deg}
-                        x1="100"
-                        y1="15"
-                        x2="100"
-                        y2="185"
-                        stroke="currentColor"
-                        strokeWidth="0.6"
-                        transform={`rotate(${deg} 100 100)`}
-                      />
-                    ))}
-                    {[0, 45, 90, 135, 180, 225, 270, 315].map((deg) => (
-                      <path
-                        key={deg}
-                        d="M100 55 Q115 78 100 100 Q85 78 100 55 Z"
-                        fill="none"
-                        stroke="currentColor"
-                        strokeWidth="0.8"
-                        transform={`rotate(${deg} 100 100)`}
-                      />
-                    ))}
-                  </svg>
-
-                  {/* Sparkling Sterling Silver Infinity Ring Image */}
-                  <picture className="w-[78%] sm:w-[82%] aspect-square relative z-10 flex items-center justify-center">
-                    <source srcSet={erisInfinityRingWebp} type="image/webp" />
-                    <img 
-                      src={erisInfinityRingPng} 
-                      alt="Infinity Ring - MANISH & CO"
-                      className="w-full h-full object-contain filter drop-shadow-md group-hover:scale-108 group-hover:-translate-y-2 transition-transform duration-500 ease-out"
-                      loading="lazy"
-                    />
-                  </picture>
-
-                  {/* Subtle Shimmer Overlay on hover */}
-                  <div className="absolute inset-0 bg-gradient-to-tr from-transparent via-white/20 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-500 pointer-events-none" />
-                </div>
-
-                {/* Typography below arch: Infinity Ring */}
-                <div className="mt-4 sm:mt-5 text-center">
-                  <h3 
-                    className="text-2xl sm:text-3xl text-[#0D2B4E] tracking-tight leading-none"
-                    style={{ fontFamily: "'Cormorant Garamond', 'Playfair Display', Georgia, serif" }}
-                  >
-                    <span className="font-bold">Infinity</span> <span className="font-light italic text-[#6B4B2E]">Ring</span>
-                  </h3>
-                  <span className="inline-flex items-center gap-1.5 text-xs sm:text-[13px] font-sans text-[#6B4B2E] font-semibold tracking-wider uppercase mt-1.5 group-hover:text-[#0D2B4E] transition-colors">
-                    <span>Explore Ring</span>
-                    <span className="text-sm">→</span>
-                  </span>
-                </div>
-              </div>
-
-              {/* CARD 2: HEART PENDANT */}
-              <div 
-                onClick={() => {
-                  triggerAudio('click');
-                  changeCategoryTab?.('pendants');
-                  navigateTo('collections');
-                }}
-                className="flex flex-col items-center group cursor-pointer"
-              >
-                {/* Arch Window Frame with Gold Gradient & Mandala Watermark */}
-                <div className="relative w-full max-w-[290px] xs:max-w-[330px] md:max-w-none mx-auto aspect-[4/5] sm:aspect-[3/4] rounded-t-full border-[3px] border-[#6B4B2E]/40 bg-gradient-to-b from-[#FFFDF9] via-[#FAF5EA] to-[#FFFFFF] p-6 sm:p-8 flex items-center justify-center overflow-hidden shadow-xs hover:shadow-xl transition-all duration-500 group-hover:-translate-y-1.5">
-                  
-                  {/* Sacred Mandala SVG Watermark Motif in Arch */}
-                  <svg 
-                    viewBox="0 0 200 200" 
-                    className="absolute -top-10 inset-x-0 mx-auto w-52 h-52 sm:w-60 sm:h-60 opacity-[0.22] pointer-events-none text-[#6B4B2E] group-hover:scale-105 transition-transform duration-700"
-                  >
-                    <circle cx="100" cy="100" r="90" fill="none" stroke="currentColor" strokeWidth="1" strokeDasharray="3,3" />
-                    <circle cx="100" cy="100" r="70" fill="none" stroke="currentColor" strokeWidth="0.8" />
-                    <circle cx="100" cy="100" r="50" fill="none" stroke="currentColor" strokeWidth="0.8" />
-                    <circle cx="100" cy="100" r="30" fill="none" stroke="currentColor" strokeWidth="0.8" />
-                    {[0, 15, 30, 45, 60, 75, 90, 105, 120, 135, 150, 165].map((deg) => (
-                      <line
-                        key={deg}
-                        x1="100"
-                        y1="15"
-                        x2="100"
-                        y2="185"
-                        stroke="currentColor"
-                        strokeWidth="0.6"
-                        transform={`rotate(${deg} 100 100)`}
-                      />
-                    ))}
-                    {[0, 45, 90, 135, 180, 225, 270, 315].map((deg) => (
-                      <path
-                        key={deg}
-                        d="M100 55 Q115 78 100 100 Q85 78 100 55 Z"
-                        fill="none"
-                        stroke="currentColor"
-                        strokeWidth="0.8"
-                        transform={`rotate(${deg} 100 100)`}
-                      />
-                    ))}
-                  </svg>
-
-                  {/* Mother-of-Pearl & Pavé Diamond Halo Heart Pendant Image */}
-                  <picture className="w-[78%] sm:w-[82%] aspect-square relative z-10 flex items-center justify-center">
-                    <source srcSet={erisHeartPendantWebp} type="image/webp" />
-                    <img 
-                      src={erisHeartPendantPng} 
-                      alt="Heart Pendant - MANISH & CO"
-                      className="w-full h-full object-contain filter drop-shadow-md group-hover:scale-108 group-hover:-translate-y-2 transition-transform duration-500 ease-out"
-                      loading="lazy"
-                    />
-                  </picture>
-
-                  {/* Subtle Shimmer Overlay on hover */}
-                  <div className="absolute inset-0 bg-gradient-to-tr from-transparent via-white/20 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-500 pointer-events-none" />
-                </div>
-
-                {/* Typography below arch: Heart Pendant */}
-                <div className="mt-4 sm:mt-5 text-center">
-                  <h3 
-                    className="text-2xl sm:text-3xl text-[#0D2B4E] tracking-tight leading-none"
-                    style={{ fontFamily: "'Cormorant Garamond', 'Playfair Display', Georgia, serif" }}
-                  >
-                    <span className="font-bold">Heart</span> <span className="font-light italic text-[#6B4B2E]">Pendant</span>
-                  </h3>
-                  <span className="inline-flex items-center gap-1.5 text-xs sm:text-[13px] font-sans text-[#6B4B2E] font-semibold tracking-wider uppercase mt-1.5 group-hover:text-[#0D2B4E] transition-colors">
-                    <span>Explore Pendant</span>
-                    <span className="text-sm">→</span>
-                  </span>
-                </div>
-              </div>
-
-            </div>
-
-          </div>
-        </section>
-
-        {/* ==========================================================
           CLIENT FEEDBACK SECTION 4: GEMS COLLECTION (Feedback #10)
           ========================================================== */}
         <section id="gems-collection-section" className="w-full py-14 sm:py-20 bg-[#091B2B] border-b border-white/10 select-none text-left text-white">
@@ -1798,117 +1440,36 @@ export default function Home({
                 </div>
               </div>
 
-              {/* Right Column: 4 Collection Category Cards */}
+              {/* Right Column: Collection Category Cards */}
               <div className="w-full lg:flex-1 grid grid-cols-2 md:grid-cols-4 gap-4 sm:gap-5 lg:gap-6">
-
-                {/* Card 1: RINGS */}
-                <div
-                  onClick={() => {
-                    triggerAudio('click');
-                    changeCategoryTab?.('Rings');
-                    navigateTo('collections');
-                  }}
-                  className="group cursor-pointer flex flex-col items-center text-center select-none"
-                >
-                  <div className="w-full aspect-[148/169] overflow-hidden bg-black/5 shadow-sm relative">
-                    <img
-                      src={colRings}
-                      alt="RINGS - MANISH & CO"
-                      className="w-full h-full object-cover transition-transform duration-700 ease-out group-hover:scale-105"
-                      loading="lazy"
-                    />
-                    <div className="absolute inset-0 bg-black/0 group-hover:bg-black/10 transition-colors duration-300" />
+                {displayCategories.slice(0, 4).map((cat) => (
+                  <div
+                    key={cat.id || cat.docId || cat.name}
+                    onClick={() => {
+                      triggerAudio('click');
+                      changeCategoryTab?.(cat.name);
+                      navigateTo('collections');
+                    }}
+                    className="group cursor-pointer flex flex-col items-center text-center select-none"
+                  >
+                    <div className="w-full aspect-[148/169] overflow-hidden bg-black/5 shadow-sm relative">
+                      <img
+                        src={cat.img || getCategoryFallbackImage(cat.name || cat.id)}
+                        alt={`${cat.name} - MANISH & CO`}
+                        className="w-full h-full object-cover transition-transform duration-700 ease-out group-hover:scale-105"
+                        loading="lazy"
+                      />
+                      <div className="absolute inset-0 bg-black/0 group-hover:bg-black/10 transition-colors duration-300" />
+                    </div>
+                    <h3 className="font-sans font-semibold text-xs sm:text-[13px] tracking-[0.22em] uppercase text-[#0D2B4E] mt-3 group-hover:text-[#6B4B2E] transition-colors">
+                      {cat.name}
+                    </h3>
+                    <span className="text-[11px] sm:text-xs text-[#6F6862] group-hover:text-[#6B4B2E] group-hover:translate-x-0.5 transition-all inline-flex items-center gap-1 mt-0.5 font-normal">
+                      <span>Shop Now</span>
+                      <span className="text-xs">→</span>
+                    </span>
                   </div>
-                  <h3 className="font-sans font-semibold text-xs sm:text-[13px] tracking-[0.22em] uppercase text-[#0D2B4E] mt-3 group-hover:text-[#6B4B2E] transition-colors">
-                    RINGS
-                  </h3>
-                  <span className="text-[11px] sm:text-xs text-[#6F6862] group-hover:text-[#6B4B2E] group-hover:translate-x-0.5 transition-all inline-flex items-center gap-1 mt-0.5 font-normal">
-                    <span>Shop Now</span>
-                    <span className="text-xs">→</span>
-                  </span>
-                </div>
-
-                {/* Card 2: BRACELETS */}
-                <div
-                  onClick={() => {
-                    triggerAudio('click');
-                    changeCategoryTab?.('Bracelets');
-                    navigateTo('collections');
-                  }}
-                  className="group cursor-pointer flex flex-col items-center text-center select-none"
-                >
-                  <div className="w-full aspect-[148/169] overflow-hidden bg-black/5 shadow-sm relative">
-                    <img
-                      src={colBracelets}
-                      alt="BRACELETS - MANISH & CO"
-                      className="w-full h-full object-cover transition-transform duration-700 ease-out group-hover:scale-105"
-                      loading="lazy"
-                    />
-                    <div className="absolute inset-0 bg-black/0 group-hover:bg-black/10 transition-colors duration-300" />
-                  </div>
-                  <h3 className="font-sans font-semibold text-xs sm:text-[13px] tracking-[0.22em] uppercase text-[#0D2B4E] mt-3 group-hover:text-[#6B4B2E] transition-colors">
-                    BRACELETS
-                  </h3>
-                  <span className="text-[11px] sm:text-xs text-[#6F6862] group-hover:text-[#6B4B2E] group-hover:translate-x-0.5 transition-all inline-flex items-center gap-1 mt-0.5 font-normal">
-                    <span>Shop Now</span>
-                    <span className="text-xs">→</span>
-                  </span>
-                </div>
-
-                {/* Card 3: PENDANTS */}
-                <div
-                  onClick={() => {
-                    triggerAudio('click');
-                    changeCategoryTab?.('Pendants');
-                    navigateTo('collections');
-                  }}
-                  className="group cursor-pointer flex flex-col items-center text-center select-none"
-                >
-                  <div className="w-full aspect-[148/169] overflow-hidden bg-black/5 shadow-sm relative">
-                    <img
-                      src={colPendants}
-                      alt="PENDANTS - MANISH & CO"
-                      className="w-full h-full object-cover transition-transform duration-700 ease-out group-hover:scale-105"
-                      loading="lazy"
-                    />
-                    <div className="absolute inset-0 bg-black/0 group-hover:bg-black/10 transition-colors duration-300" />
-                  </div>
-                  <h3 className="font-sans font-semibold text-xs sm:text-[13px] tracking-[0.22em] uppercase text-[#0D2B4E] mt-3 group-hover:text-[#6B4B2E] transition-colors">
-                    PENDANTS
-                  </h3>
-                  <span className="text-[11px] sm:text-xs text-[#6F6862] group-hover:text-[#6B4B2E] group-hover:translate-x-0.5 transition-all inline-flex items-center gap-1 mt-0.5 font-normal">
-                    <span>Shop Now</span>
-                    <span className="text-xs">→</span>
-                  </span>
-                </div>
-
-                {/* Card 4: CHAINS */}
-                <div
-                  onClick={() => {
-                    triggerAudio('click');
-                    changeCategoryTab?.('Chains');
-                    navigateTo('collections');
-                  }}
-                  className="group cursor-pointer flex flex-col items-center text-center select-none"
-                >
-                  <div className="w-full aspect-[148/169] overflow-hidden bg-black/5 shadow-sm relative">
-                    <img
-                      src={colChains}
-                      alt="CHAINS - MANISH & CO"
-                      className="w-full h-full object-cover transition-transform duration-700 ease-out group-hover:scale-105"
-                      loading="lazy"
-                    />
-                    <div className="absolute inset-0 bg-black/0 group-hover:bg-black/10 transition-colors duration-300" />
-                  </div>
-                  <h3 className="font-sans font-semibold text-xs sm:text-[13px] tracking-[0.22em] uppercase text-[#0D2B4E] mt-3 group-hover:text-[#6B4B2E] transition-colors">
-                    CHAINS
-                  </h3>
-                  <span className="text-[11px] sm:text-xs text-[#6F6862] group-hover:text-[#6B4B2E] group-hover:translate-x-0.5 transition-all inline-flex items-center gap-1 mt-0.5 font-normal">
-                    <span>Shop Now</span>
-                    <span className="text-xs">→</span>
-                  </span>
-                </div>
-
+                ))}
               </div>
 
             </div>
@@ -1916,152 +1477,109 @@ export default function Home({
         </section>
 
         {/* ==========================================================
-          CLIENT FEEDBACK SECTION 1: BEST SELLERS (Feedback #6.1)
+          CLIENT FEEDBACK SECTION 1: BEST SELLERS (Dynamic Products)
           ========================================================== */}
-        <section id="best-sellers" className="w-full py-14 sm:py-20 bg-white border-b border-[#EAE3D9] select-none">
-          <div className="max-w-[1536px] mx-auto px-6 sm:px-10 lg:px-14">
+        {dynamicBestSellers.length > 0 && (
+          <section id="best-sellers" className="w-full py-14 sm:py-20 bg-white border-b border-[#EAE3D9] select-none">
+            <div className="max-w-[1536px] mx-auto px-6 sm:px-10 lg:px-14">
 
-            {/* Editorial Header */}
-            <div className="flex flex-col sm:flex-row items-start sm:items-end justify-between gap-4 mb-10 sm:mb-12">
-              <div className="text-left">
-                <span className="inline-block text-[#6B4B2E] text-xs sm:text-[13px] font-sans font-semibold tracking-[0.28em] uppercase mb-2">
-                  CURATED PATRON FAVORITES
-                </span>
-                <h2
-                  className="text-3xl sm:text-4xl lg:text-[46px] font-bold text-[#0D2B4E] leading-tight"
-                  style={{ fontFamily: "'Cormorant Garamond', 'Playfair Display', Georgia, serif" }}
-                >
-                  Best Sellers
-                </h2>
-                <p className="text-[#6F6862] text-xs sm:text-sm font-sans mt-2 max-w-xl font-normal">
-                  Our most cherished BIS hallmarked 925 sterling silver creations, celebrated by over 25,000 patrons across India.
-                </p>
-              </div>
+              {/* Editorial Header */}
+              <div className="flex flex-col sm:flex-row items-start sm:items-end justify-between gap-4 mb-10 sm:mb-12">
+                <div className="text-left">
+                  <span className="inline-block text-[#6B4B2E] text-xs sm:text-[13px] font-sans font-semibold tracking-[0.28em] uppercase mb-2">
+                    CURATED PATRON FAVORITES
+                  </span>
+                  <h2
+                    className="text-3xl sm:text-4xl lg:text-[46px] font-bold text-[#0D2B4E] leading-tight"
+                    style={{ fontFamily: "'Cormorant Garamond', 'Playfair Display', Georgia, serif" }}
+                  >
+                    Best Sellers
+                  </h2>
+                  <p className="text-[#6F6862] text-xs sm:text-sm font-sans mt-2 max-w-xl font-normal">
+                    Our most cherished BIS hallmarked 925 sterling silver creations, celebrated by patrons across India.
+                  </p>
+                </div>
 
-              <button
-                onClick={() => {
-                  changeCategoryTab?.('Collections');
-                  navigateTo('collections');
-                }}
-                className="text-[#0D2B4E] hover:text-[#6B4B2E] font-sans text-xs sm:text-[13px] font-semibold tracking-[0.18em] uppercase inline-flex items-center gap-2 transition-colors cursor-pointer group shrink-0"
-              >
-                <span>Explore All Icons</span>
-                <span className="text-sm font-light transition-transform duration-300 group-hover:translate-x-1.5">→</span>
-              </button>
-            </div>
-
-            {/* 4 Best Seller Cards */}
-            <div className="grid grid-cols-2 lg:grid-cols-4 gap-4 sm:gap-6 lg:gap-7">
-              {[
-                {
-                  id: 'bs-sapphire-ring',
-                  title: 'Sapphire Solitaire Ring',
-                  cat: 'Rings',
-                  purity: '925 Silver',
-                  price: '₹1,899',
-                  rating: '4.9',
-                  reviews: '142',
-                  img: colRings,
-                  badge: 'MOST COVETED'
-                },
-                {
-                  id: 'bs-curb-bracelet',
-                  title: 'Royal Cuban Bracelet',
-                  cat: 'Bracelets',
-                  purity: '925 Silver',
-                  price: '₹1,499',
-                  rating: '5.0',
-                  reviews: '98',
-                  img: colBracelets,
-                  badge: 'TOP RATED'
-                },
-                {
-                  id: 'bs-compass-pendant',
-                  title: 'North Star Compass Pendant',
-                  cat: 'Pendants',
-                  purity: '925 Silver',
-                  price: '₹999',
-                  rating: '4.9',
-                  reviews: '215',
-                  img: colPendants,
-                  badge: 'BESTSELLER'
-                },
-                {
-                  id: 'bs-curb-chain',
-                  title: 'Miami Solid Curb Chain',
-                  cat: 'Chains',
-                  purity: '925 Silver',
-                  price: '₹1,999',
-                  rating: '4.8',
-                  reviews: '86',
-                  img: colChains,
-                  badge: 'ROYAL HEIRLOOM'
-                }
-              ].map((item) => (
-                <div
-                  key={item.id}
+                <button
                   onClick={() => {
-                    changeCategoryTab?.(item.cat);
+                    changeCategoryTab?.('Collections');
                     navigateTo('collections');
                   }}
-                  className="group cursor-pointer flex flex-col bg-white border border-[#E8DFD5] hover:border-[#8C6D46]/60 shadow-[0_4px_16px_rgba(0,0,0,0.04)] hover:shadow-[0_12px_32px_rgba(140,109,70,0.18)] transition-all duration-500 overflow-hidden text-left"
+                  className="text-[#0D2B4E] hover:text-[#6B4B2E] font-sans text-xs sm:text-[13px] font-semibold tracking-[0.18em] uppercase inline-flex items-center gap-2 transition-colors cursor-pointer group shrink-0"
                 >
-                  {/* Image Container with Badge */}
-                  <div className="w-full aspect-[4/5] overflow-hidden bg-[#FAF6F2] relative">
-                    <img
-                      src={item.img}
-                      alt={item.title}
-                      loading="lazy"
-                      className="w-full h-full object-cover transition-transform duration-700 ease-out group-hover:scale-106"
-                    />
-                    <div className="absolute inset-0 bg-black/0 group-hover:bg-black/5 transition-colors duration-300 pointer-events-none" />
+                  <span>Explore All Icons</span>
+                  <span className="text-sm font-light transition-transform duration-300 group-hover:translate-x-1.5">→</span>
+                </button>
+              </div>
 
-                    {/* Badge */}
-                    <span className="absolute top-2.5 left-2.5 bg-[#050B14]/90 backdrop-blur-xs text-[#E5C396] text-[8.5px] sm:text-[9.5px] font-sans font-bold tracking-[0.16em] uppercase px-2.5 py-1 rounded-[1px] border border-[#C5A880]/30 shadow-xs">
-                      {item.badge}
-                    </span>
+              {/* Dynamic Best Seller Cards */}
+              <div className="grid grid-cols-2 lg:grid-cols-4 gap-4 sm:gap-6 lg:gap-7">
+                {dynamicBestSellers.map((item) => (
+                  <div
+                    key={item.id}
+                    onClick={() => {
+                      if (item.id) navigateToPDP?.(item);
+                      else navigateTo('collections');
+                    }}
+                    className="group cursor-pointer flex flex-col bg-white border border-[#E8DFD5] hover:border-[#8C6D46]/60 shadow-[0_4px_16px_rgba(0,0,0,0.04)] hover:shadow-[0_12px_32px_rgba(140,109,70,0.18)] transition-all duration-500 overflow-hidden text-left"
+                  >
+                    {/* Image Container with Badge */}
+                    <div className="w-full aspect-[4/5] overflow-hidden bg-[#FAF6F2] relative">
+                      <img
+                        src={item.img || getCategoryFallbackImage(item.category || item.name)}
+                        alt={item.name || item.title}
+                        loading="lazy"
+                        className="w-full h-full object-cover transition-transform duration-700 ease-out group-hover:scale-106"
+                      />
+                      <div className="absolute inset-0 bg-black/0 group-hover:bg-black/5 transition-colors duration-300 pointer-events-none" />
 
-                    {/* Quick View Pill */}
-                    <div className="absolute bottom-3 inset-x-3 opacity-0 group-hover:opacity-100 transition-opacity duration-300">
-                      <div className="w-full py-2 bg-[#6B4B2E] text-white text-[10px] sm:text-[11px] font-sans font-bold tracking-[0.18em] uppercase text-center shadow-lg">
-                        VIEW PIECE →
+                      {/* Badge */}
+                      <span className="absolute top-2.5 left-2.5 bg-[#050B14]/90 backdrop-blur-xs text-[#E5C396] text-[8.5px] sm:text-[9.5px] font-sans font-bold tracking-[0.16em] uppercase px-2.5 py-1 rounded-[1px] border border-[#C5A880]/30 shadow-xs">
+                        {item.badge || 'BESTSELLER'}
+                      </span>
+
+                      {/* Quick View Pill */}
+                      <div className="absolute bottom-3 inset-x-3 opacity-0 group-hover:opacity-100 transition-opacity duration-300">
+                        <div className="w-full py-2 bg-[#6B4B2E] text-white text-[10px] sm:text-[11px] font-sans font-bold tracking-[0.18em] uppercase text-center shadow-lg">
+                          VIEW PIECE →
+                        </div>
                       </div>
                     </div>
-                  </div>
 
-                  {/* Card Info */}
-                  <div className="p-3.5 sm:p-5 flex flex-col flex-1 justify-between bg-white">
-                    <div>
-                      <div className="flex items-center justify-between gap-1 text-[10px] sm:text-[11px] text-[#6B4B2E] font-semibold tracking-wider uppercase mb-1">
-                        <span>{item.purity}</span>
-                        <span className="flex items-center gap-1 text-amber-600">
-                          <Star className="w-3 h-3 fill-amber-500 text-amber-500" />
-                          <span>{item.rating}</span>
+                    {/* Card Info */}
+                    <div className="p-3.5 sm:p-5 flex flex-col flex-1 justify-between bg-white">
+                      <div>
+                        <div className="flex items-center justify-between gap-1 text-[10px] sm:text-[11px] text-[#6B4B2E] font-semibold tracking-wider uppercase mb-1">
+                          <span>{item.silverPurity || item.purity || '925 Silver'}</span>
+                          <span className="flex items-center gap-1 text-amber-600">
+                            <Star className="w-3 h-3 fill-amber-500 text-amber-500" />
+                            <span>{item.rating || '4.9'}</span>
+                          </span>
+                        </div>
+                        <h3
+                          className="font-serif text-sm sm:text-base lg:text-[17px] font-bold text-[#0D2B4E] group-hover:text-[#6B4B2E] transition-colors line-clamp-1"
+                          style={{ fontFamily: "'Cormorant Garamond', 'Playfair Display', Georgia, serif" }}
+                        >
+                          {item.name || item.title}
+                        </h3>
+                      </div>
+
+                      <div className="flex items-center justify-between mt-3 pt-2.5 border-t border-[#F0EAE1]">
+                        <span className="font-serif text-base sm:text-lg font-bold text-[#0D2B4E]">
+                          {item.price ? `₹${Number(item.price).toLocaleString('en-IN')}` : ''}
+                        </span>
+                        <span className="text-[10px] sm:text-[11px] font-sans tracking-wider uppercase text-gray-500 group-hover:text-[#6B4B2E] transition-colors font-medium">
+                          Shop Now →
                         </span>
                       </div>
-                      <h3
-                        className="font-serif text-sm sm:text-base lg:text-[17px] font-bold text-[#0D2B4E] group-hover:text-[#6B4B2E] transition-colors line-clamp-1"
-                        style={{ fontFamily: "'Cormorant Garamond', 'Playfair Display', Georgia, serif" }}
-                      >
-                        {item.title}
-                      </h3>
-                    </div>
-
-                    <div className="flex items-center justify-between mt-3 pt-2.5 border-t border-[#F0EAE1]">
-                      <span className="font-serif text-base sm:text-lg font-bold text-[#0D2B4E]">
-                        {item.price}
-                      </span>
-                      <span className="text-[10px] sm:text-[11px] font-sans tracking-wider uppercase text-gray-500 group-hover:text-[#6B4B2E] transition-colors font-medium">
-                        Shop Now →
-                      </span>
                     </div>
                   </div>
-                </div>
-              ))}
-            </div>
+                ))}
+              </div>
 
-          </div>
-        </section>
+            </div>
+          </section>
+        )}
 
 
 
