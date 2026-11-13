@@ -81,6 +81,9 @@ import diwaliFestiveManishAndCoWebp from '../assets/diwali_festive_manish_and_co
 // Dynamic Silver Story Showcase Service
 import { silverStoryService, DEFAULT_SILVER_STORY_DATA } from '../services/silverStoryService';
 
+// Dynamic Gifting Hampers Service
+import { giftingHampersService, DEFAULT_GIFTING_HAMPERS } from '../services/giftingHampersService';
+
 // Craft Your Bespoke Jewellery Assets
 import craftYourBespokeJewelleryPng from '../assets/craft_your_bespoke_jewellery.png';
 import craftYourBespokeJewelleryWebp from '../assets/craft_your_bespoke_jewellery.webp';
@@ -177,37 +180,6 @@ const TRUST_SEALS_DATA = [
     label: '25,000+ Happy Customers',
     imgWebp: trustSealCustomersWebp,
     imgPng: trustSealCustomersPng
-  }
-];
-
-const GIFT_HAMPERS_DATA = [
-  {
-    id: 'under-1499',
-    title: 'Picks Under ₹1499',
-    imgWebp: giftPick1499Webp,
-    imgPng: giftPick1499Png,
-    path: '/collections?maxPrice=1499'
-  },
-  {
-    id: 'under-1999',
-    title: 'Picks Under ₹1999',
-    imgWebp: giftPick1999Webp,
-    imgPng: giftPick1999Png,
-    path: '/collections?maxPrice=1999'
-  },
-  {
-    id: 'under-2999',
-    title: 'Picks Under ₹2999',
-    imgWebp: giftPick2999Webp,
-    imgPng: giftPick2999Png,
-    path: '/collections?maxPrice=2999'
-  },
-  {
-    id: 'premium-gifts',
-    title: 'Premium Gifts',
-    imgWebp: giftPickPremiumWebp,
-    imgPng: giftPickPremiumPng,
-    path: '/collections?sort=luxury'
   }
 ];
 
@@ -438,6 +410,28 @@ export default function Home({
     return () => {
       if (typeof window !== 'undefined') {
         window.removeEventListener('manish_silver_story_updated', handleSilverStorySync);
+      }
+    };
+  }, []);
+
+  // ─── DYNAMIC SILVER GIFTING HAMPERS ──────────────────────────────
+  const [giftingHampers, setGiftingHampers] = useState(() => giftingHampersService.getStoredHampers());
+
+  useEffect(() => {
+    giftingHampersService.fetchRemoteHampers().then(res => {
+      if (res && res.length === 4) setGiftingHampers(res);
+    });
+
+    const handleGiftingHampersSync = () => {
+      setGiftingHampers(giftingHampersService.getStoredHampers());
+    };
+
+    if (typeof window !== 'undefined') {
+      window.addEventListener('manish_gifting_hampers_updated', handleGiftingHampersSync);
+    }
+    return () => {
+      if (typeof window !== 'undefined') {
+        window.removeEventListener('manish_gifting_hampers_updated', handleGiftingHampersSync);
       }
     };
   }, []);
@@ -769,26 +763,6 @@ export default function Home({
         >
           <div className="max-w-[1536px] mx-auto px-4 sm:px-8 lg:px-12 relative">
 
-            {/* Left Navigation Arrow */}
-            <button
-              type="button"
-              onClick={() => scrollStoryCarousel('left')}
-              aria-label="Previous categories"
-              className="flex absolute left-1 sm:left-2 lg:left-3 top-[36%] -translate-y-1/2 w-8 h-8 sm:w-10 sm:h-10 rounded-full bg-white/95 backdrop-blur-xs border border-[#8C6D46]/40 shadow-md hover:shadow-xl hover:bg-[#0D2B4E] hover:border-[#0D2B4E] items-center justify-center text-[#0D2B4E] hover:text-white transition-all z-30 cursor-pointer focus:outline-none"
-            >
-              <ChevronLeft className="w-4 h-4 sm:w-5 sm:h-5" />
-            </button>
-
-            {/* Right Navigation Arrow */}
-            <button
-              type="button"
-              onClick={() => scrollStoryCarousel('right')}
-              aria-label="Next categories"
-              className="flex absolute right-1 sm:right-2 lg:right-3 top-[36%] -translate-y-1/2 w-8 h-8 sm:w-10 sm:h-10 rounded-full bg-white/95 backdrop-blur-xs border border-[#8C6D46]/40 shadow-md hover:shadow-xl hover:bg-[#0D2B4E] hover:border-[#0D2B4E] items-center justify-center text-[#0D2B4E] hover:text-white transition-all z-30 cursor-pointer focus:outline-none"
-            >
-              <ChevronRight className="w-4 h-4 sm:w-5 sm:h-5" />
-            </button>
-
             {/* Horizontal Scrollable Category Cards Carousel */}
             <div
               ref={storyCarouselRef}
@@ -796,21 +770,21 @@ export default function Home({
               onMouseMove={handleStoryMouseMove}
               onMouseUp={handleStoryMouseUp}
               onMouseLeave={handleStoryMouseUp}
-              className="flex items-center gap-3.5 sm:gap-5 md:gap-6 lg:gap-7 overflow-x-auto no-scrollbar scroll-smooth justify-start py-2 px-3 sm:px-6 cursor-grab active:cursor-grabbing select-none"
+              className="flex items-center gap-4 sm:gap-5 md:gap-6 lg:gap-7 overflow-x-auto no-scrollbar scroll-smooth justify-start py-2 px-1 sm:px-3 cursor-grab active:cursor-grabbing select-none"
             >
               {dynamicStoryCategories.map((cat) => (
                 <button
                   key={cat.id}
                   onClick={() => handleStoryCardClick(cat)}
-                  className="w-[130px] sm:w-[150px] md:w-[165px] lg:w-[178px] bg-white rounded-xl border border-[#E6DFD3] hover:border-[#8C6D46] shadow-[0_4px_16px_rgba(0,0,0,0.04)] hover:shadow-[0_10px_28px_rgba(140,109,70,0.18)] p-2.5 sm:p-3 transition-all duration-300 group cursor-pointer flex flex-col items-center shrink-0 focus:outline-none hover:-translate-y-1"
+                  className="w-[115px] sm:w-[135px] md:w-[150px] lg:w-[160px] group cursor-pointer flex flex-col items-center shrink-0 focus:outline-none bg-transparent border-0 p-0 transition-transform duration-300 hover:-translate-y-1"
                 >
-                  {/* Square Card Image */}
-                  <div className="relative w-full aspect-square rounded-lg overflow-hidden bg-[#FAF7F2] border border-[#EADBCE]/50 pointer-events-none">
+                  {/* Clean Square Card Image matching reference screenshot */}
+                  <div className="relative w-full aspect-square rounded-xl overflow-hidden bg-gray-50 border border-gray-200/80 shadow-xs group-hover:shadow-md group-hover:border-[#0D2B4E]/40 transition-all duration-300 pointer-events-none">
                     <img
                       src={cat.img}
                       alt={cat.name}
                       draggable={false}
-                      className="w-full h-full object-cover object-center group-hover:scale-108 transition-transform duration-500 ease-out select-none pointer-events-none"
+                      className="w-full h-full object-cover object-center group-hover:scale-106 transition-transform duration-500 ease-out select-none pointer-events-none"
                       loading="lazy"
                       onError={(e) => {
                         e.target.onerror = null;
@@ -818,14 +792,14 @@ export default function Home({
                       }}
                     />
                     {cat.badge && (
-                      <span className="absolute top-1.5 left-1.5 bg-[#8C6D46] text-white text-[8px] sm:text-[9px] font-bold px-1.5 py-0.5 rounded shadow-xs tracking-wider uppercase font-sans">
+                      <span className="absolute top-1.5 left-1.5 bg-[#0D2B4E] text-white text-[8px] sm:text-[9px] font-bold px-1.5 py-0.5 rounded shadow-xs tracking-wider uppercase font-sans">
                         {cat.badge}
                       </span>
                     )}
                   </div>
 
-                  {/* Category Label */}
-                  <span className="mt-2 sm:mt-3 text-[11.5px] sm:text-[13.5px] font-sans font-semibold text-[#0D2B4E] tracking-tight group-hover:text-[#8C6D46] transition-colors text-center block w-full truncate px-0.5">
+                  {/* Clean Category Label Directly Below */}
+                  <span className="mt-2.5 sm:mt-3 text-xs sm:text-[13.5px] font-sans font-semibold text-gray-900 group-hover:text-[#0D2B4E] transition-colors text-center block w-full truncate px-1">
                     {cat.name}
                   </span>
                 </button>
@@ -996,21 +970,6 @@ export default function Home({
           </div>
         </section>
 
-        {/* Centered Custom Design Action below Story Section */}
-        <div className="w-full py-6 sm:py-8 px-4 bg-white flex justify-center items-center relative z-20">
-          <button
-            type="button"
-            onClick={() => {
-              triggerAudio('click');
-              setCustomDesignOpen(true);
-            }}
-            className="inline-flex items-center justify-center gap-2 px-7 sm:px-9 py-3 sm:py-3.5 rounded-full bg-[#0D2B4E] hover:bg-[#081B32] text-white font-sans text-xs sm:text-[13px] font-bold tracking-widest uppercase transition-all duration-300 shadow-[0_4px_16px_rgba(13,43,78,0.28)] hover:shadow-[0_6px_20px_rgba(13,43,78,0.4)] cursor-pointer active:scale-95 focus:outline-none"
-          >
-            <Sparkles className="w-4 h-4 text-[#E6DFD3] shrink-0" />
-            <span>Custom Design</span>
-          </button>
-        </div>
-
         {/* ==========================================================
           SECTION: TRUST SEALS / BRAND ASSURANCES
           (BIS Hallmarked, Free Shipping, COD, 25,000+ Happy Customers)
@@ -1086,7 +1045,7 @@ export default function Home({
             </div>
 
             <div className="grid grid-cols-2 md:grid-cols-4 gap-4 sm:gap-6 lg:gap-7">
-              {GIFT_HAMPERS_DATA.map((hamper) => (
+              {giftingHampers.map((hamper) => (
                 <button
                   key={hamper.id}
                   type="button"
@@ -1099,15 +1058,24 @@ export default function Home({
                   className="group relative w-full aspect-square rounded-2xl overflow-hidden bg-white shadow-xs hover:shadow-xl transition-all duration-300 transform hover:-translate-y-1.5 focus:outline-none cursor-pointer border border-[#E8DFD5] hover:border-[#6B4B2E]"
                   aria-label={hamper.title}
                 >
-                  <picture className="w-full h-full block">
-                    <source srcSet={hamper.imgWebp} type="image/webp" />
+                  {hamper.customImg ? (
                     <img 
-                      src={hamper.imgPng} 
+                      src={hamper.customImg} 
                       alt={hamper.title} 
                       className="w-full h-full object-cover group-hover:scale-[1.04] transition-transform duration-500 ease-out" 
                       loading="lazy" 
                     />
-                  </picture>
+                  ) : (
+                    <picture className="w-full h-full block">
+                      <source srcSet={hamper.imgWebp} type="image/webp" />
+                      <img 
+                        src={hamper.imgPng} 
+                        alt={hamper.title} 
+                        className="w-full h-full object-cover group-hover:scale-[1.04] transition-transform duration-500 ease-out" 
+                        loading="lazy" 
+                      />
+                    </picture>
+                  )}
                   <div className="absolute inset-0 bg-gradient-to-t from-black/15 via-transparent to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300 pointer-events-none" />
                 </button>
               ))}

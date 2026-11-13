@@ -11,6 +11,7 @@ import { StorageService } from '../../services/StorageService';
 import { INITIAL_CATEGORIES } from '../../config/constants';
 
 import { silverStoryService, DEFAULT_SILVER_STORY_DATA } from '../../services/silverStoryService';
+import { giftingHampersService, DEFAULT_GIFTING_HAMPERS } from '../../services/giftingHampersService';
 
 import { getOptimizedImageUrl } from '../../utils/imageOptimizer';
 // Fallback images for Silver Story Showcase Preview
@@ -53,7 +54,9 @@ import {
 
   EyeOff,
 
-  Heart
+  Heart,
+
+  Gift
 
 } from 'lucide-react';
 
@@ -326,6 +329,87 @@ export default function AdminCategories({
 
     }
 
+  };
+
+  // ─── SILVER GIFTING HAMPERS (FESTIVE) STATE & HANDLERS ─────────────
+  const [giftingHampers, setGiftingHampers] = useState(() => giftingHampersService.getStoredHampers());
+  const [hamperUploadProgress, setHamperUploadProgress] = useState('');
+  const [savingHampers, setSavingHampers] = useState(false);
+  const [hampersSaveSuccess, setHampersSaveSuccess] = useState(false);
+
+  useEffect(() => {
+    giftingHampersService.fetchRemoteHampers().then(res => {
+      if (res && res.length === 4) setGiftingHampers(res);
+    });
+
+    const handleHampersSync = () => {
+      setGiftingHampers(giftingHampersService.getStoredHampers());
+    };
+
+    if (typeof window !== 'undefined') {
+      window.addEventListener('manish_gifting_hampers_updated', handleHampersSync);
+    }
+    return () => {
+      if (typeof window !== 'undefined') {
+        window.removeEventListener('manish_gifting_hampers_updated', handleHampersSync);
+      }
+    };
+  }, []);
+
+  const handleHamperImageUpload = async (e, index) => {
+    const file = e.target.files?.[0];
+    if (!file) return;
+
+    setHamperUploadProgress(`Uploading Hamper ${index + 1}...`);
+    try {
+      const res = await ImageUploadService.uploadImage(file);
+      setGiftingHampers(prev => {
+        const next = [...prev];
+        next[index] = { ...next[index], customImg: res.url };
+        return next;
+      });
+      setHamperUploadProgress('Uploaded successfully!');
+      setTimeout(() => setHamperUploadProgress(''), 3000);
+    } catch (err) {
+      console.error(err);
+      setHamperUploadProgress('Upload failed.');
+      setTimeout(() => setHamperUploadProgress(''), 3000);
+    }
+  };
+
+  const handleSaveHampers = async (e) => {
+    if (e) e.preventDefault();
+    setSavingHampers(true);
+    try {
+      await giftingHampersService.saveHampers(giftingHampers);
+      setHampersSaveSuccess(true);
+      setTimeout(() => setHampersSaveSuccess(false), 3000);
+      if (typeof setAdminNotification === 'function') {
+        setAdminNotification({
+          message: '✓ Silver Gifting Hampers updated live on Homepage!',
+          type: 'success'
+        });
+      }
+    } catch (err) {
+      console.error(err);
+      if (typeof setAdminNotification === 'function') {
+        setAdminNotification({ message: 'Saved locally, syncing to cloud...', type: 'info' });
+      }
+    } finally {
+      setTimeout(() => {
+        setSavingHampers(false);
+      }, 350);
+    }
+  };
+
+  const handleResetHampers = async () => {
+    if (window.confirm('Reset "Silver Gifting Hampers" section to default images and prices?')) {
+      setGiftingHampers(DEFAULT_GIFTING_HAMPERS);
+      await giftingHampersService.saveHampers(DEFAULT_GIFTING_HAMPERS);
+      if (typeof setAdminNotification === 'function') {
+        setAdminNotification({ message: '✓ Hampers reset to default!', type: 'success' });
+      }
+    }
   };
 
 
@@ -949,6 +1033,36 @@ export default function AdminCategories({
 
           </button>
 
+          <button
+
+            type="button"
+
+            onClick={() => setActiveSubTab('gifting-hampers')}
+
+            className={`inline-flex items-center gap-2 px-4 py-2.5 rounded-xl text-xs font-bold transition-all cursor-pointer ${
+
+              activeSubTab === 'gifting-hampers'
+
+                ? 'bg-[#15151A] text-white dark:bg-white dark:text-zinc-900 shadow-sm'
+
+                : 'text-zinc-500 hover:text-zinc-800 hover:bg-zinc-100 dark:hover:bg-zinc-800'
+
+            }`}
+
+          >
+
+            <Gift className="w-4 h-4 text-emerald-500" />
+
+            <span>Gifting Hampers</span>
+
+            <span className="text-[10px] px-2 py-0.5 rounded-full bg-emerald-100 dark:bg-emerald-900/40 text-emerald-800 dark:text-emerald-300 font-bold">
+
+              Festive
+
+            </span>
+
+          </button>
+
         </div>
 
 
@@ -968,6 +1082,26 @@ export default function AdminCategories({
             <RotateCcw className="w-3.5 h-3.5" />
 
             <span>Reset Reference Showcase</span>
+
+          </button>
+
+        )}
+
+        {activeSubTab === 'gifting-hampers' && (
+
+          <button
+
+            type="button"
+
+            onClick={handleResetHampers}
+
+            className="inline-flex items-center gap-1.5 px-3 py-1.5 text-[11px] font-semibold text-zinc-500 hover:text-zinc-800 dark:text-zinc-400 dark:hover:text-white transition-colors cursor-pointer"
+
+          >
+
+            <RotateCcw className="w-3.5 h-3.5" />
+
+            <span>Reset Default Hampers</span>
 
           </button>
 
@@ -1363,6 +1497,195 @@ export default function AdminCategories({
 
           </div>
 
+        </div>
+      )}
+
+      {/* =========================================================
+          VIEW: SILVER GIFTING HAMPERS (FESTIVE CELEBRATIONS)
+          ========================================================= */}
+      {activeSubTab === 'gifting-hampers' && (
+        <div className="space-y-6">
+          {/* Top Info & Action Banner */}
+          <div className="bg-gradient-to-r from-emerald-500/10 via-amber-500/10 to-blue-500/10 border border-emerald-500/20 rounded-2xl p-5 sm:p-6 text-left flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4">
+            <div>
+              <span className="text-[10px] font-extrabold uppercase tracking-widest text-emerald-600 dark:text-emerald-400 block mb-1">
+                FESTIVE CELEBRATIONS
+              </span>
+              <h3 className="text-lg sm:text-xl font-black text-zinc-900 dark:text-white tracking-tight flex items-center gap-2">
+                <Gift className="w-5 h-5 text-emerald-500" />
+                Silver Gifting Hampers Manager
+              </h3>
+              <p className="text-xs text-zinc-500 dark:text-zinc-400 mt-1 max-w-2xl">
+                Update the 4 Festive Gift Pick cards (Under ₹1499, Under ₹1999, Under ₹2999, Premium Gifts) displayed on your Homepage. Upload custom images or customize landing links.
+              </p>
+            </div>
+            
+            <button
+              type="button"
+              onClick={handleSaveHampers}
+              disabled={savingHampers}
+              className="inline-flex items-center gap-2 px-6 py-3 rounded-xl bg-[#0D2B4E] hover:bg-[#081B32] text-white font-bold text-xs shadow-md hover:shadow-lg transition-all cursor-pointer disabled:opacity-50 shrink-0"
+            >
+              {savingHampers ? (
+                <>
+                  <RefreshCw className="w-4 h-4 animate-spin text-[#E6DFD3]" />
+                  <span>Saving Live...</span>
+                </>
+              ) : hampersSaveSuccess ? (
+                <>
+                  <Check className="w-4 h-4 text-emerald-400" />
+                  <span>Saved Live to Website!</span>
+                </>
+              ) : (
+                <>
+                  <Sparkles className="w-4 h-4 text-[#E6DFD3]" />
+                  <span>Save Hampers Live</span>
+                </>
+              )}
+            </button>
+          </div>
+
+          {/* 4 Hampers Grid */}
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
+            {giftingHampers.map((hamper, idx) => {
+              const activeImg = hamper.customImg || hamper.imgWebp || hamper.imgPng;
+              return (
+                <div 
+                  key={hamper.id || idx}
+                  className="bg-white dark:bg-[#15151A] border border-zinc-200 dark:border-zinc-800 rounded-2xl p-5 flex flex-col space-y-4 shadow-xs hover:border-[#0D2B4E]/50 transition-all text-left"
+                >
+                  <div className="flex items-center justify-between">
+                    <span className="text-xs font-bold text-zinc-500 uppercase tracking-wider">
+                      Tier #{idx + 1}
+                    </span>
+                    {hamper.customImg ? (
+                      <span className="text-[10px] font-bold px-2 py-0.5 rounded-full bg-emerald-100 text-emerald-800 dark:bg-emerald-900/40 dark:text-emerald-300">
+                        Custom Image
+                      </span>
+                    ) : (
+                      <span className="text-[10px] font-bold px-2 py-0.5 rounded-full bg-zinc-100 text-zinc-600 dark:bg-zinc-800 dark:text-zinc-400">
+                        Default Image
+                      </span>
+                    )}
+                  </div>
+
+                  {/* Square Image Preview */}
+                  <div className="relative w-full aspect-square rounded-xl overflow-hidden bg-gray-100 border border-zinc-200 dark:border-zinc-700">
+                    <img
+                      src={activeImg}
+                      alt={hamper.title}
+                      className="w-full h-full object-cover"
+                    />
+                  </div>
+
+                  {/* Upload Actions */}
+                  <div className="space-y-2">
+                    <label className="block text-[11px] font-bold text-zinc-700 dark:text-zinc-300">
+                      Upload New Image
+                    </label>
+                    <div className="relative">
+                      <input
+                        type="file"
+                        accept="image/*"
+                        onChange={(e) => handleHamperImageUpload(e, idx)}
+                        className="absolute inset-0 opacity-0 w-full h-full cursor-pointer z-10"
+                      />
+                      <div className="w-full py-2.5 px-3 rounded-xl border border-dashed border-zinc-300 dark:border-zinc-700 bg-zinc-50 dark:bg-zinc-850 hover:bg-zinc-100 dark:hover:bg-zinc-800 text-center transition-colors flex items-center justify-center gap-2 cursor-pointer">
+                        <ImageIcon className="w-4 h-4 text-zinc-500" />
+                        <span className="text-xs font-semibold text-zinc-700 dark:text-zinc-200">
+                          Choose File...
+                        </span>
+                      </div>
+                    </div>
+                  </div>
+
+                  {/* Or Custom URL */}
+                  <div>
+                    <label className="block text-[11px] font-bold text-zinc-700 dark:text-zinc-300 mb-1">
+                      Or Image URL
+                    </label>
+                    <input
+                      type="url"
+                      placeholder="https://..."
+                      value={hamper.customImg || ''}
+                      onChange={(e) => {
+                        const val = e.target.value;
+                        setGiftingHampers(prev => {
+                          const next = [...prev];
+                          next[idx] = { ...next[idx], customImg: val };
+                          return next;
+                        });
+                      }}
+                      className="w-full px-3 py-2 text-xs rounded-xl border border-zinc-200 dark:border-zinc-700 bg-white dark:bg-zinc-900 text-zinc-900 dark:text-white focus:outline-none focus:border-[#0D2B4E]"
+                    />
+                  </div>
+
+                  {/* Clear Custom Image */}
+                  {hamper.customImg && (
+                    <button
+                      type="button"
+                      onClick={() => {
+                        setGiftingHampers(prev => {
+                          const next = [...prev];
+                          next[idx] = { ...next[idx], customImg: '' };
+                          return next;
+                        });
+                      }}
+                      className="text-[11px] font-semibold text-rose-500 hover:text-rose-700 text-left cursor-pointer transition-colors"
+                    >
+                      ✕ Reset to Default Image
+                    </button>
+                  )}
+
+                  {/* Title & Link */}
+                  <div className="pt-2 border-t border-zinc-100 dark:border-zinc-800 space-y-2">
+                    <div>
+                      <label className="block text-[10px] font-bold text-zinc-500 uppercase tracking-wider mb-1">
+                        Title
+                      </label>
+                      <input
+                        type="text"
+                        value={hamper.title || ''}
+                        onChange={(e) => {
+                          const val = e.target.value;
+                          setGiftingHampers(prev => {
+                            const next = [...prev];
+                            next[idx] = { ...next[idx], title: val };
+                            return next;
+                          });
+                        }}
+                        className="w-full px-3 py-2 text-xs font-semibold rounded-xl border border-zinc-200 dark:border-zinc-700 bg-white dark:bg-zinc-900 text-zinc-900 dark:text-white focus:outline-none focus:border-[#0D2B4E]"
+                      />
+                    </div>
+                    <div>
+                      <label className="block text-[10px] font-bold text-zinc-500 uppercase tracking-wider mb-1">
+                        Link Path
+                      </label>
+                      <input
+                        type="text"
+                        value={hamper.path || ''}
+                        onChange={(e) => {
+                          const val = e.target.value;
+                          setGiftingHampers(prev => {
+                            const next = [...prev];
+                            next[idx] = { ...next[idx], path: val };
+                            return next;
+                          });
+                        }}
+                        className="w-full px-3 py-1.5 text-[11px] font-mono rounded-xl border border-zinc-200 dark:border-zinc-700 bg-white dark:bg-zinc-900 text-zinc-700 dark:text-zinc-300 focus:outline-none focus:border-[#0D2B4E]"
+                      />
+                    </div>
+                  </div>
+                </div>
+              );
+            })}
+          </div>
+
+          {hamperUploadProgress && (
+            <div className="p-3 bg-blue-50 dark:bg-blue-900/30 text-blue-700 dark:text-blue-300 rounded-xl text-xs font-semibold text-center">
+              {hamperUploadProgress}
+            </div>
+          )}
         </div>
       )}
 
