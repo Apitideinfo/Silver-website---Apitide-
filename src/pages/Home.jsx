@@ -1058,12 +1058,16 @@ export default function Home({
                   className="group relative w-full aspect-square rounded-2xl overflow-hidden bg-white shadow-xs hover:shadow-xl transition-all duration-300 transform hover:-translate-y-1.5 focus:outline-none cursor-pointer border border-[#E8DFD5] hover:border-[#6B4B2E]"
                   aria-label={hamper.title}
                 >
-                  {hamper.customImg ? (
+                  {(hamper.customImg || hamper.image || hamper.img) ? (
                     <img 
-                      src={hamper.customImg} 
+                      src={hamper.customImg || hamper.image || hamper.img} 
                       alt={hamper.title} 
                       className="w-full h-full object-cover group-hover:scale-[1.04] transition-transform duration-500 ease-out" 
                       loading="lazy" 
+                      onError={(e) => {
+                        e.target.onerror = null;
+                        e.target.src = hamper.imgPng || hamper.imgWebp;
+                      }}
                     />
                   ) : (
                     <picture className="w-full h-full block">
@@ -1283,74 +1287,6 @@ export default function Home({
                   </span>
                 </div>
               ))}
-            </div>
-
-          </div>
-        </section>
-
-        {/* ==========================================================
-          CLIENT FEEDBACK SECTION 3: GOLD PLATING (Feedback #6.2)
-          ========================================================== */}
-        <section id="gold-plating-section" className="w-full py-14 sm:py-20 bg-white border-b border-[#E8DFD5] select-none text-left">
-          <div className="max-w-[1536px] mx-auto px-6 sm:px-10 lg:px-14">
-
-            {/* Editorial Header */}
-            <div className="flex flex-col lg:flex-row items-start lg:items-end justify-between gap-6 mb-10 sm:mb-12">
-              <div>
-                <span className="inline-block text-[#6B4B2E] text-xs sm:text-[13px] font-sans font-semibold tracking-[0.28em] uppercase mb-2">
-                  18K DUAL TONE ROYALTY
-                </span>
-                <h2
-                  className="text-3xl sm:text-4xl lg:text-[46px] font-bold text-[#0D2B4E] leading-tight"
-                  style={{ fontFamily: "'Cormorant Garamond', 'Playfair Display', Georgia, serif" }}
-                >
-                  Gold Plating Collection
-                </h2>
-                <p className="text-[#6F6862] text-xs sm:text-sm font-sans mt-2 max-w-xl font-normal leading-relaxed">
-                  Rich 18K yellow gold layered seamlessly over solid 925 sterling silver. Anti-tarnish, skin-friendly, and designed for royal radiance.
-                </p>
-              </div>
-
-              <button
-                onClick={() => {
-                  changeCategoryTab?.('Collections');
-                  navigateTo('collections');
-                }}
-                className="inline-flex items-center gap-2.5 px-8 py-3.5 bg-[#0D2B4E] hover:bg-[#081B32] active:scale-95 text-white font-sans text-xs sm:text-[12.5px] font-semibold tracking-[0.2em] uppercase transition-all duration-300 shadow-[0_4px_16px_rgba(13,43,78,0.25)] cursor-pointer rounded-none"
-              >
-                <span>SHOP GOLD PLATED</span>
-                <span className="text-sm font-light">→</span>
-              </button>
-            </div>
-
-            {/* Showcase Visual: Large 16:9 Gold Plating Banner with 3 Feature Badges */}
-            <div className="relative rounded-[2px] overflow-hidden border border-[#D6CABE] shadow-xl group mb-8">
-              <img
-                src={goldPlatingBanner}
-                alt="18K Gold Plated 925 Sterling Silver Jewellery"
-                className="w-full h-auto max-h-[460px] object-cover transition-transform duration-700 ease-out group-hover:scale-102"
-                loading="lazy"
-              />
-              <div className="absolute inset-0 bg-gradient-to-t from-black/75 via-black/20 to-transparent pointer-events-none" />
-
-              <div className="absolute bottom-6 left-6 right-6 sm:bottom-8 sm:left-10 sm:right-10 flex flex-col sm:flex-row items-start sm:items-end justify-between gap-4 text-white">
-                <div>
-                  <span className="text-[#F5D77F] text-xs font-sans font-bold tracking-[0.25em] uppercase block mb-1">
-                    ✦ 18 KARAT YELLOW GOLD VERMEIL
-                  </span>
-                  <h3
-                    className="font-serif text-2xl sm:text-3xl lg:text-4xl font-bold leading-tight drop-shadow-md"
-                    style={{ fontFamily: "'Cormorant Garamond', 'Playfair Display', Georgia, serif" }}
-                  >
-                    The Warmth of Gold. The Purity of Silver.
-                  </h3>
-                </div>
-                <div className="flex items-center gap-6 text-xs sm:text-sm font-sans tracking-wide text-white/90">
-                  <span>• 18K Micron Plating</span>
-                  <span>• 925 Core</span>
-                  <span>• Lifetime Buyback</span>
-                </div>
-              </div>
             </div>
 
           </div>

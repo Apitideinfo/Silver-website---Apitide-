@@ -54,7 +54,13 @@ export const giftingHampersService = {
   getStoredHampers() {
     const cached = StorageService.get(STORAGE_KEY, null);
     if (cached && Array.isArray(cached) && cached.length === 4) {
-      return cached;
+      return cached.map((item, idx) => ({
+        ...DEFAULT_GIFTING_HAMPERS[idx],
+        ...item,
+        imgWebp: DEFAULT_GIFTING_HAMPERS[idx].imgWebp,
+        imgPng: DEFAULT_GIFTING_HAMPERS[idx].imgPng,
+        customImg: item.customImg || item.image || item.img || ''
+      }));
     }
     return DEFAULT_GIFTING_HAMPERS;
   },
@@ -67,11 +73,18 @@ export const giftingHampersService = {
         if (snap.exists() && snap.data()) {
           const remote = snap.data();
           if (Array.isArray(remote.items) && remote.items.length === 4) {
-            StorageService.set(STORAGE_KEY, remote.items);
+            const merged = remote.items.map((item, idx) => ({
+              ...DEFAULT_GIFTING_HAMPERS[idx],
+              ...item,
+              imgWebp: DEFAULT_GIFTING_HAMPERS[idx].imgWebp,
+              imgPng: DEFAULT_GIFTING_HAMPERS[idx].imgPng,
+              customImg: item.customImg || item.image || item.img || ''
+            }));
+            StorageService.set(STORAGE_KEY, merged);
             if (typeof window !== 'undefined') {
               window.dispatchEvent(new Event('manish_gifting_hampers_updated'));
             }
-            return remote.items;
+            return merged;
           }
         }
       }
@@ -121,3 +134,4 @@ export const giftingHampersService = {
     return safeItems;
   }
 };
+

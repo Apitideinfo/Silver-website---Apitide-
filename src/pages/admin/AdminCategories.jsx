@@ -360,20 +360,37 @@ export default function AdminCategories({
     const file = e.target.files?.[0];
     if (!file) return;
 
-    setHamperUploadProgress(`Uploading Hamper ${index + 1}...`);
+    setHamperUploadProgress(`Uploading Hamper #${index + 1} image...`);
     try {
       const res = await ImageUploadService.uploadImage(file);
-      setGiftingHampers(prev => {
-        const next = [...prev];
+      if (res && res.url) {
+        const next = [...giftingHampers];
         next[index] = { ...next[index], customImg: res.url };
-        return next;
-      });
-      setHamperUploadProgress('Uploaded successfully!');
-      setTimeout(() => setHamperUploadProgress(''), 3000);
+        setGiftingHampers(next);
+        await giftingHampersService.saveHampers(next);
+        setHamperUploadProgress(`✓ Hamper #${index + 1} image uploaded and live on Homepage!`);
+        if (typeof setAdminNotification === 'function') {
+          setAdminNotification({
+            message: `✓ Hamper #${index + 1} image updated live on Homepage!`,
+            type: 'success'
+          });
+        }
+        setTimeout(() => setHamperUploadProgress(''), 4000);
+      }
     } catch (err) {
       console.error(err);
       setHamperUploadProgress('Upload failed.');
       setTimeout(() => setHamperUploadProgress(''), 3000);
+    }
+  };
+
+  const handleResetSingleHamperImage = async (idx) => {
+    const next = [...giftingHampers];
+    next[idx] = { ...next[idx], customImg: '' };
+    setGiftingHampers(next);
+    await giftingHampersService.saveHampers(next);
+    if (typeof setAdminNotification === 'function') {
+      setAdminNotification({ message: `✓ Hamper #${idx + 1} reset to default image!`, type: 'success' });
     }
   };
 
@@ -1616,6 +1633,9 @@ export default function AdminCategories({
                           return next;
                         });
                       }}
+                      onBlur={async () => {
+                        await giftingHampersService.saveHampers(giftingHampers);
+                      }}
                       className="w-full px-3 py-2 text-xs rounded-xl border border-zinc-200 dark:border-zinc-700 bg-white dark:bg-zinc-900 text-zinc-900 dark:text-white focus:outline-none focus:border-[#0D2B4E]"
                     />
                   </div>
@@ -1624,13 +1644,7 @@ export default function AdminCategories({
                   {hamper.customImg && (
                     <button
                       type="button"
-                      onClick={() => {
-                        setGiftingHampers(prev => {
-                          const next = [...prev];
-                          next[idx] = { ...next[idx], customImg: '' };
-                          return next;
-                        });
-                      }}
+                      onClick={() => handleResetSingleHamperImage(idx)}
                       className="text-[11px] font-semibold text-rose-500 hover:text-rose-700 text-left cursor-pointer transition-colors"
                     >
                       ✕ Reset to Default Image
