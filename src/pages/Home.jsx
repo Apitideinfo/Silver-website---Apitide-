@@ -981,6 +981,21 @@ export default function Home({
           </div>
         </section>
 
+        {/* Centered Custom Design Action below Silver For Every Story */}
+        <div className="w-full py-4 sm:py-5 px-4 bg-[#FAF7F2] flex justify-center items-center relative z-20 border-b border-[#E6DFD3]/60">
+          <button
+            type="button"
+            onClick={() => {
+              triggerAudio('click');
+              setCustomDesignOpen(true);
+            }}
+            className="inline-flex items-center justify-center gap-2 px-7 sm:px-9 py-3 sm:py-3.5 rounded-full bg-[#0D2B4E] hover:bg-[#081B32] text-white font-sans text-xs sm:text-[13px] font-bold tracking-widest uppercase transition-all duration-300 shadow-[0_4px_16px_rgba(13,43,78,0.28)] hover:shadow-[0_6px_20px_rgba(13,43,78,0.4)] cursor-pointer active:scale-95 focus:outline-none"
+          >
+            <Sparkles className="w-4 h-4 text-[#E6DFD3] shrink-0" />
+            <span>Custom Design</span>
+          </button>
+        </div>
+
         {/* ==========================================================
           SECTION: TRUST SEALS / BRAND ASSURANCES
           (BIS Hallmarked, Free Shipping, COD, 25,000+ Happy Customers)
@@ -989,20 +1004,10 @@ export default function Home({
         <section id="trust-seals-section" className="w-full bg-[#FFFFFF] py-6 sm:py-8 border-b border-gray-100 select-none">
           <div className="max-w-[1536px] mx-auto px-4 sm:px-8 lg:px-12 relative">
             <div className="relative flex items-center justify-center">
-              {/* Left Navigation Arrow */}
-              <button
-                type="button"
-                onClick={() => scrollTrustSeals('left')}
-                aria-label="Previous seals"
-                className="hidden sm:flex absolute left-0 top-1/2 -translate-y-1/2 w-9 h-9 rounded-full border border-gray-200/90 items-center justify-center text-gray-400 hover:text-gray-700 bg-white shadow-xs transition-colors cursor-pointer focus:outline-none z-10"
-              >
-                <ChevronLeft className="w-4 h-4" />
-              </button>
-
               {/* 4 Trust Circular Seals - Horizontal Smooth Swipe on Mobile, Centered on Desktop */}
               <div 
                 ref={trustSealsScrollRef}
-                className="w-full max-w-[1200px] flex items-center justify-start sm:justify-between gap-3 sm:gap-6 px-2 sm:px-4 overflow-x-auto no-scrollbar scroll-smooth"
+                className="w-full max-w-[1200px] flex items-center justify-around gap-3 sm:gap-6 px-2 sm:px-4 overflow-x-auto no-scrollbar scroll-smooth"
               >
                 {TRUST_SEALS_DATA.map((seal) => (
                   <div key={seal.id} className="w-[140px] xs:w-[160px] sm:w-[250px] shrink-0 sm:shrink h-[115px] sm:h-[135px] flex items-center justify-center group cursor-pointer select-none">
@@ -1021,16 +1026,6 @@ export default function Home({
                   </div>
                 ))}
               </div>
-
-              {/* Right Navigation Arrow */}
-              <button
-                type="button"
-                onClick={() => scrollTrustSeals('right')}
-                aria-label="Next seals"
-                className="hidden sm:flex absolute right-0 top-1/2 -translate-y-1/2 w-9 h-9 rounded-full border border-gray-200/90 items-center justify-center text-gray-400 hover:text-gray-700 bg-white shadow-xs transition-colors cursor-pointer focus:outline-none z-10"
-              >
-                <ChevronRight className="w-4 h-4" />
-              </button>
             </div>
           </div>
         </section>
@@ -1165,27 +1160,6 @@ export default function Home({
                         loading="lazy"
                       />
                     </picture>
-
-                    {/* Top-Right Luxury Wishlist Heart Icon */}
-                    <button
-                      type="button"
-                      onClick={(e) => {
-                        e.stopPropagation();
-                        triggerAudio('click');
-                        toggleWishlistLoveCard(card.id);
-                      }}
-                      className="absolute top-2 right-2 sm:top-3 sm:right-3 w-7 h-7 sm:w-9 sm:h-9 rounded-full bg-white/95 hover:bg-white shadow-xs hover:shadow-md flex items-center justify-center text-[#6B4B2E] transition-all duration-300 hover:scale-110 z-10 focus:outline-none cursor-pointer"
-                      aria-label="Save to Wishlist"
-                    >
-                      <Heart 
-                        className={`w-3.5 h-3.5 sm:w-4 sm:h-4 transition-all duration-200 ${
-                          wishlistLoveCards.includes(card.id)
-                            ? 'fill-[#6B4B2E] text-[#6B4B2E] scale-110'
-                            : 'fill-transparent text-[#6B4B2E] hover:fill-[#6B4B2E]/20'
-                        }`} 
-                        strokeWidth={1.8}
-                      />
-                    </button>
                   </div>
 
                   <div className="mt-3.5 sm:mt-4 text-center">
