@@ -594,8 +594,11 @@ export default function Home({
           else if (diff < -45) prevHeroSlide();
         }}
       >
-        {/* Banner Images Carousel Container - Increased height on mobile view for bold luxury presence, proportional on desktop */}
-        <div className="relative w-full h-[250px] xs:h-[285px] sm:h-[350px] md:h-auto md:aspect-[2200/715] overflow-hidden bg-[#091B2B]">
+        {/* Banner Images Carousel Container - Fully responsive proportional aspect ratio across mobile, tablet & desktop (never cuts off) */}
+        <div 
+          className="relative w-full overflow-hidden bg-[#091B2B] aspect-[2172/724]"
+          style={{ aspectRatio: '2172 / 724' }}
+        >
           <AnimatePresence initial={false} mode="wait">
             <motion.div
               key={currentHeroSlide}
