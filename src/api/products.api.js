@@ -117,7 +117,7 @@ export const productsApi = {
 
   // Read: Realtime subscription
   subscribeToCategories(onUpdate, onError) {
-    const CURRENT_CATALOG_VERSION = 'v2026_11_14_pendant_story';
+    const CURRENT_CATALOG_VERSION = 'v2026_11_14_v3';
     const storedVersion = StorageService.get('manish_catalog_version', null);
     let local = StorageService.get(LOCAL_STORAGE_KEYS.CATEGORIES, null);
 
@@ -125,7 +125,7 @@ export const productsApi = {
       c.id === 'bangles' || c.id === 'nath-nose-pin' || c.name === 'Bangles' || c.id === 'jhumka'
     );
 
-    if (hasLegacy || !storedVersion || !Array.isArray(local) || local.length === 0) {
+    if (storedVersion !== CURRENT_CATALOG_VERSION || hasLegacy || !Array.isArray(local) || local.length === 0) {
       local = INITIAL_CATEGORIES;
       StorageService.set(LOCAL_STORAGE_KEYS.CATEGORIES, INITIAL_CATEGORIES);
       StorageService.set(CATEGORIES_INIT_KEY, true);

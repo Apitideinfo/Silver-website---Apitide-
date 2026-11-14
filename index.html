@@ -5,6 +5,50 @@
     <link rel="icon" type="image/png" href="/favicon.png" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=5.0" />
     
+    <!-- Immediate Mobile Cache & Service Worker Invalidation -->
+    <meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate" />
+    <meta http-equiv="Pragma" content="no-cache" />
+    <meta http-equiv="Expires" content="0" />
+    <script>
+      // 1. Unregister any legacy Service Workers immediately
+      if ('serviceWorker' in navigator) {
+        navigator.serviceWorker.getRegistrations().then(function(registrations) {
+          for (var reg of registrations) {
+            reg.unregister();
+          }
+        });
+      }
+
+      // 2. Client Device Legacy Cache Invalidation
+      (function() {
+        var BUILD_ID = 'manish_build_2026_11_14_v3';
+        var currentBuild = localStorage.getItem('manish_current_build_id');
+        if (currentBuild !== BUILD_ID) {
+          var keysToRemove = [
+            'manish_categories_store',
+            'manish_catalog_version',
+            'manish_silver_story_data',
+            'manish_silver_story_version',
+            'manish_gifting_hampers_data',
+            'manish_gifting_hampers_version',
+            'manish_hero_banners_data',
+            'manish_hero_banners_version',
+            'manish_categories_initialized',
+            'hrj_categories',
+            'hrj_categories_store',
+            'hrj_cart',
+            'hrj_wishlist',
+            'hrj_products_store',
+            'hrj_chunk_retry_Admin'
+          ];
+          for (var i = 0; i < keysToRemove.length; i++) {
+            try { localStorage.removeItem(keysToRemove[i]); } catch(e) {}
+          }
+          try { localStorage.setItem('manish_current_build_id', BUILD_ID); } catch(e) {}
+        }
+      })();
+    </script>
+    
     <!-- Primary SEO Meta Tags -->
     <title>MANISH &amp; CO — Fine Jewellery | 925 Sterling Silver &amp; Heirlooms</title>
     <meta name="title" content="MANISH &amp; CO — Fine Jewellery | 925 Sterling Silver &amp; Heirlooms" />

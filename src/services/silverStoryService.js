@@ -44,7 +44,7 @@ export const DEFAULT_SILVER_STORY_DATA = {
 
 const STORAGE_KEY = 'manish_silver_story_data';
 const VERSION_KEY = 'manish_silver_story_version';
-const CURRENT_VERSION = 'v2026_11_14_v2';
+const CURRENT_VERSION = 'v2026_11_14_v3';
 const FIRESTORE_DOC_ID = 'silver_story_showcase';
 
 export const silverStoryService = {

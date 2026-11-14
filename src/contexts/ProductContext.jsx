@@ -10,7 +10,7 @@ export function ProductProvider({ children }) {
     return StorageService.get('manish_products_store', []);
   });
   const [categories, setCategories] = useState(() => {
-    const CURRENT_CATALOG_VERSION = 'v2026_11_14_pendant_story';
+    const CURRENT_CATALOG_VERSION = 'v2026_11_14_v3';
     const storedVersion = StorageService.get('manish_catalog_version', null);
     let cached = StorageService.get('manish_categories_store', null);
     
@@ -18,7 +18,7 @@ export function ProductProvider({ children }) {
     const hasLegacy = Array.isArray(cached) && cached.some(c => 
       c.id === 'bangles' || c.id === 'nath-nose-pin' || c.name === 'Bangles' || c.id === 'jhumka'
     );
-    if (hasLegacy || !storedVersion || !Array.isArray(cached) || cached.length === 0) {
+    if (storedVersion !== CURRENT_CATALOG_VERSION || hasLegacy || !Array.isArray(cached) || cached.length === 0) {
       cached = INITIAL_CATEGORIES;
       StorageService.set('manish_categories_store', INITIAL_CATEGORIES);
       StorageService.set('manish_categories_initialized', true);

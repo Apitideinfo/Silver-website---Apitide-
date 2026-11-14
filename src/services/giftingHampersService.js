@@ -49,7 +49,7 @@ export const DEFAULT_GIFTING_HAMPERS = [
 
 const STORAGE_KEY = 'manish_gifting_hampers_data';
 const VERSION_KEY = 'manish_gifting_hampers_version';
-const CURRENT_VERSION = 'v2026_11_14_v2';
+const CURRENT_VERSION = 'v2026_11_14_v3';
 const FIRESTORE_DOC_ID = 'gifting_hampers_showcase';
 
 export const giftingHampersService = {

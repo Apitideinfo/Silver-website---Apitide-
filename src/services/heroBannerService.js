@@ -57,7 +57,7 @@ export const DEFAULT_HERO_BANNERS = [
 
 const STORAGE_KEY = 'manish_hero_banners_data';
 const VERSION_KEY = 'manish_hero_banners_version';
-const CURRENT_VERSION = 'v2026_11_14_v2';
+const CURRENT_VERSION = 'v2026_11_14_v3';
 const FIRESTORE_DOC_ID = 'hero_banners_carousel';
 
 export const heroBannerService = {
