@@ -317,6 +317,7 @@ export const productsApi = {
     StorageService.set(LOCAL_STORAGE_KEYS.CATEGORIES, updated);
     StorageService.set(CATEGORIES_INIT_KEY, true);
     broadcastCatalogChange('categories');
+    storeSyncService.publishSection('categories', updated).catch(() => {});
 
     // 2. Background Firestore write (non-blocking)
     (async () => {
@@ -372,6 +373,7 @@ export const productsApi = {
     StorageService.set(LOCAL_STORAGE_KEYS.CATEGORIES, updated);
     StorageService.set(CATEGORIES_INIT_KEY, true);
     broadcastCatalogChange('categories');
+    storeSyncService.publishSection('categories', updated).catch(() => {});
 
     // 2. Background Firestore sync (non-blocking)
     (async () => {
@@ -411,6 +413,7 @@ export const productsApi = {
     StorageService.set(LOCAL_STORAGE_KEYS.CATEGORIES, updated);
     StorageService.set(CATEGORIES_INIT_KEY, true);
     broadcastCatalogChange('categories');
+    storeSyncService.publishSection('categories', updated).catch(() => {});
 
     // 2. Background Firestore sync (non-blocking)
     (async () => {
@@ -449,6 +452,7 @@ export const productsApi = {
     StorageService.set(LOCAL_STORAGE_KEYS.CATEGORIES, []);
     StorageService.set(CATEGORIES_INIT_KEY, true);
     broadcastCatalogChange('categories');
+    storeSyncService.publishSection('categories', []).catch(() => {});
 
     (async () => {
       try {
@@ -474,35 +478,6 @@ export const productsApi = {
     })();
 
     return [];
-  },
-
-  // Reset to default baseline categories
-  async resetCategoriesToDefault() {
-    StorageService.remove(LOCAL_STORAGE_KEYS.ALL_CLEARED);
-    StorageService.set(LOCAL_STORAGE_KEYS.DELETED, []);
-    StorageService.set(LOCAL_STORAGE_KEYS.CATEGORIES, INITIAL_CATEGORIES);
-    StorageService.set(CATEGORIES_INIT_KEY, true);
-    broadcastCatalogChange('categories');
-
-    (async () => {
-      try {
-        const { writeBatch } = await import('firebase/firestore');
-        const batch = writeBatch(db);
-        for (const cat of INITIAL_CATEGORIES) {
-          const docRef = doc(db, CATEGORIES_COLLECTION, cat.id);
-          batch.set(docRef, { ...cat, docId: cat.id }, { merge: true });
-        }
-        await withTimeout(batch.commit(), 4000);
-      } catch (err) {
-        console.warn("Background Firestore reset sync error:", err.message);
-      }
-      try {
-        const configRef = doc(db, FIRESTORE_COLLECTIONS.SYSTEM_CONFIGS, 'category_directory');
-        await withTimeout(setDoc(configRef, { categories: INITIAL_CATEGORIES, lastUpdated: new Date().toISOString() }, { merge: true }), 3000);
-      } catch (err) { /* noop */ }
-    })();
-
-    return INITIAL_CATEGORIES;
   },
 
   // ─── PRODUCTS CRUD ────────────────────────────────────────────

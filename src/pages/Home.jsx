@@ -61,7 +61,7 @@ import diwaliFestiveManishAndCoWebp from '../assets/diwali_festive_manish_and_co
 import { silverStoryService } from '../services/silverStoryService';
 
 // Dynamic Gifting Hampers Service
-import { giftingHampersService } from '../services/giftingHampersService';
+import { giftingHampersService, getHamperFallbackImage } from '../services/giftingHampersService';
 
 // Dynamic Hero Banners Service
 import { heroBannerService } from '../services/heroBannerService';
@@ -991,28 +991,22 @@ export default function Home({
                   className="group relative w-full aspect-square rounded-2xl overflow-hidden bg-white shadow-xs hover:shadow-xl transition-all duration-300 transform hover:-translate-y-1.5 focus:outline-none cursor-pointer border border-[#E8DFD5] hover:border-[#6B4B2E]"
                   aria-label={hamper.title}
                 >
-                  {(hamper.customImg || hamper.image || hamper.img) ? (
-                    <img 
-                      src={hamper.customImg || hamper.image || hamper.img} 
-                      alt={hamper.title} 
-                      className="w-full h-full object-cover group-hover:scale-[1.04] transition-transform duration-500 ease-out" 
-                      loading="lazy" 
-                      onError={(e) => {
-                        e.target.onerror = null;
-                        e.target.src = hamper.imgPng || hamper.imgWebp;
-                      }}
-                    />
-                  ) : (
-                    <picture className="w-full h-full block">
-                      <source srcSet={hamper.imgWebp} type="image/webp" />
+                  {(() => {
+                    const fallback = getHamperFallbackImage(hamper);
+                    const hamperSrc = hamper.customImg || hamper.image || hamper.img || hamper.imgWebp || fallback;
+                    return (
                       <img 
-                        src={hamper.imgPng} 
+                        src={hamperSrc} 
                         alt={hamper.title} 
                         className="w-full h-full object-cover group-hover:scale-[1.04] transition-transform duration-500 ease-out" 
                         loading="lazy" 
+                        onError={(e) => {
+                          e.currentTarget.onerror = null;
+                          e.currentTarget.src = fallback;
+                        }}
                       />
-                    </picture>
-                  )}
+                    );
+                  })()}
                   <div className="absolute inset-0 bg-gradient-to-t from-black/15 via-transparent to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300 pointer-events-none" />
                 </button>
               ))}
@@ -1580,7 +1574,9 @@ export default function Home({
                     }
                   };
                   const rawCatImg = cat.img || getCategoryFallbackImage(cat.name || cat.id);
-                  const catImg = getOptimizedImageUrl(rawCatImg, { width: 250 });
+                  const catImg = (typeof rawCatImg === 'string' && rawCatImg.includes('cloudinary')) 
+                    ? getOptimizedImageUrl(rawCatImg, { width: 600, quality: 'auto:best' }) 
+                    : rawCatImg;
 
                   return (
                     <div

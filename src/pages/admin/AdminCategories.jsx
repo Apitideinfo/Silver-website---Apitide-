@@ -11,10 +11,11 @@ import { StorageService } from '../../services/StorageService';
 import { INITIAL_CATEGORIES } from '../../config/constants';
 
 import { silverStoryService, DEFAULT_SILVER_STORY_DATA } from '../../services/silverStoryService';
-import { giftingHampersService, DEFAULT_GIFTING_HAMPERS } from '../../services/giftingHampersService';
+import { giftingHampersService, DEFAULT_GIFTING_HAMPERS, getHamperFallbackImage } from '../../services/giftingHampersService';
 import { heroBannerService, DEFAULT_HERO_BANNERS } from '../../services/heroBannerService';
 
 import { getOptimizedImageUrl } from '../../utils/imageOptimizer';
+import { getCategoryFallbackImage } from '../../utils/categoryAssets';
 // Fallback images for Silver Story Showcase Preview
 import colTennisWebp from '../../assets/col_tennis.webp';
 import colToeRingWebp from '../../assets/col_toe_ring.webp';
@@ -314,15 +315,6 @@ export default function AdminCategories({
 
 
 
-  const handleResetSilverStory = async () => {
-    if (window.confirm('Reset "Silver For Every Story" section to default showcase references?')) {
-      setSilverStoryData(DEFAULT_SILVER_STORY_DATA);
-      await silverStoryService.resetDefaults();
-      if (typeof setAdminNotification === 'function') {
-        setAdminNotification({ message: '✓ Showcase reset to default reference items!', type: 'success' });
-      }
-    }
-  };
 
   const handleDeleteStoryCard = async (cardIdx) => {
     const cardToDelete = silverStoryData?.cards?.[cardIdx];
@@ -397,21 +389,6 @@ export default function AdminCategories({
     }
   };
 
-  const handleResetCardImage = async (cardIdx) => {
-    const newCards = [...(silverStoryData?.cards || [])];
-    if (newCards[cardIdx]) {
-      newCards[cardIdx] = { ...newCards[cardIdx], img: '' };
-      const updated = { ...silverStoryData, cards: newCards };
-      setSilverStoryData(updated);
-      await silverStoryService.saveStoryData(updated);
-      if (typeof setAdminNotification === 'function') {
-        setAdminNotification({
-          message: `✓ Card #${cardIdx + 1} photo reset to default!`,
-          type: 'success'
-        });
-      }
-    }
-  };
 
   // ─── SILVER GIFTING HAMPERS (FESTIVE) STATE & HANDLERS ─────────────
   const [giftingHampers, setGiftingHampers] = useState(() => giftingHampersService.getStoredHampers());
@@ -466,15 +443,6 @@ export default function AdminCategories({
     }
   };
 
-  const handleResetSingleHamperImage = async (idx) => {
-    const next = [...giftingHampers];
-    next[idx] = { ...next[idx], customImg: '' };
-    setGiftingHampers(next);
-    await giftingHampersService.saveHampers(next);
-    if (typeof setAdminNotification === 'function') {
-      setAdminNotification({ message: `✓ Hamper #${idx + 1} reset to default image!`, type: 'success' });
-    }
-  };
 
   const handleDeleteHamper = async (index) => {
     const hamperToDelete = giftingHampers?.[index];
@@ -537,15 +505,6 @@ export default function AdminCategories({
     }
   };
 
-  const handleResetHampers = async () => {
-    if (window.confirm('Reset "Silver Gifting Hampers" section to default images and prices?')) {
-      setGiftingHampers(DEFAULT_GIFTING_HAMPERS);
-      await giftingHampersService.resetHampers();
-      if (typeof setAdminNotification === 'function') {
-        setAdminNotification({ message: '✓ Hampers reset to default!', type: 'success' });
-      }
-    }
-  };
 
   // ─── DYNAMIC HERO BANNERS CAROUSEL STATE ──────────────────────────
   const [heroBanners, setHeroBanners] = useState(() => heroBannerService.getStoredBanners());
@@ -600,15 +559,6 @@ export default function AdminCategories({
     }
   };
 
-  const handleResetSingleHeroBannerImage = async (idx) => {
-    const next = [...heroBanners];
-    next[idx] = { ...next[idx], customImg: '' };
-    setHeroBanners(next);
-    await heroBannerService.saveBanners(next);
-    if (typeof setAdminNotification === 'function') {
-      setAdminNotification({ message: `✓ Slide #${idx + 1} reset to brand default image!`, type: 'success' });
-    }
-  };
 
   const handleHeroBannerFieldChange = (idx, field, val) => {
     setHeroBanners(prev => {
@@ -677,15 +627,6 @@ export default function AdminCategories({
     }
   };
 
-  const handleResetHeroBanners = async () => {
-    if (window.confirm('Reset all Hero Carousel Banners to original brand defaults?')) {
-      setHeroBanners(DEFAULT_HERO_BANNERS);
-      await heroBannerService.saveBanners(DEFAULT_HERO_BANNERS);
-      if (typeof setAdminNotification === 'function') {
-        setAdminNotification({ message: '✓ Hero Banners reset to default!', type: 'success' });
-      }
-    }
-  };
 
 
 
@@ -891,23 +832,6 @@ export default function AdminCategories({
 
 
 
-  const handleResetPriceTiers = async () => {
-
-    if (window.confirm('Reset all price categories to default recommended tiers (Under ₹199, ₹229, ₹299, ₹499, ₹799, ₹999)?')) {
-
-      setPriceTiers(DEFAULT_PRICE_CATEGORIES);
-
-      await priceCategoryService.saveCategories(DEFAULT_PRICE_CATEGORIES);
-
-      if (typeof setAdminNotification === 'function') {
-
-        setAdminNotification({ message: '✓ Reset to recommended price categories!', type: 'success' });
-
-      }
-
-    }
-
-  };
 
 
 
@@ -1209,23 +1133,6 @@ export default function AdminCategories({
     }
   };
 
-  // Reset to initial baseline categories
-  const handleResetDefaultCategories = async () => {
-    if (window.confirm('Reset categories back to initial baseline catalog?')) {
-      try {
-        setCategories(INITIAL_CATEGORIES);
-        await productsApi.resetCategoriesToDefault();
-        if (typeof setAdminNotification === 'function') {
-          setAdminNotification({ message: '✓ Restored default category catalog!', type: 'success' });
-        }
-      } catch (err) {
-        console.error(err);
-        if (typeof setAdminNotification === 'function') {
-          setAdminNotification({ message: 'Failed to restore default categories.', type: 'error' });
-        }
-      }
-    }
-  };
 
 
 
@@ -1319,41 +1226,7 @@ export default function AdminCategories({
           </button>
         </div>
 
-        {/* Right Side Quick Actions / Resets */}
-        <div className="flex items-center gap-2 shrink-0">
-          {activeSubTab === 'hero-banners' && (
-            <button
-              type="button"
-              onClick={handleResetHeroBanners}
-              className="inline-flex items-center gap-1.5 px-3 py-1.5 text-[11px] font-semibold text-zinc-500 hover:text-zinc-800 dark:text-zinc-400 dark:hover:text-white transition-colors cursor-pointer"
-            >
-              <RotateCcw className="w-3.5 h-3.5" />
-              <span>Reset Default Banners</span>
-            </button>
-          )}
-
-          {activeSubTab === 'silver-story' && (
-            <button
-              type="button"
-              onClick={handleResetSilverStory}
-              className="inline-flex items-center gap-1.5 px-3 py-1.5 text-[11px] font-semibold text-zinc-500 hover:text-zinc-800 dark:text-zinc-400 dark:hover:text-white transition-colors cursor-pointer"
-            >
-              <RotateCcw className="w-3.5 h-3.5" />
-              <span>Reset Reference Showcase</span>
-            </button>
-          )}
-
-          {activeSubTab === 'gifting-hampers' && (
-            <button
-              type="button"
-              onClick={handleResetHampers}
-              className="inline-flex items-center gap-1.5 px-3 py-1.5 text-[11px] font-semibold text-zinc-500 hover:text-zinc-800 dark:text-zinc-400 dark:hover:text-white transition-colors cursor-pointer"
-            >
-              <RotateCcw className="w-3.5 h-3.5" />
-              <span>Reset Default Hampers</span>
-            </button>
-          )}
-        </div>
+        {/* Sub-Tabs Navigation End */}
       </div>
 
 
@@ -1445,16 +1318,6 @@ export default function AdminCategories({
                       </div>
 
                       <div className="flex items-center gap-1.5">
-                        {isCustom && (
-                          <button
-                            type="button"
-                            onClick={() => handleResetSingleHeroBannerImage(index)}
-                            className="p-1.5 text-zinc-400 hover:text-amber-600 dark:hover:text-amber-400 transition-colors"
-                            title="Reset to brand default banner"
-                          >
-                            <RotateCcw className="w-3.5 h-3.5" />
-                          </button>
-                        )}
                         {heroBanners.length > 1 && (
                           <button
                             type="button"
@@ -1596,16 +1459,6 @@ export default function AdminCategories({
 
               <button
                 type="button"
-                onClick={handleResetSilverStory}
-                className="px-4 py-2.5 bg-zinc-100 hover:bg-zinc-200 dark:bg-zinc-800 dark:hover:bg-zinc-700 text-zinc-800 dark:text-zinc-200 font-sans text-xs font-bold rounded-xl transition-all shadow-xs cursor-pointer flex items-center gap-1.5"
-                title="Reset to 4 default cards"
-              >
-                <RotateCcw className="w-4 h-4 text-amber-500" />
-                <span>Reset Defaults</span>
-              </button>
-
-              <button
-                type="button"
                 onClick={handleSaveSilverStory}
                 disabled={savingSilverStory}
                 className="px-5 py-2.5 bg-[#15151A] hover:bg-black text-white dark:bg-white dark:text-zinc-900 font-sans text-xs font-bold uppercase tracking-wider rounded-xl transition-all shadow-md cursor-pointer flex items-center gap-2 shrink-0 disabled:opacity-50"
@@ -1660,20 +1513,13 @@ export default function AdminCategories({
                 <div className="p-8 text-center bg-zinc-50 dark:bg-zinc-900 rounded-xl border border-dashed border-zinc-300 dark:border-zinc-700 space-y-2">
                   <p className="text-xs font-bold text-zinc-600 dark:text-zinc-300">All spotlight cards have been deleted.</p>
                   <p className="text-[11px] text-zinc-400">Click below to add a card or restore the 4 default cards.</p>
-                  <div className="flex items-center justify-center gap-2 pt-2">
+                  <div className="flex items-center justify-center pt-2">
                     <button
                       type="button"
                       onClick={handleAddStoryCard}
                       className="px-3 py-1.5 bg-emerald-600 hover:bg-emerald-700 text-white rounded-lg text-xs font-bold cursor-pointer"
                     >
                       + Add New Card
-                    </button>
-                    <button
-                      type="button"
-                      onClick={handleResetSilverStory}
-                      className="px-3 py-1.5 bg-zinc-200 dark:bg-zinc-700 text-zinc-800 dark:text-zinc-200 rounded-lg text-xs font-bold cursor-pointer"
-                    >
-                      Restore 4 Defaults
                     </button>
                   </div>
                 </div>
@@ -1852,16 +1698,6 @@ export default function AdminCategories({
                           className="flex-1 h-10 px-3.5 bg-zinc-50 dark:bg-zinc-900 border border-zinc-200 dark:border-zinc-750 rounded-xl text-xs font-mono focus:outline-none focus:border-zinc-900"
                         />
                       </div>
-
-                      {currentCard.img && (
-                        <button
-                          type="button"
-                          onClick={() => handleResetCardImage(safeIdx)}
-                          className="text-[11px] font-semibold text-rose-500 hover:text-rose-700 text-left cursor-pointer transition-colors block mt-1"
-                        >
-                          ✕ Remove Uploaded Photo (Use Default)
-                        </button>
-                      )}
 
                       {cardUploadProgress && (
                         <p className="text-[11px] font-bold text-amber-600 dark:text-amber-400 mt-1">
@@ -2101,16 +1937,6 @@ export default function AdminCategories({
 
               <button
                 type="button"
-                onClick={handleResetHampers}
-                className="px-4 py-2.5 bg-zinc-100 hover:bg-zinc-200 dark:bg-zinc-800 dark:hover:bg-zinc-750 text-zinc-800 dark:text-zinc-200 font-sans text-xs font-bold rounded-xl transition-all shadow-xs cursor-pointer flex items-center gap-1.5"
-                title="Reset to 4 default hampers"
-              >
-                <RotateCcw className="w-4 h-4 text-amber-500" />
-                <span>Reset Defaults</span>
-              </button>
-
-              <button
-                type="button"
                 onClick={handleSaveHampers}
                 disabled={savingHampers}
                 className="inline-flex items-center gap-2 px-5 py-2.5 rounded-xl bg-[#0D2B4E] hover:bg-[#081B32] text-white font-bold text-xs shadow-md hover:shadow-lg transition-all cursor-pointer disabled:opacity-50 shrink-0"
@@ -2143,7 +1969,7 @@ export default function AdminCategories({
               <p className="text-xs text-zinc-500 dark:text-zinc-400 max-w-md mx-auto">
                 Aapne sare gift hampers delete kar diye hain. Website ke storefront par Silver Gifting Hampers section abhi hidden hai.
               </p>
-              <div className="flex items-center justify-center gap-3 pt-2">
+              <div className="flex items-center justify-center pt-2">
                 <button
                   type="button"
                   onClick={handleAddHamper}
@@ -2151,19 +1977,12 @@ export default function AdminCategories({
                 >
                   + Add New Gift Hamper
                 </button>
-                <button
-                  type="button"
-                  onClick={handleResetHampers}
-                  className="px-4 py-2 bg-[#0D2B4E] hover:bg-[#081B32] text-white rounded-xl text-xs font-bold cursor-pointer transition-colors"
-                >
-                  Restore 4 Default Hampers
-                </button>
               </div>
             </div>
           ) : (
             <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
               {giftingHampers.map((hamper, idx) => {
-                const activeImg = hamper.customImg || hamper.imgWebp || hamper.imgPng;
+                const activeImg = hamper.customImg || hamper.imgWebp || hamper.imgPng || getHamperFallbackImage(hamper);
                 return (
                   <div 
                     key={hamper.id || idx}
@@ -2247,17 +2066,6 @@ export default function AdminCategories({
                         className="w-full px-3 py-2 text-xs rounded-xl border border-zinc-200 dark:border-zinc-700 bg-white dark:bg-zinc-900 text-zinc-900 dark:text-white focus:outline-none focus:border-[#0D2B4E]"
                       />
                     </div>
-
-                    {/* Clear Custom Image */}
-                    {hamper.customImg && (
-                      <button
-                        type="button"
-                        onClick={() => handleResetSingleHamperImage(idx)}
-                        className="text-[11px] font-semibold text-rose-500 hover:text-rose-700 text-left cursor-pointer transition-colors"
-                      >
-                        ✕ Reset to Default Image
-                      </button>
-                    )}
 
                     {/* Title & Link */}
                     <div className="pt-2 border-t border-zinc-100 dark:border-zinc-800 space-y-2">
@@ -2632,16 +2440,6 @@ export default function AdminCategories({
               </button>
             )}
 
-            <button
-              type="button"
-              onClick={handleResetDefaultCategories}
-              className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-xl text-[11px] font-bold bg-zinc-100 hover:bg-zinc-200 text-zinc-700 dark:bg-zinc-800 dark:hover:bg-zinc-700 dark:text-zinc-300 border border-zinc-200 dark:border-zinc-700 transition-all cursor-pointer"
-              title="Restore default sample categories"
-            >
-              <RotateCcw className="w-3.5 h-3.5 text-[#C8A646]" />
-              <span>Reset Defaults</span>
-            </button>
-
             <div className="relative w-full sm:w-56">
               <Search className="w-4 h-4 text-zinc-400 absolute left-3 top-1/2 -translate-y-1/2 pointer-events-none" />
               <input
@@ -2661,16 +2459,6 @@ export default function AdminCategories({
               <p className="text-xs font-semibold text-zinc-500 mb-2">
                 {categories.length === 0 ? 'No categories in directory. All categories have been deleted.' : 'No matching categories found.'}
               </p>
-              {categories.length === 0 && (
-                <button
-                  type="button"
-                  onClick={handleResetDefaultCategories}
-                  className="inline-flex items-center gap-1.5 px-4 py-2 rounded-xl text-xs font-bold bg-[#C8A646] hover:bg-[#b09038] text-white shadow-xs transition-all cursor-pointer mt-2"
-                >
-                  <RotateCcw className="w-3.5 h-3.5" />
-                  <span>Restore Default Categories</span>
-                </button>
-              )}
             </div>
           ) : (
 
@@ -2687,24 +2475,29 @@ export default function AdminCategories({
                 
 
                 {/* Banner Visual */}
-
                 <div className="aspect-[2/1] w-full bg-zinc-150 dark:bg-zinc-900 relative overflow-hidden border-b border-solid border-zinc-200 dark:border-zinc-850 group">
-
-                  {cat.img ? (
-
-                    <img src={getOptimizedImageUrl(cat.img, { width: 500 })} alt={cat.name} className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-300" />
-
-                  ) : (
-
-                    <div className="w-full h-full flex flex-col items-center justify-center text-[10px] font-mono text-zinc-400 gap-1">
-
-                      <ImageIcon className="w-5 h-5 text-zinc-300" />
-
-                      <span>No Banner Asset</span>
-
-                    </div>
-
-                  )}
+                  {(() => {
+                    const fallbackImg = getCategoryFallbackImage(cat.name || cat.id);
+                    const displayImg = (cat.img && typeof cat.img === 'string' && cat.img.trim()) 
+                      ? cat.img.trim() 
+                      : fallbackImg;
+                    return displayImg ? (
+                      <img 
+                        src={displayImg} 
+                        alt={cat.name} 
+                        className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-300"
+                        onError={(e) => {
+                          e.currentTarget.onerror = null;
+                          e.currentTarget.src = fallbackImg;
+                        }} 
+                      />
+                    ) : (
+                      <div className="w-full h-full flex flex-col items-center justify-center text-[10px] font-mono text-zinc-400 gap-1">
+                        <ImageIcon className="w-5 h-5 text-zinc-300" />
+                        <span>No Banner Asset</span>
+                      </div>
+                    );
+                  })()}
 
                   
 

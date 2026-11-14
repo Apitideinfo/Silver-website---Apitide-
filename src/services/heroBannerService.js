@@ -57,30 +57,34 @@ export const DEFAULT_HERO_BANNERS = [
 ];
 
 const STORAGE_KEY = 'manish_hero_banners_data';
-const VERSION_KEY = 'manish_hero_banners_version';
-const CURRENT_VERSION = 'v2026_11_14_v3';
 const FIRESTORE_DOC_ID = 'hero_banners_carousel';
 
 export const heroBannerService = {
   getStoredBanners() {
-    const version = StorageService.get(VERSION_KEY, null);
     let cached = StorageService.get(STORAGE_KEY, null);
 
-    if (version !== CURRENT_VERSION || !cached || !Array.isArray(cached) || cached.length === 0) {
-      cached = DEFAULT_HERO_BANNERS;
+    if (Array.isArray(cached) && cached.length > 0) {
+      return cached.map((banner, idx) => {
+        const def = DEFAULT_HERO_BANNERS[idx % DEFAULT_HERO_BANNERS.length];
+        return {
+          ...def,
+          ...banner,
+          webp: banner.webp || def.webp,
+          png: banner.png || def.png,
+          customImg: banner.customImg || banner.img || banner.image || '',
+          mobileImg: banner.mobileImg || ''
+        };
+      });
+    }
+
+    const isInit = StorageService.get('manish_hero_banners_initialized', false);
+    if (!isInit) {
       StorageService.set(STORAGE_KEY, DEFAULT_HERO_BANNERS);
-      StorageService.set(VERSION_KEY, CURRENT_VERSION);
+      StorageService.set('manish_hero_banners_initialized', true);
       return DEFAULT_HERO_BANNERS;
     }
 
-    return cached.map((banner, idx) => ({
-      ...(DEFAULT_HERO_BANNERS[idx] || DEFAULT_HERO_BANNERS[0]),
-      ...banner,
-      webp: DEFAULT_HERO_BANNERS[idx]?.webp || banner.webp,
-      png: DEFAULT_HERO_BANNERS[idx]?.png || banner.png,
-      customImg: banner.customImg || banner.img || banner.image || '',
-      mobileImg: banner.mobileImg || ''
-    }));
+    return [];
   },
 
   async fetchRemoteBanners() {
@@ -100,16 +104,18 @@ export const heroBannerService = {
         if (snap.exists() && snap.data()) {
           const remote = snap.data();
           if (Array.isArray(remote.banners) && remote.banners.length > 0) {
-            const merged = remote.banners.map((banner, idx) => ({
-              ...(DEFAULT_HERO_BANNERS[idx] || DEFAULT_HERO_BANNERS[0]),
-              ...banner,
-              webp: DEFAULT_HERO_BANNERS[idx]?.webp || banner.webp,
-              png: DEFAULT_HERO_BANNERS[idx]?.png || banner.png,
-              customImg: banner.customImg || banner.img || banner.image || '',
-              mobileImg: banner.mobileImg || ''
-            }));
+            const merged = remote.banners.map((banner, idx) => {
+              const def = DEFAULT_HERO_BANNERS[idx % DEFAULT_HERO_BANNERS.length];
+              return {
+                ...def,
+                ...banner,
+                webp: banner.webp || def.webp,
+                png: banner.png || def.png,
+                customImg: banner.customImg || banner.img || banner.image || '',
+                mobileImg: banner.mobileImg || ''
+              };
+            });
             StorageService.set(STORAGE_KEY, merged);
-            StorageService.set(VERSION_KEY, CURRENT_VERSION);
             if (typeof window !== 'undefined') {
               window.dispatchEvent(new Event('manish_hero_banners_updated'));
             }
@@ -124,21 +130,17 @@ export const heroBannerService = {
   },
 
   async saveBanners(banners) {
-    const safeBanners = Array.isArray(banners) && banners.length > 0 ? banners : DEFAULT_HERO_BANNERS;
+    const safeBanners = Array.isArray(banners) ? banners : [];
     const payload = {
       banners: safeBanners,
       lastUpdated: new Date().toISOString()
     };
 
-    // 1. Local Storage with Version Stamp
     StorageService.set(STORAGE_KEY, safeBanners);
-    StorageService.set(VERSION_KEY, CURRENT_VERSION);
 
-    // 2. Dispatch in current window
     if (typeof window !== 'undefined') {
       window.dispatchEvent(new Event('manish_hero_banners_updated'));
 
-      // 3. Broadcast across tabs
       if ('BroadcastChannel' in window) {
         try {
           const bc = new BroadcastChannel('manish_store_sync');
@@ -148,12 +150,10 @@ export const heroBannerService = {
       }
     }
 
-    // 4. Shared Cloud Persistence via storeSyncService
     storeSyncService.publishSection('heroBanners', safeBanners).catch(err => {
       console.warn('storeSyncService heroBanners publish error:', err);
     });
 
-    // 5. Remote Firestore sync
     if (db) {
       try {
         const docRef = doc(db, FIRESTORE_COLLECTIONS.SYSTEM_CONFIGS, FIRESTORE_DOC_ID);
@@ -166,4 +166,3 @@ export const heroBannerService = {
     return safeBanners;
   }
 };
-

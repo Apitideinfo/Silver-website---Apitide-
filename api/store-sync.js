@@ -9,7 +9,7 @@ let lastResourceVersion = 0;
 
 // Fallback base configuration matching baseline website data
 const BASE_CONFIG = {
-  version: '2026.11.15.1',
+  version: '2026.11.15.2',
   lastUpdated: new Date().toISOString(),
   categories: [
     { id: 'pendant', name: 'Pendant', desc: 'Sacred deity lockets, solitaires, and vintage filigree everyday pendants.', img: '' },
@@ -45,17 +45,16 @@ const BASE_CONFIG = {
     }
   },
   giftingHampers: [
-    { id: 'hamper-1', title: 'Festive Gift Picks Under 1499', price: 'Under 1499', customImg: '', path: 'collections' },
-    { id: 'hamper-2', title: 'Festive Gift Picks Under 1999', price: 'Under 1999', customImg: '', path: 'collections' },
-    { id: 'hamper-3', title: 'Festive Gift Picks Under 2999', price: 'Under 2999', customImg: '', path: 'collections' },
-    { id: 'hamper-4', title: 'Royal Luxury Silver Hampers', price: 'Premium', customImg: '', path: 'collections' }
+    { id: 'under-1499', title: 'Picks Under ₹1499', price: 'Under 1499', customImg: '', path: '/collections?maxPrice=1499' },
+    { id: 'under-1999', title: 'Picks Under ₹1999', price: 'Under 1999', customImg: '', path: '/collections?maxPrice=1999' },
+    { id: 'under-2999', title: 'Picks Under ₹2999', price: 'Under 2999', customImg: '', path: '/collections?maxPrice=2999' },
+    { id: 'premium-gifts', title: 'Premium Gifts', price: 'Premium', customImg: '', path: '/collections?sort=luxury' }
   ]
 };
 
 // Helper: fetch latest published config from Cloudinary
 async function fetchPublishedConfig() {
   try {
-    // 1. Check Cloudinary resource metadata to get the exact latest version
     const resource = await cloudinary.api.resource(CONFIG_PUBLIC_ID, { resource_type: 'raw' });
     if (resource?.version && resource.version === lastResourceVersion && inMemoryConfig) {
       return inMemoryConfig;
@@ -131,7 +130,6 @@ export default async function handler(req, res) {
   // ─── POST: Secure Admin Update ──────────────────────────────────
   if (req.method === 'POST') {
     try {
-      // 1. Authorization check
       const authHeader = req.headers['authorization'] || '';
       const adminKeyHeader = req.headers['x-admin-key'] || '';
       const token = authHeader.replace(/^Bearer\s+/i, '').trim();
@@ -145,13 +143,11 @@ export default async function handler(req, res) {
         return res.status(401).json({ error: 'Unauthorized: Invalid Admin authentication key' });
       }
 
-      // 2. Validate payload
       const { section, data, fullSync } = req.body || {};
       if (!section && !fullSync) {
         return res.status(400).json({ error: 'Missing section or fullSync payload' });
       }
 
-      // 3. Read current published config
       const currentConfig = await fetchPublishedConfig();
       let updatedConfig = { ...currentConfig };
 
@@ -163,7 +159,6 @@ export default async function handler(req, res) {
           version: `v_${Date.now()}`
         };
       } else if (section) {
-        // Atomic section update
         const allowedSections = ['categories', 'heroBanners', 'silverStory', 'giftingHampers', 'products'];
         if (!allowedSections.includes(section)) {
           return res.status(400).json({ error: `Invalid section: ${section}. Allowed: ${allowedSections.join(', ')}` });
@@ -174,7 +169,6 @@ export default async function handler(req, res) {
         updatedConfig.version = `v_${Date.now()}`;
       }
 
-      // 4. Atomic upload to Cloudinary CDN
       const base64Data = Buffer.from(JSON.stringify(updatedConfig, null, 2)).toString('base64');
       const uploadRes = await cloudinary.uploader.upload('data:application/json;base64,' + base64Data, {
         resource_type: 'raw',
@@ -185,8 +179,6 @@ export default async function handler(req, res) {
 
       inMemoryConfig = updatedConfig;
       lastResourceVersion = uploadRes.version;
-
-      console.log(`[store-sync] Successfully published section '${section || 'fullSync'}' to Cloudinary:`, uploadRes.secure_url);
 
       return res.status(200).json({
         success: true,

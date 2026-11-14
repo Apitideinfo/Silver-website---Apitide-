@@ -4,6 +4,26 @@ import { doc, getDoc, setDoc } from 'firebase/firestore';
 import { FIRESTORE_COLLECTIONS } from '../config/constants';
 import { storeSyncService } from './storeSyncService';
 
+import colTennisWebp from '../assets/col_tennis.webp';
+import colToeRingWebp from '../assets/col_toe_ring.webp';
+import colPearlWebp from '../assets/col_pearl.webp';
+import colStoneWebp from '../assets/col_stone.webp';
+import diwaliFestiveManishAndCoWebp from '../assets/diwali_festive_manish_and_co.webp';
+
+export const getStoryCardFallbackImage = (cardOrId, idx = 0) => {
+  const norm = String(
+    typeof cardOrId === 'string' ? cardOrId : (cardOrId?.id || cardOrId?.title || cardOrId?.tab || '')
+  ).toLowerCase();
+  if (norm.includes('tennis') || norm.includes('spotlight-1')) return colTennisWebp;
+  if (norm.includes('toe') || norm.includes('spotlight-2') || norm.includes('payal')) return colToeRingWebp;
+  if (norm.includes('pearl') || norm.includes('spotlight-3') || norm.includes('necklace')) return colPearlWebp;
+  if (norm.includes('stone') || norm.includes('spotlight-4')) return colStoneWebp;
+  const fallbacks = [colTennisWebp, colToeRingWebp, colPearlWebp, colStoneWebp];
+  return fallbacks[idx % fallbacks.length];
+};
+
+export const getStoryBannerFallbackImage = () => diwaliFestiveManishAndCoWebp;
+
 export const DEFAULT_SILVER_STORY_DATA = {
   sectionTitle: 'Silver For Every Story',
   cards: [
@@ -11,42 +31,40 @@ export const DEFAULT_SILVER_STORY_DATA = {
       id: 'spotlight-1',
       title: 'TENNIS COLLECTION',
       tagline: '♥ Sparkle on repeat ♥',
-      img: '',
+      img: colTennisWebp,
       tab: 'bracelets'
     },
     {
       id: 'spotlight-2',
       title: 'TOE RING COLLECTION',
       tagline: '♥ Little Detail Big Mood ♥',
-      img: '',
+      img: colToeRingWebp,
       tab: 'payal'
     },
     {
       id: 'spotlight-3',
       title: 'PEARL COLLECTION',
       tagline: '♥ Timeless Elegance ♥',
-      img: '',
+      img: colPearlWebp,
       tab: 'necklaces'
     },
     {
       id: 'spotlight-4',
       title: 'STONE COLLECTION',
       tagline: '♥ Add Some Shine ♥',
-      img: '',
+      img: colStoneWebp,
       tab: 'bracelets'
     }
   ],
   banner: {
     title: 'MANISH & CO - Diwali Festive Season - Flat 15% Off On All Products',
-    img: '',
+    img: bannerStoryWebp,
     tab: 'Collections',
     hidden: false
   }
 };
 
 const STORAGE_KEY = 'manish_silver_story_data';
-const VERSION_KEY = 'manish_silver_story_version';
-const CURRENT_VERSION = 'v2026_11_14_v4';
 const FIRESTORE_DOC_ID = 'silver_story_showcase';
 
 export const silverStoryService = {
@@ -60,25 +78,37 @@ export const silverStoryService = {
       };
     }
 
-    const version = StorageService.get(VERSION_KEY, null);
     let cached = StorageService.get(STORAGE_KEY, null);
 
-    if (version !== CURRENT_VERSION || !cached || typeof cached !== 'object') {
-      cached = DEFAULT_SILVER_STORY_DATA;
-      StorageService.set(STORAGE_KEY, DEFAULT_SILVER_STORY_DATA);
-      StorageService.set(VERSION_KEY, CURRENT_VERSION);
-      return cached;
+    if (cached && typeof cached === 'object') {
+      const deletedCardIds = StorageService.get('manish_silver_story_deleted_card_ids', []);
+      const cards = Array.isArray(cached.cards)
+        ? cached.cards
+            .filter(c => c && !deletedCardIds.includes(c.id))
+            .map((c, i) => ({
+              ...c,
+              img: c.img || getStoryCardFallbackImage(c, i)
+            }))
+        : [];
+
+      return {
+        sectionTitle: cached.sectionTitle || 'Silver For Every Story',
+        cards,
+        banner: cached.banner || DEFAULT_SILVER_STORY_DATA.banner
+      };
     }
 
-    const deletedCardIds = StorageService.get('manish_silver_story_deleted_card_ids', []);
-    const cards = Array.isArray(cached.cards)
-      ? cached.cards.filter(c => c && !deletedCardIds.includes(c.id))
-      : [];
+    const isInit = StorageService.get('manish_silver_story_initialized', false);
+    if (!isInit) {
+      StorageService.set(STORAGE_KEY, DEFAULT_SILVER_STORY_DATA);
+      StorageService.set('manish_silver_story_initialized', true);
+      return DEFAULT_SILVER_STORY_DATA;
+    }
 
     return {
-      sectionTitle: cached.sectionTitle || 'Silver For Every Story',
-      cards,
-      banner: cached.banner || DEFAULT_SILVER_STORY_DATA.banner
+      sectionTitle: 'Silver For Every Story',
+      cards: [],
+      banner: { hidden: true, deleted: true }
     };
   },
 
@@ -104,7 +134,6 @@ export const silverStoryService = {
           const isAllCleared = StorageService.get('manish_silver_story_all_cleared', false);
           if (!isAllCleared && Array.isArray(remote.cards)) {
             StorageService.set(STORAGE_KEY, remote);
-            StorageService.set(VERSION_KEY, CURRENT_VERSION);
             if (typeof window !== 'undefined') {
               window.dispatchEvent(new CustomEvent('manish_silver_story_updated', { detail: remote }));
             }
@@ -132,7 +161,6 @@ export const silverStoryService = {
 
     // 1. Instant Local Storage
     StorageService.set(STORAGE_KEY, payload);
-    StorageService.set(VERSION_KEY, CURRENT_VERSION);
 
     // 2. Pulse for cross-tab and cross-window sync
     if (typeof window !== 'undefined') {
@@ -185,11 +213,5 @@ export const silverStoryService = {
       ...current,
       cards: updatedCards
     });
-  },
-
-  async resetDefaults() {
-    StorageService.set('manish_silver_story_all_cleared', false);
-    StorageService.set('manish_silver_story_deleted_card_ids', []);
-    return this.saveStoryData(DEFAULT_SILVER_STORY_DATA);
   }
 };

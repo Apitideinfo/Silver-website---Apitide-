@@ -13,6 +13,16 @@ import giftPick2999Png from '../assets/gift_pick_2999.png';
 import giftPickPremiumWebp from '../assets/gift_pick_premium.webp';
 import giftPickPremiumPng from '../assets/gift_pick_premium.png';
 
+export const getHamperFallbackImage = (hamperOrId) => {
+  const norm = String(
+    typeof hamperOrId === 'string' ? hamperOrId : (hamperOrId?.id || hamperOrId?.title || hamperOrId?.price || '')
+  ).toLowerCase();
+  if (norm.includes('1499') || norm.includes('hamper-1') || norm.includes('under-1499')) return giftPick1499Webp;
+  if (norm.includes('1999') || norm.includes('hamper-2') || norm.includes('under-1999')) return giftPick1999Webp;
+  if (norm.includes('2999') || norm.includes('hamper-3') || norm.includes('under-2999')) return giftPick2999Webp;
+  return giftPickPremiumWebp;
+};
+
 export const DEFAULT_GIFTING_HAMPERS = [
   {
     id: 'under-1499',
@@ -49,8 +59,6 @@ export const DEFAULT_GIFTING_HAMPERS = [
 ];
 
 const STORAGE_KEY = 'manish_gifting_hampers_data';
-const VERSION_KEY = 'manish_gifting_hampers_version';
-const CURRENT_VERSION = 'v2026_11_14_v4';
 const FIRESTORE_DOC_ID = 'gifting_hampers_showcase';
 
 export const giftingHampersService = {
@@ -59,27 +67,27 @@ export const giftingHampersService = {
     if (isAllCleared) return [];
 
     const deletedIds = StorageService.get('manish_gifting_hampers_deleted_ids', []);
-    const version = StorageService.get(VERSION_KEY, null);
     let cached = StorageService.get(STORAGE_KEY, null);
 
-    if (version !== CURRENT_VERSION || !cached || !Array.isArray(cached)) {
-      cached = DEFAULT_GIFTING_HAMPERS;
-      StorageService.set(STORAGE_KEY, DEFAULT_GIFTING_HAMPERS);
-      StorageService.set(VERSION_KEY, CURRENT_VERSION);
+    if (Array.isArray(cached)) {
+      return cached
+        .filter(item => item && !deletedIds.includes(item.id))
+        .map(item => ({
+          ...item,
+          customImg: item.customImg || '',
+          imgWebp: item.customImg || getHamperFallbackImage(item),
+          imgPng: item.customImg || getHamperFallbackImage(item)
+        }));
     }
 
-    return cached
-      .filter(item => item && !deletedIds.includes(item.id))
-      .map((item, idx) => {
-        const defaultRef = DEFAULT_GIFTING_HAMPERS.find(d => d.id === item.id) || DEFAULT_GIFTING_HAMPERS[idx] || {};
-        return {
-          ...defaultRef,
-          ...item,
-          imgWebp: defaultRef.imgWebp || item.imgWebp,
-          imgPng: defaultRef.imgPng || item.imgPng,
-          customImg: item.customImg || item.image || item.img || ''
-        };
-      });
+    const isInit = StorageService.get('manish_gifting_hampers_initialized', false);
+    if (!isInit) {
+      StorageService.set(STORAGE_KEY, DEFAULT_GIFTING_HAMPERS);
+      StorageService.set('manish_gifting_hampers_initialized', true);
+      return DEFAULT_GIFTING_HAMPERS;
+    }
+
+    return [];
   },
 
   async fetchRemoteHampers() {
@@ -104,7 +112,6 @@ export const giftingHampersService = {
           const isAllCleared = StorageService.get('manish_gifting_hampers_all_cleared', false);
           if (!isAllCleared && Array.isArray(remote.items)) {
             StorageService.set(STORAGE_KEY, remote.items);
-            StorageService.set(VERSION_KEY, CURRENT_VERSION);
             if (typeof window !== 'undefined') {
               window.dispatchEvent(new CustomEvent('manish_gifting_hampers_updated', { detail: remote.items }));
             }
@@ -122,9 +129,7 @@ export const giftingHampersService = {
     const safeItems = Array.isArray(items) ? items : [];
     const isAllCleared = safeItems.length === 0;
     StorageService.set('manish_gifting_hampers_all_cleared', isAllCleared);
-
     StorageService.set(STORAGE_KEY, safeItems);
-    StorageService.set(VERSION_KEY, CURRENT_VERSION);
 
     // Cross-tab and window sync pulse
     if (typeof window !== 'undefined') {
@@ -188,11 +193,5 @@ export const giftingHampersService = {
     };
     const updated = [...current, hamperToAdd];
     return this.saveHampers(updated);
-  },
-
-  async resetHampers() {
-    StorageService.set('manish_gifting_hampers_all_cleared', false);
-    StorageService.set('manish_gifting_hampers_deleted_ids', []);
-    return this.saveHampers(DEFAULT_GIFTING_HAMPERS);
   }
 };
