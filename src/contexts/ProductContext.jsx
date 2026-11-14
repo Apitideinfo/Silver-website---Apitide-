@@ -10,21 +10,25 @@ export function ProductProvider({ children }) {
     return StorageService.get('manish_products_store', []);
   });
   const [categories, setCategories] = useState(() => {
-    const CURRENT_CATALOG_VERSION = 'v2026_11_14_v3';
-    const storedVersion = StorageService.get('manish_catalog_version', null);
+    const isAllCleared = StorageService.get('manish_categories_all_cleared', false);
+    if (isAllCleared) return [];
+
     let cached = StorageService.get('manish_categories_store', null);
-    
-    // Auto-migrate legacy cached categories on client devices (e.g. mobile phones with old Bangles/Nath list)
-    const hasLegacy = Array.isArray(cached) && cached.some(c => 
-      c.id === 'bangles' || c.id === 'nath-nose-pin' || c.name === 'Bangles' || c.id === 'jhumka'
-    );
-    if (hasLegacy || !Array.isArray(cached) || cached.length === 0) {
-      cached = INITIAL_CATEGORIES;
+    if (Array.isArray(cached)) {
+      const deletedIds = StorageService.get('manish_categories_deleted_ids', []);
+      return cached.filter(c => {
+        const id = c.id || c.docId;
+        return id && !deletedIds.includes(id) && !deletedIds.includes(String(id).toLowerCase());
+      });
+    }
+
+    const isInit = StorageService.get('manish_categories_initialized', false);
+    if (!isInit && !isAllCleared) {
       StorageService.set('manish_categories_store', INITIAL_CATEGORIES);
       StorageService.set('manish_categories_initialized', true);
-      StorageService.set('manish_catalog_version', CURRENT_CATALOG_VERSION);
+      return INITIAL_CATEGORIES;
     }
-    return cached;
+    return [];
   });
   const [loading, setLoading] = useState(false);
   const [categoriesLoaded, setCategoriesLoaded] = useState(true);
@@ -36,9 +40,19 @@ export function ProductProvider({ children }) {
       : null;
 
     const handleCatalogUpdate = () => {
-      const updatedCats = StorageService.get('manish_categories_store', null);
-      if (Array.isArray(updatedCats)) {
-        setCategories(updatedCats);
+      const isAllCleared = StorageService.get('manish_categories_all_cleared', false);
+      if (isAllCleared) {
+        setCategories([]);
+      } else {
+        const updatedCats = StorageService.get('manish_categories_store', null);
+        if (Array.isArray(updatedCats)) {
+          const deletedIds = StorageService.get('manish_categories_deleted_ids', []);
+          const filtered = updatedCats.filter(c => {
+            const id = c.id || c.docId;
+            return id && !deletedIds.includes(id) && !deletedIds.includes(String(id).toLowerCase());
+          });
+          setCategories(filtered);
+        }
       }
       const updatedProds = StorageService.get('manish_products_store', null);
       if (Array.isArray(updatedProds)) {

@@ -117,30 +117,52 @@ export const productsApi = {
 
   // Read: Realtime subscription
   subscribeToCategories(onUpdate, onError) {
-    const CURRENT_CATALOG_VERSION = 'v2026_11_14_v3';
-    const storedVersion = StorageService.get('manish_catalog_version', null);
+    const isAllCleared = StorageService.get(LOCAL_STORAGE_KEYS.ALL_CLEARED, false);
+    const deletedIds = StorageService.get(LOCAL_STORAGE_KEYS.DELETED, []);
     let local = StorageService.get(LOCAL_STORAGE_KEYS.CATEGORIES, null);
 
-    const hasLegacy = Array.isArray(local) && local.some(c => 
-      c.id === 'bangles' || c.id === 'nath-nose-pin' || c.name === 'Bangles' || c.id === 'jhumka'
-    );
-
-    if (hasLegacy || !Array.isArray(local) || local.length === 0) {
-      local = INITIAL_CATEGORIES;
-      StorageService.set(LOCAL_STORAGE_KEYS.CATEGORIES, INITIAL_CATEGORIES);
-      StorageService.set(CATEGORIES_INIT_KEY, true);
-      StorageService.set('manish_catalog_version', CURRENT_CATALOG_VERSION);
+    if (isAllCleared) {
+      local = [];
+      onUpdate([]);
+    } else if (Array.isArray(local)) {
+      const filtered = local.filter(c => {
+        const id = c.id || c.docId;
+        return id && !deletedIds.includes(id) && !deletedIds.includes(String(id).toLowerCase());
+      });
+      onUpdate(filtered);
+    } else {
+      const isInit = StorageService.get(CATEGORIES_INIT_KEY, false);
+      if (!isInit) {
+        local = INITIAL_CATEGORIES;
+        StorageService.set(LOCAL_STORAGE_KEYS.CATEGORIES, INITIAL_CATEGORIES);
+        StorageService.set(CATEGORIES_INIT_KEY, true);
+        onUpdate(INITIAL_CATEGORIES);
+      } else {
+        onUpdate([]);
+      }
     }
-    onUpdate(local);
 
     // Cross-tab & local update handler
     let lastJson = JSON.stringify(local);
     const handleSync = () => {
-      const updated = StorageService.get(LOCAL_STORAGE_KEYS.CATEGORIES, local);
-      const str = JSON.stringify(updated);
+      const isCleared = StorageService.get(LOCAL_STORAGE_KEYS.ALL_CLEARED, false);
+      if (isCleared) {
+        if (lastJson !== '[]') {
+          lastJson = '[]';
+          onUpdate([]);
+        }
+        return;
+      }
+      const updated = StorageService.get(LOCAL_STORAGE_KEYS.CATEGORIES, []);
+      const curDeleted = StorageService.get(LOCAL_STORAGE_KEYS.DELETED, []);
+      const filtered = (Array.isArray(updated) ? updated : []).filter(c => {
+        const id = c.id || c.docId;
+        return id && !curDeleted.includes(id) && !curDeleted.includes(String(id).toLowerCase());
+      });
+      const str = JSON.stringify(filtered);
       if (str !== lastJson) {
         lastJson = str;
-        onUpdate(Array.isArray(updated) ? updated : []);
+        onUpdate(filtered);
       }
     };
 

@@ -247,19 +247,34 @@ export default function Home({
 
   // Dynamic Category Slider (populated live from Admin Categories)
   const dynamicStoryCategories = React.useMemo(() => {
-    const list = Array.isArray(categories) && categories.length > 0 
-      ? categories 
-      : INITIAL_CATEGORIES;
+    const isAllCleared = StorageService.get('manish_categories_all_cleared', false);
+    if (isAllCleared) return [];
 
-    // Filter out any stale legacy categories if present
+    const deletedIds = StorageService.get('manish_categories_deleted_ids', []);
+    const isInit = StorageService.get('manish_categories_initialized', false);
+
+    let list = [];
+    if (Array.isArray(categories)) {
+      list = categories;
+    } else {
+      const cached = StorageService.get('manish_categories_store', null);
+      if (Array.isArray(cached)) {
+        list = cached;
+      } else if (!isInit) {
+        list = INITIAL_CATEGORIES;
+      }
+    }
+
+    // Filter out deleted categories and stale legacy
     const cleanList = list.filter(c => {
       const id = String(c.id || c.docId || c.name || '').toLowerCase();
+      if (deletedIds.includes(id) || deletedIds.includes(String(c.id || '')) || deletedIds.includes(String(c.docId || ''))) {
+        return false;
+      }
       return id !== 'bangles' && id !== 'nath-nose-pin' && id !== 'jhumka' && c.name !== 'Bangles';
     });
 
-    const finalList = cleanList.length > 0 ? cleanList : INITIAL_CATEGORIES;
-
-    return finalList.map((cat) => {
+    return cleanList.map((cat) => {
       const catId = cat.id || cat.docId || String(cat.name || '').toLowerCase().replace(/\s+/g, '-');
       // If Admin uploaded a real custom image, use it! Otherwise use high-res reference image
       const isCustomUploaded = (cat.img && typeof cat.img === 'string' && (cat.img.startsWith('http') || cat.img.startsWith('data:')))
@@ -378,11 +393,18 @@ export default function Home({
 
   // Combined dynamic categories with baseline reference set (all 10+ reference categories)
   const displayCategories = React.useMemo(() => {
-    if (Array.isArray(categories) && categories.length > 0) {
-      return categories;
+    const isAllCleared = StorageService.get('manish_categories_all_cleared', false);
+    if (isAllCleared) return [];
+
+    const deletedIds = StorageService.get('manish_categories_deleted_ids', []);
+    if (Array.isArray(categories)) {
+      return categories.filter(c => {
+        const id = String(c.id || c.docId || c.name || '').toLowerCase();
+        return !deletedIds.includes(id) && !deletedIds.includes(String(c.id || '')) && !deletedIds.includes(String(c.docId || ''));
+      });
     }
     const isInit = StorageService.get('manish_categories_initialized', false);
-    if (!isInit) {
+    if (!isInit && !isAllCleared) {
       return INITIAL_CATEGORIES;
     }
     return [];
@@ -662,48 +684,50 @@ export default function Home({
           <div className="max-w-[1536px] mx-auto px-4 sm:px-8 lg:px-12 relative">
 
             {/* Horizontal Scrollable Category Cards Carousel */}
-            <div
-              ref={storyCarouselRef}
-              onMouseDown={handleStoryMouseDown}
-              onMouseMove={handleStoryMouseMove}
-              onMouseUp={handleStoryMouseUp}
-              onMouseLeave={handleStoryMouseUp}
-              className="flex items-center gap-3 sm:gap-5 md:gap-6 lg:gap-7 overflow-x-auto no-scrollbar scroll-smooth justify-start py-2 px-1 sm:px-3 cursor-grab active:cursor-grabbing select-none touch-pan-x"
-              style={{ WebkitOverflowScrolling: 'touch' }}
-            >
-              {dynamicStoryCategories.map((cat) => (
-                <button
-                  key={cat.id}
-                  onClick={() => handleStoryCardClick(cat)}
-                  className="w-[102px] xs:w-[115px] sm:w-[135px] md:w-[150px] lg:w-[160px] group cursor-pointer flex flex-col items-center shrink-0 focus:outline-none bg-transparent border-0 p-0 transition-transform duration-300 hover:-translate-y-1"
-                >
-                  {/* Clean Square Card Image matching reference screenshot */}
-                  <div className="relative w-full aspect-square rounded-xl overflow-hidden bg-gray-50 border border-gray-200/80 shadow-xs group-hover:shadow-md group-hover:border-[#0D2B4E]/40 transition-all duration-300 pointer-events-none">
-                    <img
-                      src={cat.img}
-                      alt={cat.name}
-                      draggable={false}
-                      className="w-full h-full object-cover object-center group-hover:scale-106 transition-transform duration-500 ease-out select-none pointer-events-none"
-                      loading="lazy"
-                      onError={(e) => {
-                        e.target.onerror = null;
-                        e.target.src = getCategoryFallbackImage(cat.name || cat.id);
-                      }}
-                    />
-                    {cat.badge && (
-                      <span className="absolute top-1.5 left-1.5 bg-[#0D2B4E] text-white text-[8px] sm:text-[9px] font-bold px-1.5 py-0.5 rounded shadow-xs tracking-wider uppercase font-sans">
-                        {cat.badge}
-                      </span>
-                    )}
-                  </div>
+            {dynamicStoryCategories.length > 0 && (
+              <div
+                ref={storyCarouselRef}
+                onMouseDown={handleStoryMouseDown}
+                onMouseMove={handleStoryMouseMove}
+                onMouseUp={handleStoryMouseUp}
+                onMouseLeave={handleStoryMouseUp}
+                className="flex items-center gap-3 sm:gap-5 md:gap-6 lg:gap-7 overflow-x-auto no-scrollbar scroll-smooth justify-start py-2 px-1 sm:px-3 cursor-grab active:cursor-grabbing select-none touch-pan-x"
+                style={{ WebkitOverflowScrolling: 'touch' }}
+              >
+                {dynamicStoryCategories.map((cat) => (
+                  <button
+                    key={cat.id}
+                    onClick={() => handleStoryCardClick(cat)}
+                    className="w-[102px] xs:w-[115px] sm:w-[135px] md:w-[150px] lg:w-[160px] group cursor-pointer flex flex-col items-center shrink-0 focus:outline-none bg-transparent border-0 p-0 transition-transform duration-300 hover:-translate-y-1"
+                  >
+                    {/* Clean Square Card Image matching reference screenshot */}
+                    <div className="relative w-full aspect-square rounded-xl overflow-hidden bg-gray-50 border border-gray-200/80 shadow-xs group-hover:shadow-md group-hover:border-[#0D2B4E]/40 transition-all duration-300 pointer-events-none">
+                      <img
+                        src={cat.img}
+                        alt={cat.name}
+                        draggable={false}
+                        className="w-full h-full object-cover object-center group-hover:scale-106 transition-transform duration-500 ease-out select-none pointer-events-none"
+                        loading="lazy"
+                        onError={(e) => {
+                          e.target.onerror = null;
+                          e.target.src = getCategoryFallbackImage(cat.name || cat.id);
+                        }}
+                      />
+                      {cat.badge && (
+                        <span className="absolute top-1.5 left-1.5 bg-[#0D2B4E] text-white text-[8px] sm:text-[9px] font-bold px-1.5 py-0.5 rounded shadow-xs tracking-wider uppercase font-sans">
+                          {cat.badge}
+                        </span>
+                      )}
+                    </div>
 
-                  {/* Clean Category Label Directly Below */}
-                  <span className="mt-2.5 sm:mt-3 text-xs sm:text-[13.5px] font-sans font-semibold text-gray-900 group-hover:text-[#0D2B4E] transition-colors text-center block w-full truncate px-1">
-                    {cat.name}
-                  </span>
-                </button>
-              ))}
-            </div>
+                    {/* Clean Category Label Directly Below */}
+                    <span className="mt-2.5 sm:mt-3 text-xs sm:text-[13.5px] font-sans font-semibold text-gray-900 group-hover:text-[#0D2B4E] transition-colors text-center block w-full truncate px-1">
+                      {cat.name}
+                    </span>
+                  </button>
+                ))}
+              </div>
+            )}
 
             {/* Reference Screenshot Exact: ♥ Silver For Every Story ♥ */}
             <div className="max-w-4xl mx-auto flex items-center justify-center mt-6 sm:mt-10 px-2 sm:px-4">
