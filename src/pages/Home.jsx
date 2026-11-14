@@ -359,13 +359,31 @@ export default function Home({
       setSilverStoryData(silverStoryService.getStoredStoryData());
     };
 
-    if (typeof window !== 'undefined') {
-      window.addEventListener('manish_silver_story_updated', handleSilverStorySync);
-    }
-    return () => {
-      if (typeof window !== 'undefined') {
-        window.removeEventListener('manish_silver_story_updated', handleSilverStorySync);
+    window.addEventListener('manish_silver_story_updated', handleSilverStorySync);
+
+    const storageHandler = (e) => {
+      if (e.key === 'manish_silver_story_data' || (e.key === 'manish_sync_pulse' && e.newValue && e.newValue.startsWith('silver_story_'))) {
+        handleSilverStorySync();
       }
+    };
+    window.addEventListener('storage', storageHandler);
+
+    let bc = null;
+    if (typeof window !== 'undefined' && 'BroadcastChannel' in window) {
+      try {
+        bc = new BroadcastChannel('manish_store_sync');
+        bc.onmessage = (msg) => {
+          if (msg?.data?.type === 'silver_story') {
+            handleSilverStorySync();
+          }
+        };
+      } catch { /* noop */ }
+    }
+
+    return () => {
+      window.removeEventListener('manish_silver_story_updated', handleSilverStorySync);
+      window.removeEventListener('storage', storageHandler);
+      if (bc) bc.close();
     };
   }, []);
 
@@ -374,20 +392,38 @@ export default function Home({
 
   useEffect(() => {
     giftingHampersService.fetchRemoteHampers().then(res => {
-      if (res && res.length === 4) setGiftingHampers(res);
+      if (res) setGiftingHampers(res);
     });
 
     const handleGiftingHampersSync = () => {
       setGiftingHampers(giftingHampersService.getStoredHampers());
     };
 
-    if (typeof window !== 'undefined') {
-      window.addEventListener('manish_gifting_hampers_updated', handleGiftingHampersSync);
-    }
-    return () => {
-      if (typeof window !== 'undefined') {
-        window.removeEventListener('manish_gifting_hampers_updated', handleGiftingHampersSync);
+    window.addEventListener('manish_gifting_hampers_updated', handleGiftingHampersSync);
+
+    const storageHandler = (e) => {
+      if (e.key === 'manish_gifting_hampers_data' || (e.key === 'manish_sync_pulse' && e.newValue && e.newValue.startsWith('gifting_hampers_'))) {
+        handleGiftingHampersSync();
       }
+    };
+    window.addEventListener('storage', storageHandler);
+
+    let bc = null;
+    if (typeof window !== 'undefined' && 'BroadcastChannel' in window) {
+      try {
+        bc = new BroadcastChannel('manish_store_sync');
+        bc.onmessage = (msg) => {
+          if (msg?.data?.type === 'gifting_hampers') {
+            handleGiftingHampersSync();
+          }
+        };
+      } catch { /* noop */ }
+    }
+
+    return () => {
+      window.removeEventListener('manish_gifting_hampers_updated', handleGiftingHampersSync);
+      window.removeEventListener('storage', storageHandler);
+      if (bc) bc.close();
     };
   }, []);
 
@@ -742,153 +778,98 @@ export default function Home({
 
             {/* ==========================================================
                 DIWALI FESTIVE SHOWCASE & 4 COLLECTION SPOTLIGHT (Reference Screenshot Exact)
-                Left: 2x2 Grid (Tennis, Toe Ring, Pearl, Stone Collections)
-                Right: MANISH & CO Royal Diwali Festive Banner (Flat 15% Off)
+                Left: Dynamic Spotlight Collections Grid
+                Right: MANISH & CO Royal Diwali Festive Banner
                 ========================================================== */}
-            <div className="mt-8 sm:mt-12 grid grid-cols-1 lg:grid-cols-12 gap-6 sm:gap-8 items-stretch">
+            {(() => {
+              const cards = silverStoryData?.cards || [];
+              const banner = silverStoryData?.banner;
+              const hasCards = cards.length > 0;
+              const hasBanner = banner && !banner.hidden && !banner.deleted;
 
-              {/* Left Column: 2x2 Grid of 4 Collections */}
-              <div className="lg:col-span-6 grid grid-cols-2 gap-3.5 sm:gap-5">
+              if (!hasCards && !hasBanner) return null;
 
-                {/* 1. Tennis Collection */}
-                <button
-                  type="button"
-                  onClick={() => {
-                    triggerAudio('click');
-                    changeCategoryTab?.(silverStoryData?.cards?.[0]?.tab || 'bracelets');
-                    navigateTo('collections');
-                  }}
-                  className="flex flex-col items-center group cursor-pointer border-none bg-transparent text-left focus:outline-none"
-                >
-                  <div className="relative w-full aspect-[4/3] rounded-xl overflow-hidden bg-white border border-[#E6DFD3] shadow-xs group-hover:shadow-md transition-all duration-300">
-                    <img
-                      src={silverStoryData?.cards?.[0]?.img || colTennisWebp || colTennisPng}
-                      alt={silverStoryData?.cards?.[0]?.title || 'TENNIS COLLECTION'}
-                      className="w-full h-full object-cover object-center group-hover:scale-106 transition-transform duration-500 ease-out"
-                      loading="lazy"
-                    />
-                  </div>
-                  <div className="mt-2.5 sm:mt-3 text-center">
-                    <h3 className="text-xs sm:text-[13.5px] font-sans font-bold tracking-wider uppercase text-[#0D2B4E] group-hover:text-[#8C6D46] transition-colors leading-tight">
-                      {silverStoryData?.cards?.[0]?.title || 'TENNIS COLLECTION'}
-                    </h3>
-                    <p className="text-[10px] sm:text-[11px] font-sans text-[#8C6D46] font-medium tracking-wide mt-0.5">
-                      {silverStoryData?.cards?.[0]?.tagline || '♥ Sparkle On Repeat ♥'}
-                    </p>
-                  </div>
-                </button>
+              const fallbackImgs = [colTennisWebp, colToeRingWebp, colPearlWebp, colStoneWebp];
+              const fallbackPngs = [colTennisPng, colToeRingPng, colPearlPng, colStonePng];
 
-                {/* 2. Toe Ring Collection */}
-                <button
-                  type="button"
-                  onClick={() => {
-                    triggerAudio('click');
-                    changeCategoryTab?.(silverStoryData?.cards?.[1]?.tab || 'payal');
-                    navigateTo('collections');
-                  }}
-                  className="flex flex-col items-center group cursor-pointer border-none bg-transparent text-left focus:outline-none"
-                >
-                  <div className="relative w-full aspect-[4/3] rounded-xl overflow-hidden bg-white border border-[#E6DFD3] shadow-xs group-hover:shadow-md transition-all duration-300">
-                    <img
-                      src={silverStoryData?.cards?.[1]?.img || colToeRingWebp || colToeRingPng}
-                      alt={silverStoryData?.cards?.[1]?.title || 'TOE RING COLLECTION'}
-                      className="w-full h-full object-cover object-center group-hover:scale-106 transition-transform duration-500 ease-out"
-                      loading="lazy"
-                    />
-                  </div>
-                  <div className="mt-2.5 sm:mt-3 text-center">
-                    <h3 className="text-xs sm:text-[13.5px] font-sans font-bold tracking-wider uppercase text-[#0D2B4E] group-hover:text-[#8C6D46] transition-colors leading-tight">
-                      {silverStoryData?.cards?.[1]?.title || 'TOE RING COLLECTION'}
-                    </h3>
-                    <p className="text-[10px] sm:text-[11px] font-sans text-[#8C6D46] font-medium tracking-wide mt-0.5">
-                      {silverStoryData?.cards?.[1]?.tagline || '♥ Little Detail Big Mood ♥'}
-                    </p>
-                  </div>
-                </button>
+              return (
+                <div className="mt-8 sm:mt-12 grid grid-cols-1 lg:grid-cols-12 gap-6 sm:gap-8 items-stretch">
+                  {/* Left Column: Spotlight Collections Grid */}
+                  {hasCards && (
+                    <div className={`${hasBanner ? 'lg:col-span-6' : 'lg:col-span-12'} grid ${
+                      cards.length === 1 
+                        ? 'grid-cols-1 max-w-sm mx-auto w-full' 
+                        : cards.length === 2 && !hasBanner
+                        ? 'grid-cols-1 sm:grid-cols-2 max-w-2xl mx-auto w-full'
+                        : cards.length === 3 && !hasBanner
+                        ? 'grid-cols-1 sm:grid-cols-3 w-full'
+                        : cards.length >= 4 && !hasBanner
+                        ? 'grid-cols-2 sm:grid-cols-4 w-full'
+                        : 'grid-cols-2'
+                    } gap-3.5 sm:gap-5`}>
+                      {cards.map((card, idx) => {
+                        const imgSrc = card.img || fallbackImgs[idx % fallbackImgs.length] || fallbackPngs[idx % fallbackPngs.length];
+                        return (
+                          <button
+                            key={card.id || idx}
+                            type="button"
+                            onClick={() => {
+                              triggerAudio('click');
+                              changeCategoryTab?.(card.tab || 'bracelets');
+                              navigateTo('collections');
+                            }}
+                            className="flex flex-col items-center group cursor-pointer border-none bg-transparent text-left focus:outline-none"
+                          >
+                            <div className="relative w-full aspect-[4/3] rounded-xl overflow-hidden bg-white border border-[#E6DFD3] shadow-xs group-hover:shadow-md transition-all duration-300">
+                              <img
+                                src={imgSrc}
+                                alt={card.title || 'Collection'}
+                                className="w-full h-full object-cover object-center group-hover:scale-106 transition-transform duration-500 ease-out"
+                                loading="lazy"
+                              />
+                            </div>
+                            <div className="mt-2.5 sm:mt-3 text-center">
+                              <h3 className="text-xs sm:text-[13.5px] font-sans font-bold tracking-wider uppercase text-[#0D2B4E] group-hover:text-[#8C6D46] transition-colors leading-tight">
+                                {card.title}
+                              </h3>
+                              {card.tagline && (
+                                <p className="text-[10px] sm:text-[11px] font-sans text-[#8C6D46] font-medium tracking-wide mt-0.5">
+                                  {card.tagline}
+                                </p>
+                              )}
+                            </div>
+                          </button>
+                        );
+                      })}
+                    </div>
+                  )}
 
-                {/* 3. Pearl Collection */}
-                <button
-                  type="button"
-                  onClick={() => {
-                    triggerAudio('click');
-                    changeCategoryTab?.(silverStoryData?.cards?.[2]?.tab || 'necklaces');
-                    navigateTo('collections');
-                  }}
-                  className="flex flex-col items-center group cursor-pointer border-none bg-transparent text-left focus:outline-none"
-                >
-                  <div className="relative w-full aspect-[4/3] rounded-xl overflow-hidden bg-white border border-[#E6DFD3] shadow-xs group-hover:shadow-md transition-all duration-300">
-                    <img
-                      src={silverStoryData?.cards?.[2]?.img || colPearlWebp || colPearlPng}
-                      alt={silverStoryData?.cards?.[2]?.title || 'PEARL COLLECTION'}
-                      className="w-full h-full object-cover object-center group-hover:scale-106 transition-transform duration-500 ease-out"
-                      loading="lazy"
-                    />
-                  </div>
-                  <div className="mt-2.5 sm:mt-3 text-center">
-                    <h3 className="text-xs sm:text-[13.5px] font-sans font-bold tracking-wider uppercase text-[#0D2B4E] group-hover:text-[#8C6D46] transition-colors leading-tight">
-                      {silverStoryData?.cards?.[2]?.title || 'PEARL COLLECTION'}
-                    </h3>
-                    <p className="text-[10px] sm:text-[11px] font-sans text-[#8C6D46] font-medium tracking-wide mt-0.5">
-                      {silverStoryData?.cards?.[2]?.tagline || '♥ Timeless Elegance ♥'}
-                    </p>
-                  </div>
-                </button>
-
-                {/* 4. Stone Collection */}
-                <button
-                  type="button"
-                  onClick={() => {
-                    triggerAudio('click');
-                    changeCategoryTab?.(silverStoryData?.cards?.[3]?.tab || 'bracelets');
-                    navigateTo('collections');
-                  }}
-                  className="flex flex-col items-center group cursor-pointer border-none bg-transparent text-left focus:outline-none"
-                >
-                  <div className="relative w-full aspect-[4/3] rounded-xl overflow-hidden bg-white border border-[#E6DFD3] shadow-xs group-hover:shadow-md transition-all duration-300">
-                    <img
-                      src={silverStoryData?.cards?.[3]?.img || colStoneWebp || colStonePng}
-                      alt={silverStoryData?.cards?.[3]?.title || 'STONE COLLECTION'}
-                      className="w-full h-full object-cover object-center group-hover:scale-106 transition-transform duration-500 ease-out"
-                      loading="lazy"
-                    />
-                  </div>
-                  <div className="mt-2.5 sm:mt-3 text-center">
-                    <h3 className="text-xs sm:text-[13.5px] font-sans font-bold tracking-wider uppercase text-[#0D2B4E] group-hover:text-[#8C6D46] transition-colors leading-tight">
-                      {silverStoryData?.cards?.[3]?.title || 'STONE COLLECTION'}
-                    </h3>
-                    <p className="text-[10px] sm:text-[11px] font-sans text-[#8C6D46] font-medium tracking-wide mt-0.5">
-                      {silverStoryData?.cards?.[3]?.tagline || '♥ Add Some Shine ♥'}
-                    </p>
-                  </div>
-                </button>
-
-              </div>
-
-              {/* Right Column: MANISH & CO Diwali Festive Banner (Generated for brand) */}
-              <div className="lg:col-span-6 flex">
-                <button
-                  type="button"
-                  onClick={() => {
-                    triggerAudio('click');
-                    changeCategoryTab?.(silverStoryData?.banner?.tab || 'Collections');
-                    navigateTo('collections');
-                  }}
-                  className="relative w-full aspect-square sm:aspect-auto sm:min-h-[380px] rounded-2xl overflow-hidden border border-[#E6DFD3] shadow-md hover:shadow-xl transition-all duration-500 group cursor-pointer focus:outline-none bg-gradient-to-br from-[#FAF5EE] to-[#F2E8DA]"
-                  aria-label="Explore MANISH & CO Diwali Festive Offer"
-                >
-                  <img
-                    src={silverStoryData?.banner?.img || diwaliFestiveManishAndCoWebp || diwaliFestiveManishAndCoJpg}
-                    alt={silverStoryData?.banner?.title || "MANISH & CO Diwali Festive Season - Flat 15% Off On 925 Sterling Silver Jewellery"}
-                    className="w-full h-full object-cover object-center group-hover:scale-104 transition-transform duration-700 ease-out"
-                    loading="lazy"
-                  />
-
-                  {/* Subtle Interactive Shimmer Overlay */}
-                  <span className="absolute inset-0 w-full h-full bg-gradient-to-tr from-transparent via-white/10 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-500 pointer-events-none" />
-                </button>
-              </div>
-
-            </div>
+                  {/* Right Column: Festive Offer Banner */}
+                  {hasBanner && (
+                    <div className={`${hasCards ? 'lg:col-span-6' : 'lg:col-span-8 lg:col-start-3 max-w-xl mx-auto w-full'} flex`}>
+                      <button
+                        type="button"
+                        onClick={() => {
+                          triggerAudio('click');
+                          changeCategoryTab?.(banner.tab || 'Collections');
+                          navigateTo('collections');
+                        }}
+                        className="relative w-full aspect-square sm:aspect-auto sm:min-h-[380px] rounded-2xl overflow-hidden border border-[#E6DFD3] shadow-md hover:shadow-xl transition-all duration-500 group cursor-pointer focus:outline-none bg-gradient-to-br from-[#FAF5EE] to-[#F2E8DA]"
+                        aria-label="Explore MANISH & CO Festive Offer"
+                      >
+                        <img
+                          src={banner.img || diwaliFestiveManishAndCoWebp || diwaliFestiveManishAndCoJpg}
+                          alt={banner.title || "MANISH & CO Festive Season Offer"}
+                          className="w-full h-full object-cover object-center group-hover:scale-104 transition-transform duration-700 ease-out"
+                          loading="lazy"
+                        />
+                        <span className="absolute inset-0 w-full h-full bg-gradient-to-tr from-transparent via-white/10 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-500 pointer-events-none" />
+                      </button>
+                    </div>
+                  )}
+                </div>
+              );
+            })()}
 
           </div>
         </section>
@@ -946,6 +927,7 @@ export default function Home({
           SECTION: SILVER GIFTING HAMPERS
           Festive Gift Picks (Under 1499, Under 1999, Under 2999, Premium Gifts)
           ========================================================== */}
+        {giftingHampers && giftingHampers.length > 0 && (
         <section id="silver-gifting-hampers-section" className="w-full bg-[#FFFFFF] py-10 sm:py-14 border-b border-gray-100 select-none">
           <div className="max-w-[1536px] mx-auto px-4 sm:px-8 lg:px-12">
             
@@ -962,7 +944,15 @@ export default function Home({
               <div className="w-12 h-[2px] bg-[#6B4B2E] mx-auto mt-3 rounded-full" />
             </div>
 
-            <div className="grid grid-cols-2 md:grid-cols-4 gap-4 sm:gap-6 lg:gap-7">
+            <div className={`grid ${
+              giftingHampers.length === 1
+                ? 'grid-cols-1 max-w-xs mx-auto'
+                : giftingHampers.length === 2
+                ? 'grid-cols-2 max-w-xl mx-auto'
+                : giftingHampers.length === 3
+                ? 'grid-cols-1 sm:grid-cols-3 max-w-4xl mx-auto'
+                : 'grid-cols-2 md:grid-cols-4'
+            } gap-4 sm:gap-6 lg:gap-7`}>
               {giftingHampers.map((hamper) => (
                 <button
                   key={hamper.id}
@@ -1005,6 +995,7 @@ export default function Home({
 
           </div>
         </section>
+        )}
 
         {/* ==========================================================
           SECTION: CRAFT YOUR BESPOKE JEWELLERY BANNER (Edge-to-Edge)

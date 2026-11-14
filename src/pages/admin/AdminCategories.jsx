@@ -315,21 +315,102 @@ export default function AdminCategories({
 
 
   const handleResetSilverStory = async () => {
-
     if (window.confirm('Reset "Silver For Every Story" section to default showcase references?')) {
-
       setSilverStoryData(DEFAULT_SILVER_STORY_DATA);
-
-      await silverStoryService.saveStoryData(DEFAULT_SILVER_STORY_DATA);
-
+      await silverStoryService.resetDefaults();
       if (typeof setAdminNotification === 'function') {
-
         setAdminNotification({ message: '✓ Showcase reset to default reference items!', type: 'success' });
-
       }
-
     }
+  };
 
+  const handleDeleteStoryCard = async (cardIdx) => {
+    const cardToDelete = silverStoryData?.cards?.[cardIdx];
+    const cardTitle = cardToDelete?.title || `Card #${cardIdx + 1}`;
+    if (!window.confirm(`Delete Spotlight Card "${cardTitle}" from Homepage?`)) return;
+
+    const newCards = (silverStoryData?.cards || []).filter((_, i) => i !== cardIdx);
+    const updated = {
+      ...silverStoryData,
+      cards: newCards
+    };
+    setSilverStoryData(updated);
+    setActiveStoryCardIdx(Math.max(0, cardIdx - 1));
+    await silverStoryService.saveStoryData(updated);
+    if (typeof setAdminNotification === 'function') {
+      setAdminNotification({
+        message: `✓ Spotlight Card "${cardTitle}" deleted and updated live on Homepage!`,
+        type: 'success'
+      });
+    }
+  };
+
+  const handleAddStoryCard = async () => {
+    const currentCards = silverStoryData?.cards || [];
+    const newCard = {
+      id: `spotlight-${Date.now()}`,
+      title: `COLLECTION 0${currentCards.length + 1}`,
+      tagline: '♥ Pure Silver Sparkle ♥',
+      img: '',
+      tab: 'bracelets'
+    };
+    const updated = {
+      ...silverStoryData,
+      cards: [...currentCards, newCard]
+    };
+    setSilverStoryData(updated);
+    setActiveStoryCardIdx(currentCards.length);
+    await silverStoryService.saveStoryData(updated);
+    if (typeof setAdminNotification === 'function') {
+      setAdminNotification({
+        message: '✓ New Spotlight Card added! Customize its title and photo.',
+        type: 'success'
+      });
+    }
+  };
+
+  const handleToggleBanner = async () => {
+    const currentBanner = silverStoryData?.banner || {};
+    const isCurrentlyHidden = currentBanner.hidden || currentBanner.deleted;
+    const nextHidden = !isCurrentlyHidden;
+
+    if (!nextHidden && !window.confirm('Show Right Festive Offer Banner on Homepage?')) return;
+    if (nextHidden && !window.confirm('Delete / Hide Right Festive Offer Banner from Homepage?')) return;
+
+    const updated = {
+      ...silverStoryData,
+      banner: {
+        ...currentBanner,
+        hidden: nextHidden,
+        deleted: nextHidden
+      }
+    };
+    setSilverStoryData(updated);
+    await silverStoryService.saveStoryData(updated);
+    if (typeof setAdminNotification === 'function') {
+      setAdminNotification({
+        message: nextHidden
+          ? '✓ Festive Banner hidden from Homepage.'
+          : '✓ Festive Banner enabled on Homepage!',
+        type: 'success'
+      });
+    }
+  };
+
+  const handleResetCardImage = async (cardIdx) => {
+    const newCards = [...(silverStoryData?.cards || [])];
+    if (newCards[cardIdx]) {
+      newCards[cardIdx] = { ...newCards[cardIdx], img: '' };
+      const updated = { ...silverStoryData, cards: newCards };
+      setSilverStoryData(updated);
+      await silverStoryService.saveStoryData(updated);
+      if (typeof setAdminNotification === 'function') {
+        setAdminNotification({
+          message: `✓ Card #${cardIdx + 1} photo reset to default!`,
+          type: 'success'
+        });
+      }
+    }
   };
 
   // ─── SILVER GIFTING HAMPERS (FESTIVE) STATE & HANDLERS ─────────────
@@ -340,7 +421,7 @@ export default function AdminCategories({
 
   useEffect(() => {
     giftingHampersService.fetchRemoteHampers().then(res => {
-      if (res && res.length === 4) setGiftingHampers(res);
+      if (res) setGiftingHampers(res);
     });
 
     const handleHampersSync = () => {
@@ -395,6 +476,42 @@ export default function AdminCategories({
     }
   };
 
+  const handleDeleteHamper = async (index) => {
+    const hamperToDelete = giftingHampers?.[index];
+    const hamperTitle = hamperToDelete?.title || `Hamper #${index + 1}`;
+    if (!window.confirm(`Delete Gift Hamper "${hamperTitle}" from Homepage?`)) return;
+
+    const next = giftingHampers.filter((_, i) => i !== index);
+    setGiftingHampers(next);
+    await giftingHampersService.saveHampers(next);
+    if (typeof setAdminNotification === 'function') {
+      setAdminNotification({
+        message: `✓ Gift Hamper "${hamperTitle}" deleted and updated live on Homepage!`,
+        type: 'success'
+      });
+    }
+  };
+
+  const handleAddHamper = async () => {
+    const next = [
+      ...giftingHampers,
+      {
+        id: `hamper-${Date.now()}`,
+        title: `Gift Box Under ₹${(giftingHampers.length + 1) * 1000}`,
+        customImg: '',
+        path: '/collections'
+      }
+    ];
+    setGiftingHampers(next);
+    await giftingHampersService.saveHampers(next);
+    if (typeof setAdminNotification === 'function') {
+      setAdminNotification({
+        message: '✓ New gift hamper card added! Upload an image and title.',
+        type: 'success'
+      });
+    }
+  };
+
   const handleSaveHampers = async (e) => {
     if (e) e.preventDefault();
     setSavingHampers(true);
@@ -423,7 +540,7 @@ export default function AdminCategories({
   const handleResetHampers = async () => {
     if (window.confirm('Reset "Silver Gifting Hampers" section to default images and prices?')) {
       setGiftingHampers(DEFAULT_GIFTING_HAMPERS);
-      await giftingHampersService.saveHampers(DEFAULT_GIFTING_HAMPERS);
+      await giftingHampersService.resetHampers();
       if (typeof setAdminNotification === 'function') {
         setAdminNotification({ message: '✓ Hampers reset to default!', type: 'success' });
       }
@@ -1463,96 +1580,172 @@ export default function AdminCategories({
                 "Silver For Every Story" Spotlight &amp; Banner Management
               </h3>
               <p className="text-xs text-zinc-500 dark:text-zinc-400 mt-1 max-w-2xl leading-relaxed">
-                Yaha se aap Homepage ke 4 Spotlight Cards (Tennis, Toe Ring, Pearl, Stone) aur right-side wale Diwali Festive Offer Banner ki photo, title, tagline aur link live update kar sakte hain.
+                Yaha se aap Homepage ke Spotlight Cards aur right-side wale Festive Offer Banner ki photo, title, tagline aur link live update ya delete kar sakte hain. Changes storefront pe turant reflect honge.
               </p>
             </div>
             
-            <button
-              type="button"
-              onClick={handleSaveSilverStory}
-              disabled={savingSilverStory}
-              className="px-6 py-3 bg-[#15151A] hover:bg-black text-white dark:bg-white dark:text-zinc-900 font-sans text-xs font-bold uppercase tracking-wider rounded-xl transition-all shadow-md cursor-pointer flex items-center gap-2 shrink-0 disabled:opacity-50"
-            >
-              {saveSuccess ? (
-                <>
-                  <Check className="w-4 h-4 text-emerald-400" />
-                  <span className="text-emerald-400 font-bold">Published Live!</span>
-                </>
-              ) : savingSilverStory ? (
-                <>
-                  <RefreshCw className="w-4 h-4 animate-spin text-[#C8A646]" />
-                  <span>Saving...</span>
-                </>
-              ) : (
-                <>
-                  <Check className="w-4 h-4 text-[#C8A646]" />
-                  <span>Save &amp; Publish Live</span>
-                </>
-              )}
-            </button>
+            <div className="flex flex-wrap items-center gap-2.5">
+              <button
+                type="button"
+                onClick={handleAddStoryCard}
+                className="px-4 py-2.5 bg-emerald-50 hover:bg-emerald-100 text-emerald-700 dark:bg-emerald-950/40 dark:text-emerald-300 font-sans text-xs font-bold rounded-xl transition-all shadow-xs cursor-pointer flex items-center gap-1.5 border border-emerald-200 dark:border-emerald-800"
+              >
+                <Plus className="w-4 h-4 text-emerald-600 dark:text-emerald-400" />
+                <span>Add Card</span>
+              </button>
+
+              <button
+                type="button"
+                onClick={handleResetSilverStory}
+                className="px-4 py-2.5 bg-zinc-100 hover:bg-zinc-200 dark:bg-zinc-800 dark:hover:bg-zinc-700 text-zinc-800 dark:text-zinc-200 font-sans text-xs font-bold rounded-xl transition-all shadow-xs cursor-pointer flex items-center gap-1.5"
+                title="Reset to 4 default cards"
+              >
+                <RotateCcw className="w-4 h-4 text-amber-500" />
+                <span>Reset Defaults</span>
+              </button>
+
+              <button
+                type="button"
+                onClick={handleSaveSilverStory}
+                disabled={savingSilverStory}
+                className="px-5 py-2.5 bg-[#15151A] hover:bg-black text-white dark:bg-white dark:text-zinc-900 font-sans text-xs font-bold uppercase tracking-wider rounded-xl transition-all shadow-md cursor-pointer flex items-center gap-2 shrink-0 disabled:opacity-50"
+              >
+                {saveSuccess ? (
+                  <>
+                    <Check className="w-4 h-4 text-emerald-400" />
+                    <span className="text-emerald-400 font-bold">Published Live!</span>
+                  </>
+                ) : savingSilverStory ? (
+                  <>
+                    <RefreshCw className="w-4 h-4 animate-spin text-[#C8A646]" />
+                    <span>Saving...</span>
+                  </>
+                ) : (
+                  <>
+                    <Check className="w-4 h-4 text-[#C8A646]" />
+                    <span>Save Live</span>
+                  </>
+                )}
+              </button>
+            </div>
           </div>
 
           <div className="grid grid-cols-1 lg:grid-cols-12 gap-6 items-start">
             
-            {/* LEFT COLUMN: 4 Spotlight Cards Editor (7 Cols) */}
+            {/* LEFT COLUMN: Spotlight Cards Editor (7 Cols) */}
             <div className="lg:col-span-7 bg-white dark:bg-[#15151A] border border-solid border-zinc-200 dark:border-zinc-800 rounded-2xl p-6 sm:p-7 space-y-6 shadow-xs">
               
               <div className="border-b border-zinc-100 dark:border-zinc-850 pb-3 flex items-center justify-between">
                 <div>
                   <h4 className="text-sm font-black uppercase tracking-wider text-zinc-900 dark:text-[#E6C687] flex items-center gap-2">
                     <Sparkles className="w-4 h-4 text-[#C8A646]" />
-                    4 Spotlight Cards (2x2 Grid)
+                    Spotlight Cards ({(silverStoryData?.cards || []).length} Active)
                   </h4>
                   <span className="text-[10px] text-zinc-400 font-semibold">
-                    Select a card below to edit its photo, headline and linked collection.
+                    Select a card to edit, upload a photo, or click Delete to remove it from the Homepage.
                   </span>
                 </div>
+                <button
+                  type="button"
+                  onClick={handleAddStoryCard}
+                  className="px-3 py-1.5 bg-emerald-50 hover:bg-emerald-100 text-emerald-700 dark:bg-emerald-950/40 dark:text-emerald-300 rounded-lg text-xs font-bold flex items-center gap-1 cursor-pointer border border-emerald-200 dark:border-emerald-800"
+                >
+                  <Plus className="w-3.5 h-3.5" />
+                  <span>Add Card</span>
+                </button>
               </div>
 
-              {/* Sub-Tabs for the 4 Cards */}
-              <div className="grid grid-cols-2 sm:grid-cols-4 gap-2">
-                {(silverStoryData?.cards || []).map((card, idx) => {
-                  const isSelected = activeStoryCardIdx === idx;
-                  const fallbackImg = [colTennisWebp, colToeRingWebp, colPearlWebp, colStoneWebp][idx] || colTennisWebp;
-                  return (
+              {/* Sub-Tabs for Cards */}
+              {(silverStoryData?.cards || []).length === 0 ? (
+                <div className="p-8 text-center bg-zinc-50 dark:bg-zinc-900 rounded-xl border border-dashed border-zinc-300 dark:border-zinc-700 space-y-2">
+                  <p className="text-xs font-bold text-zinc-600 dark:text-zinc-300">All spotlight cards have been deleted.</p>
+                  <p className="text-[11px] text-zinc-400">Click below to add a card or restore the 4 default cards.</p>
+                  <div className="flex items-center justify-center gap-2 pt-2">
                     <button
-                      key={card.id || idx}
                       type="button"
-                      onClick={() => setActiveStoryCardIdx(idx)}
-                      className={`p-2.5 rounded-xl border text-left flex items-center gap-2.5 transition-all cursor-pointer ${
-                        isSelected
-                          ? 'border-zinc-900 dark:border-white ring-2 ring-zinc-900/10 bg-zinc-50 dark:bg-zinc-800/80 shadow-xs'
-                          : 'border-zinc-200 dark:border-zinc-800 hover:border-zinc-400'
-                      }`}
+                      onClick={handleAddStoryCard}
+                      className="px-3 py-1.5 bg-emerald-600 hover:bg-emerald-700 text-white rounded-lg text-xs font-bold cursor-pointer"
                     >
-                      <div className="w-9 h-9 rounded-lg overflow-hidden bg-zinc-100 border border-zinc-200 shrink-0">
-                        <img 
-                          src={card.img || fallbackImg} 
-                          alt={card.title} 
-                          className="w-full h-full object-cover" 
-                        />
-                      </div>
-                      <div className="min-w-0">
-                        <span className="text-[9px] font-bold text-zinc-400 block uppercase tracking-wider">
-                          Card 0{idx + 1}
-                        </span>
-                        <span className="text-[11px] font-bold text-zinc-800 dark:text-zinc-200 truncate block">
-                          {card.title?.replace(' COLLECTION', '') || `Card ${idx + 1}`}
-                        </span>
-                      </div>
+                      + Add New Card
                     </button>
-                  );
-                })}
-              </div>
+                    <button
+                      type="button"
+                      onClick={handleResetSilverStory}
+                      className="px-3 py-1.5 bg-zinc-200 dark:bg-zinc-700 text-zinc-800 dark:text-zinc-200 rounded-lg text-xs font-bold cursor-pointer"
+                    >
+                      Restore 4 Defaults
+                    </button>
+                  </div>
+                </div>
+              ) : (
+                <div className="grid grid-cols-2 sm:grid-cols-4 gap-2">
+                  {(silverStoryData?.cards || []).map((card, idx) => {
+                    const isSelected = activeStoryCardIdx === idx;
+                    const fallbackImg = [colTennisWebp, colToeRingWebp, colPearlWebp, colStoneWebp][idx] || colTennisWebp;
+                    return (
+                      <button
+                        key={card.id || idx}
+                        type="button"
+                        onClick={() => setActiveStoryCardIdx(idx)}
+                        className={`p-2.5 rounded-xl border text-left flex items-center gap-2.5 transition-all cursor-pointer relative group ${
+                          isSelected
+                            ? 'border-zinc-900 dark:border-white ring-2 ring-zinc-900/10 bg-zinc-50 dark:bg-zinc-800/80 shadow-xs'
+                            : 'border-zinc-200 dark:border-zinc-800 hover:border-zinc-400'
+                        }`}
+                      >
+                        <div className="w-9 h-9 rounded-lg overflow-hidden bg-zinc-100 border border-zinc-200 shrink-0">
+                          <img 
+                            src={card.img || fallbackImg} 
+                            alt={card.title} 
+                            className="w-full h-full object-cover" 
+                          />
+                        </div>
+                        <div className="min-w-0 flex-1">
+                          <span className="text-[9px] font-bold text-zinc-400 block uppercase tracking-wider">
+                            Card 0{idx + 1}
+                          </span>
+                          <span className="text-[11px] font-bold text-zinc-800 dark:text-zinc-200 truncate block">
+                            {card.title?.replace(' COLLECTION', '') || `Card ${idx + 1}`}
+                          </span>
+                        </div>
+                      </button>
+                    );
+                  })}
+                </div>
+              )}
 
               {/* Active Card Edit Form */}
               {(() => {
-                const currentCard = silverStoryData?.cards?.[activeStoryCardIdx] || {};
-                const fallbackImg = [colTennisWebp, colToeRingWebp, colPearlWebp, colStoneWebp][activeStoryCardIdx] || colTennisWebp;
+                const cards = silverStoryData?.cards || [];
+                if (cards.length === 0) return null;
+                const safeIdx = Math.min(activeStoryCardIdx, cards.length - 1);
+                const currentCard = cards[safeIdx] || {};
+                const fallbackImg = [colTennisWebp, colToeRingWebp, colPearlWebp, colStoneWebp][safeIdx] || colTennisWebp;
 
                 return (
                   <div className="space-y-4 pt-2 border-t border-zinc-100 dark:border-zinc-850">
                     
+                    {/* Card Header with Delete Option */}
+                    <div className="flex items-center justify-between p-3 bg-zinc-50 dark:bg-zinc-900/80 rounded-xl border border-zinc-200 dark:border-zinc-750">
+                      <div>
+                        <span className="text-[10px] font-bold text-zinc-400 uppercase tracking-wider block">
+                          Card #{safeIdx + 1} of {cards.length}
+                        </span>
+                        <span className="text-xs font-bold text-zinc-800 dark:text-zinc-200">
+                          {currentCard.title || 'Untitled Card'}
+                        </span>
+                      </div>
+                      <button
+                        type="button"
+                        onClick={() => handleDeleteStoryCard(safeIdx)}
+                        className="inline-flex items-center gap-1.5 px-3 py-1.5 bg-rose-50 hover:bg-rose-100 text-rose-700 dark:bg-rose-950/40 dark:hover:bg-rose-900/60 dark:text-rose-300 text-xs font-bold rounded-lg transition-colors cursor-pointer border border-rose-200 dark:border-rose-800"
+                        title="Delete this spotlight card from Homepage"
+                      >
+                        <Trash2 className="w-3.5 h-3.5 text-rose-500" />
+                        <span>Delete Card</span>
+                      </button>
+                    </div>
+
                     {/* Title & Tagline Inputs */}
                     <div className="grid grid-cols-1 sm:grid-cols-2 gap-3.5">
                       <div className="space-y-1.5">
@@ -1567,7 +1760,7 @@ export default function AdminCategories({
                             const val = e.target.value;
                             setSilverStoryData(prev => {
                               const newCards = [...prev.cards];
-                              newCards[activeStoryCardIdx] = { ...newCards[activeStoryCardIdx], title: val };
+                              newCards[safeIdx] = { ...newCards[safeIdx], title: val };
                               return { ...prev, cards: newCards };
                             });
                           }}
@@ -1587,7 +1780,7 @@ export default function AdminCategories({
                             const val = e.target.value;
                             setSilverStoryData(prev => {
                               const newCards = [...prev.cards];
-                              newCards[activeStoryCardIdx] = { ...newCards[activeStoryCardIdx], tagline: val };
+                              newCards[safeIdx] = { ...newCards[safeIdx], tagline: val };
                               return { ...prev, cards: newCards };
                             });
                           }}
@@ -1608,7 +1801,7 @@ export default function AdminCategories({
                           const val = e.target.value;
                           setSilverStoryData(prev => {
                             const newCards = [...prev.cards];
-                            newCards[activeStoryCardIdx] = { ...newCards[activeStoryCardIdx], tab: val };
+                            newCards[safeIdx] = { ...newCards[safeIdx], tab: val };
                             return { ...prev, cards: newCards };
                           });
                         }}
@@ -1639,7 +1832,7 @@ export default function AdminCategories({
                           <input
                             type="file"
                             accept="image/*"
-                            onChange={(e) => handleCardImageUpload(e, activeStoryCardIdx)}
+                            onChange={(e) => handleCardImageUpload(e, safeIdx)}
                             className="hidden"
                           />
                         </label>
@@ -1652,13 +1845,23 @@ export default function AdminCategories({
                             const val = e.target.value;
                             setSilverStoryData(prev => {
                               const newCards = [...prev.cards];
-                              newCards[activeStoryCardIdx] = { ...newCards[activeStoryCardIdx], img: val };
+                              newCards[safeIdx] = { ...newCards[safeIdx], img: val };
                               return { ...prev, cards: newCards };
                             });
                           }}
                           className="flex-1 h-10 px-3.5 bg-zinc-50 dark:bg-zinc-900 border border-zinc-200 dark:border-zinc-750 rounded-xl text-xs font-mono focus:outline-none focus:border-zinc-900"
                         />
                       </div>
+
+                      {currentCard.img && (
+                        <button
+                          type="button"
+                          onClick={() => handleResetCardImage(safeIdx)}
+                          className="text-[11px] font-semibold text-rose-500 hover:text-rose-700 text-left cursor-pointer transition-colors block mt-1"
+                        >
+                          ✕ Remove Uploaded Photo (Use Default)
+                        </button>
+                      )}
 
                       {cardUploadProgress && (
                         <p className="text-[11px] font-bold text-amber-600 dark:text-amber-400 mt-1">
@@ -1697,18 +1900,49 @@ export default function AdminCategories({
 
             </div>
 
-            {/* RIGHT COLUMN: Right Diwali Festive Offer Banner (5 Cols) */}
+            {/* RIGHT COLUMN: Festive Offer Banner (5 Cols) */}
             <div className="lg:col-span-5 bg-white dark:bg-[#15151A] border border-solid border-zinc-200 dark:border-zinc-800 rounded-2xl p-6 sm:p-7 space-y-5 shadow-xs">
               
-              <div className="border-b border-zinc-100 dark:border-zinc-850 pb-3">
-                <h4 className="text-sm font-black uppercase tracking-wider text-zinc-900 dark:text-[#E6C687] flex items-center gap-2">
-                  <Tag className="w-4 h-4 text-[#C8A646]" />
-                  Right Festive Showcase Banner
-                </h4>
-                <span className="text-[10px] text-zinc-400 font-semibold">
-                  Large square offer banner displayed on the right of the 4 cards.
-                </span>
+              <div className="border-b border-zinc-100 dark:border-zinc-850 pb-3 flex items-center justify-between">
+                <div>
+                  <h4 className="text-sm font-black uppercase tracking-wider text-zinc-900 dark:text-[#E6C687] flex items-center gap-2">
+                    <Tag className="w-4 h-4 text-[#C8A646]" />
+                    Right Festive Showcase Banner
+                  </h4>
+                  <span className="text-[10px] text-zinc-400 font-semibold">
+                    Offer banner displayed on the right of spotlight cards.
+                  </span>
+                </div>
+                <button
+                  type="button"
+                  onClick={handleToggleBanner}
+                  className={`inline-flex items-center gap-1.5 px-3 py-1.5 text-xs font-bold rounded-lg transition-colors cursor-pointer border ${
+                    silverStoryData?.banner?.hidden || silverStoryData?.banner?.deleted
+                      ? 'bg-emerald-50 text-emerald-700 border-emerald-200 hover:bg-emerald-100 dark:bg-emerald-950/40 dark:text-emerald-300 dark:border-emerald-800'
+                      : 'bg-rose-50 text-rose-700 border-rose-200 hover:bg-rose-100 dark:bg-rose-950/40 dark:text-rose-300 dark:border-rose-800'
+                  }`}
+                  title={silverStoryData?.banner?.hidden || silverStoryData?.banner?.deleted ? "Enable Banner on Homepage" : "Delete / Hide Banner from Homepage"}
+                >
+                  {silverStoryData?.banner?.hidden || silverStoryData?.banner?.deleted ? (
+                    <>
+                      <Eye className="w-3.5 h-3.5" />
+                      <span>Enable Banner</span>
+                    </>
+                  ) : (
+                    <>
+                      <Trash2 className="w-3.5 h-3.5 text-rose-500" />
+                      <span>Delete / Hide Banner</span>
+                    </>
+                  )}
+                </button>
               </div>
+
+              {/* Banner Status Alert */}
+              {(silverStoryData?.banner?.hidden || silverStoryData?.banner?.deleted) && (
+                <div className="p-3 bg-amber-50 dark:bg-amber-950/40 text-amber-800 dark:text-amber-200 rounded-xl text-xs font-medium border border-amber-200 dark:border-amber-800">
+                  Banner is currently <strong>Hidden / Deleted</strong> from the Homepage. Click "Enable Banner" to restore it.
+                </div>
+              )}
 
               {/* Banner Title */}
               <div className="space-y-1.5">
@@ -1848,170 +2082,237 @@ export default function AdminCategories({
               </span>
               <h3 className="text-lg sm:text-xl font-black text-zinc-900 dark:text-white tracking-tight flex items-center gap-2">
                 <Gift className="w-5 h-5 text-emerald-500" />
-                Silver Gifting Hampers Manager
+                Silver Gifting Hampers Manager ({giftingHampers.length} Active)
               </h3>
               <p className="text-xs text-zinc-500 dark:text-zinc-400 mt-1 max-w-2xl">
-                Update the 4 Festive Gift Pick cards (Under ₹1499, Under ₹1999, Under ₹2999, Premium Gifts) displayed on your Homepage. Upload custom images or customize landing links.
+                Homepage par show hone wale Gift Hamper Cards ko yaha se add, edit, photo upload aur delete kar sakte hain. Delete karne par user panel se card turant gayab ho jayega.
               </p>
             </div>
             
-            <button
-              type="button"
-              onClick={handleSaveHampers}
-              disabled={savingHampers}
-              className="inline-flex items-center gap-2 px-6 py-3 rounded-xl bg-[#0D2B4E] hover:bg-[#081B32] text-white font-bold text-xs shadow-md hover:shadow-lg transition-all cursor-pointer disabled:opacity-50 shrink-0"
-            >
-              {savingHampers ? (
-                <>
-                  <RefreshCw className="w-4 h-4 animate-spin text-[#E6DFD3]" />
-                  <span>Saving Live...</span>
-                </>
-              ) : hampersSaveSuccess ? (
-                <>
-                  <Check className="w-4 h-4 text-emerald-400" />
-                  <span>Saved Live to Website!</span>
-                </>
-              ) : (
-                <>
-                  <Sparkles className="w-4 h-4 text-[#E6DFD3]" />
-                  <span>Save Hampers Live</span>
-                </>
-              )}
-            </button>
+            <div className="flex flex-wrap items-center gap-2.5">
+              <button
+                type="button"
+                onClick={handleAddHamper}
+                className="px-4 py-2.5 bg-emerald-50 hover:bg-emerald-100 text-emerald-700 dark:bg-emerald-950/40 dark:text-emerald-300 font-sans text-xs font-bold rounded-xl transition-all shadow-xs cursor-pointer flex items-center gap-1.5 border border-emerald-200 dark:border-emerald-800"
+              >
+                <Plus className="w-4 h-4 text-emerald-600 dark:text-emerald-400" />
+                <span>Add Hamper</span>
+              </button>
+
+              <button
+                type="button"
+                onClick={handleResetHampers}
+                className="px-4 py-2.5 bg-zinc-100 hover:bg-zinc-200 dark:bg-zinc-800 dark:hover:bg-zinc-750 text-zinc-800 dark:text-zinc-200 font-sans text-xs font-bold rounded-xl transition-all shadow-xs cursor-pointer flex items-center gap-1.5"
+                title="Reset to 4 default hampers"
+              >
+                <RotateCcw className="w-4 h-4 text-amber-500" />
+                <span>Reset Defaults</span>
+              </button>
+
+              <button
+                type="button"
+                onClick={handleSaveHampers}
+                disabled={savingHampers}
+                className="inline-flex items-center gap-2 px-5 py-2.5 rounded-xl bg-[#0D2B4E] hover:bg-[#081B32] text-white font-bold text-xs shadow-md hover:shadow-lg transition-all cursor-pointer disabled:opacity-50 shrink-0"
+              >
+                {savingHampers ? (
+                  <>
+                    <RefreshCw className="w-4 h-4 animate-spin text-[#E6DFD3]" />
+                    <span>Saving...</span>
+                  </>
+                ) : hampersSaveSuccess ? (
+                  <>
+                    <Check className="w-4 h-4 text-emerald-400" />
+                    <span>Saved Live!</span>
+                  </>
+                ) : (
+                  <>
+                    <Sparkles className="w-4 h-4 text-[#E6DFD3]" />
+                    <span>Save Hampers Live</span>
+                  </>
+                )}
+              </button>
+            </div>
           </div>
 
-          {/* 4 Hampers Grid */}
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
-            {giftingHampers.map((hamper, idx) => {
-              const activeImg = hamper.customImg || hamper.imgWebp || hamper.imgPng;
-              return (
-                <div 
-                  key={hamper.id || idx}
-                  className="bg-white dark:bg-[#15151A] border border-zinc-200 dark:border-zinc-800 rounded-2xl p-5 flex flex-col space-y-4 shadow-xs hover:border-[#0D2B4E]/50 transition-all text-left"
+          {/* Hampers Grid / Empty State */}
+          {giftingHampers.length === 0 ? (
+            <div className="p-10 text-center bg-white dark:bg-[#15151A] rounded-2xl border border-dashed border-zinc-300 dark:border-zinc-700 space-y-3">
+              <Gift className="w-12 h-12 text-zinc-400 mx-auto" />
+              <h4 className="text-sm font-bold text-zinc-800 dark:text-zinc-200">No Gifting Hampers Displayed on Homepage</h4>
+              <p className="text-xs text-zinc-500 dark:text-zinc-400 max-w-md mx-auto">
+                Aapne sare gift hampers delete kar diye hain. Website ke storefront par Silver Gifting Hampers section abhi hidden hai.
+              </p>
+              <div className="flex items-center justify-center gap-3 pt-2">
+                <button
+                  type="button"
+                  onClick={handleAddHamper}
+                  className="px-4 py-2 bg-emerald-600 hover:bg-emerald-700 text-white rounded-xl text-xs font-bold cursor-pointer transition-colors"
                 >
-                  <div className="flex items-center justify-between">
-                    <span className="text-xs font-bold text-zinc-500 uppercase tracking-wider">
-                      Tier #{idx + 1}
-                    </span>
-                    {hamper.customImg ? (
-                      <span className="text-[10px] font-bold px-2 py-0.5 rounded-full bg-emerald-100 text-emerald-800 dark:bg-emerald-900/40 dark:text-emerald-300">
-                        Custom Image
+                  + Add New Gift Hamper
+                </button>
+                <button
+                  type="button"
+                  onClick={handleResetHampers}
+                  className="px-4 py-2 bg-[#0D2B4E] hover:bg-[#081B32] text-white rounded-xl text-xs font-bold cursor-pointer transition-colors"
+                >
+                  Restore 4 Default Hampers
+                </button>
+              </div>
+            </div>
+          ) : (
+            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
+              {giftingHampers.map((hamper, idx) => {
+                const activeImg = hamper.customImg || hamper.imgWebp || hamper.imgPng;
+                return (
+                  <div 
+                    key={hamper.id || idx}
+                    className="bg-white dark:bg-[#15151A] border border-zinc-200 dark:border-zinc-800 rounded-2xl p-5 flex flex-col space-y-4 shadow-xs hover:border-[#0D2B4E]/50 transition-all text-left relative"
+                  >
+                    <div className="flex items-center justify-between">
+                      <span className="text-xs font-bold text-zinc-500 uppercase tracking-wider">
+                        Tier #{idx + 1}
                       </span>
-                    ) : (
-                      <span className="text-[10px] font-bold px-2 py-0.5 rounded-full bg-zinc-100 text-zinc-600 dark:bg-zinc-800 dark:text-zinc-400">
-                        Default Image
-                      </span>
-                    )}
-                  </div>
-
-                  {/* Square Image Preview */}
-                  <div className="relative w-full aspect-square rounded-xl overflow-hidden bg-gray-100 border border-zinc-200 dark:border-zinc-700">
-                    <img
-                      src={activeImg}
-                      alt={hamper.title}
-                      className="w-full h-full object-cover"
-                    />
-                  </div>
-
-                  {/* Upload Actions */}
-                  <div className="space-y-2">
-                    <label className="block text-[11px] font-bold text-zinc-700 dark:text-zinc-300">
-                      Upload New Image
-                    </label>
-                    <div className="relative">
-                      <input
-                        type="file"
-                        accept="image/*"
-                        onChange={(e) => handleHamperImageUpload(e, idx)}
-                        className="absolute inset-0 opacity-0 w-full h-full cursor-pointer z-10"
-                      />
-                      <div className="w-full py-2.5 px-3 rounded-xl border border-dashed border-zinc-300 dark:border-zinc-700 bg-zinc-50 dark:bg-zinc-850 hover:bg-zinc-100 dark:hover:bg-zinc-800 text-center transition-colors flex items-center justify-center gap-2 cursor-pointer">
-                        <ImageIcon className="w-4 h-4 text-zinc-500" />
-                        <span className="text-xs font-semibold text-zinc-700 dark:text-zinc-200">
-                          Choose File...
-                        </span>
+                      <div className="flex items-center gap-2">
+                        {hamper.customImg ? (
+                          <span className="text-[10px] font-bold px-2 py-0.5 rounded-full bg-emerald-100 text-emerald-800 dark:bg-emerald-900/40 dark:text-emerald-300">
+                            Custom Image
+                          </span>
+                        ) : (
+                          <span className="text-[10px] font-bold px-2 py-0.5 rounded-full bg-zinc-100 text-zinc-600 dark:bg-zinc-800 dark:text-zinc-400">
+                            Default Image
+                          </span>
+                        )}
+                        <button
+                          type="button"
+                          onClick={() => handleDeleteHamper(idx)}
+                          className="p-1 rounded-md text-rose-500 hover:text-rose-700 hover:bg-rose-50 dark:hover:bg-rose-950/50 transition-colors cursor-pointer"
+                          title="Delete this hamper"
+                        >
+                          <Trash2 className="w-4 h-4" />
+                        </button>
                       </div>
                     </div>
-                  </div>
 
-                  {/* Or Custom URL */}
-                  <div>
-                    <label className="block text-[11px] font-bold text-zinc-700 dark:text-zinc-300 mb-1">
-                      Or Image URL
-                    </label>
-                    <input
-                      type="url"
-                      placeholder="https://..."
-                      value={hamper.customImg || ''}
-                      onChange={(e) => {
-                        const val = e.target.value;
-                        setGiftingHampers(prev => {
-                          const next = [...prev];
-                          next[idx] = { ...next[idx], customImg: val };
-                          return next;
-                        });
-                      }}
-                      onBlur={async () => {
-                        await giftingHampersService.saveHampers(giftingHampers);
-                      }}
-                      className="w-full px-3 py-2 text-xs rounded-xl border border-zinc-200 dark:border-zinc-700 bg-white dark:bg-zinc-900 text-zinc-900 dark:text-white focus:outline-none focus:border-[#0D2B4E]"
-                    />
-                  </div>
+                    {/* Square Image Preview */}
+                    <div className="relative w-full aspect-square rounded-xl overflow-hidden bg-gray-100 border border-zinc-200 dark:border-zinc-700">
+                      <img
+                        src={activeImg}
+                        alt={hamper.title}
+                        className="w-full h-full object-cover"
+                      />
+                    </div>
 
-                  {/* Clear Custom Image */}
-                  {hamper.customImg && (
+                    {/* Upload Actions */}
+                    <div className="space-y-2">
+                      <label className="block text-[11px] font-bold text-zinc-700 dark:text-zinc-300">
+                        Upload New Image
+                      </label>
+                      <div className="relative">
+                        <input
+                          type="file"
+                          accept="image/*"
+                          onChange={(e) => handleHamperImageUpload(e, idx)}
+                          className="absolute inset-0 opacity-0 w-full h-full cursor-pointer z-10"
+                        />
+                        <div className="w-full py-2.5 px-3 rounded-xl border border-dashed border-zinc-300 dark:border-zinc-700 bg-zinc-50 dark:bg-zinc-850 hover:bg-zinc-100 dark:hover:bg-zinc-800 text-center transition-colors flex items-center justify-center gap-2 cursor-pointer">
+                          <ImageIcon className="w-4 h-4 text-zinc-500" />
+                          <span className="text-xs font-semibold text-zinc-700 dark:text-zinc-200">
+                            Choose File...
+                          </span>
+                        </div>
+                      </div>
+                    </div>
+
+                    {/* Or Custom URL */}
+                    <div>
+                      <label className="block text-[11px] font-bold text-zinc-700 dark:text-zinc-300 mb-1">
+                        Or Image URL
+                      </label>
+                      <input
+                        type="url"
+                        placeholder="https://..."
+                        value={hamper.customImg || ''}
+                        onChange={(e) => {
+                          const val = e.target.value;
+                          setGiftingHampers(prev => {
+                            const next = [...prev];
+                            next[idx] = { ...next[idx], customImg: val };
+                            return next;
+                          });
+                        }}
+                        onBlur={async () => {
+                          await giftingHampersService.saveHampers(giftingHampers);
+                        }}
+                        className="w-full px-3 py-2 text-xs rounded-xl border border-zinc-200 dark:border-zinc-700 bg-white dark:bg-zinc-900 text-zinc-900 dark:text-white focus:outline-none focus:border-[#0D2B4E]"
+                      />
+                    </div>
+
+                    {/* Clear Custom Image */}
+                    {hamper.customImg && (
+                      <button
+                        type="button"
+                        onClick={() => handleResetSingleHamperImage(idx)}
+                        className="text-[11px] font-semibold text-rose-500 hover:text-rose-700 text-left cursor-pointer transition-colors"
+                      >
+                        ✕ Reset to Default Image
+                      </button>
+                    )}
+
+                    {/* Title & Link */}
+                    <div className="pt-2 border-t border-zinc-100 dark:border-zinc-800 space-y-2">
+                      <div>
+                        <label className="block text-[10px] font-bold text-zinc-500 uppercase tracking-wider mb-1">
+                          Title
+                        </label>
+                        <input
+                          type="text"
+                          value={hamper.title || ''}
+                          onChange={(e) => {
+                            const val = e.target.value;
+                            setGiftingHampers(prev => {
+                              const next = [...prev];
+                              next[idx] = { ...next[idx], title: val };
+                              return next;
+                            });
+                          }}
+                          className="w-full px-3 py-2 text-xs font-semibold rounded-xl border border-zinc-200 dark:border-zinc-700 bg-white dark:bg-zinc-900 text-zinc-900 dark:text-white focus:outline-none focus:border-[#0D2B4E]"
+                        />
+                      </div>
+                      <div>
+                        <label className="block text-[10px] font-bold text-zinc-500 uppercase tracking-wider mb-1">
+                          Link Path
+                        </label>
+                        <input
+                          type="text"
+                          value={hamper.path || ''}
+                          onChange={(e) => {
+                            const val = e.target.value;
+                            setGiftingHampers(prev => {
+                              const next = [...prev];
+                              next[idx] = { ...next[idx], path: val };
+                              return next;
+                            });
+                          }}
+                          className="w-full px-3 py-1.5 text-[11px] font-mono rounded-xl border border-zinc-200 dark:border-zinc-700 bg-white dark:bg-zinc-900 text-zinc-700 dark:text-zinc-300 focus:outline-none focus:border-[#0D2B4E]"
+                        />
+                      </div>
+                    </div>
+
+                    {/* Prominent Red Delete Button at bottom */}
                     <button
                       type="button"
-                      onClick={() => handleResetSingleHamperImage(idx)}
-                      className="text-[11px] font-semibold text-rose-500 hover:text-rose-700 text-left cursor-pointer transition-colors"
+                      onClick={() => handleDeleteHamper(idx)}
+                      className="w-full py-2 px-3 bg-rose-50 hover:bg-rose-100 text-rose-700 dark:bg-rose-950/40 dark:hover:bg-rose-900/60 dark:text-rose-300 rounded-xl text-xs font-bold flex items-center justify-center gap-1.5 transition-colors cursor-pointer border border-rose-200 dark:border-rose-800"
                     >
-                      ✕ Reset to Default Image
+                      <Trash2 className="w-3.5 h-3.5 text-rose-500" />
+                      <span>Delete Hamper</span>
                     </button>
-                  )}
-
-                  {/* Title & Link */}
-                  <div className="pt-2 border-t border-zinc-100 dark:border-zinc-800 space-y-2">
-                    <div>
-                      <label className="block text-[10px] font-bold text-zinc-500 uppercase tracking-wider mb-1">
-                        Title
-                      </label>
-                      <input
-                        type="text"
-                        value={hamper.title || ''}
-                        onChange={(e) => {
-                          const val = e.target.value;
-                          setGiftingHampers(prev => {
-                            const next = [...prev];
-                            next[idx] = { ...next[idx], title: val };
-                            return next;
-                          });
-                        }}
-                        className="w-full px-3 py-2 text-xs font-semibold rounded-xl border border-zinc-200 dark:border-zinc-700 bg-white dark:bg-zinc-900 text-zinc-900 dark:text-white focus:outline-none focus:border-[#0D2B4E]"
-                      />
-                    </div>
-                    <div>
-                      <label className="block text-[10px] font-bold text-zinc-500 uppercase tracking-wider mb-1">
-                        Link Path
-                      </label>
-                      <input
-                        type="text"
-                        value={hamper.path || ''}
-                        onChange={(e) => {
-                          const val = e.target.value;
-                          setGiftingHampers(prev => {
-                            const next = [...prev];
-                            next[idx] = { ...next[idx], path: val };
-                            return next;
-                          });
-                        }}
-                        className="w-full px-3 py-1.5 text-[11px] font-mono rounded-xl border border-zinc-200 dark:border-zinc-700 bg-white dark:bg-zinc-900 text-zinc-700 dark:text-zinc-300 focus:outline-none focus:border-[#0D2B4E]"
-                      />
-                    </div>
                   </div>
-                </div>
-              );
-            })}
-          </div>
+                );
+              })}
+            </div>
+          )}
 
           {hamperUploadProgress && (
             <div className="p-3 bg-blue-50 dark:bg-blue-900/30 text-blue-700 dark:text-blue-300 rounded-xl text-xs font-semibold text-center">

@@ -49,86 +49,95 @@ export const DEFAULT_GIFTING_HAMPERS = [
 
 const STORAGE_KEY = 'manish_gifting_hampers_data';
 const VERSION_KEY = 'manish_gifting_hampers_version';
-const CURRENT_VERSION = 'v2026_11_14_v3';
+const CURRENT_VERSION = 'v2026_11_14_v4';
 const FIRESTORE_DOC_ID = 'gifting_hampers_showcase';
 
 export const giftingHampersService = {
   getStoredHampers() {
+    const isAllCleared = StorageService.get('manish_gifting_hampers_all_cleared', false);
+    if (isAllCleared) return [];
+
+    const deletedIds = StorageService.get('manish_gifting_hampers_deleted_ids', []);
     const version = StorageService.get(VERSION_KEY, null);
     let cached = StorageService.get(STORAGE_KEY, null);
 
-    if (version !== CURRENT_VERSION || !cached || !Array.isArray(cached) || cached.length !== 4) {
+    if (version !== CURRENT_VERSION || !cached || !Array.isArray(cached)) {
       cached = DEFAULT_GIFTING_HAMPERS;
       StorageService.set(STORAGE_KEY, DEFAULT_GIFTING_HAMPERS);
       StorageService.set(VERSION_KEY, CURRENT_VERSION);
-      return DEFAULT_GIFTING_HAMPERS;
     }
 
-    return cached.map((item, idx) => ({
-      ...DEFAULT_GIFTING_HAMPERS[idx],
-      ...item,
-      imgWebp: DEFAULT_GIFTING_HAMPERS[idx].imgWebp,
-      imgPng: DEFAULT_GIFTING_HAMPERS[idx].imgPng,
-      customImg: item.customImg || item.image || item.img || ''
-    }));
+    return cached
+      .filter(item => item && !deletedIds.includes(item.id))
+      .map((item, idx) => {
+        const defaultRef = DEFAULT_GIFTING_HAMPERS.find(d => d.id === item.id) || DEFAULT_GIFTING_HAMPERS[idx] || {};
+        return {
+          ...defaultRef,
+          ...item,
+          imgWebp: defaultRef.imgWebp || item.imgWebp,
+          imgPng: defaultRef.imgPng || item.imgPng,
+          customImg: item.customImg || item.image || item.img || ''
+        };
+      });
   },
 
   async fetchRemoteHampers() {
     try {
       if (db) {
         const docRef = doc(db, FIRESTORE_COLLECTIONS.SYSTEM_CONFIGS, FIRESTORE_DOC_ID);
-        const snap = await getDoc(docRef);
-        if (snap.exists() && snap.data()) {
+        const snap = await Promise.race([
+          getDoc(docRef),
+          new Promise((_, reject) => setTimeout(() => reject(new Error('timeout')), 1500))
+        ]);
+        if (snap && snap.exists() && snap.data()) {
           const remote = snap.data();
-          if (Array.isArray(remote.items) && remote.items.length === 4) {
-            const merged = remote.items.map((item, idx) => ({
-              ...DEFAULT_GIFTING_HAMPERS[idx],
-              ...item,
-              imgWebp: DEFAULT_GIFTING_HAMPERS[idx].imgWebp,
-              imgPng: DEFAULT_GIFTING_HAMPERS[idx].imgPng,
-              customImg: item.customImg || item.image || item.img || ''
-            }));
-            StorageService.set(STORAGE_KEY, merged);
+          const isAllCleared = StorageService.get('manish_gifting_hampers_all_cleared', false);
+          if (!isAllCleared && Array.isArray(remote.items)) {
+            StorageService.set(STORAGE_KEY, remote.items);
             StorageService.set(VERSION_KEY, CURRENT_VERSION);
             if (typeof window !== 'undefined') {
-              window.dispatchEvent(new Event('manish_gifting_hampers_updated'));
+              window.dispatchEvent(new CustomEvent('manish_gifting_hampers_updated', { detail: remote.items }));
             }
-            return merged;
+            return this.getStoredHampers();
           }
         }
       }
     } catch (e) {
-      console.warn('Could not fetch remote hampers data, using cached:', e.message);
+      // Offline fallback
     }
     return this.getStoredHampers();
   },
 
   async saveHampers(items) {
-    const safeItems = Array.isArray(items) && items.length === 4 ? items : DEFAULT_GIFTING_HAMPERS;
-    const payload = {
-      items: safeItems,
-      lastUpdated: new Date().toISOString()
-    };
+    const safeItems = Array.isArray(items) ? items : [];
+    const isAllCleared = safeItems.length === 0;
+    StorageService.set('manish_gifting_hampers_all_cleared', isAllCleared);
 
-    // 1. Instant Local Storage with Version Stamp
     StorageService.set(STORAGE_KEY, safeItems);
     StorageService.set(VERSION_KEY, CURRENT_VERSION);
 
-    // 2. Dispatch in current window
+    // Cross-tab and window sync pulse
     if (typeof window !== 'undefined') {
-      window.dispatchEvent(new Event('manish_gifting_hampers_updated'));
+      try {
+        localStorage.setItem('manish_sync_pulse', `gifting_hampers_${Date.now()}`);
+      } catch (_e) { /* noop */ }
 
-      // 3. Broadcast across tabs
+      window.dispatchEvent(new CustomEvent('manish_gifting_hampers_updated', { detail: safeItems }));
+
       if ('BroadcastChannel' in window) {
         try {
           const bc = new BroadcastChannel('manish_store_sync');
-          bc.postMessage({ type: 'gifting_hampers', data: safeItems });
+          bc.postMessage({ type: 'gifting_hampers', data: safeItems, timestamp: Date.now() });
           bc.close();
         } catch { /* noop */ }
       }
     }
 
-    // 4. Remote Firestore sync with 1.5s timeout so UI never hangs
+    const payload = {
+      items: safeItems,
+      lastUpdated: new Date().toISOString()
+    };
+
     if (db) {
       try {
         const docRef = doc(db, FIRESTORE_COLLECTIONS.SYSTEM_CONFIGS, FIRESTORE_DOC_ID);
@@ -137,11 +146,41 @@ export const giftingHampersService = {
           new Promise((_, reject) => setTimeout(() => reject(new Error('timeout')), 1500))
         ]);
       } catch (e) {
-        console.warn('Remote sync fallback:', e.message);
+        // Fallback
       }
     }
 
     return safeItems;
+  },
+
+  async deleteHamper(hamperId) {
+    const current = this.getStoredHampers();
+    const updated = current.filter(h => h.id !== hamperId);
+
+    const deletedIds = StorageService.get('manish_gifting_hampers_deleted_ids', []);
+    if (!deletedIds.includes(hamperId)) {
+      deletedIds.push(hamperId);
+      StorageService.set('manish_gifting_hampers_deleted_ids', deletedIds);
+    }
+
+    return this.saveHampers(updated);
+  },
+
+  async addHamper(newHamper) {
+    const current = this.getStoredHampers();
+    const hamperToAdd = {
+      id: newHamper?.id || `hamper-${Date.now()}`,
+      title: newHamper?.title || 'New Gift Hamper',
+      customImg: newHamper?.customImg || '',
+      path: newHamper?.path || '/collections'
+    };
+    const updated = [...current, hamperToAdd];
+    return this.saveHampers(updated);
+  },
+
+  async resetHampers() {
+    StorageService.set('manish_gifting_hampers_all_cleared', false);
+    StorageService.set('manish_gifting_hampers_deleted_ids', []);
+    return this.saveHampers(DEFAULT_GIFTING_HAMPERS);
   }
 };
-

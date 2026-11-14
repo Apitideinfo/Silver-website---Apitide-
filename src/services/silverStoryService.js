@@ -38,79 +38,112 @@ export const DEFAULT_SILVER_STORY_DATA = {
   banner: {
     title: 'MANISH & CO - Diwali Festive Season - Flat 15% Off On All Products',
     img: '',
-    tab: 'Collections'
+    tab: 'Collections',
+    hidden: false
   }
 };
 
 const STORAGE_KEY = 'manish_silver_story_data';
 const VERSION_KEY = 'manish_silver_story_version';
-const CURRENT_VERSION = 'v2026_11_14_v3';
+const CURRENT_VERSION = 'v2026_11_14_v4';
 const FIRESTORE_DOC_ID = 'silver_story_showcase';
 
 export const silverStoryService = {
   getStoredStoryData() {
+    const isAllCleared = StorageService.get('manish_silver_story_all_cleared', false);
+    if (isAllCleared) {
+      return {
+        sectionTitle: 'Silver For Every Story',
+        cards: [],
+        banner: { hidden: true, deleted: true }
+      };
+    }
+
     const version = StorageService.get(VERSION_KEY, null);
     let cached = StorageService.get(STORAGE_KEY, null);
 
-    // Auto-migrate stale or legacy cache on client devices
-    if (version !== CURRENT_VERSION || !cached || !Array.isArray(cached.cards) || cached.cards.length !== 4) {
+    if (version !== CURRENT_VERSION || !cached || typeof cached !== 'object') {
       cached = DEFAULT_SILVER_STORY_DATA;
       StorageService.set(STORAGE_KEY, DEFAULT_SILVER_STORY_DATA);
       StorageService.set(VERSION_KEY, CURRENT_VERSION);
+      return cached;
     }
-    return cached;
+
+    const deletedCardIds = StorageService.get('manish_silver_story_deleted_card_ids', []);
+    const cards = Array.isArray(cached.cards)
+      ? cached.cards.filter(c => c && !deletedCardIds.includes(c.id))
+      : [];
+
+    return {
+      sectionTitle: cached.sectionTitle || 'Silver For Every Story',
+      cards,
+      banner: cached.banner || DEFAULT_SILVER_STORY_DATA.banner
+    };
   },
 
   async fetchRemoteStoryData() {
     try {
       if (db) {
         const docRef = doc(db, FIRESTORE_COLLECTIONS.SYSTEM_CONFIGS, FIRESTORE_DOC_ID);
-        const snap = await getDoc(docRef);
-        if (snap.exists() && snap.data()) {
+        const snap = await Promise.race([
+          getDoc(docRef),
+          new Promise((_, reject) => setTimeout(() => reject(new Error('timeout')), 1500))
+        ]);
+        if (snap && snap.exists() && snap.data()) {
           const remote = snap.data();
-          if (Array.isArray(remote.cards) && remote.cards.length === 4) {
+          const isAllCleared = StorageService.get('manish_silver_story_all_cleared', false);
+          if (!isAllCleared && Array.isArray(remote.cards)) {
             StorageService.set(STORAGE_KEY, remote);
             StorageService.set(VERSION_KEY, CURRENT_VERSION);
             if (typeof window !== 'undefined') {
-              window.dispatchEvent(new Event('manish_silver_story_updated'));
+              window.dispatchEvent(new CustomEvent('manish_silver_story_updated', { detail: remote }));
             }
-            return remote;
+            return this.getStoredStoryData();
           }
         }
       }
     } catch (e) {
-      console.warn('Could not fetch remote silver story data, using cached:', e.message);
+      // Offline or timeout fallback to local cached data
     }
     return this.getStoredStoryData();
   },
 
   async saveStoryData(data) {
+    const safeCards = Array.isArray(data.cards) ? data.cards : [];
+    const isAllCleared = safeCards.length === 0 && (!data.banner || data.banner.hidden || data.banner.deleted);
+    StorageService.set('manish_silver_story_all_cleared', isAllCleared);
+
     const payload = {
       sectionTitle: data.sectionTitle || 'Silver For Every Story',
-      cards: Array.isArray(data.cards) ? data.cards : DEFAULT_SILVER_STORY_DATA.cards,
-      banner: data.banner || DEFAULT_SILVER_STORY_DATA.banner,
+      cards: safeCards,
+      banner: data.banner || { hidden: false },
       lastUpdated: new Date().toISOString()
     };
 
-    // 1. Instant Local Storage with Version Stamp
+    // 1. Instant Local Storage
     StorageService.set(STORAGE_KEY, payload);
     StorageService.set(VERSION_KEY, CURRENT_VERSION);
 
-    // 2. Dispatch in current window
+    // 2. Pulse for cross-tab and cross-window sync
     if (typeof window !== 'undefined') {
-      window.dispatchEvent(new Event('manish_silver_story_updated'));
+      try {
+        localStorage.setItem('manish_sync_pulse', `silver_story_${Date.now()}`);
+      } catch (_e) { /* noop */ }
 
-      // 3. Broadcast across tabs
+      // 3. Dispatch in current window
+      window.dispatchEvent(new CustomEvent('manish_silver_story_updated', { detail: payload }));
+
+      // 4. Broadcast across tabs
       if ('BroadcastChannel' in window) {
         try {
           const bc = new BroadcastChannel('manish_store_sync');
-          bc.postMessage({ type: 'silver_story', data: payload });
+          bc.postMessage({ type: 'silver_story', data: payload, timestamp: Date.now() });
           bc.close();
         } catch { /* noop */ }
       }
     }
 
-    // 4. Remote Firestore sync with 1.5s timeout so UI never hangs
+    // 5. Remote Firestore sync with timeout
     if (db) {
       try {
         const docRef = doc(db, FIRESTORE_COLLECTIONS.SYSTEM_CONFIGS, FIRESTORE_DOC_ID);
@@ -119,11 +152,32 @@ export const silverStoryService = {
           new Promise((_, reject) => setTimeout(() => reject(new Error('timeout')), 1500))
         ]);
       } catch (e) {
-        console.warn('Remote sync fallback:', e.message);
+        // Fallback to local
       }
     }
 
     return payload;
+  },
+
+  async deleteCard(cardId) {
+    const current = this.getStoredStoryData();
+    const updatedCards = current.cards.filter(c => c.id !== cardId);
+    
+    const deletedCardIds = StorageService.get('manish_silver_story_deleted_card_ids', []);
+    if (!deletedCardIds.includes(cardId)) {
+      deletedCardIds.push(cardId);
+      StorageService.set('manish_silver_story_deleted_card_ids', deletedCardIds);
+    }
+
+    return this.saveStoryData({
+      ...current,
+      cards: updatedCards
+    });
+  },
+
+  async resetDefaults() {
+    StorageService.set('manish_silver_story_all_cleared', false);
+    StorageService.set('manish_silver_story_deleted_card_ids', []);
+    return this.saveStoryData(DEFAULT_SILVER_STORY_DATA);
   }
 };
-
