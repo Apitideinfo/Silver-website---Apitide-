@@ -1012,6 +1012,15 @@ export default function AdminCategories({
 
       await productsApi.updateCategory(editingCategory.id || editingCategory.docId, updatedData);
 
+      setCategories(prev => {
+        const id = editingCategory.id || editingCategory.docId;
+        const exists = (Array.isArray(prev) ? prev : []).some(c => c.id === id || c.docId === id);
+        if (exists) {
+          return prev.map(c => (c.id === id || c.docId === id) ? { ...c, ...updatedData } : c);
+        }
+        return [...(Array.isArray(prev) ? prev : []), { id, ...updatedData }];
+      });
+
 
 
       if (typeof setAdminNotification === 'function') {

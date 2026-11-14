@@ -18,7 +18,7 @@ export function ProductProvider({ children }) {
     const hasLegacy = Array.isArray(cached) && cached.some(c => 
       c.id === 'bangles' || c.id === 'nath-nose-pin' || c.name === 'Bangles' || c.id === 'jhumka'
     );
-    if (storedVersion !== CURRENT_CATALOG_VERSION || hasLegacy || !Array.isArray(cached) || cached.length === 0) {
+    if (hasLegacy || !Array.isArray(cached) || cached.length === 0) {
       cached = INITIAL_CATEGORIES;
       StorageService.set('manish_categories_store', INITIAL_CATEGORIES);
       StorageService.set('manish_categories_initialized', true);

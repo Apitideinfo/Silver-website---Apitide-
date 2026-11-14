@@ -125,7 +125,7 @@ export const productsApi = {
       c.id === 'bangles' || c.id === 'nath-nose-pin' || c.name === 'Bangles' || c.id === 'jhumka'
     );
 
-    if (storedVersion !== CURRENT_CATALOG_VERSION || hasLegacy || !Array.isArray(local) || local.length === 0) {
+    if (hasLegacy || !Array.isArray(local) || local.length === 0) {
       local = INITIAL_CATEGORIES;
       StorageService.set(LOCAL_STORAGE_KEYS.CATEGORIES, INITIAL_CATEGORIES);
       StorageService.set(CATEGORIES_INIT_KEY, true);
@@ -304,12 +304,23 @@ export const productsApi = {
     };
 
     // 1. Instant Optimistic Local Update
-    const existing = StorageService.get(LOCAL_STORAGE_KEYS.CATEGORIES, []);
-    const updated = (Array.isArray(existing) ? existing : []).map(c => 
-      (c.id === id || c.docId === id || String(c.id || '').toLowerCase() === lowerId || String(c.docId || '').toLowerCase() === lowerId)
-        ? { ...c, ...payload }
-        : c
+    const rawExisting = StorageService.get(LOCAL_STORAGE_KEYS.CATEGORIES, null);
+    const existing = (Array.isArray(rawExisting) && rawExisting.length > 0)
+      ? rawExisting
+      : [...INITIAL_CATEGORIES];
+
+    const exists = existing.some(c => 
+      c.id === id || c.docId === id || String(c.id || '').toLowerCase() === lowerId || String(c.docId || '').toLowerCase() === lowerId
     );
+
+    const updated = exists
+      ? existing.map(c => 
+          (c.id === id || c.docId === id || String(c.id || '').toLowerCase() === lowerId || String(c.docId || '').toLowerCase() === lowerId)
+            ? { ...c, ...payload }
+            : c
+        )
+      : [...existing, payload];
+
     StorageService.set(LOCAL_STORAGE_KEYS.CATEGORIES, updated);
     StorageService.set(CATEGORIES_INIT_KEY, true);
     broadcastCatalogChange('categories');
@@ -590,8 +601,12 @@ export const productsApi = {
     };
 
     // 1. Instant Optimistic Local Update
-    const existing = StorageService.get(LOCAL_STORAGE_KEYS.PRODUCTS, []);
-    const updated = existing.map(p => (p.id === id || p.docId === id) ? { ...p, ...payload } : p);
+    const rawExisting = StorageService.get(LOCAL_STORAGE_KEYS.PRODUCTS, []);
+    const existing = Array.isArray(rawExisting) ? rawExisting : [];
+    const exists = existing.some(p => String(p.id) === id || String(p.docId) === id);
+    const updated = exists
+      ? existing.map(p => (String(p.id) === id || String(p.docId) === id) ? { ...p, ...payload } : p)
+      : [payload, ...existing];
     StorageService.set(LOCAL_STORAGE_KEYS.PRODUCTS, updated);
     broadcastCatalogChange('products');
 

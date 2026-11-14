@@ -19,21 +19,12 @@
         });
       }
 
-      // 2. Client Device Legacy Cache Invalidation
+      // 2. Client Device Legacy Cache Invalidation (removes old legacy hrj_* keys only, preserving manish user data)
       (function() {
-        var BUILD_ID = 'manish_build_2026_11_14_v3';
+        var BUILD_ID = 'manish_build_2026_11_14_v4';
         var currentBuild = localStorage.getItem('manish_current_build_id');
         if (currentBuild !== BUILD_ID) {
-          var keysToRemove = [
-            'manish_categories_store',
-            'manish_catalog_version',
-            'manish_silver_story_data',
-            'manish_silver_story_version',
-            'manish_gifting_hampers_data',
-            'manish_gifting_hampers_version',
-            'manish_hero_banners_data',
-            'manish_hero_banners_version',
-            'manish_categories_initialized',
+          var legacyKeysToRemove = [
             'hrj_categories',
             'hrj_categories_store',
             'hrj_cart',
@@ -41,8 +32,8 @@
             'hrj_products_store',
             'hrj_chunk_retry_Admin'
           ];
-          for (var i = 0; i < keysToRemove.length; i++) {
-            try { localStorage.removeItem(keysToRemove[i]); } catch(e) {}
+          for (var i = 0; i < legacyKeysToRemove.length; i++) {
+            try { localStorage.removeItem(legacyKeysToRemove[i]); } catch(e) {}
           }
           try { localStorage.setItem('manish_current_build_id', BUILD_ID); } catch(e) {}
         }
