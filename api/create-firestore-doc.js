@@ -1,5 +1,5 @@
 /* global process */
-import { admin, serviceAccount } from './utils/firebase-admin-init.js';
+import { admin, serviceAccount } from './_utils/firebase-admin-init.js';
 
 export default async function handler(req, res) {
   // CORS Headers

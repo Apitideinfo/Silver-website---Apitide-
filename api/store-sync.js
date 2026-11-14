@@ -1,5 +1,5 @@
 /* global process, Buffer */
-import { cloudinary } from './utils/cloudinary.js';
+import { cloudinary } from './_utils/cloudinary.js';
 
 const CONFIG_PUBLIC_ID = 'manish_store_config.json';
 const ADMIN_API_KEY = process.env.MANISH_ADMIN_SECRET || 'manish_admin_secure_vault_2026';

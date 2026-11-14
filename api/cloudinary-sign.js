@@ -1,5 +1,5 @@
 /* global process */
-import { cloudinary, cloud_name, api_key, api_secret } from './utils/cloudinary.js';
+import { cloudinary, cloud_name, api_key, api_secret } from './_utils/cloudinary.js';
 
 export default async function handler(req, res) {
   // CORS Headers

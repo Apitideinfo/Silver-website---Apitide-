@@ -1,4 +1,4 @@
-﻿import { generateInvoicePdf } from './utils/generate-invoice-pdf.js';
+﻿import { generateInvoicePdf } from './_utils/generate-invoice-pdf.js';
 
 async function getRequestBody(req) {
   if (req.body !== undefined) {

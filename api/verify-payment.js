@@ -1,6 +1,6 @@
 /* global process */
 import crypto from 'crypto';
-import { getRazorpayCredentials } from './utils/razorpay.js';
+import { getRazorpayCredentials } from './_utils/razorpay.js';
 
 // Helper to parse request body in any serverless/node environment
 async function getRequestBody(req) {

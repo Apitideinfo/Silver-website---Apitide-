@@ -1,6 +1,6 @@
 /* global process, Buffer */
-import { cloudinary, cloud_name } from './utils/cloudinary.js';
-import { admin, serviceAccount } from './utils/firebase-admin-init.js';
+import { cloudinary, cloud_name } from './_utils/cloudinary.js';
+import { admin, serviceAccount } from './_utils/firebase-admin-init.js';
 import crypto from 'crypto';
 
 export default async function handler(req, res) {

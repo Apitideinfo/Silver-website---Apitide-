@@ -3,7 +3,7 @@
 // Supports multi-tier providers: Nodemailer (Gmail / Custom SMTP), Resend API, and Brevo API.
 
 import nodemailer from 'nodemailer';
-import { generateInvoicePdf } from './utils/generate-invoice-pdf.js';
+import { generateInvoicePdf } from './_utils/generate-invoice-pdf.js';
 
 export default async function handler(req, res) {
   // CORS Headers
