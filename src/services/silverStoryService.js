@@ -2,6 +2,7 @@ import { StorageService } from './StorageService';
 import { db } from '../firebase';
 import { doc, getDoc, setDoc } from 'firebase/firestore';
 import { FIRESTORE_COLLECTIONS } from '../config/constants';
+import { storeSyncService } from './storeSyncService';
 
 export const DEFAULT_SILVER_STORY_DATA = {
   sectionTitle: 'Silver For Every Story',
@@ -83,6 +84,15 @@ export const silverStoryService = {
 
   async fetchRemoteStoryData() {
     try {
+      const config = await storeSyncService.pullLatestConfig();
+      if (config?.silverStory && typeof config.silverStory === 'object') {
+        return this.getStoredStoryData();
+      }
+    } catch (_e) {
+      // Continue to local/remote check
+    }
+
+    try {
       if (db) {
         const docRef = doc(db, FIRESTORE_COLLECTIONS.SYSTEM_CONFIGS, FIRESTORE_DOC_ID);
         const snap = await Promise.race([
@@ -103,7 +113,7 @@ export const silverStoryService = {
         }
       }
     } catch (e) {
-      // Offline or timeout fallback to local cached data
+      // Offline fallback
     }
     return this.getStoredStoryData();
   },
@@ -143,16 +153,18 @@ export const silverStoryService = {
       }
     }
 
-    // 5. Remote Firestore sync with timeout
+    // 5. Shared Cloud Persistence via storeSyncService
+    storeSyncService.publishSection('silverStory', payload).catch(err => {
+      console.warn('storeSyncService silverStory publish error:', err);
+    });
+
+    // 6. Firestore sync attempt (graceful fallback)
     if (db) {
       try {
         const docRef = doc(db, FIRESTORE_COLLECTIONS.SYSTEM_CONFIGS, FIRESTORE_DOC_ID);
-        await Promise.race([
-          setDoc(docRef, payload, { merge: true }),
-          new Promise((_, reject) => setTimeout(() => reject(new Error('timeout')), 1500))
-        ]);
+        setDoc(docRef, payload, { merge: true }).catch(() => {});
       } catch (e) {
-        // Fallback to local
+        // Fallback
       }
     }
 

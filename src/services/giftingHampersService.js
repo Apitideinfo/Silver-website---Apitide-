@@ -2,6 +2,7 @@ import { StorageService } from './StorageService';
 import { db } from '../firebase';
 import { doc, getDoc, setDoc } from 'firebase/firestore';
 import { FIRESTORE_COLLECTIONS } from '../config/constants';
+import { storeSyncService } from './storeSyncService';
 
 import giftPick1499Webp from '../assets/gift_pick_1499.webp';
 import giftPick1499Png from '../assets/gift_pick_1499.png';
@@ -83,6 +84,15 @@ export const giftingHampersService = {
 
   async fetchRemoteHampers() {
     try {
+      const config = await storeSyncService.pullLatestConfig();
+      if (Array.isArray(config?.giftingHampers)) {
+        return this.getStoredHampers();
+      }
+    } catch (_e) {
+      // Continue to local/remote check
+    }
+
+    try {
       if (db) {
         const docRef = doc(db, FIRESTORE_COLLECTIONS.SYSTEM_CONFIGS, FIRESTORE_DOC_ID);
         const snap = await Promise.race([
@@ -133,6 +143,11 @@ export const giftingHampersService = {
       }
     }
 
+    // Shared Cloud Persistence via storeSyncService
+    storeSyncService.publishSection('giftingHampers', safeItems).catch(err => {
+      console.warn('storeSyncService giftingHampers publish error:', err);
+    });
+
     const payload = {
       items: safeItems,
       lastUpdated: new Date().toISOString()
@@ -141,10 +156,7 @@ export const giftingHampersService = {
     if (db) {
       try {
         const docRef = doc(db, FIRESTORE_COLLECTIONS.SYSTEM_CONFIGS, FIRESTORE_DOC_ID);
-        await Promise.race([
-          setDoc(docRef, payload, { merge: true }),
-          new Promise((_, reject) => setTimeout(() => reject(new Error('timeout')), 1500))
-        ]);
+        setDoc(docRef, payload, { merge: true }).catch(() => {});
       } catch (e) {
         // Fallback
       }

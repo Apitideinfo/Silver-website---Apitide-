@@ -245,6 +245,19 @@ export default function Home({
   const storyScrollLeft = useRef(0);
   const storyHasDragged = useRef(false);
 
+  // Sync listener for categories updates from cloud/admin
+  const [categoriesVersion, setCategoriesVersion] = useState(0);
+  useEffect(() => {
+    const handleCategorySync = () => setCategoriesVersion(v => v + 1);
+    window.addEventListener('manish_catalog_updated', handleCategorySync);
+    window.addEventListener('storage', (e) => {
+      if (e.key === 'manish_categories_store' || e.key === 'manish_sync_pulse') {
+        handleCategorySync();
+      }
+    });
+    return () => window.removeEventListener('manish_catalog_updated', handleCategorySync);
+  }, []);
+
   // Dynamic Category Slider (populated live from Admin Categories)
   const dynamicStoryCategories = React.useMemo(() => {
     const isAllCleared = StorageService.get('manish_categories_all_cleared', false);
@@ -254,7 +267,7 @@ export default function Home({
     const isInit = StorageService.get('manish_categories_initialized', false);
 
     let list = [];
-    if (Array.isArray(categories)) {
+    if (Array.isArray(categories) && categories.length > 0) {
       list = categories;
     } else {
       const cached = StorageService.get('manish_categories_store', null);
@@ -291,7 +304,7 @@ export default function Home({
         tab: cat.tab || catId
       };
     });
-  }, [categories]);
+  }, [categories, categoriesVersion]);
 
   const handleStoryMouseDown = (e) => {
     if (!storyCarouselRef.current) return;
@@ -594,10 +607,9 @@ export default function Home({
           else if (diff < -45) prevHeroSlide();
         }}
       >
-        {/* Banner Images Carousel Container - Fully responsive proportional aspect ratio across mobile, tablet & desktop (never cuts off) */}
+        {/* Banner Images Carousel Container - Fully responsive across mobile, tablet & desktop */}
         <div 
-          className="relative w-full overflow-hidden bg-[#091B2B] aspect-[2172/724]"
-          style={{ aspectRatio: '2172 / 724' }}
+          className="relative w-full overflow-hidden bg-[#091B2B] h-[205px] xs:h-[235px] sm:h-[285px] md:h-auto md:aspect-[2200/715] flex items-center justify-center"
         >
           <AnimatePresence initial={false} mode="wait">
             <motion.div
@@ -606,7 +618,7 @@ export default function Home({
               animate={{ opacity: 1 }}
               exit={{ opacity: 0 }}
               transition={{ duration: 0.65, ease: "easeInOut" }}
-              className="absolute inset-0 w-full h-full cursor-pointer"
+              className="absolute inset-0 w-full h-full cursor-pointer flex items-center justify-center"
               onClick={() => {
                 const banner = heroBanners[currentHeroSlide] || heroBanners[0];
                 if (banner?.category && typeof changeCategoryTab === 'function') {
@@ -616,23 +628,31 @@ export default function Home({
               }}
             >
               {heroBanners[currentHeroSlide]?.customImg ? (
-                <img
-                  src={heroBanners[currentHeroSlide].customImg}
-                  alt={heroBanners[currentHeroSlide]?.alt || heroBanners[currentHeroSlide]?.title || 'MANISH & CO Hero Banner'}
-                  className="w-full h-full object-cover object-center select-none"
-                  loading="eager"
-                  fetchPriority="high"
-                  decoding="async"
-                />
+                <picture className="w-full h-full block">
+                  {heroBanners[currentHeroSlide]?.mobileImg && (
+                    <source media="(max-width: 767px)" srcSet={heroBanners[currentHeroSlide].mobileImg} />
+                  )}
+                  <img
+                    src={heroBanners[currentHeroSlide].customImg}
+                    alt={heroBanners[currentHeroSlide]?.alt || heroBanners[currentHeroSlide]?.title || 'MANISH & CO Hero Banner'}
+                    className="w-full h-full object-contain md:object-cover object-center select-none"
+                    loading="eager"
+                    fetchPriority="high"
+                    decoding="async"
+                  />
+                </picture>
               ) : (
                 <picture className="w-full h-full block">
+                  {heroBanners[currentHeroSlide]?.mobileImg && (
+                    <source media="(max-width: 767px)" srcSet={heroBanners[currentHeroSlide].mobileImg} />
+                  )}
                   {heroBanners[currentHeroSlide]?.webp && (
                     <source srcSet={heroBanners[currentHeroSlide].webp} type="image/webp" />
                   )}
                   <img
                     src={heroBanners[currentHeroSlide]?.png || heroBanners[currentHeroSlide]?.webp}
                     alt={heroBanners[currentHeroSlide]?.alt || heroBanners[currentHeroSlide]?.title || 'MANISH & CO Hero Banner'}
-                    className="w-full h-full object-cover object-center select-none"
+                    className="w-full h-full object-contain md:object-cover object-center select-none"
                     loading="eager"
                     fetchPriority="high"
                     decoding="async"
@@ -730,14 +750,14 @@ export default function Home({
                 onMouseMove={handleStoryMouseMove}
                 onMouseUp={handleStoryMouseUp}
                 onMouseLeave={handleStoryMouseUp}
-                className="flex items-center gap-3 sm:gap-5 md:gap-6 lg:gap-7 overflow-x-auto no-scrollbar scroll-smooth justify-start py-2 px-1 sm:px-3 cursor-grab active:cursor-grabbing select-none touch-pan-x"
+                className="flex items-center gap-2.5 xs:gap-3.5 sm:gap-5 md:gap-6 lg:gap-7 overflow-x-auto no-scrollbar scroll-smooth justify-start py-2 px-1 sm:px-3 cursor-grab active:cursor-grabbing select-none touch-pan-x snap-x snap-mandatory"
                 style={{ WebkitOverflowScrolling: 'touch' }}
               >
                 {dynamicStoryCategories.map((cat) => (
                   <button
                     key={cat.id}
                     onClick={() => handleStoryCardClick(cat)}
-                    className="w-[102px] xs:w-[115px] sm:w-[135px] md:w-[150px] lg:w-[160px] group cursor-pointer flex flex-col items-center shrink-0 focus:outline-none bg-transparent border-0 p-0 transition-transform duration-300 hover:-translate-y-1"
+                    className="w-[92px] xs:w-[108px] sm:w-[130px] md:w-[145px] lg:w-[160px] snap-start group cursor-pointer flex flex-col items-center shrink-0 focus:outline-none bg-transparent border-0 p-0 transition-transform duration-300 hover:-translate-y-1"
                   >
                     {/* Clean Square Card Image matching reference screenshot */}
                     <div className="relative w-full aspect-square rounded-xl overflow-hidden bg-gray-50 border border-gray-200/80 shadow-xs group-hover:shadow-md group-hover:border-[#0D2B4E]/40 transition-all duration-300 pointer-events-none">
@@ -760,7 +780,7 @@ export default function Home({
                     </div>
 
                     {/* Clean Category Label Directly Below */}
-                    <span className="mt-2.5 sm:mt-3 text-xs sm:text-[13.5px] font-sans font-semibold text-gray-900 group-hover:text-[#0D2B4E] transition-colors text-center block w-full truncate px-1">
+                    <span className="mt-2 sm:mt-2.5 text-[11px] xs:text-xs sm:text-[13.5px] font-sans font-semibold text-gray-900 group-hover:text-[#0D2B4E] transition-colors text-center block w-full truncate px-0.5">
                       {cat.name}
                     </span>
                   </button>
@@ -849,7 +869,7 @@ export default function Home({
 
                   {/* Right Column: Festive Offer Banner */}
                   {hasBanner && (
-                    <div className={`${hasCards ? 'lg:col-span-6' : 'lg:col-span-8 lg:col-start-3 max-w-xl mx-auto w-full'} flex`}>
+                    <div className={`${hasCards ? 'lg:col-span-6' : 'lg:col-span-8 lg:col-start-3 max-w-xl mx-auto w-full'} flex items-stretch mt-2 lg:mt-0`}>
                       <button
                         type="button"
                         onClick={() => {
@@ -857,7 +877,7 @@ export default function Home({
                           changeCategoryTab?.(banner.tab || 'Collections');
                           navigateTo('collections');
                         }}
-                        className="relative w-full aspect-square sm:aspect-auto sm:min-h-[380px] rounded-2xl overflow-hidden border border-[#E6DFD3] shadow-md hover:shadow-xl transition-all duration-500 group cursor-pointer focus:outline-none bg-gradient-to-br from-[#FAF5EE] to-[#F2E8DA]"
+                        className="relative w-full aspect-[16/9] xs:aspect-[16/9] sm:aspect-[21/9] lg:aspect-auto lg:min-h-[380px] rounded-xl sm:rounded-2xl overflow-hidden border border-[#E6DFD3] shadow-xs hover:shadow-xl transition-all duration-500 group cursor-pointer focus:outline-none bg-gradient-to-br from-[#FAF5EE] to-[#F2E8DA]"
                         aria-label="Explore MANISH & CO Festive Offer"
                       >
                         <img
@@ -954,8 +974,10 @@ export default function Home({
                 ? 'grid-cols-2 max-w-xl mx-auto'
                 : giftingHampers.length === 3
                 ? 'grid-cols-1 sm:grid-cols-3 max-w-4xl mx-auto'
-                : 'grid-cols-2 md:grid-cols-4'
-            } gap-4 sm:gap-6 lg:gap-7`}>
+                : giftingHampers.length === 4
+                ? 'grid-cols-2 md:grid-cols-4'
+                : 'grid-cols-2 md:grid-cols-3 lg:grid-cols-4'
+            } gap-3 sm:gap-6 lg:gap-7`}>
               {giftingHampers.map((hamper) => (
                 <button
                   key={hamper.id}
@@ -1649,73 +1671,17 @@ export default function Home({
           </div>
 
           {/* ==========================================================
-              MOBILE VIEW (< md): Responsive Touch Swipe Cards Carousel
-              ========================================================== */}
-          <div className="md:hidden w-full px-4">
-            <div className="flex overflow-x-auto no-scrollbar snap-x snap-mandatory gap-4 py-4 px-1 touch-pan-x">
-              {[
-                {
-                  name: "Aarohi Sharma, 27",
-                  quote: "My dream silver bridal set became a reality with MANISH & CO. The craftsmanship and royal finish are beyond expectations.",
-                  img: testimonial1
-                },
-                {
-                  name: "Priya Mehta, 31",
-                  quote: "The quality, finishing, and personalized service made my purchase truly memorable. A perfect luxury silver boutique experience.",
-                  img: testimonial2
-                },
-                {
-                  name: "Neha Kapoor, 29",
-                  quote: "I wear my bracelet every day and it still looks stunning. Timeless craftsmanship, 925 purity and exceptional quality.",
-                  img: testimonial3
-                },
-                {
-                  name: "Riya Verma, 26",
-                  quote: "My husband gifted me this beautiful necklace and I receive compliments everywhere. The wax seal packaging was breathtaking.",
-                  img: testimonial4
-                }
-              ].map((item, idx) => (
-                <div
-                  key={idx}
-                  className="w-[82vw] max-w-[310px] shrink-0 snap-center bg-white rounded-2xl p-4 sm:p-5 shadow-[0_8px_25px_rgba(13,43,78,0.08)] border border-[#E6DFD3] flex flex-col items-center select-none"
-                >
-                  <div className="w-full aspect-square rounded-xl overflow-hidden bg-[#F8F5EC] p-1.5 border border-[#E6DFD3] mb-3 shadow-xs">
-                    <img
-                      src={item.img}
-                      alt={item.name}
-                      loading="lazy"
-                      className="w-full h-full object-cover object-center rounded-lg pointer-events-none"
-                    />
-                  </div>
-
-                  <div className="flex items-center gap-1 text-[#D4AF37] text-xs mb-2">
-                    <span>★</span><span>★</span><span>★</span><span>★</span><span>★</span>
-                    <span className="text-[10px] text-[#6B4B2E] font-medium ml-1 font-sans">Verified Purchase</span>
-                  </div>
-
-                  <div className="w-full text-center space-y-1.5">
-                    <h4 className="font-sans font-bold text-[13px] tracking-wide text-[#0D2B4E]">
-                      {item.name}
-                    </h4>
-                    <p className="font-sans text-[11px] leading-relaxed tracking-normal font-normal text-[#657989] italic">
-                      "{item.quote}"
-                    </p>
-                  </div>
-                </div>
-              ))}
-            </div>
-          </div>
-
-          {/* ==========================================================
-              DESKTOP VIEW (>= md): Clothesline with Hanging Clips & Rotations
+              UNIFIED RESPONSIVE PATRONS' STORIES CLOTHESLINE
+              Identical luxury Polaroid hanging aesthetic across all devices
               ========================================================== */}
           <div
             ref={polaroidScrollRef}
             onScroll={handlePolaroidScroll}
-            className="hidden md:block w-full overflow-x-auto no-scrollbar py-6 snap-x touch-pan-x"
+            className="w-full overflow-x-auto no-scrollbar py-6 snap-x touch-pan-x select-none"
             style={{ WebkitOverflowScrolling: 'touch' }}
           >
-            <div className="relative w-full min-w-[1100px] sm:min-w-[1250px] lg:min-w-[1400px] xl:min-w-0 xl:w-full h-[460px] sm:h-[480px]">
+            <div className="relative mx-auto min-w-[1040px] lg:min-w-0 lg:max-w-6xl xl:max-w-7xl h-[440px] sm:h-[460px] px-4">
+              {/* Clothesline Wire SVG */}
               <svg className="absolute left-0 top-0 w-full h-[120px] pointer-events-none z-0" viewBox="0 0 100 120" fill="none" preserveAspectRatio="none">
                 <path
                   d="M 0,30 Q 5,50 10,50 Q 23.3,85 36.6,50 Q 50,85 63.3,50 Q 76.7,85 90,50 Q 95,50 100,30"
@@ -1724,60 +1690,57 @@ export default function Home({
                 />
               </svg>
 
-              {[
-                {
-                  name: "Aarohi Sharma, 27",
-                  quote: "My dream silver bridal set became a reality with MANISH & CO. The craftsmanship and royal finish are beyond expectations.",
-                  img: testimonial1,
-                  rot: "rotate-[-10deg]",
-                  left: "10%"
-                },
-                {
-                  name: "Priya Mehta, 31",
-                  quote: "The quality, finishing, and personalized service made my purchase truly memorable. A perfect luxury silver boutique experience.",
-                  img: testimonial2,
-                  rot: "rotate-[-4deg]",
-                  left: "36.6%"
-                },
-                {
-                  name: "Neha Kapoor, 29",
-                  quote: "I wear my bracelet every day and it still looks stunning. Timeless craftsmanship, 925 purity and exceptional quality.",
-                  img: testimonial3,
-                  rot: "rotate-[4deg]",
-                  left: "63.3%"
-                },
-                {
-                  name: "Riya Verma, 26",
-                  quote: "My husband gifted me this beautiful necklace and I receive compliments everywhere. The wax seal packaging was breathtaking.",
-                  img: testimonial4,
-                  rot: "rotate-[10deg]",
-                  left: "90%"
-                }
-              ].map((item, idx) => (
-                <div
-                  key={idx}
-                  style={{
-                    left: item.left,
-                    top: "50px",
-                    transform: "translateX(-50%)"
-                  }}
-                  className="absolute shrink-0 z-10 hover:z-30"
-                >
-                  <div className="transform-gpu transition-all duration-700 ease-out opacity-100 translate-y-0">
+              <div className="w-full h-full flex items-start justify-between relative z-10 px-4 sm:px-8">
+                {[
+                  {
+                    name: "Aarohi Sharma, 27",
+                    quote: "My dream silver bridal set became a reality with MANISH & CO. The craftsmanship and royal finish are beyond expectations.",
+                    img: testimonial1,
+                    rot: "rotate-[-4deg] sm:rotate-[-8deg]",
+                    top: "42px"
+                  },
+                  {
+                    name: "Priya Mehta, 31",
+                    quote: "The quality, finishing, and personalized service made my purchase truly memorable. A perfect luxury silver boutique experience.",
+                    img: testimonial2,
+                    rot: "rotate-[3deg] sm:rotate-[-3deg]",
+                    top: "52px"
+                  },
+                  {
+                    name: "Neha Kapoor, 29",
+                    quote: "I wear my bracelet every day and it still looks stunning. Timeless craftsmanship, 925 purity and exceptional quality.",
+                    img: testimonial3,
+                    rot: "rotate-[-3deg] sm:rotate-[4deg]",
+                    top: "50px"
+                  },
+                  {
+                    name: "Riya Verma, 26",
+                    quote: "My husband gifted me this beautiful necklace and I receive compliments everywhere. The wax seal packaging was breathtaking.",
+                    img: testimonial4,
+                    rot: "rotate-[4deg] sm:rotate-[8deg]",
+                    top: "42px"
+                  }
+                ].map((item, idx) => (
+                  <div
+                    key={idx}
+                    style={{ marginTop: item.top }}
+                    className="shrink-0 snap-center transition-all duration-300 px-2 sm:px-3"
+                  >
                     <div
                       style={{ transformOrigin: "50% -20px" }}
-                      className={`w-[285px] shadow-[0_15px_35px_rgba(13,43,78,0.08),0_5px_15px_rgba(13,43,78,0.04)] rounded-xs pt-5 px-5 pb-8 relative flex flex-col items-center select-none snap-center transition-all duration-300 hover:scale-[1.04] hover:rotate-0 hover:z-40 cursor-pointer border border-solid mt-[20px] overflow-visible bg-white border-[#E6DFD3] ${item.rot}`}
+                      className={`w-[245px] xs:w-[260px] sm:w-[280px] shadow-[0_15px_35px_rgba(13,43,78,0.08),0_5px_15px_rgba(13,43,78,0.04)] rounded-xs pt-4 sm:pt-5 px-4 sm:px-5 pb-6 sm:pb-7 relative flex flex-col items-center select-none snap-center transition-all duration-300 hover:scale-[1.03] hover:rotate-0 hover:z-40 cursor-pointer border border-solid overflow-visible bg-white border-[#E6DFD3] ${item.rot}`}
                     >
-                      <div className="absolute -top-[30px] left-1/2 -translate-x-1/2 w-8 h-12 flex items-center justify-center z-20 pointer-events-none">
+                      {/* Realistic Silver Clip Pin */}
+                      <div className="absolute -top-[28px] left-1/2 -translate-x-1/2 w-8 h-12 flex items-center justify-center z-20 pointer-events-none">
                         <svg width="28" height="42" viewBox="0 0 28 42" fill="none" xmlns="http://www.w3.org/2000/svg">
                           <defs>
-                            <linearGradient id="metalGrad" x1="0%" y1="0%" x2="100%" y2="100%">
+                            <linearGradient id={`metalGrad_${idx}`} x1="0%" y1="0%" x2="100%" y2="100%">
                               <stop offset="0%" stopColor="#FFFFFF" />
                               <stop offset="40%" stopColor="#D8D9DA" />
                               <stop offset="70%" stopColor="#9EA0A2" />
                               <stop offset="100%" stopColor="#5C5E60" />
                             </linearGradient>
-                            <linearGradient id="loopGrad" x1="0%" y1="0%" x2="0%" y2="100%">
+                            <linearGradient id={`loopGrad_${idx}`} x1="0%" y1="0%" x2="0%" y2="100%">
                               <stop offset="0%" stopColor="#F0F1F2" />
                               <stop offset="50%" stopColor="#9EA0A2" />
                               <stop offset="100%" stopColor="#404142" />
@@ -1785,7 +1748,7 @@ export default function Home({
                           </defs>
                           <path
                             d="M14 2 C8 2, 7 20, 7 20 M14 2 C20 2, 21 20, 21 20"
-                            stroke="url(#loopGrad)"
+                            stroke={`url(#loopGrad_${idx})`}
                             strokeWidth="1.6"
                             strokeLinecap="round"
                             fill="none"
@@ -1800,7 +1763,7 @@ export default function Home({
                           />
                           <path
                             d="M4 20 L24 20 L27 32 L1 32 Z"
-                            fill="url(#metalGrad)"
+                            fill={`url(#metalGrad_${idx})`}
                             stroke="#8E9092"
                             strokeWidth="0.8"
                             strokeLinejoin="round"
@@ -1810,7 +1773,8 @@ export default function Home({
                         </svg>
                       </div>
 
-                      <div className="w-full aspect-square overflow-hidden rounded-xs mb-4 bg-[#F8F5EC] p-1 shadow-sm border border-solid border-[#E6DFD3] text-center">
+                      {/* Polaroid Photo */}
+                      <div className="w-full aspect-square overflow-hidden rounded-xs mb-3 sm:mb-4 bg-[#F8F5EC] p-1 shadow-xs border border-solid border-[#E6DFD3] text-center">
                         <img
                           src={item.img}
                           alt={item.name}
@@ -1819,18 +1783,27 @@ export default function Home({
                         />
                       </div>
 
-                      <div className="w-full space-y-2 text-left px-1">
+                      {/* Verified Badge */}
+                      <div className="w-full flex items-center justify-between text-[#D4AF37] text-[10px] mb-1.5 px-0.5">
+                        <div className="flex gap-0.5">
+                          <span>★</span><span>★</span><span>★</span><span>★</span><span>★</span>
+                        </div>
+                        <span className="text-[9px] text-[#6B4B2E] font-medium font-sans">Verified Patron</span>
+                      </div>
+
+                      {/* Patron Name and Quote */}
+                      <div className="w-full space-y-1 text-left px-0.5">
                         <h4 className="font-sans font-bold text-xs sm:text-[13px] tracking-wide text-[#0D2B4E]">
                           {item.name}
                         </h4>
-                        <p className="font-sans text-[10px] sm:text-[11px] leading-relaxed tracking-wide font-normal text-[#657989]">
-                          {item.quote}
+                        <p className="font-sans text-[10px] sm:text-[11px] leading-relaxed tracking-normal font-normal text-[#657989] italic">
+                          "{item.quote}"
                         </p>
                       </div>
                     </div>
                   </div>
-                </div>
-              ))}
+                ))}
+              </div>
             </div>
           </div>
 

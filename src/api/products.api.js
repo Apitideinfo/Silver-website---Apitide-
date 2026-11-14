@@ -13,6 +13,7 @@ import {
 } from '../firebase/firestore';
 import { FIRESTORE_COLLECTIONS, INITIAL_CATEGORIES } from '../config/constants';
 import { StorageService } from '../services/StorageService';
+import { storeSyncService } from '../services/storeSyncService';
 
 const PRODUCTS_COLLECTION = FIRESTORE_COLLECTIONS.PRODUCTS;
 const CATEGORIES_COLLECTION = FIRESTORE_COLLECTIONS.CATEGORIES;
@@ -59,6 +60,14 @@ const broadcastCatalogChange = (type) => {
     } catch (_e) {
       // noop
     }
+
+    // 4. Shared Cloud Persistence via storeSyncService for categories
+    if (type === 'categories') {
+      try {
+        const currentCats = StorageService.get(LOCAL_STORAGE_KEYS.CATEGORIES, []);
+        storeSyncService.publishSection('categories', currentCats).catch(() => {});
+      } catch (_e) { /* noop */ }
+    }
   }
 };
 
@@ -71,6 +80,16 @@ export const productsApi = {
     const deletedIds = StorageService.get(LOCAL_STORAGE_KEYS.DELETED, []);
     const isAllCleared = StorageService.get(LOCAL_STORAGE_KEYS.ALL_CLEARED, false);
     const localCached = StorageService.get(LOCAL_STORAGE_KEYS.CATEGORIES, null);
+
+    // 1. First priority: Shared Cloud Configuration (sync across mobile & desktop)
+    try {
+      const config = await storeSyncService.pullLatestConfig();
+      if (config && Array.isArray(config.categories)) {
+        return config.categories;
+      }
+    } catch (_syncErr) {
+      // Continue to local/remote check
+    }
 
     try {
       const querySnapshot = await withTimeout(getDocs(collection(db, CATEGORIES_COLLECTION)), 3000);
@@ -141,6 +160,13 @@ export const productsApi = {
         onUpdate([]);
       }
     }
+
+    // Immediately pull latest shared cloud config across all mobile/desktop devices
+    storeSyncService.pullLatestConfig().then(config => {
+      if (config && Array.isArray(config.categories)) {
+        onUpdate(config.categories);
+      }
+    }).catch(() => {});
 
     // Cross-tab & local update handler
     let lastJson = JSON.stringify(local);

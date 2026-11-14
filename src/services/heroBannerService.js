@@ -2,6 +2,7 @@ import { StorageService } from './StorageService';
 import { db } from '../firebase';
 import { doc, getDoc, setDoc } from 'firebase/firestore';
 import { FIRESTORE_COLLECTIONS } from '../config/constants';
+import { storeSyncService } from './storeSyncService';
 
 import heroBannerTimelessSilverWebp from '../assets/hero_banner_timeless_silver.webp';
 import heroBannerTimelessSilverPng from '../assets/hero_banner_timeless_silver.png';
@@ -77,11 +78,21 @@ export const heroBannerService = {
       ...banner,
       webp: DEFAULT_HERO_BANNERS[idx]?.webp || banner.webp,
       png: DEFAULT_HERO_BANNERS[idx]?.png || banner.png,
-      customImg: banner.customImg || banner.img || banner.image || ''
+      customImg: banner.customImg || banner.img || banner.image || '',
+      mobileImg: banner.mobileImg || ''
     }));
   },
 
   async fetchRemoteBanners() {
+    try {
+      const config = await storeSyncService.pullLatestConfig();
+      if (Array.isArray(config?.heroBanners) && config.heroBanners.length > 0) {
+        return this.getStoredBanners();
+      }
+    } catch (_e) {
+      // Continue to local/remote check
+    }
+
     try {
       if (db) {
         const docRef = doc(db, FIRESTORE_COLLECTIONS.SYSTEM_CONFIGS, FIRESTORE_DOC_ID);
@@ -94,7 +105,8 @@ export const heroBannerService = {
               ...banner,
               webp: DEFAULT_HERO_BANNERS[idx]?.webp || banner.webp,
               png: DEFAULT_HERO_BANNERS[idx]?.png || banner.png,
-              customImg: banner.customImg || banner.img || banner.image || ''
+              customImg: banner.customImg || banner.img || banner.image || '',
+              mobileImg: banner.mobileImg || ''
             }));
             StorageService.set(STORAGE_KEY, merged);
             StorageService.set(VERSION_KEY, CURRENT_VERSION);
@@ -136,14 +148,16 @@ export const heroBannerService = {
       }
     }
 
-    // 4. Remote Firestore sync
+    // 4. Shared Cloud Persistence via storeSyncService
+    storeSyncService.publishSection('heroBanners', safeBanners).catch(err => {
+      console.warn('storeSyncService heroBanners publish error:', err);
+    });
+
+    // 5. Remote Firestore sync
     if (db) {
       try {
         const docRef = doc(db, FIRESTORE_COLLECTIONS.SYSTEM_CONFIGS, FIRESTORE_DOC_ID);
-        await Promise.race([
-          setDoc(docRef, payload, { merge: true }),
-          new Promise((_, reject) => setTimeout(() => reject(new Error('timeout')), 1500))
-        ]);
+        setDoc(docRef, payload, { merge: true }).catch(() => {});
       } catch (e) {
         console.warn('Hero banners remote sync fallback:', e.message);
       }

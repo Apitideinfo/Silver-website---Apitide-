@@ -70,6 +70,7 @@ const PrivacyPolicy = lazyWithRetry(() => import('./pages/PrivacyPolicy'), 'Priv
 const AboutUs = lazyWithRetry(() => import('./pages/AboutUs'), 'AboutUs');
 
 import { StorageService } from './services/StorageService';
+import { storeSyncService } from './services/storeSyncService';
 
 function AppContent() {
   const getInitialPage = () => {
@@ -155,8 +156,9 @@ function AppContent() {
     return () => window.removeEventListener('popstate', handlePopState);
   }, []);
 
-  // One time anonymous login for visitors
+  // One time anonymous login for visitors & global data sync
   useEffect(() => {
+    storeSyncService.initGlobalSync();
     if (!currentUser) {
       loginAnonymously();
     }
