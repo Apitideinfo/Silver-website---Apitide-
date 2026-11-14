@@ -43,15 +43,22 @@ export const DEFAULT_SILVER_STORY_DATA = {
 };
 
 const STORAGE_KEY = 'manish_silver_story_data';
+const VERSION_KEY = 'manish_silver_story_version';
+const CURRENT_VERSION = 'v2026_11_14_v2';
 const FIRESTORE_DOC_ID = 'silver_story_showcase';
 
 export const silverStoryService = {
   getStoredStoryData() {
-    const cached = StorageService.get(STORAGE_KEY, null);
-    if (cached && Array.isArray(cached.cards) && cached.cards.length === 4) {
-      return cached;
+    const version = StorageService.get(VERSION_KEY, null);
+    let cached = StorageService.get(STORAGE_KEY, null);
+
+    // Auto-migrate stale or legacy cache on client devices
+    if (version !== CURRENT_VERSION || !cached || !Array.isArray(cached.cards) || cached.cards.length !== 4) {
+      cached = DEFAULT_SILVER_STORY_DATA;
+      StorageService.set(STORAGE_KEY, DEFAULT_SILVER_STORY_DATA);
+      StorageService.set(VERSION_KEY, CURRENT_VERSION);
     }
-    return DEFAULT_SILVER_STORY_DATA;
+    return cached;
   },
 
   async fetchRemoteStoryData() {
@@ -63,6 +70,7 @@ export const silverStoryService = {
           const remote = snap.data();
           if (Array.isArray(remote.cards) && remote.cards.length === 4) {
             StorageService.set(STORAGE_KEY, remote);
+            StorageService.set(VERSION_KEY, CURRENT_VERSION);
             if (typeof window !== 'undefined') {
               window.dispatchEvent(new Event('manish_silver_story_updated'));
             }
@@ -84,8 +92,9 @@ export const silverStoryService = {
       lastUpdated: new Date().toISOString()
     };
 
-    // 1. Instant Local Storage
+    // 1. Instant Local Storage with Version Stamp
     StorageService.set(STORAGE_KEY, payload);
+    StorageService.set(VERSION_KEY, CURRENT_VERSION);
 
     // 2. Dispatch in current window
     if (typeof window !== 'undefined') {

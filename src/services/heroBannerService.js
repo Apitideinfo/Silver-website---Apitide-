@@ -56,21 +56,29 @@ export const DEFAULT_HERO_BANNERS = [
 ];
 
 const STORAGE_KEY = 'manish_hero_banners_data';
+const VERSION_KEY = 'manish_hero_banners_version';
+const CURRENT_VERSION = 'v2026_11_14_v2';
 const FIRESTORE_DOC_ID = 'hero_banners_carousel';
 
 export const heroBannerService = {
   getStoredBanners() {
-    const cached = StorageService.get(STORAGE_KEY, null);
-    if (cached && Array.isArray(cached) && cached.length > 0) {
-      return cached.map((banner, idx) => ({
-        ...(DEFAULT_HERO_BANNERS[idx] || DEFAULT_HERO_BANNERS[0]),
-        ...banner,
-        webp: DEFAULT_HERO_BANNERS[idx]?.webp || banner.webp,
-        png: DEFAULT_HERO_BANNERS[idx]?.png || banner.png,
-        customImg: banner.customImg || banner.img || banner.image || ''
-      }));
+    const version = StorageService.get(VERSION_KEY, null);
+    let cached = StorageService.get(STORAGE_KEY, null);
+
+    if (version !== CURRENT_VERSION || !cached || !Array.isArray(cached) || cached.length === 0) {
+      cached = DEFAULT_HERO_BANNERS;
+      StorageService.set(STORAGE_KEY, DEFAULT_HERO_BANNERS);
+      StorageService.set(VERSION_KEY, CURRENT_VERSION);
+      return DEFAULT_HERO_BANNERS;
     }
-    return DEFAULT_HERO_BANNERS;
+
+    return cached.map((banner, idx) => ({
+      ...(DEFAULT_HERO_BANNERS[idx] || DEFAULT_HERO_BANNERS[0]),
+      ...banner,
+      webp: DEFAULT_HERO_BANNERS[idx]?.webp || banner.webp,
+      png: DEFAULT_HERO_BANNERS[idx]?.png || banner.png,
+      customImg: banner.customImg || banner.img || banner.image || ''
+    }));
   },
 
   async fetchRemoteBanners() {
@@ -89,6 +97,7 @@ export const heroBannerService = {
               customImg: banner.customImg || banner.img || banner.image || ''
             }));
             StorageService.set(STORAGE_KEY, merged);
+            StorageService.set(VERSION_KEY, CURRENT_VERSION);
             if (typeof window !== 'undefined') {
               window.dispatchEvent(new Event('manish_hero_banners_updated'));
             }
@@ -109,8 +118,9 @@ export const heroBannerService = {
       lastUpdated: new Date().toISOString()
     };
 
-    // 1. Local Storage
+    // 1. Local Storage with Version Stamp
     StorageService.set(STORAGE_KEY, safeBanners);
+    StorageService.set(VERSION_KEY, CURRENT_VERSION);
 
     // 2. Dispatch in current window
     if (typeof window !== 'undefined') {

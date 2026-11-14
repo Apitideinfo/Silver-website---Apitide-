@@ -48,21 +48,29 @@ export const DEFAULT_GIFTING_HAMPERS = [
 ];
 
 const STORAGE_KEY = 'manish_gifting_hampers_data';
+const VERSION_KEY = 'manish_gifting_hampers_version';
+const CURRENT_VERSION = 'v2026_11_14_v2';
 const FIRESTORE_DOC_ID = 'gifting_hampers_showcase';
 
 export const giftingHampersService = {
   getStoredHampers() {
-    const cached = StorageService.get(STORAGE_KEY, null);
-    if (cached && Array.isArray(cached) && cached.length === 4) {
-      return cached.map((item, idx) => ({
-        ...DEFAULT_GIFTING_HAMPERS[idx],
-        ...item,
-        imgWebp: DEFAULT_GIFTING_HAMPERS[idx].imgWebp,
-        imgPng: DEFAULT_GIFTING_HAMPERS[idx].imgPng,
-        customImg: item.customImg || item.image || item.img || ''
-      }));
+    const version = StorageService.get(VERSION_KEY, null);
+    let cached = StorageService.get(STORAGE_KEY, null);
+
+    if (version !== CURRENT_VERSION || !cached || !Array.isArray(cached) || cached.length !== 4) {
+      cached = DEFAULT_GIFTING_HAMPERS;
+      StorageService.set(STORAGE_KEY, DEFAULT_GIFTING_HAMPERS);
+      StorageService.set(VERSION_KEY, CURRENT_VERSION);
+      return DEFAULT_GIFTING_HAMPERS;
     }
-    return DEFAULT_GIFTING_HAMPERS;
+
+    return cached.map((item, idx) => ({
+      ...DEFAULT_GIFTING_HAMPERS[idx],
+      ...item,
+      imgWebp: DEFAULT_GIFTING_HAMPERS[idx].imgWebp,
+      imgPng: DEFAULT_GIFTING_HAMPERS[idx].imgPng,
+      customImg: item.customImg || item.image || item.img || ''
+    }));
   },
 
   async fetchRemoteHampers() {
@@ -81,6 +89,7 @@ export const giftingHampersService = {
               customImg: item.customImg || item.image || item.img || ''
             }));
             StorageService.set(STORAGE_KEY, merged);
+            StorageService.set(VERSION_KEY, CURRENT_VERSION);
             if (typeof window !== 'undefined') {
               window.dispatchEvent(new Event('manish_gifting_hampers_updated'));
             }
@@ -101,8 +110,9 @@ export const giftingHampersService = {
       lastUpdated: new Date().toISOString()
     };
 
-    // 1. Instant Local Storage
+    // 1. Instant Local Storage with Version Stamp
     StorageService.set(STORAGE_KEY, safeItems);
+    StorageService.set(VERSION_KEY, CURRENT_VERSION);
 
     // 2. Dispatch in current window
     if (typeof window !== 'undefined') {

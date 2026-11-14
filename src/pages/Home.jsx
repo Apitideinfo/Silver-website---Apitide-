@@ -536,8 +536,8 @@ export default function Home({
           else if (diff < -45) prevHeroSlide();
         }}
       >
-        {/* Banner Images Carousel Container - Proportional 2200x715 across all viewports to ensure zero clipping on mobile */}
-        <div className="relative w-full aspect-[2200/715] overflow-hidden bg-[#091B2B]">
+        {/* Banner Images Carousel Container - Increased height on mobile view for bold luxury presence, proportional on desktop */}
+        <div className="relative w-full h-[250px] xs:h-[285px] sm:h-[350px] md:h-auto md:aspect-[2200/715] overflow-hidden bg-[#091B2B]">
           <AnimatePresence initial={false} mode="wait">
             <motion.div
               key={currentHeroSlide}
@@ -849,7 +849,7 @@ export default function Home({
                     changeCategoryTab?.(silverStoryData?.banner?.tab || 'Collections');
                     navigateTo('collections');
                   }}
-                  className="relative w-full aspect-[16/10] sm:aspect-auto sm:min-h-[380px] rounded-2xl overflow-hidden border border-[#E6DFD3] shadow-md hover:shadow-xl transition-all duration-500 group cursor-pointer focus:outline-none bg-gradient-to-br from-[#FAF5EE] to-[#F2E8DA]"
+                  className="relative w-full aspect-square sm:aspect-auto sm:min-h-[380px] rounded-2xl overflow-hidden border border-[#E6DFD3] shadow-md hover:shadow-xl transition-all duration-500 group cursor-pointer focus:outline-none bg-gradient-to-br from-[#FAF5EE] to-[#F2E8DA]"
                   aria-label="Explore MANISH & CO Diwali Festive Offer"
                 >
                   <img
@@ -1630,10 +1630,71 @@ export default function Home({
             </p>
           </div>
 
+          {/* ==========================================================
+              MOBILE VIEW (< md): Responsive Touch Swipe Cards Carousel
+              ========================================================== */}
+          <div className="md:hidden w-full px-4">
+            <div className="flex overflow-x-auto no-scrollbar snap-x snap-mandatory gap-4 py-4 px-1 touch-pan-x">
+              {[
+                {
+                  name: "Aarohi Sharma, 27",
+                  quote: "My dream silver bridal set became a reality with MANISH & CO. The craftsmanship and royal finish are beyond expectations.",
+                  img: testimonial1
+                },
+                {
+                  name: "Priya Mehta, 31",
+                  quote: "The quality, finishing, and personalized service made my purchase truly memorable. A perfect luxury silver boutique experience.",
+                  img: testimonial2
+                },
+                {
+                  name: "Neha Kapoor, 29",
+                  quote: "I wear my bracelet every day and it still looks stunning. Timeless craftsmanship, 925 purity and exceptional quality.",
+                  img: testimonial3
+                },
+                {
+                  name: "Riya Verma, 26",
+                  quote: "My husband gifted me this beautiful necklace and I receive compliments everywhere. The wax seal packaging was breathtaking.",
+                  img: testimonial4
+                }
+              ].map((item, idx) => (
+                <div
+                  key={idx}
+                  className="w-[82vw] max-w-[310px] shrink-0 snap-center bg-white rounded-2xl p-4 sm:p-5 shadow-[0_8px_25px_rgba(13,43,78,0.08)] border border-[#E6DFD3] flex flex-col items-center select-none"
+                >
+                  <div className="w-full aspect-square rounded-xl overflow-hidden bg-[#F8F5EC] p-1.5 border border-[#E6DFD3] mb-3 shadow-xs">
+                    <img
+                      src={item.img}
+                      alt={item.name}
+                      loading="lazy"
+                      className="w-full h-full object-cover object-center rounded-lg pointer-events-none"
+                    />
+                  </div>
+
+                  <div className="flex items-center gap-1 text-[#D4AF37] text-xs mb-2">
+                    <span>★</span><span>★</span><span>★</span><span>★</span><span>★</span>
+                    <span className="text-[10px] text-[#6B4B2E] font-medium ml-1 font-sans">Verified Purchase</span>
+                  </div>
+
+                  <div className="w-full text-center space-y-1.5">
+                    <h4 className="font-sans font-bold text-[13px] tracking-wide text-[#0D2B4E]">
+                      {item.name}
+                    </h4>
+                    <p className="font-sans text-[11px] leading-relaxed tracking-normal font-normal text-[#657989] italic">
+                      "{item.quote}"
+                    </p>
+                  </div>
+                </div>
+              ))}
+            </div>
+          </div>
+
+          {/* ==========================================================
+              DESKTOP VIEW (>= md): Clothesline with Hanging Clips & Rotations
+              ========================================================== */}
           <div
             ref={polaroidScrollRef}
             onScroll={handlePolaroidScroll}
-            className="w-full overflow-x-auto no-scrollbar py-6 snap-x touch-pan-x"
+            className="hidden md:block w-full overflow-x-auto no-scrollbar py-6 snap-x touch-pan-x"
             style={{ WebkitOverflowScrolling: 'touch' }}
           >
             <div className="relative w-full min-w-[1100px] sm:min-w-[1250px] lg:min-w-[1400px] xl:min-w-0 xl:w-full h-[460px] sm:h-[480px]">
