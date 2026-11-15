@@ -28,10 +28,11 @@ import colPendants from '../assets/col_pendants.png';
 import colChains from '../assets/col_chains.png';
 import diamondBracelet from '../assets/diamond_bracelet.png';
 import sapphireHeritageSet from '../assets/sapphire_heritage_set.png';
+import colToeRingPng from '../assets/col_toe_ring.png';
 
 export const getShowcaseSectionsConfig = ({ navigateTo, changeCategoryTab, setCustomDesignOpen }) => [
   // ==========================================================
-  // PAGE 03 IN RECORDING: 01 / FOR HER — WOMEN'S JEWELLERY
+  // 01 / FOR HER — WOMEN'S JEWELLERY
   // ==========================================================
   {
     id: 'for-her',
@@ -41,20 +42,20 @@ export const getShowcaseSectionsConfig = ({ navigateTo, changeCategoryTab, setCu
     defaultGender: 'women',
     dark: false,
     categories: [
-      { label: 'Rings', img: herRings, tab: 'Rings' },
-      { label: 'Anklets', img: herAnklets, tab: 'Payal' },
-      { label: 'Bracelets', img: herBracelets, tab: 'Bracelets' },
-      { label: 'Earrings', img: jhumkasImg, tab: 'Earrings' },
-      { label: 'Toe Rings', img: payalImg, tab: 'Payal' },
-      { label: 'Chains', img: silverChainImg, tab: 'Necklaces' },
-      { label: 'Necklaces', img: necklacesImg, tab: 'Necklaces' },
-      { label: 'Pendants', img: pendantsImg, tab: 'Pendants' },
+      { label: 'Bracelets', img: herBracelets, tab: 'bracelets' },
+      { label: 'Anklets', img: herAnklets, tab: 'payal' },
+      { label: 'Rings', img: herRings, tab: 'rings' },
+      { label: 'Ear rings', img: earringsImg, tab: 'earrings' },
+      { label: 'Toe Rings', img: colToeRingPng || payalImg, tab: 'payal' },
+      { label: 'Chains', img: silverChainImg, tab: 'necklaces' },
+      { label: 'Necklaces', img: necklacesImg, tab: 'necklaces' },
+      { label: 'Pendants', img: pendantsImg, tab: 'pendant' },
       { label: 'Other', img: diamondBracelet, tab: 'Collections' },
     ],
   },
 
   // ==========================================================
-  // PAGE 04 IN RECORDING: 02 / FOR HIM — MEN'S JEWELLERY
+  // 02 / FOR HIM — MEN'S JEWELLERY
   // ==========================================================
   {
     id: 'for-him',
@@ -64,74 +65,67 @@ export const getShowcaseSectionsConfig = ({ navigateTo, changeCategoryTab, setCu
     defaultGender: 'men',
     dark: false,
     categories: [
-      { label: 'Kada', img: kadaImg, tab: 'Bangles' },
-      { label: 'Rings', img: himRings, tab: 'Rings' },
-      { label: 'Chains', img: himChains, tab: 'Necklaces' },
-      { label: 'Bracelets', img: himBracelets, tab: 'Bracelets' },
-      { label: 'Pendants', img: solitairesImg, tab: 'Pendants' },
+      { label: 'Kada', img: kadaImg, tab: 'bangles' },
+      { label: 'Rings', img: himRings, tab: 'rings' },
+      { label: 'Chains', img: himChains, tab: 'necklaces' },
+      { label: 'Bracelets', img: himBracelets, tab: 'bracelets' },
+      { label: 'Pendants', img: solitairesImg, tab: 'pendant' },
       { label: 'Other', img: mensJewelleryImg, tab: 'Collections' },
     ],
   },
 
   // ==========================================================
-  // PAGE 05 IN RECORDING: 03 / LITTLE TREASURES — KID'S JEWELLERY
+  // 03 / FOR KIDS — LITTLE TREASURES
   // ==========================================================
   {
-    id: 'kids-collection',
+    id: 'for-kids',
     number: '03 / LITTLE TREASURES',
     title: "Kid's Jewellery",
     subtitle: 'Pure, skin-friendly 925 silver keepsakes handcrafted for your little precious ones.',
     defaultGender: 'kids',
     dark: false,
     categories: [
-      { label: 'Born Baby Kit', img: kidsJewelleryImg, tab: 'Collections' },
-      { label: 'Nazariya & Bracelets', img: kidsBracelets, tab: 'Bracelets' },
-      { label: 'Chains', img: kidsChains, tab: 'Necklaces' },
-      { label: 'Pendants', img: pendantsImg, tab: 'Pendants' },
-      { label: 'Baby Kadas', img: kidsKadas, tab: 'Bangles' },
-      { label: 'Other', img: kidsJewelleryImg, tab: 'Collections' },
+      { label: 'Bornbaby Kit', img: kidsJewelleryImg, tab: 'Collections' },
+      { label: 'Chains', img: kidsChains, tab: 'necklaces' },
+      { label: 'Pendants', img: pendantsImg, tab: 'pendant' },
+      { label: 'Bracelets & Berwa', img: kidsBracelets, tab: 'bracelets' },
+      { label: 'Other', img: kidsKadas, tab: 'Collections' },
     ],
   },
 
   // ==========================================================
-  // PAGE 06 IN RECORDING: 04 / SACRED & CELEBRATION — GIFT'S & COUPLES
+  // 04 / COUPLE'S SECTION
+  // ==========================================================
+  {
+    id: 'couples-section',
+    number: "04 / COUPLE'S SUITE",
+    title: "Couple's Collection",
+    subtitle: 'Matching sterling silver designs crafted to celebrate sacred bonds.',
+    defaultGender: null,
+    dark: false,
+    categories: [
+      { label: 'Couple Rings', img: herRings, tab: 'rings' },
+      { label: 'Couple Chains', img: himChains, tab: 'necklaces' },
+      { label: 'Couple Bracelets', img: herBracelets, tab: 'bracelets' },
+      { label: 'Secret Sets', img: giftsKeepsakes, tab: 'Collections' },
+      { label: 'Others', img: solitairesImg, tab: 'Collections' },
+    ],
+  },
+
+  // ==========================================================
+  // 05 / GIFT'S COLLECTION
   // ==========================================================
   {
     id: 'gifts-collection',
-    number: '04 / SACRED & CELEBRATION',
-    title: "Gift's & Couples Collection",
-    subtitle: 'Auspicious 999 fine silver coins, couple sets, sacred pooja articles, and royal keepsakes.',
+    number: '05 / GIFTS & CELEBRATION',
+    title: "Gift's Collection",
+    subtitle: 'Thoughtful 925 silver gift sets, bespoke pieces, and memorable keepsakes.',
     defaultGender: null,
     dark: false,
     categories: [
-      { label: 'Born Baby Kit', img: kidsJewelleryImg, action: () => { changeCategoryTab?.('Collections'); navigateTo?.('collections'); } },
-      { label: 'Couple Rings', img: herRings, tab: 'Rings' },
-      { label: 'Couple Chains', img: himChains, tab: 'Necklaces' },
-      { label: 'Silver Coins 999', img: giftsCoins, action: () => navigateTo?.('gold-coins') },
-      { label: 'Sacred Pooja Articles', img: giftsPooja, tab: 'Silver' },
-      { label: 'Secret Sets', img: giftsKeepsakes, tab: 'Collections' },
-      { label: 'Add Your Fav.', img: solitairesImg, action: () => setCustomDesignOpen?.(true) },
-    ],
-  },
-
-  // ==========================================================
-  // ACCESSORIES SECTION
-  // ==========================================================
-  {
-    id: 'accessories-collection',
-    number: '05 / ACCESSORIES',
-    title: 'Silver Accessories',
-    subtitle: 'Pure 999 silver coins, royal cufflinks, brooches, pooja articles, and everyday sterling silver essentials.',
-    defaultGender: null,
-    dark: false,
-    categories: [
-      { label: 'Silver Coins', img: giftsCoins, action: () => navigateTo?.('gold-coins') },
-      { label: 'Cufflinks', img: giftsKeepsakes, tab: 'Collections' },
-      { label: 'Brooches', img: diamondBracelet, tab: 'Collections' },
-      { label: 'Chhala & Rings', img: colRings, tab: 'Rings' },
-      { label: 'Tie Pins', img: colChains, tab: 'Collections' },
-      { label: 'Religious Articles', img: giftsPooja, tab: 'Silver' },
-      { label: 'Other', img: solitairesImg, tab: 'Collections' },
+      { label: 'Born Baby Kit', img: kidsJewelleryImg, tab: 'Collections' },
+      { label: 'Couples things', img: giftsCoins, tab: 'Collections' },
+      { label: 'Add Your Fav.', img: giftsKeepsakes, action: () => setCustomDesignOpen?.(true) },
     ],
   },
 ];

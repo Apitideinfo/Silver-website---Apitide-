@@ -19,20 +19,23 @@ export default function EditorialShowcaseSection({
   changeCategoryTab,
   setGenderFilter,
   defaultGender = null,
+  tabs = null,
+  activeTab = null,
+  onTabChange = null,
 }) {
   const catScrollRef = useRef(null);
 
   const scrollLeft = (ref) => {
     triggerAudio?.('click');
     if (ref.current) {
-      ref.current.scrollBy({ left: -260, behavior: 'smooth' });
+      ref.current.scrollBy({ left: -240, behavior: 'smooth' });
     }
   };
 
   const scrollRight = (ref) => {
     triggerAudio?.('click');
     if (ref.current) {
-      ref.current.scrollBy({ left: 260, behavior: 'smooth' });
+      ref.current.scrollBy({ left: 240, behavior: 'smooth' });
     }
   };
 
@@ -48,7 +51,6 @@ export default function EditorialShowcaseSection({
       navigateTo?.('collections');
     }
   };
-
 
   const isDark = dark;
   const sectionBg = isDark ? 'bg-[#091B2B]' : 'bg-white';
@@ -67,7 +69,7 @@ export default function EditorialShowcaseSection({
         {/* ========================================================
             EDITORIAL HEADER
             ======================================================== */}
-        <div className="flex items-end justify-between gap-4 mb-6">
+        <div className="flex flex-col sm:flex-row sm:items-end justify-between gap-4 mb-6">
           <div className="text-left flex-1 min-w-0">
             <span className={`inline-block ${tagColor} text-[11px] sm:text-xs font-sans font-bold tracking-[0.28em] uppercase mb-1`}>
               {number}
@@ -89,7 +91,7 @@ export default function EditorialShowcaseSection({
           </div>
 
           {/* View All & Arrow navigation */}
-          <div className="flex items-center gap-3 shrink-0">
+          <div className="flex items-center justify-between sm:justify-end gap-3 shrink-0">
             <button
               onClick={() => {
                 triggerAudio?.('click');
@@ -103,7 +105,7 @@ export default function EditorialShowcaseSection({
               <span className="text-sm transition-transform duration-300 group-hover:translate-x-1">→</span>
             </button>
 
-            <div className="hidden sm:flex items-center gap-1.5">
+            <div className="flex items-center gap-1.5">
               <button
                 type="button"
                 onClick={() => scrollLeft(catScrollRef)}
@@ -124,19 +126,44 @@ export default function EditorialShowcaseSection({
           </div>
         </div>
 
+        {/* Optional Tabs for Multi-collection Switcher (Kids, Couples, Gifts) */}
+        {Array.isArray(tabs) && tabs.length > 0 && (
+          <div className="flex items-center gap-2 sm:gap-3 overflow-x-auto no-scrollbar pb-3 mb-4">
+            {tabs.map((tab) => {
+              const isActive = tab.id === activeTab;
+              return (
+                <button
+                  key={tab.id}
+                  onClick={() => {
+                    triggerAudio?.('click');
+                    onTabChange?.(tab.id);
+                  }}
+                  className={`px-3.5 py-1.5 sm:px-4 sm:py-2 rounded-full text-xs font-sans font-semibold tracking-wider uppercase transition-all whitespace-nowrap cursor-pointer border ${
+                    isActive
+                      ? 'bg-[#0D2B4E] text-white border-[#0D2B4E] shadow-sm'
+                      : 'bg-white text-[#6F6862] border-[#E8DFD5] hover:border-[#8C6D46] hover:text-[#0D2B4E]'
+                  }`}
+                >
+                  {tab.label}
+                </button>
+              );
+            })}
+          </div>
+        )}
+
         {/* ========================================================
             ROW: CATEGORY SLIDE (Square image + title below)
-            Matches client reference image exact structure
+            2-3 items visible on mobile, smoothly sliding horizontally
             ======================================================== */}
         <div 
           ref={catScrollRef}
-          className="flex gap-4 sm:gap-6 overflow-x-auto no-scrollbar scroll-smooth pb-4 pt-1"
+          className="flex gap-3 sm:gap-6 overflow-x-auto no-scrollbar scroll-smooth pb-4 pt-1 snap-x snap-mandatory touch-pan-x"
         >
           {categories.map((cat, idx) => (
             <div
               key={idx}
               onClick={() => handleCategoryClick(cat)}
-              className="flex flex-col items-center group cursor-pointer shrink-0 w-[124px] sm:w-[140px] md:w-[155px]"
+              className="flex flex-col items-center group cursor-pointer shrink-0 w-[110px] xs:w-[124px] sm:w-[140px] md:w-[155px] snap-start"
             >
               {/* Square Image Box */}
               <div className={`w-full aspect-square overflow-hidden bg-white rounded-none border ${cardBorder} group-hover:border-[#8C6D46] shadow-[0_2px_10px_rgba(0,0,0,0.04)] group-hover:shadow-[0_8px_20px_rgba(140,109,70,0.18)] transition-all duration-300 relative`}>

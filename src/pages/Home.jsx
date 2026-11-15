@@ -16,6 +16,14 @@ import kidsJewelleryImg from '../assets/kids_jewellery.png';
 import goldCoinsImg from '../assets/gold_coins.png';
 import kadaImg from '../assets/kada.png';
 import EditorialShowcaseSection from '../components/EditorialShowcaseSection';
+import { getShowcaseSectionsConfig } from '../config/showcaseSections';
+import herRings from '../assets/editorial/her_rings.jpg';
+import herBracelets from '../assets/editorial/her_bracelets.jpg';
+import herAnklets from '../assets/editorial/her_anklets.jpg';
+import necklacesImg from '../assets/necklaces.png';
+import pendantsImg from '../assets/pendants.png';
+import earringsImg from '../assets/clean_categories/earrings.png';
+import silverChainImg from '../assets/clean_categories/silver_chain.png';
 import { INITIAL_CATEGORIES } from '../config/constants';
 import { StorageService } from '../services/StorageService';
 
@@ -477,14 +485,152 @@ export default function Home({
   const categoriesAutoplayRef = useRef(null);
 
 
+  // Polaroid Testimonials Data
+  const polaroidTestimonialsData = [
+    {
+      name: "Aarohi Sharma, 27",
+      quote: "My dream silver bridal set became a reality with MANISH & CO. The craftsmanship and royal finish are beyond expectations.",
+      img: testimonial1,
+      rot: "rotate-[-4deg] sm:rotate-[-8deg]",
+      top: "42px"
+    },
+    {
+      name: "Priya Mehta, 31",
+      quote: "The quality, finishing, and personalized service made my purchase truly memorable. A perfect luxury silver boutique experience.",
+      img: testimonial2,
+      rot: "rotate-[3deg] sm:rotate-[-3deg]",
+      top: "52px"
+    },
+    {
+      name: "Neha Kapoor, 29",
+      quote: "I wear my bracelet every day and it still looks stunning. Timeless craftsmanship, 925 purity and exceptional quality.",
+      img: testimonial3,
+      rot: "rotate-[-3deg] sm:rotate-[4deg]",
+      top: "50px"
+    },
+    {
+      name: "Riya Verma, 26",
+      quote: "My husband gifted me this beautiful necklace and I receive compliments everywhere. The wax seal packaging was breathtaking.",
+      img: testimonial4,
+      rot: "rotate-[4deg] sm:rotate-[8deg]",
+      top: "42px"
+    }
+  ];
+
   // Polaroid Testimonials Refs & Progress State
   const testimonialsRef = useRef(null);
   const [testimonialsInView, setTestimonialsInView] = useState(false);
   const polaroidScrollRef = useRef(null);
   const [polaroidScrollProgress, setPolaroidScrollProgress] = useState(0);
+  const [activePolaroidIdx, setActivePolaroidIdx] = useState(0);
+
+  const scrollToPolaroid = (idx) => {
+    if (polaroidScrollRef.current) {
+      const container = polaroidScrollRef.current;
+      const card = container.children[idx];
+      if (card) {
+        card.scrollIntoView({ behavior: 'smooth', block: 'nearest', inline: 'center' });
+      }
+      setActivePolaroidIdx(idx);
+    }
+  };
+
+  const scrollPolaroid = (direction) => {
+    const nextIdx = direction === 'left' ? Math.max(0, activePolaroidIdx - 1) : Math.min(3, activePolaroidIdx + 1);
+    scrollToPolaroid(nextIdx);
+  };
+
+  const handlePolaroidScroll = () => {
+    if (polaroidScrollRef.current) {
+      const { scrollLeft, scrollWidth, clientWidth } = polaroidScrollRef.current;
+      const totalScroll = scrollWidth - clientWidth;
+      if (totalScroll > 0) {
+        setPolaroidScrollProgress((scrollLeft / totalScroll) * 100);
+        const cardStep = totalScroll / 3;
+        const currentIdx = Math.round(scrollLeft / Math.max(cardStep, 1));
+        setActivePolaroidIdx(Math.min(3, Math.max(0, currentIdx)));
+      }
+    }
+  };
+
+  // Curated Showcase Special Occasions Active Tab
+  const [specialOccasionTab, setSpecialOccasionTab] = useState('for-kids');
+
+  // Featured Collection Cards (for "Crafted for Every Moment" - Screenshot 2)
+  const featuredCollectionCards = React.useMemo(() => {
+    const defaultFeatured = [
+      { id: 'rings', name: 'Rings', img: herRings, tab: 'rings' },
+      { id: 'necklaces', name: 'Necklaces', img: necklacesImg, tab: 'necklaces' },
+      { id: 'bracelets', name: 'Bracelets', img: herBracelets, tab: 'bracelets' },
+      { id: 'payal', name: 'Anklets', img: herAnklets, tab: 'payal' }
+    ];
+
+    if (Array.isArray(categories) && categories.length > 0) {
+      const live = categories.map(c => ({
+        id: c.id || c.docId || c.name,
+        name: c.name,
+        img: c.img || getCategoryFallbackImage(c.name || c.id),
+        tab: c.tab || c.name
+      }));
+      if (live.length >= 4) return live.slice(0, 4);
+      const existingNames = new Set(live.map(l => String(l.name).toLowerCase()));
+      const fillers = defaultFeatured.filter(b => !existingNames.has(b.name.toLowerCase()));
+      return [...live, ...fillers].slice(0, 4);
+    }
+
+    return defaultFeatured;
+  }, [categories]);
+
+  // Recommended For You Categories (Issue 3)
+  const activeCategories = React.useMemo(() => {
+    const baselineRecommended = [
+      { id: 'pendant', name: 'Pendants', img: pendantsImg || catRefPendantWebp },
+      { id: 'rings', name: 'Rings', img: herRings || catRefRingsWebp },
+      { id: 'necklaces', name: 'Necklaces', img: necklacesImg || catRefNecklacesWebp },
+      { id: 'bracelets', name: 'Bracelets', img: herBracelets || catRefBraceletsWebp },
+      { id: 'anklets', name: 'Anklets', img: herAnklets || catRefAnkletsWebp },
+      { id: 'kada', name: 'Royal Kada', img: kadaImg },
+      { id: 'chain', name: 'Silver Chains', img: silverChainImg || catRefChainWebp },
+      { id: 'earrings', name: 'Earrings', img: earringsImg || catRefEarringWebp },
+      { id: 'mangalsutra', name: 'Mangalsutra', img: catRefMangalsutraWebp || catRefMangalsutra },
+      { id: 'toe-ring', name: 'Toe Rings', img: colToeRingPng || catRefToeRingWebp }
+    ];
+
+    if (Array.isArray(categories) && categories.length > 0) {
+      const live = categories.map(c => ({
+        id: c.id || c.docId || c.name,
+        name: c.name,
+        img: c.img || getCategoryFallbackImage(c.name || c.id)
+      }));
+      const existingNames = new Set(live.map(l => String(l.name).toLowerCase()));
+      const combined = [...live, ...baselineRecommended.filter(b => !existingNames.has(b.name.toLowerCase()))];
+      return combined;
+    }
+
+    return baselineRecommended;
+  }, [categories]);
+
+  // Showcase Sections Config (for Her, Him, Kids, Couples, Gifts)
+  const showcaseSections = React.useMemo(() => {
+    return getShowcaseSectionsConfig({
+      navigateTo,
+      changeCategoryTab,
+      setCustomDesignOpen
+    });
+  }, [navigateTo, changeCategoryTab, setCustomDesignOpen]);
+
+  const forHerSection = showcaseSections.find(s => s.id === 'for-her');
+  const forHimSection = showcaseSections.find(s => s.id === 'for-him');
+  const forKidsSection = showcaseSections.find(s => s.id === 'for-kids');
+  const couplesSection = showcaseSections.find(s => s.id === 'couples-section');
+  const giftsSection = showcaseSections.find(s => s.id === 'gifts-collection');
+
+  const specialOccasionActive = 
+    specialOccasionTab === 'couples-section' ? couplesSection :
+    specialOccasionTab === 'gifts-collection' ? giftsSection :
+    forKidsSection;
 
   // Story & Process States
-  const activeCategories = displayCategories;
   const [activeStoryTimeline, setActiveStoryTimeline] = useState(1996);
   const [timelineDirection, setTimelineDirection] = useState(1);
   const [openFaqIndex, setOpenFaqIndex] = useState(null);
@@ -525,16 +671,6 @@ export default function Home({
 
 
 
-
-  const handlePolaroidScroll = () => {
-    if (polaroidScrollRef.current) {
-      const { scrollLeft, scrollWidth, clientWidth } = polaroidScrollRef.current;
-      const totalScroll = scrollWidth - clientWidth;
-      if (totalScroll > 0) {
-        setPolaroidScrollProgress((scrollLeft / totalScroll) * 100);
-      }
-    }
-  };
 
   // Testimonials Observer Setup
   useEffect(() => {
@@ -1311,19 +1447,19 @@ export default function Home({
 
               {/* Right Column: Collection Category Cards */}
               <div className="w-full lg:flex-1 grid grid-cols-2 md:grid-cols-4 gap-4 sm:gap-5 lg:gap-6">
-                {displayCategories.slice(0, 4).map((cat) => (
+                {featuredCollectionCards.map((cat) => (
                   <div
                     key={cat.id || cat.docId || cat.name}
                     onClick={() => {
                       triggerAudio('click');
-                      changeCategoryTab?.(cat.name);
+                      changeCategoryTab?.(cat.tab || cat.name);
                       navigateTo('collections');
                     }}
                     className="group cursor-pointer flex flex-col items-center text-center select-none"
                   >
                     <div className="w-full aspect-[148/169] overflow-hidden bg-black/5 shadow-sm relative">
                       <img
-                        src={cat.img || getCategoryFallbackImage(cat.name || cat.id)}
+                        src={cat.img}
                         alt={`${cat.name} - MANISH & CO`}
                         className="w-full h-full object-cover transition-transform duration-700 ease-out group-hover:scale-105"
                         loading="lazy"
@@ -1448,6 +1584,62 @@ export default function Home({
 
             </div>
           </section>
+        )}
+
+        {/* ==========================================================
+          CURATED EDITORIAL SECTIONS (For Her, For Him, Special Occasions)
+          Compact horizontal slides, 2-3 items on mobile, 3 sections total
+          ========================================================== */}
+        {forHerSection && (
+          <EditorialShowcaseSection
+            id={forHerSection.id}
+            number={forHerSection.number}
+            title={forHerSection.title}
+            subtitle={forHerSection.subtitle}
+            defaultGender={forHerSection.defaultGender}
+            categories={forHerSection.categories}
+            triggerAudio={triggerAudio}
+            navigateTo={navigateTo}
+            changeCategoryTab={changeCategoryTab}
+            setGenderFilter={setGenderFilter}
+          />
+        )}
+
+        {forHimSection && (
+          <EditorialShowcaseSection
+            id={forHimSection.id}
+            number={forHimSection.number}
+            title={forHimSection.title}
+            subtitle={forHimSection.subtitle}
+            defaultGender={forHimSection.defaultGender}
+            categories={forHimSection.categories}
+            triggerAudio={triggerAudio}
+            navigateTo={navigateTo}
+            changeCategoryTab={changeCategoryTab}
+            setGenderFilter={setGenderFilter}
+          />
+        )}
+
+        {specialOccasionActive && (
+          <EditorialShowcaseSection
+            id="special-occasions"
+            number="03 / SPECIAL EDITIONS & CELEBRATIONS"
+            title={specialOccasionActive.title}
+            subtitle={specialOccasionActive.subtitle}
+            defaultGender={specialOccasionActive.defaultGender}
+            categories={specialOccasionActive.categories}
+            triggerAudio={triggerAudio}
+            navigateTo={navigateTo}
+            changeCategoryTab={changeCategoryTab}
+            setGenderFilter={setGenderFilter}
+            tabs={[
+              { id: 'for-kids', label: 'For Kids' },
+              { id: 'couples-section', label: "Couple's Suite" },
+              { id: 'gifts-collection', label: "Gift's Collection" }
+            ]}
+            activeTab={specialOccasionTab}
+            onTabChange={(tabId) => setSpecialOccasionTab(tabId)}
+          />
         )}
 
 
@@ -1673,17 +1865,9 @@ export default function Home({
             </p>
           </div>
 
-          {/* ==========================================================
-              UNIFIED RESPONSIVE PATRONS' STORIES CLOTHESLINE
-              Identical luxury Polaroid hanging aesthetic across all devices
-              ========================================================== */}
-          <div
-            ref={polaroidScrollRef}
-            onScroll={handlePolaroidScroll}
-            className="w-full overflow-x-auto no-scrollbar py-6 snap-x touch-pan-x select-none"
-            style={{ WebkitOverflowScrolling: 'touch' }}
-          >
-            <div className="relative mx-auto min-w-[1040px] lg:min-w-0 lg:max-w-6xl xl:max-w-7xl h-[440px] sm:h-[460px] px-4">
+          {/* DESKTOP VIEW (1024px+): Exact luxury hanging clothesline from Screenshot 1 */}
+          <div className="hidden lg:block w-full overflow-visible py-6 select-none">
+            <div className="relative mx-auto max-w-6xl xl:max-w-7xl h-[460px] px-4">
               {/* Clothesline Wire SVG */}
               <svg className="absolute left-0 top-0 w-full h-[120px] pointer-events-none z-0" viewBox="0 0 100 120" fill="none" preserveAspectRatio="none">
                 <path
@@ -1693,80 +1877,38 @@ export default function Home({
                 />
               </svg>
 
-              <div className="w-full h-full flex items-start justify-between relative z-10 px-4 sm:px-8">
-                {[
-                  {
-                    name: "Aarohi Sharma, 27",
-                    quote: "My dream silver bridal set became a reality with MANISH & CO. The craftsmanship and royal finish are beyond expectations.",
-                    img: testimonial1,
-                    rot: "rotate-[-4deg] sm:rotate-[-8deg]",
-                    top: "42px"
-                  },
-                  {
-                    name: "Priya Mehta, 31",
-                    quote: "The quality, finishing, and personalized service made my purchase truly memorable. A perfect luxury silver boutique experience.",
-                    img: testimonial2,
-                    rot: "rotate-[3deg] sm:rotate-[-3deg]",
-                    top: "52px"
-                  },
-                  {
-                    name: "Neha Kapoor, 29",
-                    quote: "I wear my bracelet every day and it still looks stunning. Timeless craftsmanship, 925 purity and exceptional quality.",
-                    img: testimonial3,
-                    rot: "rotate-[-3deg] sm:rotate-[4deg]",
-                    top: "50px"
-                  },
-                  {
-                    name: "Riya Verma, 26",
-                    quote: "My husband gifted me this beautiful necklace and I receive compliments everywhere. The wax seal packaging was breathtaking.",
-                    img: testimonial4,
-                    rot: "rotate-[4deg] sm:rotate-[8deg]",
-                    top: "42px"
-                  }
-                ].map((item, idx) => (
+              <div className="w-full h-full flex items-start justify-between relative z-10 px-8">
+                {polaroidTestimonialsData.map((item, idx) => (
                   <div
                     key={idx}
                     style={{ marginTop: item.top }}
-                    className="shrink-0 snap-center transition-all duration-300 px-2 sm:px-3"
+                    className="shrink-0 transition-all duration-300 px-3"
                   >
                     <div
                       style={{ transformOrigin: "50% -20px" }}
-                      className={`w-[245px] xs:w-[260px] sm:w-[280px] shadow-[0_15px_35px_rgba(13,43,78,0.08),0_5px_15px_rgba(13,43,78,0.04)] rounded-xs pt-4 sm:pt-5 px-4 sm:px-5 pb-6 sm:pb-7 relative flex flex-col items-center select-none snap-center transition-all duration-300 hover:scale-[1.03] hover:rotate-0 hover:z-40 cursor-pointer border border-solid overflow-visible bg-white border-[#E6DFD3] ${item.rot}`}
+                      className={`w-[270px] xl:w-[280px] shadow-[0_15px_35px_rgba(13,43,78,0.08),0_5px_15px_rgba(13,43,78,0.04)] rounded-xs pt-5 px-5 pb-7 relative flex flex-col items-center select-none transition-all duration-300 hover:scale-[1.03] hover:rotate-0 hover:z-40 cursor-pointer border border-solid overflow-visible bg-white border-[#E6DFD3] ${item.rot}`}
                     >
                       {/* Realistic Silver Clip Pin */}
                       <div className="absolute -top-[28px] left-1/2 -translate-x-1/2 w-8 h-12 flex items-center justify-center z-20 pointer-events-none">
                         <svg width="28" height="42" viewBox="0 0 28 42" fill="none" xmlns="http://www.w3.org/2000/svg">
                           <defs>
-                            <linearGradient id={`metalGrad_${idx}`} x1="0%" y1="0%" x2="100%" y2="100%">
+                            <linearGradient id={`metalGrad_desk_${idx}`} x1="0%" y1="0%" x2="100%" y2="100%">
                               <stop offset="0%" stopColor="#FFFFFF" />
                               <stop offset="40%" stopColor="#D8D9DA" />
                               <stop offset="70%" stopColor="#9EA0A2" />
                               <stop offset="100%" stopColor="#5C5E60" />
                             </linearGradient>
-                            <linearGradient id={`loopGrad_${idx}`} x1="0%" y1="0%" x2="0%" y2="100%">
-                              <stop offset="0%" stopColor="#F0F1F2" />
-                              <stop offset="50%" stopColor="#9EA0A2" />
-                              <stop offset="100%" stopColor="#404142" />
-                            </linearGradient>
                           </defs>
                           <path
                             d="M14 2 C8 2, 7 20, 7 20 M14 2 C20 2, 21 20, 21 20"
-                            stroke={`url(#loopGrad_${idx})`}
+                            stroke="#9EA0A2"
                             strokeWidth="1.6"
-                            strokeLinecap="round"
-                            fill="none"
-                            className="drop-shadow-[0_1.5px_1px_rgba(0,0,0,0.2)]"
-                          />
-                          <path
-                            d="M14 2 C8 2, 7 20, 7 20 M14 2 C20 2, 21 20, 21 20"
-                            stroke="#F3F4F6"
-                            strokeWidth="0.8"
                             strokeLinecap="round"
                             fill="none"
                           />
                           <path
                             d="M4 20 L24 20 L27 32 L1 32 Z"
-                            fill={`url(#metalGrad_${idx})`}
+                            fill={`url(#metalGrad_desk_${idx})`}
                             stroke="#8E9092"
                             strokeWidth="0.8"
                             strokeLinejoin="round"
@@ -1777,7 +1919,7 @@ export default function Home({
                       </div>
 
                       {/* Polaroid Photo */}
-                      <div className="w-full aspect-square overflow-hidden rounded-xs mb-3 sm:mb-4 bg-[#F8F5EC] p-1 shadow-xs border border-solid border-[#E6DFD3] text-center">
+                      <div className="w-full aspect-square overflow-hidden rounded-xs mb-4 bg-[#F8F5EC] p-1 shadow-xs border border-solid border-[#E6DFD3] text-center">
                         <img
                           src={item.img}
                           alt={item.name}
@@ -1796,10 +1938,10 @@ export default function Home({
 
                       {/* Patron Name and Quote */}
                       <div className="w-full space-y-1 text-left px-0.5">
-                        <h4 className="font-sans font-bold text-xs sm:text-[13px] tracking-wide text-[#0D2B4E]">
+                        <h4 className="font-sans font-bold text-[13px] tracking-wide text-[#0D2B4E]">
                           {item.name}
                         </h4>
-                        <p className="font-sans text-[10px] sm:text-[11px] leading-relaxed tracking-normal font-normal text-[#657989] italic">
+                        <p className="font-sans text-[11px] leading-relaxed tracking-normal font-normal text-[#657989] italic">
                           "{item.quote}"
                         </p>
                       </div>
@@ -1807,6 +1949,106 @@ export default function Home({
                   </div>
                 ))}
               </div>
+            </div>
+          </div>
+
+          {/* MOBILE & TABLET VIEW (< 1024px): 100% Responsive Clothesline Carousel */}
+          <div className="block lg:hidden w-full relative px-4">
+            {/* Hanging Clothesline Header Wire */}
+            <div className="w-full h-[1.5px] bg-[#D1D5DB] relative mb-6">
+              <div className="absolute left-1/2 -translate-x-1/2 -top-1 w-2 h-2 rounded-full bg-[#8C6D46]/40" />
+            </div>
+
+            {/* Carousel Container */}
+            <div
+              ref={polaroidScrollRef}
+              onScroll={handlePolaroidScroll}
+              className="w-full overflow-x-auto no-scrollbar py-2 snap-x snap-mandatory flex items-start gap-4 sm:gap-6 justify-start touch-pan-x"
+              style={{ WebkitOverflowScrolling: 'touch' }}
+            >
+              {polaroidTestimonialsData.map((item, idx) => (
+                <div
+                  key={idx}
+                  className="shrink-0 snap-center w-[82vw] max-w-[290px] px-1 py-4 flex flex-col items-center"
+                >
+                  <div className="w-full shadow-[0_12px_28px_rgba(13,43,78,0.08),0_4px_12px_rgba(13,43,78,0.04)] rounded-xs pt-5 px-4 pb-6 relative flex flex-col items-center bg-white border border-solid border-[#E6DFD3]">
+                    {/* Metallic Clip */}
+                    <div className="absolute -top-[24px] left-1/2 -translate-x-1/2 w-7 h-10 flex items-center justify-center z-20 pointer-events-none">
+                      <svg width="24" height="36" viewBox="0 0 28 42" fill="none">
+                        <path d="M14 2 C8 2, 7 20, 7 20 M14 2 C20 2, 21 20, 21 20" stroke="#9EA0A2" strokeWidth="1.6" fill="none" />
+                        <path d="M4 20 L24 20 L27 32 L1 32 Z" fill="#D8D9DA" stroke="#8E9092" strokeWidth="0.8" />
+                        <path d="M4 20 L24 20 L25 23 L3 23 Z" fill="#C5C6C8" />
+                      </svg>
+                    </div>
+
+                    {/* Photo */}
+                    <div className="w-full aspect-square overflow-hidden rounded-xs mb-3 bg-[#F8F5EC] p-1 shadow-xs border border-solid border-[#E6DFD3]">
+                      <img
+                        src={item.img}
+                        alt={item.name}
+                        loading="lazy"
+                        className="w-full h-full object-cover object-center pointer-events-none"
+                      />
+                    </div>
+
+                    {/* Verified Stars */}
+                    <div className="w-full flex items-center justify-between text-[#D4AF37] text-[10px] mb-1 px-0.5">
+                      <div className="flex gap-0.5">
+                        <span>★</span><span>★</span><span>★</span><span>★</span><span>★</span>
+                      </div>
+                      <span className="text-[9px] text-[#6B4B2E] font-medium font-sans">Verified Patron</span>
+                    </div>
+
+                    {/* Name & Quote */}
+                    <div className="w-full space-y-1 text-left px-0.5">
+                      <h4 className="font-sans font-bold text-xs sm:text-[13px] tracking-wide text-[#0D2B4E]">
+                        {item.name}
+                      </h4>
+                      <p className="font-sans text-[10.5px] leading-relaxed tracking-normal font-normal text-[#657989] italic">
+                        "{item.quote}"
+                      </p>
+                    </div>
+                  </div>
+                </div>
+              ))}
+            </div>
+
+            {/* Mobile Navigation Arrows & Dots */}
+            <div className="flex items-center justify-center gap-4 mt-6">
+              <button
+                type="button"
+                onClick={() => scrollPolaroid('left')}
+                disabled={activePolaroidIdx === 0}
+                className="w-8 h-8 rounded-full border border-[#E6DFD3] bg-white flex items-center justify-center text-[#0D2B4E] disabled:opacity-30 disabled:cursor-not-allowed hover:bg-[#F5EDE4] transition-all cursor-pointer shadow-xs"
+                aria-label="Previous story"
+              >
+                <ChevronLeft className="w-4 h-4" />
+              </button>
+
+              <div className="flex items-center gap-1.5">
+                {[0, 1, 2, 3].map((dotIdx) => (
+                  <button
+                    key={dotIdx}
+                    onClick={() => scrollToPolaroid(dotIdx)}
+                    className={`h-2 rounded-full transition-all duration-300 cursor-pointer ${
+                      activePolaroidIdx === dotIdx
+                        ? 'w-6 bg-[#6B4B2E]'
+                        : 'w-2 bg-[#E6DFD3] hover:bg-[#8C6D46]/60'
+                    }`}
+                    aria-label={`Go to story ${dotIdx + 1}`}
+                  />
+                ))}
+              </div>
+
+              <button
+                type="button"
+                onClick={() => scrollPolaroid('right')}
+                disabled={activePolaroidIdx === 3}
+                className="w-8 h-8 rounded-full border border-[#E6DFD3] bg-white flex items-center justify-center text-[#0D2B4E] disabled:opacity-30 disabled:cursor-not-allowed hover:bg-[#F5EDE4] transition-all cursor-pointer shadow-xs"
+                aria-label="Next story"
+              >
+                <ChevronRight className="w-4 h-4" />
+              </button>
             </div>
           </div>
 
