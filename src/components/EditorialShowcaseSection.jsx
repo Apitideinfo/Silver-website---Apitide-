@@ -1,5 +1,6 @@
 import React, { useRef } from 'react';
 import { ChevronLeft, ChevronRight } from 'lucide-react';
+import { getCategoryFallbackImage } from '../utils/categoryAssets';
 
 /**
  * EditorialShowcaseSection
@@ -44,7 +45,7 @@ export default function EditorialShowcaseSection({
     if (cat.action) {
       cat.action();
     } else {
-      if (defaultGender && setGenderFilter) {
+      if (defaultGender && typeof setGenderFilter === 'function') {
         setGenderFilter(defaultGender);
       }
       changeCategoryTab?.(cat.tab || 'Collections', 'all', defaultGender || 'all');
@@ -95,7 +96,7 @@ export default function EditorialShowcaseSection({
             <button
               onClick={() => {
                 triggerAudio?.('click');
-                if (defaultGender && setGenderFilter) setGenderFilter(defaultGender);
+                if (defaultGender && typeof setGenderFilter === 'function') setGenderFilter(defaultGender);
                 changeCategoryTab?.('Collections', 'all', defaultGender || 'all');
                 navigateTo?.('collections');
               }}
@@ -168,10 +169,14 @@ export default function EditorialShowcaseSection({
               {/* Square Image Box */}
               <div className={`w-full aspect-square overflow-hidden bg-white rounded-none border ${cardBorder} group-hover:border-[#8C6D46] shadow-[0_2px_10px_rgba(0,0,0,0.04)] group-hover:shadow-[0_8px_20px_rgba(140,109,70,0.18)] transition-all duration-300 relative`}>
                 <img
-                  src={cat.img}
+                  src={cat.img || getCategoryFallbackImage(cat.label)}
                   alt={cat.label}
                   loading="lazy"
                   className="w-full h-full object-cover object-center group-hover:scale-108 transition-transform duration-500"
+                  onError={(e) => {
+                    e.currentTarget.onerror = null;
+                    e.currentTarget.src = getCategoryFallbackImage(cat.label);
+                  }}
                 />
                 <div className="absolute inset-0 bg-black/0 group-hover:bg-black/10 transition-colors pointer-events-none" />
               </div>
