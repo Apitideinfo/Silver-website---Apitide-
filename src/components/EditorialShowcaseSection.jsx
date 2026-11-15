@@ -92,39 +92,41 @@ export default function EditorialShowcaseSection({
           </div>
 
           {/* View All & Arrow navigation */}
-          <div className="flex items-center justify-between sm:justify-end gap-3 shrink-0">
-            <button
-              onClick={() => {
-                triggerAudio?.('click');
-                if (defaultGender && typeof setGenderFilter === 'function') setGenderFilter(defaultGender);
-                changeCategoryTab?.('Collections', 'all', defaultGender || 'all');
-                navigateTo?.('collections');
-              }}
-              className={`${tagColor} hover:text-[#1A1817] font-sans text-xs font-bold tracking-[0.18em] uppercase inline-flex items-center gap-1.5 transition-colors cursor-pointer group`}
-            >
-              <span>VIEW ALL</span>
-              <span className="text-sm transition-transform duration-300 group-hover:translate-x-1">→</span>
-            </button>
+          {categories.length > 0 && (
+            <div className="flex items-center justify-between sm:justify-end gap-3 shrink-0">
+              <button
+                onClick={() => {
+                  triggerAudio?.('click');
+                  if (defaultGender && typeof setGenderFilter === 'function') setGenderFilter(defaultGender);
+                  changeCategoryTab?.('Collections', 'all', defaultGender || 'all');
+                  navigateTo?.('collections');
+                }}
+                className={`${tagColor} hover:text-[#1A1817] font-sans text-xs font-bold tracking-[0.18em] uppercase inline-flex items-center gap-1.5 transition-colors cursor-pointer group`}
+              >
+                <span>VIEW ALL</span>
+                <span className="text-sm transition-transform duration-300 group-hover:translate-x-1">→</span>
+              </button>
 
-            <div className="flex items-center gap-1.5">
-              <button
-                type="button"
-                onClick={() => scrollLeft(catScrollRef)}
-                aria-label="Previous categories"
-                className={`w-7 h-7 rounded-full border ${cardBorder} ${cardBg} flex items-center justify-center text-gray-600 hover:text-[#8C6D46] hover:border-[#8C6D46] transition-colors cursor-pointer`}
-              >
-                <ChevronLeft className="w-4 h-4" />
-              </button>
-              <button
-                type="button"
-                onClick={() => scrollRight(catScrollRef)}
-                aria-label="Next categories"
-                className={`w-7 h-7 rounded-full border ${cardBorder} ${cardBg} flex items-center justify-center text-gray-600 hover:text-[#8C6D46] hover:border-[#8C6D46] transition-colors cursor-pointer`}
-              >
-                <ChevronRight className="w-4 h-4" />
-              </button>
+              <div className="flex items-center gap-1.5">
+                <button
+                  type="button"
+                  onClick={() => scrollLeft(catScrollRef)}
+                  aria-label="Previous categories"
+                  className={`w-7 h-7 rounded-full border ${cardBorder} ${cardBg} flex items-center justify-center text-gray-600 hover:text-[#8C6D46] hover:border-[#8C6D46] transition-colors cursor-pointer`}
+                >
+                  <ChevronLeft className="w-4 h-4" />
+                </button>
+                <button
+                  type="button"
+                  onClick={() => scrollRight(catScrollRef)}
+                  aria-label="Next categories"
+                  className={`w-7 h-7 rounded-full border ${cardBorder} ${cardBg} flex items-center justify-center text-gray-600 hover:text-[#8C6D46] hover:border-[#8C6D46] transition-colors cursor-pointer`}
+                >
+                  <ChevronRight className="w-4 h-4" />
+                </button>
+              </div>
             </div>
-          </div>
+          )}
         </div>
 
         {/* Optional Tabs for Multi-collection Switcher (Kids, Couples, Gifts) */}
@@ -155,41 +157,44 @@ export default function EditorialShowcaseSection({
         {/* ========================================================
             ROW: CATEGORY SLIDE (Square image + title below)
             2-3 items visible on mobile, smoothly sliding horizontally
+            Only renders when admin has uploaded items
             ======================================================== */}
-        <div 
-          ref={catScrollRef}
-          className="flex gap-3 sm:gap-6 overflow-x-auto no-scrollbar scroll-smooth pb-4 pt-1 snap-x snap-mandatory touch-pan-x"
-        >
-          {categories.map((cat, idx) => (
-            <div
-              key={idx}
-              onClick={() => handleCategoryClick(cat)}
-              className="flex flex-col items-center group cursor-pointer shrink-0 w-[110px] xs:w-[124px] sm:w-[140px] md:w-[155px] snap-start"
-            >
-              {/* Square Image Box */}
-              <div className={`w-full aspect-square overflow-hidden bg-white rounded-none border ${cardBorder} group-hover:border-[#8C6D46] shadow-[0_2px_10px_rgba(0,0,0,0.04)] group-hover:shadow-[0_8px_20px_rgba(140,109,70,0.18)] transition-all duration-300 relative`}>
-                <img
-                  src={cat.img || getCategoryFallbackImage(cat.label)}
-                  alt={cat.label}
-                  loading="lazy"
-                  className="w-full h-full object-cover object-center group-hover:scale-108 transition-transform duration-500"
-                  onError={(e) => {
-                    e.currentTarget.onerror = null;
-                    e.currentTarget.src = getCategoryFallbackImage(cat.label);
-                  }}
-                />
-                <div className="absolute inset-0 bg-black/0 group-hover:bg-black/10 transition-colors pointer-events-none" />
-              </div>
-
-              {/* Title below card */}
-              <span 
-                className={`mt-2.5 font-sans text-[10.5px] sm:text-xs font-semibold tracking-[0.12em] uppercase text-center w-full px-1 leading-snug break-words ${textColor} group-hover:text-[#8C6D46] transition-colors`}
+        {categories.length > 0 && (
+          <div 
+            ref={catScrollRef}
+            className="flex gap-3 sm:gap-6 overflow-x-auto no-scrollbar scroll-smooth pb-4 pt-1 snap-x snap-mandatory touch-pan-x"
+          >
+            {categories.map((cat, idx) => (
+              <div
+                key={idx}
+                onClick={() => handleCategoryClick(cat)}
+                className="flex flex-col items-center group cursor-pointer shrink-0 w-[110px] xs:w-[124px] sm:w-[140px] md:w-[155px] snap-start"
               >
-                {cat.label}
-              </span>
-            </div>
-          ))}
-        </div>
+                {/* Square Image Box */}
+                <div className={`w-full aspect-square overflow-hidden bg-white rounded-none border ${cardBorder} group-hover:border-[#8C6D46] shadow-[0_2px_10px_rgba(0,0,0,0.04)] group-hover:shadow-[0_8px_20px_rgba(140,109,70,0.18)] transition-all duration-300 relative`}>
+                  <img
+                    src={cat.img || getCategoryFallbackImage(cat.label)}
+                    alt={cat.label}
+                    loading="lazy"
+                    className="w-full h-full object-cover object-center group-hover:scale-108 transition-transform duration-500"
+                    onError={(e) => {
+                      e.currentTarget.onerror = null;
+                      e.currentTarget.src = getCategoryFallbackImage(cat.label);
+                    }}
+                  />
+                  <div className="absolute inset-0 bg-black/0 group-hover:bg-black/10 transition-colors pointer-events-none" />
+                </div>
+
+                {/* Title below card */}
+                <span 
+                  className={`mt-2.5 font-sans text-[10.5px] sm:text-xs font-semibold tracking-[0.12em] uppercase text-center w-full px-1 leading-snug break-words ${textColor} group-hover:text-[#8C6D46] transition-colors`}
+                >
+                  {cat.label}
+                </span>
+              </div>
+            ))}
+          </div>
+        )}
 
       </div>
     </section>

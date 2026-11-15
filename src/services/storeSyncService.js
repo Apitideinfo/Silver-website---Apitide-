@@ -148,7 +148,7 @@ class StoreSyncService {
 
     // 5. Curated Showcases (For Her, Him, Kids, Couples, Gifts)
     if (config.curatedShowcases && typeof config.curatedShowcases === 'object' && (now - (this.lastPublishTimes['curatedShowcases'] || this.lastPublishTimes['curated_showcases'] || 0) > 10000)) {
-      StorageService.set('manish_curated_showcase_data', config.curatedShowcases);
+      StorageService.set('manish_curated_showcase_data_v2', config.curatedShowcases);
       this.broadcast('curated_showcase', config.curatedShowcases);
     }
   }

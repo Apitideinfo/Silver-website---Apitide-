@@ -36,17 +36,7 @@ export const DEFAULT_SHOWCASE_SECTIONS = {
     title: "Women's Jewellery",
     subtitle: 'Elegant 925 sterling silver pieces for everyday beauty and royal moments.',
     defaultGender: 'women',
-    categories: [
-      { id: 'her-anklets', label: 'Anklets', img: herAnklets, tab: 'payal' },
-      { id: 'her-rings', label: 'Rings', img: herRings, tab: 'rings' },
-      { id: 'her-earrings', label: 'Ear rings', img: earringsImg, tab: 'earrings' },
-      { id: 'her-toerings', label: 'Toe Rings', img: colToeRingPng || payalImg, tab: 'payal' },
-      { id: 'her-chains', label: 'Chains', img: silverChainImg, tab: 'necklaces' },
-      { id: 'her-necklaces', label: 'Necklaces', img: necklacesImg, tab: 'necklaces' },
-      { id: 'her-pendants', label: 'Pendants', img: pendantsImg, tab: 'pendant' },
-      { id: 'her-bracelets', label: 'Bracelets', img: herBracelets, tab: 'bracelets' },
-      { id: 'her-other', label: 'Other', img: diamondBracelet, tab: 'Collections' },
-    ]
+    categories: []
   },
   'for-him': {
     id: 'for-him',
@@ -54,14 +44,7 @@ export const DEFAULT_SHOWCASE_SECTIONS = {
     title: "Men's Jewellery",
     subtitle: 'Bold 925 sterling silver designs crafted for confidence and royal presence.',
     defaultGender: 'men',
-    categories: [
-      { id: 'him-kada', label: 'Kada', img: kadaImg, tab: 'bangles' },
-      { id: 'him-rings', label: 'Rings', img: himRings, tab: 'rings' },
-      { id: 'him-chains', label: 'Chains', img: himChains, tab: 'necklaces' },
-      { id: 'him-bracelets', label: 'Bracelets', img: himBracelets, tab: 'bracelets' },
-      { id: 'him-pendants', label: 'Pendants', img: solitairesImg, tab: 'pendant' },
-      { id: 'him-other', label: 'Other', img: mensJewelleryImg, tab: 'Collections' },
-    ]
+    categories: []
   },
   'for-kids': {
     id: 'for-kids',
@@ -69,13 +52,7 @@ export const DEFAULT_SHOWCASE_SECTIONS = {
     title: "Kid's Jewellery",
     subtitle: 'Pure, skin-friendly 925 silver keepsakes handcrafted for your little precious ones.',
     defaultGender: 'kids',
-    categories: [
-      { id: 'kids-bornbaby', label: 'Bornbaby Kit', img: kidsJewelleryImg, tab: 'Collections' },
-      { id: 'kids-chains', label: 'Chains', img: kidsChains, tab: 'necklaces' },
-      { id: 'kids-pendants', label: 'Pendants', img: pendantsImg, tab: 'pendant' },
-      { id: 'kids-bracelets', label: 'Bracelets & Berwa', img: kidsBracelets, tab: 'bracelets' },
-      { id: 'kids-other', label: 'Other', img: kidsKadas, tab: 'Collections' },
-    ]
+    categories: []
   },
   'couples-section': {
     id: 'couples-section',
@@ -83,13 +60,7 @@ export const DEFAULT_SHOWCASE_SECTIONS = {
     title: "Couple's Collection",
     subtitle: 'Matching sterling silver designs crafted to celebrate sacred bonds.',
     defaultGender: null,
-    categories: [
-      { id: 'couple-rings', label: 'Couple Rings', img: herRings, tab: 'rings' },
-      { id: 'couple-chains', label: 'Couple Chains', img: himChains, tab: 'necklaces' },
-      { id: 'couple-bracelets', label: 'Couple Bracelets', img: herBracelets, tab: 'bracelets' },
-      { id: 'couple-sets', label: 'Secret Sets', img: giftsKeepsakes, tab: 'Collections' },
-      { id: 'couple-others', label: 'Others', img: solitairesImg, tab: 'Collections' },
-    ]
+    categories: []
   },
   'gifts-collection': {
     id: 'gifts-collection',
@@ -97,23 +68,44 @@ export const DEFAULT_SHOWCASE_SECTIONS = {
     title: "Gift's Collection",
     subtitle: 'Thoughtful 925 silver gift sets, bespoke pieces, and memorable keepsakes.',
     defaultGender: null,
-    categories: [
-      { id: 'gift-bornbaby', label: 'Born Baby Kit', img: kidsJewelleryImg, tab: 'Collections' },
-      { id: 'gift-couples', label: 'Couples things', img: giftsCoins, tab: 'Collections' },
-      { id: 'gift-fav', label: 'Add Your Fav.', img: giftsKeepsakes, tab: 'Collections' },
-    ]
+    categories: []
   }
 };
 
-const STORAGE_KEY = 'manish_curated_showcase_data';
+const STORAGE_KEY = 'manish_curated_showcase_data_v2';
+const OLD_STORAGE_KEY = 'manish_curated_showcase_data';
 const FIRESTORE_DOC_ID = 'curated_showcases';
 
 export const showcaseSectionsService = {
   getStoredShowcaseData() {
+    // Purge any old v1 cache that contained mock items
+    if (typeof window !== 'undefined') {
+      try {
+        localStorage.removeItem(OLD_STORAGE_KEY);
+      } catch (_e) { /* noop */ }
+    }
+
     let cached = StorageService.get(STORAGE_KEY, null);
 
     if (cached && typeof cached === 'object' && Object.keys(cached).length > 0) {
-      // Return merged with defaults to preserve headings if missing
+      // Check if it accidentally contains old mock item IDs
+      const hasMock = ['for-her', 'for-him', 'for-kids', 'couples-section', 'gifts-collection'].some(k => 
+        Array.isArray(cached[k]?.categories) && 
+        cached[k].categories.some(c => 
+          c.id === 'her-anklets' || 
+          c.id === 'him-kada' || 
+          c.id === 'kids-bornbaby' ||
+          c.id === 'couple-rings' ||
+          c.id === 'gift-bornbaby'
+        )
+      );
+
+      if (hasMock) {
+        StorageService.set(STORAGE_KEY, DEFAULT_SHOWCASE_SECTIONS);
+        return DEFAULT_SHOWCASE_SECTIONS;
+      }
+
+      // Return user's dynamically uploaded categories
       const result = {};
       Object.keys(DEFAULT_SHOWCASE_SECTIONS).forEach(secKey => {
         const defSec = DEFAULT_SHOWCASE_SECTIONS[secKey];
@@ -122,7 +114,7 @@ export const showcaseSectionsService = {
           result[secKey] = {
             ...defSec,
             ...cachedSec,
-            // Ensure headings are preserved
+            // Strictly preserve headings
             number: defSec.number,
             title: cachedSec.title || defSec.title,
             subtitle: cachedSec.subtitle || defSec.subtitle,

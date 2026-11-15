@@ -49,7 +49,14 @@ const BASE_CONFIG = {
     { id: 'under-1999', title: 'Picks Under ₹1999', price: 'Under 1999', customImg: '', path: '/collections?maxPrice=1999' },
     { id: 'under-2999', title: 'Picks Under ₹2999', price: 'Under 2999', customImg: '', path: '/collections?maxPrice=2999' },
     { id: 'premium-gifts', title: 'Premium Gifts', price: 'Premium', customImg: '', path: '/collections?sort=luxury' }
-  ]
+  ],
+  curatedShowcases: {
+    'for-her': { id: 'for-her', number: '01 / FOR HER', title: "Women's Jewellery", subtitle: 'Elegant 925 sterling silver pieces for everyday beauty and royal moments.', defaultGender: 'women', categories: [] },
+    'for-him': { id: 'for-him', number: '02 / FOR HIM', title: "Men's Jewellery", subtitle: 'Bold 925 sterling silver designs crafted for confidence and royal presence.', defaultGender: 'men', categories: [] },
+    'for-kids': { id: 'for-kids', number: '03 / SPECIAL EDITIONS & CELEBRATIONS', title: "Kid's Jewellery", subtitle: 'Pure, skin-friendly 925 silver keepsakes handcrafted for your little precious ones.', defaultGender: 'kids', categories: [] },
+    'couples-section': { id: 'couples-section', number: '03 / SPECIAL EDITIONS & CELEBRATIONS', title: "Couple's Collection", subtitle: 'Matching sterling silver designs crafted to celebrate sacred bonds.', categories: [] },
+    'gifts-collection': { id: 'gifts-collection', number: '03 / SPECIAL EDITIONS & CELEBRATIONS', title: "Gift's Collection", subtitle: 'Thoughtful 925 silver gift sets, bespoke pieces, and memorable keepsakes.', categories: [] }
+  }
 };
 
 // Helper: fetch latest published config from Cloudinary
