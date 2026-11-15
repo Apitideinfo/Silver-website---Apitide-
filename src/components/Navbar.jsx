@@ -100,14 +100,21 @@ export default function Navbar({
   };
 
   const navCategories = React.useMemo(() => {
-    const list = Array.isArray(categories) && categories.length > 0 
+    const isAllCleared = StorageService.get('manish_categories_all_cleared', false);
+    if (isAllCleared) return [];
+    const deletedIds = StorageService.get('manish_categories_deleted_ids', []);
+    const sourceList = Array.isArray(categories) && categories.length > 0 
       ? categories 
-      : INITIAL_CATEGORIES;
-    const cleanList = list.filter(c => {
+      : (StorageService.get('manish_categories_initialized', false) ? [] : INITIAL_CATEGORIES);
+
+    const cleanList = sourceList.filter(c => {
       const id = String(c.id || c.docId || c.name || '').toLowerCase();
+      if (deletedIds.includes(id) || deletedIds.includes(String(c.id || '')) || deletedIds.includes(String(c.docId || ''))) {
+        return false;
+      }
       return id !== 'bangles' && id !== 'nath-nose-pin' && id !== 'jhumka' && c.name !== 'Bangles';
     });
-    const finalList = cleanList.length > 0 ? cleanList : INITIAL_CATEGORIES;
+    const finalList = cleanList;
 
     return [
       { label: 'New Arrivals', action: () => { changeCategoryTab?.('Collections'); navigateTo('collections'); } },

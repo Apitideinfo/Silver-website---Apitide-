@@ -13,6 +13,7 @@ import { INITIAL_CATEGORIES } from '../../config/constants';
 import { silverStoryService, DEFAULT_SILVER_STORY_DATA } from '../../services/silverStoryService';
 import { giftingHampersService, DEFAULT_GIFTING_HAMPERS, getHamperFallbackImage } from '../../services/giftingHampersService';
 import { heroBannerService, DEFAULT_HERO_BANNERS } from '../../services/heroBannerService';
+import { storeSyncService } from '../../services/storeSyncService';
 
 import { getOptimizedImageUrl } from '../../utils/imageOptimizer';
 import { getCategoryFallbackImage } from '../../utils/categoryAssets';
@@ -79,12 +80,11 @@ import {
 
 
 export default function AdminCategories({
-
   categories: propCategories = [],
-
   setAdminNotification
-
 }) {
+  // Navigation Sub-tab state
+  const [activeSubTab, setActiveSubTab] = useState('categories');
 
   // Synchronized Reactive Categories State
   const [categories, setCategories] = useState(() => {
@@ -602,8 +602,6 @@ export default function AdminCategories({
 
 
 
-  const [activeSubTab, setActiveSubTab] = useState('categories');
-
   const [priceTiers, setPriceTiers] = useState(() => priceCategoryService.getStoredCategories());
 
   
@@ -928,13 +926,13 @@ export default function AdminCategories({
 
 
       // 1. Instant local reactive state update
-
-      setCategories(prev => [payload, ...prev.filter(c => c.id !== finalSlug && c.docId !== finalSlug)]);
-
-
+      const nextCategories = [payload, ...(Array.isArray(categories) ? categories : []).filter(c => c.id !== finalSlug && c.docId !== finalSlug)];
+      setCategories(nextCategories);
+      StorageService.set('manish_categories_store', nextCategories);
+      StorageService.set('manish_categories_initialized', true);
+      storeSyncService.publishSection('categories', nextCategories).catch(() => {});
 
       // 2. Call products API
-
       await productsApi.addCategory(payload);
 
       
@@ -1023,16 +1021,19 @@ export default function AdminCategories({
 
 
 
-      await productsApi.updateCategory(editingCategory.id || editingCategory.docId, updatedData);
-
-      setCategories(prev => {
-        const id = editingCategory.id || editingCategory.docId;
-        const exists = (Array.isArray(prev) ? prev : []).some(c => c.id === id || c.docId === id);
-        if (exists) {
-          return prev.map(c => (c.id === id || c.docId === id) ? { ...c, ...updatedData } : c);
-        }
-        return [...(Array.isArray(prev) ? prev : []), { id, ...updatedData }];
+      const targetId = editingCategory.id || editingCategory.docId;
+      const nextCategories = (Array.isArray(categories) ? categories : []).map(c => {
+        const cId = c.id || c.docId;
+        return (cId === targetId || String(cId || '').toLowerCase() === String(targetId || '').toLowerCase())
+          ? { ...c, ...updatedData }
+          : c;
       });
+      setCategories(nextCategories);
+      StorageService.set('manish_categories_store', nextCategories);
+      StorageService.set('manish_categories_initialized', true);
+      storeSyncService.publishSection('categories', nextCategories).catch(() => {});
+
+      await productsApi.updateCategory(editingCategory.id || editingCategory.docId, updatedData);
 
 
 
@@ -1069,12 +1070,22 @@ export default function AdminCategories({
     if (window.confirm(`Are you sure you want to remove "${catName || catDocId}" from published categories?`)) {
       try {
         const idToDelete = String(catDocId).trim();
-        setCategories(prev => (Array.isArray(prev) ? prev : []).filter(c => 
+        const nextCategories = (Array.isArray(categories) ? categories : []).filter(c => 
           c.id !== idToDelete && c.docId !== idToDelete &&
           String(c.id || '').toLowerCase() !== idToDelete.toLowerCase() &&
           String(c.docId || '').toLowerCase() !== idToDelete.toLowerCase()
-        ));
-        await productsApi.deleteCategory(idToDelete);
+        );
+        setCategories(nextCategories);
+        StorageService.set('manish_categories_store', nextCategories);
+        StorageService.set('manish_categories_initialized', true);
+
+        const deletedCatIds = StorageService.get('manish_categories_deleted_ids', []);
+        if (!deletedCatIds.includes(idToDelete)) deletedCatIds.push(idToDelete);
+        if (!deletedCatIds.includes(idToDelete.toLowerCase())) deletedCatIds.push(idToDelete.toLowerCase());
+        StorageService.set('manish_categories_deleted_ids', deletedCatIds);
+
+        await storeSyncService.publishSection('categories', nextCategories);
+        await productsApi.deleteCategory(idToDelete, nextCategories);
         if (typeof setAdminNotification === 'function') {
           setAdminNotification({ message: `Category "${catName || catDocId}" removed.`, type: 'success' });
         }
@@ -1092,6 +1103,10 @@ export default function AdminCategories({
     if (window.confirm('Are you sure you want to delete ALL categories from the directory? This action cannot be undone.')) {
       try {
         setCategories([]);
+        StorageService.set('manish_categories_store', []);
+        StorageService.set('manish_categories_all_cleared', true);
+        StorageService.set('manish_categories_initialized', true);
+        await storeSyncService.publishSection('categories', []);
         await productsApi.deleteAllCategories();
         if (typeof setAdminNotification === 'function') {
           setAdminNotification({ message: 'All categories deleted successfully.', type: 'success' });

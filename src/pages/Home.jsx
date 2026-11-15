@@ -271,9 +271,9 @@ export default function Home({
       list = categories;
     } else {
       const cached = StorageService.get('manish_categories_store', null);
-      if (Array.isArray(cached)) {
+      if (Array.isArray(cached) && cached.length > 0) {
         list = cached;
-      } else if (!isInit) {
+      } else if (!isInit && !isAllCleared) {
         list = INITIAL_CATEGORIES;
       }
     }
@@ -446,8 +446,15 @@ export default function Home({
     if (isAllCleared) return [];
 
     const deletedIds = StorageService.get('manish_categories_deleted_ids', []);
-    if (Array.isArray(categories)) {
+    if (Array.isArray(categories) && categories.length > 0) {
       return categories.filter(c => {
+        const id = String(c.id || c.docId || c.name || '').toLowerCase();
+        return !deletedIds.includes(id) && !deletedIds.includes(String(c.id || '')) && !deletedIds.includes(String(c.docId || ''));
+      });
+    }
+    const cached = StorageService.get('manish_categories_store', null);
+    if (Array.isArray(cached) && cached.length > 0) {
+      return cached.filter(c => {
         const id = String(c.id || c.docId || c.name || '').toLowerCase();
         return !deletedIds.includes(id) && !deletedIds.includes(String(c.id || '')) && !deletedIds.includes(String(c.docId || ''));
       });

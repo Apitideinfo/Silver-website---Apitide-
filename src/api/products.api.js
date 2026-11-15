@@ -393,7 +393,7 @@ export const productsApi = {
   },
 
   // Delete: Remove category
-  async deleteCategory(categoryId) {
+  async deleteCategory(categoryId, updatedList = null) {
     const id = String(categoryId).trim();
     const lowerId = id.toLowerCase();
 
@@ -404,12 +404,17 @@ export const productsApi = {
     StorageService.set(LOCAL_STORAGE_KEYS.DELETED, deletedList);
 
     // 1. Instant Optimistic Local Delete
-    const existing = StorageService.get(LOCAL_STORAGE_KEYS.CATEGORIES, []);
-    const updated = (Array.isArray(existing) ? existing : []).filter(c => 
-      c.id !== id && c.docId !== id &&
-      String(c.id || '').toLowerCase() !== lowerId &&
-      String(c.docId || '').toLowerCase() !== lowerId
-    );
+    let updated;
+    if (Array.isArray(updatedList)) {
+      updated = updatedList;
+    } else {
+      const existing = StorageService.get(LOCAL_STORAGE_KEYS.CATEGORIES, []);
+      updated = (Array.isArray(existing) ? existing : []).filter(c => 
+        c.id !== id && c.docId !== id &&
+        String(c.id || '').toLowerCase() !== lowerId &&
+        String(c.docId || '').toLowerCase() !== lowerId
+      );
+    }
     StorageService.set(LOCAL_STORAGE_KEYS.CATEGORIES, updated);
     StorageService.set(CATEGORIES_INIT_KEY, true);
     broadcastCatalogChange('categories');
