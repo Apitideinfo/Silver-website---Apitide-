@@ -99,27 +99,49 @@ class StoreSyncService {
 
     // 1. Categories
     if (Array.isArray(config.categories)) {
-      StorageService.set('manish_categories_store', config.categories);
+      const deletedCatIds = StorageService.get('manish_categories_deleted_ids', []);
+      const isAllCatsCleared = StorageService.get('manish_categories_all_cleared', false);
+      const safeCats = isAllCatsCleared 
+        ? [] 
+        : config.categories.filter(c => c && c.id && !deletedCatIds.includes(c.id));
+      StorageService.set('manish_categories_store', safeCats);
       StorageService.set('manish_categories_initialized', true);
-      this.broadcast('catalog', config.categories);
+      this.broadcast('catalog', safeCats);
     }
 
     // 2. Hero Banners
     if (Array.isArray(config.heroBanners)) {
-      StorageService.set('manish_hero_banners_data', config.heroBanners);
-      this.broadcast('hero_banners', config.heroBanners);
+      const deletedHeroIds = StorageService.get('manish_hero_banners_deleted_ids', []);
+      const safeHeroBanners = config.heroBanners.filter(
+        b => b && b.id && !deletedHeroIds.includes(b.id)
+      );
+      StorageService.set('manish_hero_banners_data', safeHeroBanners);
+      this.broadcast('hero_banners', safeHeroBanners);
     }
 
     // 3. Silver Story Spotlight
     if (config.silverStory && typeof config.silverStory === 'object') {
-      StorageService.set('manish_silver_story_data', config.silverStory);
-      this.broadcast('silver_story', config.silverStory);
+      const isStoryCleared = StorageService.get('manish_silver_story_all_cleared', false);
+      const deletedStoryCardIds = StorageService.get('manish_silver_story_deleted_card_ids', []);
+      const safeStoryCards = isStoryCleared
+        ? []
+        : Array.isArray(config.silverStory.cards)
+        ? config.silverStory.cards.filter(c => c && c.id && !deletedStoryCardIds.includes(c.id))
+        : [];
+      const safeStory = { ...config.silverStory, cards: safeStoryCards };
+      StorageService.set('manish_silver_story_data', safeStory);
+      this.broadcast('silver_story', safeStory);
     }
 
     // 4. Gifting Hampers
     if (Array.isArray(config.giftingHampers)) {
-      StorageService.set('manish_gifting_hampers_data', config.giftingHampers);
-      this.broadcast('gifting_hampers', config.giftingHampers);
+      const isHampersCleared = StorageService.get('manish_gifting_hampers_all_cleared', false);
+      const deletedHamperIds = StorageService.get('manish_gifting_hampers_deleted_ids', []);
+      const safeHampers = isHampersCleared
+        ? []
+        : config.giftingHampers.filter(h => h && h.id && !deletedHamperIds.includes(h.id));
+      StorageService.set('manish_gifting_hampers_data', safeHampers);
+      this.broadcast('gifting_hampers', safeHampers);
     }
   }
 

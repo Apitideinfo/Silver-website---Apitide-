@@ -57,41 +57,52 @@ export const DEFAULT_HERO_BANNERS = [
 ];
 
 const STORAGE_KEY = 'manish_hero_banners_data';
+const DELETED_KEY = 'manish_hero_banners_deleted_ids';
 const FIRESTORE_DOC_ID = 'hero_banners_carousel';
 
 export const heroBannerService = {
   getStoredBanners() {
+    const deletedIds = StorageService.get(DELETED_KEY, []);
     let cached = StorageService.get(STORAGE_KEY, null);
 
     if (Array.isArray(cached) && cached.length > 0) {
-      return cached.map((banner, idx) => {
-        const def = DEFAULT_HERO_BANNERS[idx % DEFAULT_HERO_BANNERS.length];
-        return {
-          ...def,
-          ...banner,
-          webp: banner.webp || def.webp,
-          png: banner.png || def.png,
-          customImg: banner.customImg || banner.img || banner.image || '',
-          mobileImg: banner.mobileImg || ''
-        };
-      });
+      return cached
+        .filter(banner => banner && banner.id && !deletedIds.includes(banner.id))
+        .map((banner, idx) => {
+          const def = DEFAULT_HERO_BANNERS[idx % DEFAULT_HERO_BANNERS.length];
+          return {
+            ...def,
+            ...banner,
+            webp: banner.webp || def.webp,
+            png: banner.png || def.png,
+            customImg: banner.customImg || banner.img || banner.image || '',
+            mobileImg: banner.mobileImg || ''
+          };
+        });
     }
 
     const isInit = StorageService.get('manish_hero_banners_initialized', false);
     if (!isInit) {
-      StorageService.set(STORAGE_KEY, DEFAULT_HERO_BANNERS);
+      const initial = DEFAULT_HERO_BANNERS.filter(b => !deletedIds.includes(b.id));
+      StorageService.set(STORAGE_KEY, initial);
       StorageService.set('manish_hero_banners_initialized', true);
-      return DEFAULT_HERO_BANNERS;
+      return initial;
     }
 
     return [];
   },
 
   async fetchRemoteBanners() {
+    const deletedIds = StorageService.get(DELETED_KEY, []);
+
     try {
       const config = await storeSyncService.pullLatestConfig();
-      if (Array.isArray(config?.heroBanners) && config.heroBanners.length > 0) {
-        return this.getStoredBanners();
+      if (Array.isArray(config?.heroBanners)) {
+        const valid = config.heroBanners.filter(b => b && b.id && !deletedIds.includes(b.id));
+        if (valid.length > 0) {
+          StorageService.set(STORAGE_KEY, valid);
+          return this.getStoredBanners();
+        }
       }
     } catch (_e) {
       // Continue to local/remote check
@@ -100,26 +111,32 @@ export const heroBannerService = {
     try {
       if (db) {
         const docRef = doc(db, FIRESTORE_COLLECTIONS.SYSTEM_CONFIGS, FIRESTORE_DOC_ID);
-        const snap = await getDoc(docRef);
-        if (snap.exists() && snap.data()) {
+        const snap = await Promise.race([
+          getDoc(docRef),
+          new Promise((_, reject) => setTimeout(() => reject(new Error('timeout')), 2000))
+        ]);
+        if (snap && snap.exists() && snap.data()) {
           const remote = snap.data();
-          if (Array.isArray(remote.banners) && remote.banners.length > 0) {
-            const merged = remote.banners.map((banner, idx) => {
-              const def = DEFAULT_HERO_BANNERS[idx % DEFAULT_HERO_BANNERS.length];
-              return {
-                ...def,
-                ...banner,
-                webp: banner.webp || def.webp,
-                png: banner.png || def.png,
-                customImg: banner.customImg || banner.img || banner.image || '',
-                mobileImg: banner.mobileImg || ''
-              };
-            });
-            StorageService.set(STORAGE_KEY, merged);
-            if (typeof window !== 'undefined') {
-              window.dispatchEvent(new Event('manish_hero_banners_updated'));
+          if (Array.isArray(remote.banners)) {
+            const filtered = remote.banners.filter(b => b && b.id && !deletedIds.includes(b.id));
+            if (filtered.length > 0) {
+              const merged = filtered.map((banner, idx) => {
+                const def = DEFAULT_HERO_BANNERS[idx % DEFAULT_HERO_BANNERS.length];
+                return {
+                  ...def,
+                  ...banner,
+                  webp: banner.webp || def.webp,
+                  png: banner.png || def.png,
+                  customImg: banner.customImg || banner.img || banner.image || '',
+                  mobileImg: banner.mobileImg || ''
+                };
+              });
+              StorageService.set(STORAGE_KEY, merged);
+              if (typeof window !== 'undefined') {
+                window.dispatchEvent(new CustomEvent('manish_hero_banners_updated', { detail: merged }));
+              }
+              return merged;
             }
-            return merged;
           }
         }
       }
@@ -130,7 +147,11 @@ export const heroBannerService = {
   },
 
   async saveBanners(banners) {
-    const safeBanners = Array.isArray(banners) ? banners : [];
+    const deletedIds = StorageService.get(DELETED_KEY, []);
+    const safeBanners = (Array.isArray(banners) ? banners : []).filter(
+      b => b && b.id && !deletedIds.includes(b.id)
+    );
+
     const payload = {
       banners: safeBanners,
       lastUpdated: new Date().toISOString()
@@ -139,30 +160,44 @@ export const heroBannerService = {
     StorageService.set(STORAGE_KEY, safeBanners);
 
     if (typeof window !== 'undefined') {
-      window.dispatchEvent(new Event('manish_hero_banners_updated'));
+      window.dispatchEvent(new CustomEvent('manish_hero_banners_updated', { detail: safeBanners }));
 
       if ('BroadcastChannel' in window) {
         try {
           const bc = new BroadcastChannel('manish_store_sync');
-          bc.postMessage({ type: 'hero_banners', data: safeBanners });
+          bc.postMessage({ type: 'hero_banners', data: safeBanners, timestamp: Date.now() });
           bc.close();
         } catch { /* noop */ }
       }
     }
 
-    storeSyncService.publishSection('heroBanners', safeBanners).catch(err => {
+    // Await cloud sync for immediate persistence
+    try {
+      await storeSyncService.publishSection('heroBanners', safeBanners);
+    } catch (err) {
       console.warn('storeSyncService heroBanners publish error:', err);
-    });
+    }
 
     if (db) {
       try {
         const docRef = doc(db, FIRESTORE_COLLECTIONS.SYSTEM_CONFIGS, FIRESTORE_DOC_ID);
-        setDoc(docRef, payload, { merge: true }).catch(() => {});
+        await setDoc(docRef, payload, { merge: false });
       } catch (e) {
         console.warn('Hero banners remote sync fallback:', e.message);
       }
     }
 
     return safeBanners;
+  },
+
+  async deleteBanner(bannerId, nextBanners) {
+    const deletedIds = StorageService.get(DELETED_KEY, []);
+    if (bannerId && !deletedIds.includes(bannerId)) {
+      deletedIds.push(bannerId);
+      StorageService.set(DELETED_KEY, deletedIds);
+    }
+
+    const current = nextBanners || this.getStoredBanners().filter(b => b.id !== bannerId);
+    return this.saveBanners(current);
   }
 };

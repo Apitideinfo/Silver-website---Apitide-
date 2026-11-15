@@ -592,12 +592,13 @@ export default function AdminCategories({
       alert('You must have at least 1 hero banner slide in the carousel.');
       return;
     }
+    const slideToDelete = heroBanners[idx];
     if (window.confirm(`Delete Hero Slide #${idx + 1}?`)) {
       const next = heroBanners.filter((_, i) => i !== idx);
       setHeroBanners(next);
-      await heroBannerService.saveBanners(next);
+      await heroBannerService.deleteBanner(slideToDelete?.id, next);
       if (typeof setAdminNotification === 'function') {
-        setAdminNotification({ message: `✓ Hero Slide #${idx + 1} removed!`, type: 'success' });
+        setAdminNotification({ message: `✓ Hero Slide #${idx + 1} permanently removed!`, type: 'success' });
       }
     }
   };
