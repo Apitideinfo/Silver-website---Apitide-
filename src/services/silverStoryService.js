@@ -58,7 +58,7 @@ export const DEFAULT_SILVER_STORY_DATA = {
   ],
   banner: {
     title: 'MANISH & CO - Diwali Festive Season - Flat 15% Off On All Products',
-    img: bannerStoryWebp,
+    img: diwaliFestiveManishAndCoWebp,
     tab: 'Collections',
     hidden: false
   }
@@ -84,11 +84,11 @@ export const silverStoryService = {
       const deletedCardIds = StorageService.get('manish_silver_story_deleted_card_ids', []);
       const cards = Array.isArray(cached.cards)
         ? cached.cards
-            .filter(c => c && !deletedCardIds.includes(c.id))
-            .map((c, i) => ({
-              ...c,
-              img: c.img || getStoryCardFallbackImage(c, i)
-            }))
+          .filter(c => c && !deletedCardIds.includes(c.id))
+          .map((c, i) => ({
+            ...c,
+            img: c.img || getStoryCardFallbackImage(c, i)
+          }))
         : [];
 
       return {
@@ -190,7 +190,7 @@ export const silverStoryService = {
     if (db) {
       try {
         const docRef = doc(db, FIRESTORE_COLLECTIONS.SYSTEM_CONFIGS, FIRESTORE_DOC_ID);
-        setDoc(docRef, payload, { merge: true }).catch(() => {});
+        setDoc(docRef, payload, { merge: true }).catch(() => { });
       } catch (e) {
         // Fallback
       }
@@ -202,7 +202,7 @@ export const silverStoryService = {
   async deleteCard(cardId) {
     const current = this.getStoredStoryData();
     const updatedCards = current.cards.filter(c => c.id !== cardId);
-    
+
     const deletedCardIds = StorageService.get('manish_silver_story_deleted_card_ids', []);
     if (!deletedCardIds.includes(cardId)) {
       deletedCardIds.push(cardId);

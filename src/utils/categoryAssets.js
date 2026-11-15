@@ -33,3 +33,4 @@ export const getCategoryFallbackImage = (catNameOrId) => {
   if (norm.includes('bracelet')) return catRefBraceletsWebp || catRefBracelets;
   return catRefRingsWebp || catRefRings;
 };
+
