@@ -16,7 +16,7 @@ import kidsJewelleryImg from '../assets/kids_jewellery.png';
 import goldCoinsImg from '../assets/gold_coins.png';
 import kadaImg from '../assets/kada.png';
 import EditorialShowcaseSection from '../components/EditorialShowcaseSection';
-import { getShowcaseSectionsConfig } from '../config/showcaseSections';
+import { showcaseSectionsService, DEFAULT_SHOWCASE_SECTIONS } from '../services/showcaseSectionsService';
 import herRings from '../assets/editorial/her_rings.jpg';
 import herBracelets from '../assets/editorial/her_bracelets.jpg';
 import herAnklets from '../assets/editorial/her_anklets.jpg';
@@ -583,54 +583,51 @@ export default function Home({
     return defaultFeatured;
   }, [categories]);
 
-  // Recommended For You Categories (Issue 3)
+  // Recommended For You Categories (Dynamic from Shop by Category - Requirement 2)
   const activeCategories = React.useMemo(() => {
-    const baselineRecommended = [
-      { id: 'pendant', name: 'Pendants', img: pendantsImg || catRefPendantWebp },
-      { id: 'rings', name: 'Rings', img: herRings || catRefRingsWebp },
-      { id: 'necklaces', name: 'Necklaces', img: necklacesImg || catRefNecklacesWebp },
-      { id: 'bracelets', name: 'Bracelets', img: herBracelets || catRefBraceletsWebp },
-      { id: 'anklets', name: 'Anklets', img: herAnklets || catRefAnkletsWebp },
-      { id: 'kada', name: 'Royal Kada', img: kadaImg },
-      { id: 'chain', name: 'Silver Chains', img: silverChainImg || catRefChainWebp },
-      { id: 'earrings', name: 'Earrings', img: earringsImg || catRefEarringWebp },
-      { id: 'mangalsutra', name: 'Mangalsutra', img: catRefMangalsutraWebp || catRefMangalsutra },
-      { id: 'toe-ring', name: 'Toe Rings', img: colToeRingPng || catRefToeRingWebp }
-    ];
-
     if (Array.isArray(categories) && categories.length > 0) {
-      const live = categories.map(c => ({
+      return categories.map(c => ({
         id: c.id || c.docId || c.name,
         name: c.name,
-        img: c.img || getCategoryFallbackImage(c.name || c.id)
+        img: c.img || getCategoryFallbackImage(c.name || c.id),
+        tab: c.tab || c.name
       }));
-      const existingNames = new Set(live.map(l => String(l.name).toLowerCase()));
-      const combined = [...live, ...baselineRecommended.filter(b => !existingNames.has(b.name.toLowerCase()))];
-      return combined;
     }
-
-    return baselineRecommended;
+    return (INITIAL_CATEGORIES || []).map(c => ({
+      id: c.id || c.name,
+      name: c.name,
+      img: c.img || getCategoryFallbackImage(c.name || c.id),
+      tab: c.tab || c.name
+    }));
   }, [categories]);
 
-  // Showcase Sections Config (for Her, Him, Kids, Couples, Gifts)
-  const showcaseSections = React.useMemo(() => {
-    return getShowcaseSectionsConfig({
-      navigateTo,
-      changeCategoryTab,
-      setCustomDesignOpen
+  // Dynamic Curated Showcase Sections from Admin (Requirement 1)
+  const [showcaseData, setShowcaseData] = useState(() => showcaseSectionsService.getStoredShowcaseData());
+
+  useEffect(() => {
+    showcaseSectionsService.fetchRemoteShowcaseData().then(data => {
+      if (data) setShowcaseData(data);
     });
-  }, [navigateTo, changeCategoryTab, setCustomDesignOpen]);
 
-  const forHerSection = showcaseSections.find(s => s.id === 'for-her');
-  const forHimSection = showcaseSections.find(s => s.id === 'for-him');
-  const forKidsSection = showcaseSections.find(s => s.id === 'for-kids');
-  const couplesSection = showcaseSections.find(s => s.id === 'couples-section');
-  const giftsSection = showcaseSections.find(s => s.id === 'gifts-collection');
+    const handleShowcaseSync = () => {
+      setShowcaseData(showcaseSectionsService.getStoredShowcaseData());
+    };
 
-  const specialOccasionActive = 
-    specialOccasionTab === 'couples-section' ? couplesSection :
-    specialOccasionTab === 'gifts-collection' ? giftsSection :
-    forKidsSection;
+    if (typeof window !== 'undefined') {
+      window.addEventListener('manish_curated_showcase_updated', handleShowcaseSync);
+      window.addEventListener('manish_curated_showcases_updated', handleShowcaseSync);
+    }
+    return () => {
+      if (typeof window !== 'undefined') {
+        window.removeEventListener('manish_curated_showcase_updated', handleShowcaseSync);
+        window.removeEventListener('manish_curated_showcases_updated', handleShowcaseSync);
+      }
+    };
+  }, []);
+
+  const forHerSection = showcaseData['for-her'] || DEFAULT_SHOWCASE_SECTIONS['for-her'];
+  const forHimSection = showcaseData['for-him'] || DEFAULT_SHOWCASE_SECTIONS['for-him'];
+  const specialOccasionActive = showcaseData[specialOccasionTab] || DEFAULT_SHOWCASE_SECTIONS[specialOccasionTab] || DEFAULT_SHOWCASE_SECTIONS['for-kids'];
 
   // Story & Process States
   const [activeStoryTimeline, setActiveStoryTimeline] = useState(1996);
@@ -1857,17 +1854,17 @@ export default function Home({
         </section>
 
         {/* ==========================================================
-          POLAROID TESTIMONIALS
+          POLAROID TESTIMONIALS (Edge-to-Edge & Length Increased - Requirement 3)
           ========================================================== */}
         <section id="testimonials" ref={testimonialsRef}
           data-inview={testimonialsInView ? "true" : "false"}
-          className="w-full py-16 overflow-hidden select-none border-y border-solid transition-colors duration-500 group bg-[#F8F5EC] border-[#E6DFD3] text-center"
+          className="w-full py-20 sm:py-24 lg:py-28 overflow-hidden select-none border-y border-solid transition-colors duration-500 group bg-[#F8F5EC] border-[#E6DFD3] text-center"
         >
-          <div className="max-w-7xl mx-auto px-4 text-center space-y-3 mb-12">
+          <div className="w-full max-w-7xl mx-auto px-4 sm:px-6 text-center space-y-3 mb-12 sm:mb-16">
             <span className="text-[10px] sm:text-xs uppercase tracking-[0.35em] text-[#6B4B2E] font-bold font-sans block">
               OUR PATRONS' STORIES
             </span>
-            <h2 className="serif-luxury text-3xl sm:text-[48px] font-medium leading-none tracking-wide text-[#0D2B4E]">
+            <h2 className="serif-luxury text-3xl sm:text-4xl lg:text-[50px] font-medium leading-none tracking-wide text-[#0D2B4E]">
               More Than Just Jewellery
             </h2>
             <p className="font-sans text-xs sm:text-[16px] tracking-wide font-normal max-w-2xl mx-auto leading-relaxed text-[#657989]">
@@ -1875,28 +1872,28 @@ export default function Home({
             </p>
           </div>
 
-          {/* DESKTOP VIEW (1024px+): Exact luxury hanging clothesline from Screenshot 1 */}
-          <div className="hidden lg:block w-full overflow-visible py-6 select-none">
-            <div className="relative mx-auto max-w-6xl xl:max-w-7xl h-[460px] px-4">
-              {/* Clothesline Wire SVG */}
-              <svg className="absolute left-0 top-0 w-full h-[120px] pointer-events-none z-0" viewBox="0 0 100 120" fill="none" preserveAspectRatio="none">
+          {/* DESKTOP VIEW (1024px+): True Edge-to-Edge Hanging Clothesline with Extended Height */}
+          <div className="hidden lg:block w-full overflow-visible py-6 select-none px-4 sm:px-8 lg:px-12 xl:px-16 2xl:px-20">
+            <div className="relative w-full h-[540px] xl:h-[570px]">
+              {/* Clothesline Wire SVG - True 0 to 100 edge-to-edge */}
+              <svg className="absolute left-0 top-0 w-full h-[140px] pointer-events-none z-0" viewBox="0 0 100 140" fill="none" preserveAspectRatio="none">
                 <path
-                  d="M 0,30 Q 5,50 10,50 Q 23.3,85 36.6,50 Q 50,85 63.3,50 Q 76.7,85 90,50 Q 95,50 100,30"
+                  d="M 0,35 Q 6,55 12.5,55 Q 25,95 37.5,55 Q 50,95 62.5,55 Q 75,95 87.5,55 Q 94,55 100,35"
                   stroke="#D1D5DB"
                   strokeWidth="1.2"
                 />
               </svg>
 
-              <div className="w-full h-full flex items-start justify-between relative z-10 px-8">
+              <div className="w-full h-full flex items-start justify-between 2xl:justify-around relative z-10 px-4">
                 {polaroidTestimonialsData.map((item, idx) => (
                   <div
                     key={idx}
                     style={{ marginTop: item.top }}
-                    className="shrink-0 transition-all duration-300 px-3"
+                    className="shrink-0 transition-all duration-300 px-2 xl:px-4"
                   >
                     <div
                       style={{ transformOrigin: "50% -20px" }}
-                      className={`w-[270px] xl:w-[280px] shadow-[0_15px_35px_rgba(13,43,78,0.08),0_5px_15px_rgba(13,43,78,0.04)] rounded-xs pt-5 px-5 pb-7 relative flex flex-col items-center select-none transition-all duration-300 hover:scale-[1.03] hover:rotate-0 hover:z-40 cursor-pointer border border-solid overflow-visible bg-white border-[#E6DFD3] ${item.rot}`}
+                      className={`w-[280px] xl:w-[310px] 2xl:w-[330px] shadow-[0_20px_45px_rgba(13,43,78,0.09),0_6px_18px_rgba(13,43,78,0.05)] rounded-xs pt-6 px-5 pb-8 relative flex flex-col items-center select-none transition-all duration-300 hover:scale-[1.03] hover:rotate-0 hover:z-40 cursor-pointer border border-solid overflow-visible bg-white border-[#E6DFD3] ${item.rot}`}
                     >
                       {/* Realistic Silver Clip Pin */}
                       <div className="absolute -top-[28px] left-1/2 -translate-x-1/2 w-8 h-12 flex items-center justify-center z-20 pointer-events-none">
@@ -1939,19 +1936,19 @@ export default function Home({
                       </div>
 
                       {/* Verified Badge */}
-                      <div className="w-full flex items-center justify-between text-[#D4AF37] text-[10px] mb-1.5 px-0.5">
+                      <div className="w-full flex items-center justify-between text-[#D4AF37] text-[10.5px] mb-2 px-0.5">
                         <div className="flex gap-0.5">
                           <span>★</span><span>★</span><span>★</span><span>★</span><span>★</span>
                         </div>
-                        <span className="text-[9px] text-[#6B4B2E] font-medium font-sans">Verified Patron</span>
+                        <span className="text-[9.5px] text-[#6B4B2E] font-medium font-sans">Verified Patron</span>
                       </div>
 
                       {/* Patron Name and Quote */}
-                      <div className="w-full space-y-1 text-left px-0.5">
-                        <h4 className="font-sans font-bold text-[13px] tracking-wide text-[#0D2B4E]">
+                      <div className="w-full space-y-1.5 text-left px-0.5">
+                        <h4 className="font-sans font-bold text-sm tracking-wide text-[#0D2B4E]">
                           {item.name}
                         </h4>
-                        <p className="font-sans text-[11px] leading-relaxed tracking-normal font-normal text-[#657989] italic">
+                        <p className="font-sans text-[11.5px] leading-relaxed tracking-normal font-normal text-[#657989] italic">
                           "{item.quote}"
                         </p>
                       </div>
@@ -1962,11 +1959,11 @@ export default function Home({
             </div>
           </div>
 
-          {/* MOBILE & TABLET VIEW (< 1024px): 100% Responsive Clothesline Carousel */}
-          <div className="block lg:hidden w-full relative px-4">
+          {/* MOBILE & TABLET VIEW (< 1024px): 100% Responsive Edge-to-Edge Clothesline Carousel */}
+          <div className="block lg:hidden w-full relative px-0 sm:px-4">
             {/* Hanging Clothesline Header Wire */}
-            <div className="w-full h-[1.5px] bg-[#D1D5DB] relative mb-6">
-              <div className="absolute left-1/2 -translate-x-1/2 -top-1 w-2 h-2 rounded-full bg-[#8C6D46]/40" />
+            <div className="w-full h-[2px] bg-[#D1D5DB] relative mb-6">
+              <div className="absolute left-1/2 -translate-x-1/2 -top-1 w-2.5 h-2.5 rounded-full bg-[#8C6D46]/40" />
             </div>
 
             {/* Carousel Container */}

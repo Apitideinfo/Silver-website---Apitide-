@@ -159,12 +159,13 @@ export default async function handler(req, res) {
           version: `v_${Date.now()}`
         };
       } else if (section) {
-        const allowedSections = ['categories', 'heroBanners', 'silverStory', 'giftingHampers', 'products'];
+        const allowedSections = ['categories', 'heroBanners', 'silverStory', 'giftingHampers', 'products', 'curatedShowcases', 'curated_showcases'];
         if (!allowedSections.includes(section)) {
           return res.status(400).json({ error: `Invalid section: ${section}. Allowed: ${allowedSections.join(', ')}` });
         }
 
-        updatedConfig[section] = data;
+        const canonicalSection = section === 'curated_showcases' ? 'curatedShowcases' : section;
+        updatedConfig[canonicalSection] = data;
         updatedConfig.lastUpdated = new Date().toISOString();
         updatedConfig.version = `v_${Date.now()}`;
       }

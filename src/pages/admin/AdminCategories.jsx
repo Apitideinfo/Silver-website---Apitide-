@@ -23,6 +23,7 @@ import colToeRingWebp from '../../assets/col_toe_ring.webp';
 import colPearlWebp from '../../assets/col_pearl.webp';
 import colStoneWebp from '../../assets/col_stone.webp';
 import diwaliFestiveManishAndCoWebp from '../../assets/diwali_festive_manish_and_co.webp';
+import AdminCuratedShowcase from './AdminCuratedShowcase';
 
 
 import { 
@@ -1211,6 +1212,23 @@ export default function AdminCategories({
               Festive
             </span>
           </button>
+
+          {/* Tab 5: Curated Showcases */}
+          <button
+            type="button"
+            onClick={() => setActiveSubTab('curated-showcases')}
+            className={`inline-flex items-center gap-2 px-4 py-2.5 rounded-xl text-xs font-bold transition-all cursor-pointer whitespace-nowrap shrink-0 ${
+              activeSubTab === 'curated-showcases'
+                ? 'bg-[#15151A] text-white dark:bg-white dark:text-zinc-900 shadow-sm'
+                : 'text-zinc-500 hover:text-zinc-800 hover:bg-zinc-100 dark:hover:bg-zinc-800 dark:text-zinc-400 dark:hover:text-white'
+            }`}
+          >
+            <Tag className="w-4 h-4 text-purple-500" />
+            <span>Curated Showcases</span>
+            <span className="text-[10px] px-2 py-0.5 rounded-full bg-purple-100 dark:bg-purple-900/40 text-purple-800 dark:text-purple-300 font-bold">
+              Her / Him / Kids
+            </span>
+          </button>
         </div>
 
         {/* Sub-Tabs Navigation End */}
@@ -2135,6 +2153,13 @@ export default function AdminCategories({
             </div>
           )}
         </div>
+      )}
+
+      {/* =========================================================
+          VIEW: CURATED SHOWCASES (FOR HER, HIM, KIDS, COUPLES, GIFTS)
+          ========================================================= */}
+      {activeSubTab === 'curated-showcases' && (
+        <AdminCuratedShowcase setAdminNotification={setAdminNotification} />
       )}
 
 {/* =========================================================

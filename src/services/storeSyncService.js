@@ -145,6 +145,12 @@ class StoreSyncService {
       StorageService.set('manish_gifting_hampers_data', safeHampers);
       this.broadcast('gifting_hampers', safeHampers);
     }
+
+    // 5. Curated Showcases (For Her, Him, Kids, Couples, Gifts)
+    if (config.curatedShowcases && typeof config.curatedShowcases === 'object' && (now - (this.lastPublishTimes['curatedShowcases'] || this.lastPublishTimes['curated_showcases'] || 0) > 10000)) {
+      StorageService.set('manish_curated_showcase_data', config.curatedShowcases);
+      this.broadcast('curated_showcase', config.curatedShowcases);
+    }
   }
 
   // Securely publish an update from Admin to the shared Cloud
