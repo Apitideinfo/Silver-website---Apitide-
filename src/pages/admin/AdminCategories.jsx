@@ -175,113 +175,84 @@ export default function AdminCategories({
 
 
   useEffect(() => {
-
     silverStoryService.fetchRemoteStoryData().then(res => {
-
       if (res) setSilverStoryData(res);
-
     });
 
-
-
     const handleSilverStorySync = () => {
-
+      if (activeSubTab === 'silver-story') return;
       setSilverStoryData(silverStoryService.getStoredStoryData());
-
     };
-
-
 
     if (typeof window !== 'undefined') {
-
       window.addEventListener('manish_silver_story_updated', handleSilverStorySync);
-
     }
-
     return () => {
-
       if (typeof window !== 'undefined') {
-
         window.removeEventListener('manish_silver_story_updated', handleSilverStorySync);
-
       }
-
     };
-
-  }, []);
+  }, [activeSubTab]);
 
 
 
   const handleCardImageUpload = async (e, cardIdx) => {
-
     const file = e.target.files?.[0];
-
     if (!file) return;
-
-
 
     setCardUploadProgress('Uploading Spotlight Photo...');
-
     try {
-
       const res = await ImageUploadService.uploadImage(file);
-
-      setSilverStoryData(prev => {
-
-        const newCards = [...prev.cards];
-
+      if (res && res.url) {
+        const newCards = [...(silverStoryData?.cards || [])];
         newCards[cardIdx] = { ...newCards[cardIdx], img: res.url };
-
-        return { ...prev, cards: newCards };
-
-      });
-
-      setCardUploadProgress('Uploaded successfully!');
-
+        const next = { ...silverStoryData, cards: newCards };
+        setSilverStoryData(next);
+        await silverStoryService.saveStoryData(next);
+        setCardUploadProgress('Uploaded successfully!');
+        if (typeof setAdminNotification === 'function') {
+          setAdminNotification({
+            message: `✓ Spotlight Card #${cardIdx + 1} photo updated!`,
+            type: 'success'
+          });
+        }
+        setTimeout(() => setCardUploadProgress(''), 3000);
+      }
     } catch (err) {
-
       console.error(err);
-
       setCardUploadProgress('Upload failed.');
-
+      setTimeout(() => setCardUploadProgress(''), 3000);
     }
-
   };
 
-
-
   const handleBannerImageUpload = async (e) => {
-
     const file = e.target.files?.[0];
-
     if (!file) return;
 
-
-
     setBannerUploadProgress('Uploading Showcase Banner...');
-
     try {
-
       const res = await ImageUploadService.uploadImage(file);
-
-      setSilverStoryData(prev => ({
-
-        ...prev,
-
-        banner: { ...prev.banner, img: res.url }
-
-      }));
-
-      setBannerUploadProgress('Uploaded successfully!');
-
+      if (res && res.url) {
+        const next = {
+          ...silverStoryData,
+          banner: { ...silverStoryData.banner, img: res.url }
+        };
+        setSilverStoryData(next);
+        await silverStoryService.saveStoryData(next);
+        setBannerUploadProgress('Uploaded successfully!');
+        if (typeof setAdminNotification === 'function') {
+          setAdminNotification({
+            message: '✓ Right Festive Showcase banner photo updated!',
+            type: 'success'
+          });
+        }
+        setTimeout(() => setBannerUploadProgress(''), 3000);
+      }
     } catch (err) {
-
       console.error(err);
-
       setBannerUploadProgress('Upload failed.');
-
+      setTimeout(() => setBannerUploadProgress(''), 3000);
     }
-
   };
 
 
@@ -1533,7 +1504,10 @@ export default function AdminCategories({
                       <button
                         key={card.id || idx}
                         type="button"
-                        onClick={() => setActiveStoryCardIdx(idx)}
+                        onClick={async () => {
+                          await silverStoryService.saveStoryData(silverStoryData);
+                          setActiveStoryCardIdx(idx);
+                        }}
                         className={`p-2.5 rounded-xl border text-left flex items-center gap-2.5 transition-all cursor-pointer relative group ${
                           isSelected
                             ? 'border-zinc-900 dark:border-white ring-2 ring-zinc-900/10 bg-zinc-50 dark:bg-zinc-800/80 shadow-xs'
@@ -1611,6 +1585,9 @@ export default function AdminCategories({
                               return { ...prev, cards: newCards };
                             });
                           }}
+                          onBlur={async () => {
+                            await silverStoryService.saveStoryData(silverStoryData);
+                          }}
                           placeholder="e.g. TENNIS COLLECTION"
                           className="w-full h-10 px-3.5 bg-zinc-50 dark:bg-zinc-900 border border-zinc-200 dark:border-zinc-750 rounded-xl text-xs font-bold text-zinc-900 dark:text-zinc-100 focus:outline-none focus:border-zinc-900"
                         />
@@ -1631,6 +1608,9 @@ export default function AdminCategories({
                               return { ...prev, cards: newCards };
                             });
                           }}
+                          onBlur={async () => {
+                            await silverStoryService.saveStoryData(silverStoryData);
+                          }}
                           placeholder="e.g. ♥ Sparkle on repeat ♥"
                           className="w-full h-10 px-3.5 bg-zinc-50 dark:bg-zinc-900 border border-zinc-200 dark:border-zinc-750 rounded-xl text-xs font-semibold text-zinc-900 dark:text-zinc-100 focus:outline-none focus:border-zinc-900"
                         />
@@ -1644,13 +1624,13 @@ export default function AdminCategories({
                       </label>
                       <select
                         value={currentCard.tab || 'bracelets'}
-                        onChange={(e) => {
+                        onChange={async (e) => {
                           const val = e.target.value;
-                          setSilverStoryData(prev => {
-                            const newCards = [...prev.cards];
-                            newCards[safeIdx] = { ...newCards[safeIdx], tab: val };
-                            return { ...prev, cards: newCards };
-                          });
+                          const newCards = [...cards];
+                          newCards[safeIdx] = { ...newCards[safeIdx], tab: val };
+                          const next = { ...silverStoryData, cards: newCards };
+                          setSilverStoryData(next);
+                          await silverStoryService.saveStoryData(next);
                         }}
                         className="w-full h-10 px-3.5 bg-zinc-50 dark:bg-zinc-900 border border-zinc-200 dark:border-zinc-750 rounded-xl text-xs font-bold text-zinc-800 dark:text-zinc-200 focus:outline-none focus:border-zinc-900 cursor-pointer"
                       >
@@ -1695,6 +1675,9 @@ export default function AdminCategories({
                               newCards[safeIdx] = { ...newCards[safeIdx], img: val };
                               return { ...prev, cards: newCards };
                             });
+                          }}
+                          onBlur={async () => {
+                            await silverStoryService.saveStoryData(silverStoryData);
                           }}
                           className="flex-1 h-10 px-3.5 bg-zinc-50 dark:bg-zinc-900 border border-zinc-200 dark:border-zinc-750 rounded-xl text-xs font-mono focus:outline-none focus:border-zinc-900"
                         />
@@ -1796,6 +1779,9 @@ export default function AdminCategories({
                       banner: { ...prev.banner, title: val }
                     }));
                   }}
+                  onBlur={async () => {
+                    await silverStoryService.saveStoryData(silverStoryData);
+                  }}
                   placeholder="e.g. Diwali Festive Season - Flat 15% Off On All Products"
                   className="w-full h-10 px-3.5 bg-zinc-50 dark:bg-zinc-900 border border-zinc-200 dark:border-zinc-750 rounded-xl text-xs font-bold text-zinc-900 dark:text-zinc-100 focus:outline-none focus:border-zinc-900"
                 />
@@ -1808,12 +1794,14 @@ export default function AdminCategories({
                 </label>
                 <select
                   value={silverStoryData?.banner?.tab || 'Collections'}
-                  onChange={(e) => {
+                  onChange={async (e) => {
                     const val = e.target.value;
-                    setSilverStoryData(prev => ({
-                      ...prev,
-                      banner: { ...prev.banner, tab: val }
-                    }));
+                    const next = {
+                      ...silverStoryData,
+                      banner: { ...silverStoryData.banner, tab: val }
+                    };
+                    setSilverStoryData(next);
+                    await silverStoryService.saveStoryData(next);
                   }}
                   className="w-full h-10 px-3.5 bg-zinc-50 dark:bg-zinc-900 border border-zinc-200 dark:border-zinc-750 rounded-xl text-xs font-bold text-zinc-800 dark:text-zinc-200 focus:outline-none focus:border-zinc-900 cursor-pointer"
                 >
@@ -1853,6 +1841,9 @@ export default function AdminCategories({
                         ...prev,
                         banner: { ...prev.banner, img: val }
                       }));
+                    }}
+                    onBlur={async () => {
+                      await silverStoryService.saveStoryData(silverStoryData);
                     }}
                     className="w-full h-10 px-3.5 bg-zinc-50 dark:bg-zinc-900 border border-zinc-200 dark:border-zinc-750 rounded-xl text-xs font-mono focus:outline-none focus:border-zinc-900"
                   />

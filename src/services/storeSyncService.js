@@ -8,6 +8,7 @@ class StoreSyncService {
     this.hasInitialized = false;
     this.isFetching = false;
     this.lastSyncTime = 0;
+    this.lastPublishTimes = {};
   }
 
   // Broadcast sync pulse across windows/tabs
@@ -96,9 +97,10 @@ class StoreSyncService {
   // Apply fetched cloud config to local stores and notify all listening components
   applyConfigLocally(config) {
     if (!config) return;
+    const now = Date.now();
 
     // 1. Categories
-    if (Array.isArray(config.categories)) {
+    if (Array.isArray(config.categories) && (now - (this.lastPublishTimes['categories'] || 0) > 10000)) {
       const deletedCatIds = StorageService.get('manish_categories_deleted_ids', []);
       const isAllCatsCleared = StorageService.get('manish_categories_all_cleared', false);
       const safeCats = isAllCatsCleared 
@@ -110,7 +112,7 @@ class StoreSyncService {
     }
 
     // 2. Hero Banners
-    if (Array.isArray(config.heroBanners)) {
+    if (Array.isArray(config.heroBanners) && (now - (this.lastPublishTimes['heroBanners'] || 0) > 10000)) {
       const deletedHeroIds = StorageService.get('manish_hero_banners_deleted_ids', []);
       const safeHeroBanners = config.heroBanners.filter(
         b => b && b.id && !deletedHeroIds.includes(b.id)
@@ -120,7 +122,7 @@ class StoreSyncService {
     }
 
     // 3. Silver Story Spotlight
-    if (config.silverStory && typeof config.silverStory === 'object') {
+    if (config.silverStory && typeof config.silverStory === 'object' && (now - (this.lastPublishTimes['silverStory'] || 0) > 10000)) {
       const isStoryCleared = StorageService.get('manish_silver_story_all_cleared', false);
       const deletedStoryCardIds = StorageService.get('manish_silver_story_deleted_card_ids', []);
       const safeStoryCards = isStoryCleared
@@ -134,7 +136,7 @@ class StoreSyncService {
     }
 
     // 4. Gifting Hampers
-    if (Array.isArray(config.giftingHampers)) {
+    if (Array.isArray(config.giftingHampers) && (now - (this.lastPublishTimes['giftingHampers'] || 0) > 10000)) {
       const isHampersCleared = StorageService.get('manish_gifting_hampers_all_cleared', false);
       const deletedHamperIds = StorageService.get('manish_gifting_hampers_deleted_ids', []);
       const safeHampers = isHampersCleared
@@ -147,6 +149,9 @@ class StoreSyncService {
 
   // Securely publish an update from Admin to the shared Cloud
   async publishSection(section, data) {
+    if (section) {
+      this.lastPublishTimes[section] = Date.now();
+    }
     // 1. Immediately apply locally for zero latency
     this.broadcast(section, data);
 
