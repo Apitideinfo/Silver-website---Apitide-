@@ -5,7 +5,7 @@ import { useProducts } from '../hooks/useProducts';
 import Modal from '../components/Modal';
 import BookingForm from '../forms/BookingForm';
 import { getOptimizedImageUrl } from '../utils/imageOptimizer';
-import { ArrowRight, Star, Sparkles, ChevronRight, ChevronLeft } from 'lucide-react';
+import { ArrowRight, Star, Sparkles, ChevronRight, ChevronLeft, Diamond, ShieldCheck, RotateCcw, Truck, Gift } from 'lucide-react';
 
 // Category Image Fallbacks
 import solitariesImg from '../assets/solitaries.png';
@@ -102,6 +102,8 @@ import bannerBuiltOnPurity from '../assets/built_on_purity_925_fine_silver.png';
 import bannerCraftsmanshipJourney from '../assets/craftsmanship_in_every_silver_detail.png';
 import bannerStoreBanner from '../assets/banner_store_banner.png';
 import gemsCollectionBanner from '../assets/gems_collection_banner.jpg';
+import bannerOurStory from '../assets/banner_our_story.png';
+import bannerOurCraftsmanship from '../assets/banner_our_craftsmanship.png';
 
 
 
@@ -850,6 +852,82 @@ export default function Home({
         </div>
       </section>
 
+      {/* ==========================================================
+          LUXURY TRUST BADGES STRIP (Directly Below Hero Section)
+          5-Item Assurances Matching Brand Reference:
+          1. 925 Fine Jewellery
+          2. 100% Hypoallergenic
+          3. 90% Refund Policy
+          4. Free Shipping Across India
+          5. Elegant Gift Packaging
+          ========================================================== */}
+      <section 
+        id="hero-trust-badges-strip"
+        aria-label="Manish and Co Guarantees" 
+        className="w-full bg-[#FAF7F2] border-b border-[#E6DFD3] select-none py-3.5 sm:py-5"
+      >
+        <div className="max-w-[1536px] mx-auto px-2 sm:px-6 lg:px-10">
+          <div className="grid grid-cols-5 divide-x divide-[#E2D8CC] items-center text-center">
+            
+            {/* 1. 925 Fine Jewellery */}
+            <div className="flex flex-col items-center justify-center px-1 sm:px-4 py-1 group">
+              <Diamond className="w-5 h-5 sm:w-6 sm:h-6 md:w-7 md:h-7 text-[#0D2B4E] stroke-[1.3] mb-1 sm:mb-2 group-hover:scale-110 transition-transform duration-300" />
+              <span className="font-serif text-[11px] xs:text-xs sm:text-sm md:text-[15px] font-bold text-[#0D2B4E] leading-tight sm:leading-snug">
+                925 Fine
+              </span>
+              <span className="font-sans text-[9px] xs:text-[10px] sm:text-xs text-[#5A6474] font-medium leading-tight">
+                Jewellery
+              </span>
+            </div>
+
+            {/* 2. 100% Hypoallergenic */}
+            <div className="flex flex-col items-center justify-center px-1 sm:px-4 py-1 group">
+              <ShieldCheck className="w-5 h-5 sm:w-6 sm:h-6 md:w-7 md:h-7 text-[#0D2B4E] stroke-[1.3] mb-1 sm:mb-2 group-hover:scale-110 transition-transform duration-300" />
+              <span className="font-serif text-[11px] xs:text-xs sm:text-sm md:text-[15px] font-bold text-[#0D2B4E] leading-tight sm:leading-snug">
+                100%
+              </span>
+              <span className="font-sans text-[9px] xs:text-[10px] sm:text-xs text-[#5A6474] font-medium leading-tight">
+                Hypoallergenic
+              </span>
+            </div>
+
+            {/* 3. 90% Refund Policy */}
+            <div className="flex flex-col items-center justify-center px-1 sm:px-4 py-1 group">
+              <RotateCcw className="w-5 h-5 sm:w-6 sm:h-6 md:w-7 md:h-7 text-[#0D2B4E] stroke-[1.3] mb-1 sm:mb-2 group-hover:scale-110 transition-transform duration-300" />
+              <span className="font-serif text-[11px] xs:text-xs sm:text-sm md:text-[15px] font-bold text-[#0D2B4E] leading-tight sm:leading-snug">
+                90%
+              </span>
+              <span className="font-sans text-[9px] xs:text-[10px] sm:text-xs text-[#5A6474] font-medium leading-tight">
+                Refund Policy
+              </span>
+            </div>
+
+            {/* 4. Free Shipping Across India */}
+            <div className="flex flex-col items-center justify-center px-1 sm:px-4 py-1 group">
+              <Truck className="w-5 h-5 sm:w-6 sm:h-6 md:w-7 md:h-7 text-[#0D2B4E] stroke-[1.3] mb-1 sm:mb-2 group-hover:scale-110 transition-transform duration-300" />
+              <span className="font-serif text-[11px] xs:text-xs sm:text-sm md:text-[15px] font-bold text-[#0D2B4E] leading-tight sm:leading-snug whitespace-nowrap">
+                Free Shipping
+              </span>
+              <span className="font-sans text-[9px] xs:text-[10px] sm:text-xs text-[#5A6474] font-medium leading-tight whitespace-nowrap">
+                Across India
+              </span>
+            </div>
+
+            {/* 5. Elegant Gift Packaging */}
+            <div className="flex flex-col items-center justify-center px-1 sm:px-4 py-1 group">
+              <Gift className="w-5 h-5 sm:w-6 sm:h-6 md:w-7 md:h-7 text-[#0D2B4E] stroke-[1.3] mb-1 sm:mb-2 group-hover:scale-110 transition-transform duration-300" />
+              <span className="font-serif text-[11px] xs:text-xs sm:text-sm md:text-[15px] font-bold text-[#0D2B4E] leading-tight sm:leading-snug">
+                Elegant
+              </span>
+              <span className="font-sans text-[9px] xs:text-[10px] sm:text-xs text-[#5A6474] font-medium leading-tight whitespace-nowrap">
+                Gift Packaging
+              </span>
+            </div>
+
+          </div>
+        </div>
+      </section>
+
       {/* Divider */}
       <div className="w-full h-[1px] bg-[#E6DFD3] relative z-20" />
 
@@ -1039,6 +1117,27 @@ export default function Home({
           </div>
         </section>
 
+        {/* ==========================================================
+          SECTION: OUR CRAFTSMANSHIP - A LEGACY OF TRUST (Edge-to-Edge)
+          User Request 5: Gemini Generated Craftsmanship Banner below Shop by Category
+          ========================================================== */}
+        <section 
+          id="our-craftsmanship-legacy-banner"
+          className="w-full bg-[#091B2B] select-none overflow-hidden cursor-pointer group"
+          onClick={() => {
+            triggerAudio('click');
+            navigateTo('heritage');
+          }}
+          aria-label="Our Craftsmanship - A Legacy of Trust"
+        >
+          <img 
+            src={bannerOurCraftsmanship} 
+            alt="OUR CRAFTSMANSHIP - A Legacy of Trust - MANISH & CO Fine Jewellery" 
+            className="w-full h-auto block object-cover group-hover:scale-[1.008] transition-transform duration-700 ease-out"
+            loading="lazy"
+          />
+        </section>
+
         {/* Centered Custom Design Action below Silver For Every Story */}
         <div className="w-full py-4 sm:py-5 px-4 bg-[#FAF7F2] flex justify-center items-center relative z-20 border-b border-[#E6DFD3]/60">
           <button
@@ -1159,32 +1258,24 @@ export default function Home({
         )}
 
         {/* ==========================================================
-          SECTION: CRAFT YOUR BESPOKE JEWELLERY BANNER (Edge-to-Edge)
+          SECTION: OUR STORY - MORE THAN A BRAND, A PROMISE (Edge-to-Edge)
+          User Request 3 & 4: Replaced Screenshot 2 bespoke banner with Our Story banner
           ========================================================== */}
         <section 
-          id="craft-bespoke-jewellery-banner"
-          className="w-full bg-white select-none overflow-hidden"
+          id="our-story-heritage-banner"
+          className="w-full bg-[#091B2B] select-none overflow-hidden cursor-pointer group"
+          onClick={() => {
+            triggerAudio('click');
+            navigateTo('heritage');
+          }}
+          aria-label="Our Story - More Than a Brand, A Promise"
         >
-          <button
-            type="button"
-            onClick={() => {
-              triggerAudio('click');
-              setConsultationModal(true);
-            }}
-            className="w-full block border-none p-0 m-0 cursor-pointer text-left focus:outline-none relative group"
-            aria-label="Craft Your Bespoke Jewellery - Book a Consultation"
-          >
-            <picture className="w-full block">
-              <source srcSet={craftYourBespokeJewelleryWebp} type="image/webp" />
-              <img 
-                src={craftYourBespokeJewelleryPng} 
-                alt="Craft Your Bespoke Jewellery - MANISH & CO" 
-                className="w-full h-auto block object-cover group-hover:scale-[1.01] transition-transform duration-700 ease-out"
-                loading="lazy"
-              />
-            </picture>
-            <div className="absolute inset-0 bg-gradient-to-t from-black/10 via-transparent to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300 pointer-events-none" />
-          </button>
+          <img 
+            src={bannerOurStory} 
+            alt="OUR STORY - More Than a Brand, A Promise - MANISH & CO Fine Jewellery" 
+            className="w-full h-auto block object-cover group-hover:scale-[1.008] transition-transform duration-700 ease-out"
+            loading="lazy"
+          />
         </section>
 
         {/* ==========================================================
