@@ -150,11 +150,11 @@ export default function GoldRateManagement({ setAdminNotification, adminUser }) 
   });
 
   const [percentages, setPercentages] = useState({
-    '22k': DEFAULT_PURITY_PERCENTAGES['22K'],
-    '20k': DEFAULT_PURITY_PERCENTAGES['20K'],
-    '18k': DEFAULT_PURITY_PERCENTAGES['18K'],
-    '14k': DEFAULT_PURITY_PERCENTAGES['14K'],
-    '9k':  DEFAULT_PURITY_PERCENTAGES['9K'] ?? 37.50,
+    '22k': DEFAULT_PURITY_PERCENTAGES?.['22K'] ?? 91.67,
+    '20k': DEFAULT_PURITY_PERCENTAGES?.['20K'] ?? 83.33,
+    '18k': DEFAULT_PURITY_PERCENTAGES?.['18K'] ?? 75.00,
+    '14k': DEFAULT_PURITY_PERCENTAGES?.['14K'] ?? 58.33,
+    '9k':  DEFAULT_PURITY_PERCENTAGES?.['9K'] ?? 37.50,
     'silver925': 92.50,
     'silverNormal': 90.00,
   });
@@ -172,11 +172,11 @@ export default function GoldRateManagement({ setAdminNotification, adminUser }) 
       (data) => {
         setSavedRates(data);
         const storedPercentages = {
-          '22k': Number(data.purityPercentages?.['22k'] ?? DEFAULT_PURITY_PERCENTAGES['22K']),
-          '20k': Number(data.purityPercentages?.['20k'] ?? DEFAULT_PURITY_PERCENTAGES['20K']),
-          '18k': Number(data.purityPercentages?.['18k'] ?? DEFAULT_PURITY_PERCENTAGES['18K']),
-          '14k': Number(data.purityPercentages?.['14k'] ?? DEFAULT_PURITY_PERCENTAGES['14K']),
-          '9k':  Number(data.purityPercentages?.['9k']  ?? DEFAULT_PURITY_PERCENTAGES['9K'] ?? 37.50),
+          '22k': Number(data.purityPercentages?.['22k'] ?? DEFAULT_PURITY_PERCENTAGES?.['22K'] ?? 91.67),
+          '20k': Number(data.purityPercentages?.['20k'] ?? DEFAULT_PURITY_PERCENTAGES?.['20K'] ?? 83.33),
+          '18k': Number(data.purityPercentages?.['18k'] ?? DEFAULT_PURITY_PERCENTAGES?.['18K'] ?? 75.00),
+          '14k': Number(data.purityPercentages?.['14k'] ?? DEFAULT_PURITY_PERCENTAGES?.['14K'] ?? 58.33),
+          '9k':  Number(data.purityPercentages?.['9k']  ?? DEFAULT_PURITY_PERCENTAGES?.['9K'] ?? 37.50),
           'silver925': Number(data.purityPercentages?.['silver925'] ?? data.purityPercentages?.['925'] ?? 92.50),
           'silverNormal': Number(data.purityPercentages?.['silverNormal'] ?? data.purityPercentages?.['normal'] ?? 90.00),
         };

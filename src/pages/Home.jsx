@@ -72,7 +72,7 @@ import { silverStoryService } from '../services/silverStoryService';
 import { giftingHampersService, getHamperFallbackImage } from '../services/giftingHampersService';
 
 // Dynamic Hero Banners Service
-import { heroBannerService } from '../services/heroBannerService';
+import { heroBannerService, DEFAULT_HERO_BANNERS } from '../services/heroBannerService';
 
 // Craft Your Bespoke Jewellery Assets
 import craftYourBespokeJewelleryPng from '../assets/craft_your_bespoke_jewellery.png';
@@ -199,7 +199,7 @@ export default function Home({
   changeCategoryTab,
   triggerAudio: triggerAudioProp,
   setMaxPriceFilter,
-  setGenderFilter,
+  setGenderFilter = () => {},
   setMetalFilter,
 }) {
   // Self-contained data from context
@@ -771,38 +771,39 @@ export default function Home({
                 navigateTo(banner?.page || 'collections');
               }}
             >
-              {heroBanners[currentHeroSlide]?.customImg ? (
-                <picture className="w-full h-full block">
-                  {heroBanners[currentHeroSlide]?.mobileImg && (
-                    <source media="(max-width: 767px)" srcSet={heroBanners[currentHeroSlide].mobileImg} />
-                  )}
-                  <img
-                    src={heroBanners[currentHeroSlide].customImg}
-                    alt={heroBanners[currentHeroSlide]?.alt || heroBanners[currentHeroSlide]?.title || 'MANISH & CO Hero Banner'}
-                    className="w-full h-full object-contain md:object-cover object-center select-none"
-                    loading="eager"
-                    fetchPriority="high"
-                    decoding="async"
-                  />
-                </picture>
-              ) : (
-                <picture className="w-full h-full block">
-                  {heroBanners[currentHeroSlide]?.mobileImg && (
-                    <source media="(max-width: 767px)" srcSet={heroBanners[currentHeroSlide].mobileImg} />
-                  )}
-                  {heroBanners[currentHeroSlide]?.webp && (
-                    <source srcSet={heroBanners[currentHeroSlide].webp} type="image/webp" />
-                  )}
-                  <img
-                    src={heroBanners[currentHeroSlide]?.png || heroBanners[currentHeroSlide]?.webp}
-                    alt={heroBanners[currentHeroSlide]?.alt || heroBanners[currentHeroSlide]?.title || 'MANISH & CO Hero Banner'}
-                    className="w-full h-full object-contain md:object-cover object-center select-none"
-                    loading="eager"
-                    fetchPriority="high"
-                    decoding="async"
-                  />
-                </picture>
-              )}
+              {(() => {
+                const banner = heroBanners[currentHeroSlide] || DEFAULT_HERO_BANNERS[0];
+                const def = DEFAULT_HERO_BANNERS[currentHeroSlide % DEFAULT_HERO_BANNERS.length] || DEFAULT_HERO_BANNERS[0];
+                const bannerSrc = (banner.customImg && !banner.customImg.startsWith('/assets/')) 
+                  ? banner.customImg 
+                  : (banner.png || banner.webp || def.png || def.webp);
+                const mobileSrc = (banner.mobileImg && !banner.mobileImg.startsWith('/assets/')) 
+                  ? banner.mobileImg 
+                  : bannerSrc;
+
+                return (
+                  <picture className="w-full h-full block">
+                    {mobileSrc && (
+                      <source media="(max-width: 767px)" srcSet={mobileSrc} />
+                    )}
+                    {banner.webp && (
+                      <source srcSet={banner.webp} type="image/webp" />
+                    )}
+                    <img
+                      src={bannerSrc}
+                      alt={banner?.alt || banner?.title || 'MANISH & CO Hero Banner'}
+                      className="w-full h-full object-contain md:object-cover object-center select-none"
+                      loading="eager"
+                      fetchPriority="high"
+                      decoding="async"
+                      onError={(e) => {
+                        e.currentTarget.onerror = null;
+                        e.currentTarget.src = def.png || def.webp;
+                      }}
+                    />
+                  </picture>
+                );
+              })()}
             </motion.div>
           </AnimatePresence>
 
@@ -948,6 +949,27 @@ export default function Home({
 
       {/* Main Content Area (Clean White background) */}
       <div className="bg-white text-[#0D2B4E] transition-colors duration-500 !mt-0">
+
+        {/* ==========================================================
+          SECTION: OUR CRAFTSMANSHIP - A LEGACY OF TRUST (Edge-to-Edge)
+          User Request 2: Banner Placed ABOVE "Silver For Every Story"
+          ========================================================== */}
+        <section 
+          id="our-craftsmanship-legacy-banner"
+          className="w-full bg-[#061220] select-none overflow-hidden cursor-pointer group"
+          onClick={() => {
+            triggerAudio('click');
+            navigateTo('heritage');
+          }}
+          aria-label="Our Craftsmanship - A Legacy of Trust"
+        >
+          <img 
+            src={bannerOurCraftsmanship} 
+            alt="OUR CRAFTSMANSHIP - A Legacy of Trust - MANISH & CO Fine Jewellery" 
+            className="w-full h-auto block object-cover group-hover:scale-[1.008] transition-transform duration-700 ease-out"
+            loading="lazy"
+          />
+        </section>
 
         {/* ==========================================================
           SECTION: SHOP BY CATEGORY ("Silver For Every Story")
@@ -1118,74 +1140,66 @@ export default function Home({
         </section>
 
         {/* ==========================================================
-          SECTION: OUR CRAFTSMANSHIP - A LEGACY OF TRUST (Edge-to-Edge)
-          User Request 5: Gemini Generated Craftsmanship Banner below Shop by Category
+          01 / FOR HER — WOMEN'S JEWELLERY (Editorial Showcase)
           ========================================================== */}
-        <section 
-          id="our-craftsmanship-legacy-banner"
-          className="w-full bg-[#091B2B] select-none overflow-hidden cursor-pointer group"
-          onClick={() => {
-            triggerAudio('click');
-            navigateTo('heritage');
-          }}
-          aria-label="Our Craftsmanship - A Legacy of Trust"
-        >
-          <img 
-            src={bannerOurCraftsmanship} 
-            alt="OUR CRAFTSMANSHIP - A Legacy of Trust - MANISH & CO Fine Jewellery" 
-            className="w-full h-auto block object-cover group-hover:scale-[1.008] transition-transform duration-700 ease-out"
-            loading="lazy"
+        {forHerSection && (
+          <EditorialShowcaseSection
+            id={forHerSection.id}
+            number={forHerSection.number}
+            title={forHerSection.title}
+            subtitle={forHerSection.subtitle}
+            defaultGender={forHerSection.defaultGender}
+            categories={forHerSection.categories}
+            triggerAudio={triggerAudio}
+            navigateTo={navigateTo}
+            changeCategoryTab={changeCategoryTab}
+            setGenderFilter={setGenderFilter}
           />
-        </section>
-
-        {/* Centered Custom Design Action below Silver For Every Story */}
-        <div className="w-full py-4 sm:py-5 px-4 bg-[#FAF7F2] flex justify-center items-center relative z-20 border-b border-[#E6DFD3]/60">
-          <button
-            type="button"
-            onClick={() => {
-              triggerAudio('click');
-              setCustomDesignOpen(true);
-            }}
-            className="inline-flex items-center justify-center gap-2 px-7 sm:px-9 py-3 sm:py-3.5 rounded-full bg-[#0D2B4E] hover:bg-[#081B32] text-white font-sans text-xs sm:text-[13px] font-bold tracking-widest uppercase transition-all duration-300 shadow-[0_4px_16px_rgba(13,43,78,0.28)] hover:shadow-[0_6px_20px_rgba(13,43,78,0.4)] cursor-pointer active:scale-95 focus:outline-none"
-          >
-            <Sparkles className="w-4 h-4 text-[#E6DFD3] shrink-0" />
-            <span>Custom Design</span>
-          </button>
-        </div>
+        )}
 
         {/* ==========================================================
-          SECTION: TRUST SEALS / BRAND ASSURANCES
-          (BIS Hallmarked, Free Shipping, COD, 25,000+ Happy Customers)
-          Size enlarged, luxury balanced, crystal clear badges
+          02 / FOR HIM — MEN'S JEWELLERY (Royal Navy Theme 70%)
           ========================================================== */}
-        <section id="trust-seals-section" className="w-full bg-[#FFFFFF] py-6 sm:py-8 border-b border-gray-100 select-none">
-          <div className="max-w-[1536px] mx-auto px-4 sm:px-8 lg:px-12 relative">
-            <div className="relative flex items-center justify-center">
-              {/* 4 Trust Circular Seals - Clean 4-Col on Mobile, Spacious Flex on Desktop */}
-              <div 
-                ref={trustSealsScrollRef}
-                className="w-full max-w-[1200px] grid grid-cols-4 sm:flex sm:items-center sm:justify-around gap-1.5 xs:gap-3 sm:gap-6 px-1 sm:px-4"
-              >
-                {TRUST_SEALS_DATA.map((seal) => (
-                  <div key={seal.id} className="w-full sm:w-[220px] md:w-[250px] h-[78px] xs:h-[95px] sm:h-[135px] flex items-center justify-center group cursor-pointer select-none">
-                    <div className="w-[64px] h-[64px] xs:w-[82px] xs:h-[82px] sm:w-[130px] sm:h-[130px] flex items-center justify-center transition-all duration-300 group-hover:scale-106 group-hover:drop-shadow-md">
-                      <picture className="w-full h-full flex items-center justify-center">
-                        <source srcSet={seal.imgWebp} type="image/webp" />
-                        <img 
-                          src={seal.imgPng} 
-                          alt={seal.label} 
-                          className="w-full h-full object-contain"
-                          style={{ maxHeight: '130px', maxWidth: '100%' }}
-                          loading="lazy"
-                        />
-                      </picture>
-                    </div>
-                  </div>
-                ))}
-              </div>
-            </div>
-          </div>
-        </section>
+        {forHimSection && (
+          <EditorialShowcaseSection
+            id={forHimSection.id}
+            number={forHimSection.number}
+            title={forHimSection.title}
+            subtitle={forHimSection.subtitle}
+            defaultGender={forHimSection.defaultGender}
+            categories={forHimSection.categories}
+            dark={true}
+            triggerAudio={triggerAudio}
+            navigateTo={navigateTo}
+            changeCategoryTab={changeCategoryTab}
+            setGenderFilter={setGenderFilter}
+          />
+        )}
+
+        {/* ==========================================================
+          03 / FOR KIDS & CELEBRATIONS (Soft Cream Theme 20%)
+          ========================================================== */}
+        {specialOccasionActive && (
+          <EditorialShowcaseSection
+            id="special-occasions"
+            number="03 / FOR KIDS & CELEBRATIONS"
+            title={specialOccasionActive.title}
+            subtitle={specialOccasionActive.subtitle}
+            defaultGender={specialOccasionActive.defaultGender}
+            categories={specialOccasionActive.categories}
+            triggerAudio={triggerAudio}
+            navigateTo={navigateTo}
+            changeCategoryTab={changeCategoryTab}
+            setGenderFilter={setGenderFilter}
+            tabs={[
+              { id: 'for-kids', label: 'For Kids' },
+              { id: 'couples-section', label: "Couple's Suite" },
+              { id: 'gifts-collection', label: "Gift's Collection" }
+            ]}
+            activeTab={specialOccasionTab}
+            onTabChange={(tabId) => setSpecialOccasionTab(tabId)}
+          />
+        )}
 
         {/* ==========================================================
           SECTION: SILVER GIFTING HAMPERS
@@ -1258,317 +1272,110 @@ export default function Home({
         )}
 
         {/* ==========================================================
-          SECTION: OUR STORY - MORE THAN A BRAND, A PROMISE (Edge-to-Edge)
-          User Request 3 & 4: Replaced Screenshot 2 bespoke banner with Our Story banner
+          05 / CUSTOM DESIGNS — BESPOKE JEWELLERY ATELIER (Screenshot 7 Exact)
+          Theme: 70% Navy (#061220), 10% Gold/Bronze (#C5A880), 20% Cream
           ========================================================== */}
         <section 
-          id="our-story-heritage-banner"
-          className="w-full bg-[#091B2B] select-none overflow-hidden cursor-pointer group"
-          onClick={() => {
-            triggerAudio('click');
-            navigateTo('heritage');
-          }}
-          aria-label="Our Story - More Than a Brand, A Promise"
+          id="custom-designs-section" 
+          className="relative w-full py-12 sm:py-16 lg:py-20 bg-gradient-to-r from-[#030912] via-[#061424] to-[#040D18] border-b border-[#C5A880]/20 select-none overflow-hidden"
         >
-          <img 
-            src={bannerOurStory} 
-            alt="OUR STORY - More Than a Brand, A Promise - MANISH & CO Fine Jewellery" 
-            className="w-full h-auto block object-cover group-hover:scale-[1.008] transition-transform duration-700 ease-out"
-            loading="lazy"
-          />
-        </section>
+          {/* Subtle Ambient Glows */}
+          <div className="absolute top-0 right-1/4 w-96 h-96 bg-[#C5A880]/5 rounded-full blur-3xl pointer-events-none" />
+          <div className="absolute bottom-0 left-1/4 w-96 h-96 bg-[#0D2B4E]/20 rounded-full blur-3xl pointer-events-none" />
 
-        {/* ==========================================================
-          SECTION: MADE FOR EVERY KIND OF LOVE (Screenshot 01 Exact)
-          ========================================================== */}
-        <section id="made-for-every-kind-of-love" className="w-full bg-[#FFFFFF] py-10 sm:py-14 border-b border-gray-100 select-none">
-          <div className="max-w-[1536px] mx-auto px-4 sm:px-8 lg:px-12">
-            
-            {/* Header: ✨ Made for Every Kind of Love ✨ */}
-            <div className="text-center mb-8 sm:mb-10">
-              <h2 className="text-xl sm:text-2xl md:text-[26px] font-sans font-bold text-[#0D2B4E] tracking-tight inline-flex items-center justify-center gap-2">
-                <span className="text-[#6B4B2E] text-lg">✨</span>
-                <span>Made for Every Kind of Love</span>
-                <span className="text-[#6B4B2E] text-lg">✨</span>
-              </h2>
-            </div>
-
-            {/* 4 Cards Row */}
-            <div className="grid grid-cols-2 md:grid-cols-4 gap-4 sm:gap-6 lg:gap-8 max-w-5xl mx-auto">
-              {LOVE_STORY_CARDS.map((card) => (
-                <div 
-                  key={card.id}
-                  onClick={() => {
-                    triggerAudio('click');
-                    if (card.tab) changeCategoryTab(card.tab);
-                    navigateTo('collections');
-                  }}
-                  className="flex flex-col items-center group cursor-pointer"
-                >
-                  <div className="relative w-full aspect-square rounded-2xl sm:rounded-[30px] overflow-hidden bg-[#F5EDE4] border border-[#E8DFD5] shadow-xs hover:shadow-xl transition-all duration-300 transform group-hover:-translate-y-1.5 group-hover:scale-[1.02]">
-                    <picture className="w-full h-full block">
-                      <source srcSet={card.imgWebp} type="image/webp" />
-                      <img 
-                        src={card.imgPng} 
-                        alt={card.title} 
-                        className="w-full h-full object-cover transition-transform duration-500 group-hover:scale-105"
-                        loading="lazy"
-                      />
-                    </picture>
-                  </div>
-
-                  <div className="mt-3.5 sm:mt-4 text-center">
-                    <span className={`text-xs sm:text-[13px] font-sans font-bold tracking-wider uppercase transition-colors ${
-                      card.active 
-                        ? 'text-[#6B4B2E] border-b-2 border-[#6B4B2E] pb-0.5' 
-                        : 'text-[#0D2B4E] group-hover:text-[#6B4B2E]'
-                    }`}>
-                      {card.title}
-                    </span>
-                  </div>
-                </div>
-              ))}
-            </div>
-
-          </div>
-        </section>
-
-        {/* ==========================================================
-          CLIENT FEEDBACK SECTION 4: GEMS COLLECTION (Ultra-Premium Redesign)
-          ========================================================== */}
-        <section id="gems-collection-section" className="relative w-full py-12 sm:py-20 lg:py-24 bg-gradient-to-b from-[#030911] via-[#061424] to-[#040C16] border-b border-[#C5A880]/20 select-none text-left text-white overflow-hidden">
-          {/* Subtle Ambient Radial Glows */}
-          <div className="absolute top-0 left-1/4 w-96 h-96 bg-[#C5A880]/5 rounded-full blur-3xl pointer-events-none" />
-          <div className="absolute bottom-0 right-1/4 w-96 h-96 bg-[#3B82F6]/5 rounded-full blur-3xl pointer-events-none" />
-
-          <div className="relative max-w-[1536px] mx-auto px-4 sm:px-8 lg:px-14 z-10">
-
-            {/* Editorial Luxury Header */}
-            <div className="flex flex-col lg:flex-row items-start lg:items-end justify-between gap-5 sm:gap-6 mb-8 sm:mb-14">
-              <div>
-                <div className="inline-flex items-center gap-1.5 sm:gap-2 px-2.5 sm:px-3 py-1 rounded-full bg-white/[0.06] border border-[#C5A880]/30 backdrop-blur-md mb-2.5 sm:mb-3">
-                  <Sparkles className="w-3 h-3 sm:w-3.5 sm:h-3.5 text-[#E5C396]" />
-                  <span className="text-[#E5C396] text-[10px] sm:text-[11px] font-sans font-bold tracking-[0.25em] uppercase">
-                    CERTIFIED NATURAL GEMSTONES
+          <div className="max-w-[1536px] mx-auto px-4 sm:px-8 lg:px-14 relative z-10">
+            <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 lg:gap-12 items-center">
+              
+              {/* Left Column: Headline, Copy, Action Buttons & Trust Features */}
+              <div className="lg:col-span-5 text-left space-y-5 sm:space-y-6">
+                
+                {/* Eyebrow with gold accent bar */}
+                <div className="flex items-center gap-3">
+                  <span className="text-[11px] sm:text-xs font-sans font-bold tracking-[0.28em] text-[#C5A880] uppercase">
+                    MADE PERSONAL
                   </span>
+                  <div className="w-10 sm:w-14 h-[1.5px] bg-[#C5A880]" />
                 </div>
-                <h2
-                  className="text-2xl xs:text-3xl sm:text-4xl lg:text-[50px] font-bold leading-tight tracking-tight text-transparent bg-clip-text bg-gradient-to-r from-[#FFF5DC] via-[#E8D1A7] to-[#C8A265]"
-                  style={{ fontFamily: "'Cormorant Garamond', 'Playfair Display', Georgia, serif" }}
-                >
-                  Gems Collection
-                </h2>
-                <div className="w-16 sm:w-20 h-[2px] bg-gradient-to-r from-[#C5A880] to-transparent my-2.5 sm:my-3.5" />
-                <p className="text-gray-300 text-xs sm:text-sm font-sans max-w-2xl font-light leading-relaxed">
-                  Certified Royal Blue Sapphires, Zambian Emeralds, Burmese Rubies, and Tanzanites hand-set in hallmarked 925 sterling silver. Forged for timeless royalty and astrological radiance.
-                </p>
-              </div>
-
-              <button
-                onClick={() => {
-                  changeCategoryTab?.('Collections');
-                  navigateTo('collections');
-                }}
-                className="w-full sm:w-auto inline-flex items-center justify-center gap-3 px-7 sm:px-8 py-3 sm:py-3.5 bg-[#0D2B4E] hover:bg-[#143B66] active:scale-95 text-white font-sans text-xs sm:text-[12.5px] font-semibold tracking-[0.22em] uppercase transition-all duration-300 shadow-[0_8px_25px_rgba(0,0,0,0.4)] border border-[#C5A880]/40 rounded-sm cursor-pointer group"
-              >
-                <span>EXPLORE ALL GEMS</span>
-                <ArrowRight className="w-4 h-4 text-[#E5C396] group-hover:translate-x-1 transition-transform" />
-              </button>
-            </div>
-
-            {/* Gems Showcase Banner with Dual-tone Luxury Border */}
-            <div className="relative rounded-lg overflow-hidden border border-[#C5A880]/25 shadow-[0_25px_60px_rgba(0,0,0,0.7)] group mb-6 sm:mb-10 bg-black/40">
-              <img
-                src={gemsCollectionBanner}
-                alt="Sapphire, Emerald, Ruby & Tanzanite 925 Silver Jewellery"
-                className="w-full h-auto max-h-[460px] object-cover transition-transform duration-700 ease-out group-hover:scale-102"
-                loading="lazy"
-              />
-              <div className="absolute inset-0 bg-gradient-to-t from-[#02060C]/90 via-[#02060C]/35 to-transparent pointer-events-none" />
-
-              <div className="absolute bottom-4 left-4 right-4 sm:bottom-8 sm:left-10 sm:right-10 flex flex-col sm:flex-row items-start sm:items-end justify-between gap-3 sm:gap-4">
-                <div>
-                  <div className="flex items-center gap-2 mb-1 sm:mb-1.5">
-                    <span className="w-2 h-2 rounded-full bg-[#10B981] animate-pulse" />
-                    <span className="text-[#E5C396] text-[9.5px] sm:text-[11px] font-sans font-bold tracking-[0.22em] uppercase">
-                      100% ETHICALLY SOURCED • BIS HALLMARKED 925 SILVER
-                    </span>
-                  </div>
-                  <h3
-                    className="font-serif text-lg xs:text-2xl sm:text-3xl lg:text-4xl font-bold leading-tight drop-shadow-lg text-white"
-                    style={{ fontFamily: "'Cormorant Garamond', 'Playfair Display', Georgia, serif" }}
-                  >
-                    Earth's Rarest Hues. Forged in Pure Silver.
-                  </h3>
-                </div>
-
-                <div className="hidden sm:flex items-center gap-2 px-4 py-2 rounded-full bg-black/60 backdrop-blur-md border border-[#C5A880]/30 text-xs font-sans font-medium text-[#E5C396]">
-                  <span>IGI / SGL Certified Gemstones</span>
-                </div>
-              </div>
-            </div>
-
-            {/* 4 Premium Gemstone Cards - 2x2 Grid on Mobile */}
-            <div className="grid grid-cols-2 lg:grid-cols-4 gap-3 sm:gap-6">
-              {[
-                { 
-                  name: 'Royal Sapphire', 
-                  stone: 'Neelam', 
-                  origin: 'Ceylon • AAA', 
-                  desc: 'Symbol of wisdom, regal grace & serene mental focus.',
-                  accentGlow: 'hover:border-[#3B82F6]/60 hover:shadow-[0_12px_32px_rgba(59,130,246,0.22)]',
-                  badgeBg: 'bg-[#3B82F6]/15 text-[#93C5FD] border-[#3B82F6]/30',
-                  gemDot: 'bg-[#3B82F6]'
-                },
-                { 
-                  name: 'Zambian Emerald', 
-                  stone: 'Panna', 
-                  origin: 'Zambia • AAA', 
-                  desc: 'Lush green harmony, flourishing prosperity & crisp clarity.',
-                  accentGlow: 'hover:border-[#10B981]/60 hover:shadow-[0_12px_32px_rgba(16,185,129,0.22)]',
-                  badgeBg: 'bg-[#10B981]/15 text-[#6EE7B7] border-[#10B981]/30',
-                  gemDot: 'bg-[#10B981]'
-                },
-                { 
-                  name: 'Burmese Ruby', 
-                  stone: 'Manik', 
-                  origin: 'Burma • AAA', 
-                  desc: 'Fiery passion, invictus courage & noble self-confidence.',
-                  accentGlow: 'hover:border-[#F43F5E]/60 hover:shadow-[0_12px_32px_rgba(244,63,94,0.22)]',
-                  badgeBg: 'bg-[#F43F5E]/15 text-[#FDA4AF] border-[#F43F5E]/30',
-                  gemDot: 'bg-[#F43F5E]'
-                },
-                { 
-                  name: 'Royal Tanzanite', 
-                  stone: 'Tanzanite', 
-                  origin: 'Merelani • AAAA', 
-                  desc: 'Rare deep indigo African treasure with mystical brilliance.',
-                  accentGlow: 'hover:border-[#8B5CF6]/60 hover:shadow-[0_12px_32px_rgba(139,92,246,0.22)]',
-                  badgeBg: 'bg-[#8B5CF6]/15 text-[#C4B5FD] border-[#8B5CF6]/30',
-                  gemDot: 'bg-[#8B5CF6]'
-                }
-              ].map((gem, idx) => (
-                <div
-                  key={idx}
-                  onClick={() => {
-                    changeCategoryTab?.('Collections');
-                    navigateTo('collections');
-                  }}
-                  className={`relative p-3.5 sm:p-5 lg:p-6 rounded-lg bg-white/[0.03] backdrop-blur-md border border-white/10 transition-all duration-300 cursor-pointer group hover:bg-white/[0.07] ${gem.accentGlow}`}
-                >
-                  <div className="flex flex-col xs:flex-row xs:items-center justify-between gap-1 xs:gap-2 mb-2 sm:mb-3">
-                    <span className="text-[#C5A880] text-[10px] sm:text-[11px] font-sans font-bold tracking-[0.2em] uppercase">
-                      {gem.stone}
-                    </span>
-                    <span className={`text-[8.5px] sm:text-[9.5px] font-sans font-semibold px-1.5 sm:px-2 py-0.5 rounded-full border self-start xs:self-auto ${gem.badgeBg}`}>
-                      {gem.origin}
-                    </span>
-                  </div>
-
-                  <div className="flex items-center gap-1.5 sm:gap-2 mb-1.5 sm:mb-2">
-                    <span className={`w-2 h-2 sm:w-2.5 sm:h-2.5 rounded-full shadow-sm shrink-0 ${gem.gemDot}`} />
-                    <h4
-                      className="font-serif text-sm xs:text-base sm:text-lg lg:text-xl font-bold text-white group-hover:text-[#FFF5DC] transition-colors truncate"
-                      style={{ fontFamily: "'Cormorant Garamond', 'Playfair Display', Georgia, serif" }}
-                    >
-                      {gem.name}
-                    </h4>
-                  </div>
-
-                  <p className="text-gray-400 text-[10.5px] sm:text-xs font-sans mt-1 sm:mt-2 leading-relaxed line-clamp-2 min-h-[30px] sm:min-h-[36px]">
-                    {gem.desc}
-                  </p>
-
-                  <div className="mt-3 sm:mt-4 pt-2.5 sm:pt-3 border-t border-white/10 flex items-center justify-between">
-                    <span className="text-[10px] sm:text-xs font-sans font-bold tracking-wider uppercase text-[#E5C396] group-hover:text-white transition-colors">
-                      Shop
-                    </span>
-                    <span className="w-5.5 h-5.5 sm:w-7 sm:h-7 rounded-full bg-[#0D2B4E] group-hover:bg-[#143B66] text-white flex items-center justify-center transition-all duration-300 group-hover:translate-x-1 shadow-sm text-xs sm:text-sm">
-                      →
-                    </span>
-                  </div>
-                </div>
-              ))}
-            </div>
-
-          </div>
-        </section>
-
-        <section id="our-collections" className="w-full py-12 sm:py-16 lg:py-20 bg-white border-b border-[#E8DFD5] select-none">
-          <div className="max-w-[1536px] mx-auto px-6 sm:px-10 lg:px-14">
-            <div className="flex flex-col lg:flex-row items-center justify-between gap-10 lg:gap-14">
-
-              {/* Left Column: Editorial Brand Headline */}
-              <div className="w-full lg:w-[32%] xl:w-[28%] shrink-0 text-left">
-                {/* Eyebrow */}
-                <span className="inline-block text-[#6B4B2E] text-xs sm:text-[13px] font-sans font-semibold tracking-[0.28em] uppercase mb-3 sm:mb-4">
-                  OUR COLLECTIONS
-                </span>
 
                 {/* Main Serif Headline */}
-                <h2
-                  className="text-3xl sm:text-4xl lg:text-[44px] xl:text-[48px] font-bold text-[#0D2B4E] leading-[1.08] mb-4 sm:mb-5"
+                <h2 
+                  className="text-3xl sm:text-4xl lg:text-[50px] font-bold text-[#FFF8ED] leading-[1.08] tracking-tight"
                   style={{ fontFamily: "'Cormorant Garamond', 'Playfair Display', Georgia, serif" }}
                 >
-                  Crafted for<br />
-                  Every Moment
+                  Your Idea.<br />
+                  Your Jewellery.
                 </h2>
 
                 {/* Subtitle Paragraph */}
-                <p className="text-[#5A5550] text-sm sm:text-[14.5px] font-sans font-normal leading-relaxed mb-7 sm:mb-8 max-w-[340px]">
-                  Explore our finely crafted 925 silver jewellery designed for everyday elegance and lasting value.
+                <p className="text-[#C2CAD2] text-xs sm:text-[14px] font-sans font-light leading-relaxed max-w-md">
+                  Create a custom piece or meet us for a personal appointment to bring your vision to life.
                 </p>
 
-                {/* Solid Bronze CTA Button */}
-                <div>
+                {/* CTA Buttons Row */}
+                <div className="flex flex-wrap items-center gap-3 pt-1">
                   <button
+                    type="button"
                     onClick={() => {
                       triggerAudio('click');
-                      changeCategoryTab?.('Collections');
-                      navigateTo('collections');
+                      setCustomDesignOpen(true);
                     }}
-                    className="inline-flex items-center gap-2.5 px-8 py-3.5 bg-[#0D2B4E] hover:bg-[#081B32] active:scale-95 text-white font-sans text-xs sm:text-[12.5px] font-semibold tracking-[0.2em] uppercase transition-all duration-300 shadow-[0_4px_16px_rgba(13,43,78,0.25)] cursor-pointer rounded-none"
+                    className="inline-flex items-center justify-center gap-2 px-6 sm:px-7 py-3 rounded-[3px] bg-gradient-to-r from-[#C5A880] via-[#D8BC94] to-[#B8966C] hover:brightness-105 active:scale-95 text-[#0A1624] font-sans text-xs sm:text-[12.5px] font-bold tracking-[0.16em] uppercase transition-all duration-300 shadow-[0_4px_16px_rgba(197,168,128,0.3)] cursor-pointer"
                   >
-                    <span>SHOP ALL</span>
+                    <span>Custom Designs</span>
+                    <span className="text-sm font-semibold">→</span>
+                  </button>
+
+                  <button
+                    type="button"
+                    onClick={() => {
+                      triggerAudio('click');
+                      setConsultationModal(true);
+                    }}
+                    className="inline-flex items-center justify-center gap-2 px-6 sm:px-7 py-3 rounded-[3px] bg-transparent hover:bg-white/[0.06] active:scale-95 text-[#FFF8ED] border border-[#C5A880]/50 hover:border-[#C5A880] font-sans text-xs sm:text-[12.5px] font-medium tracking-[0.14em] uppercase transition-all duration-300 cursor-pointer"
+                  >
+                    <span>Book an Appointment</span>
                     <span className="text-sm font-light">→</span>
                   </button>
                 </div>
-              </div>
 
-              {/* Right Column: Collection Category Cards */}
-              <div className="w-full lg:flex-1 grid grid-cols-2 md:grid-cols-4 gap-4 sm:gap-5 lg:gap-6">
-                {featuredCollectionCards.map((cat) => (
-                  <div
-                    key={cat.id || cat.docId || cat.name}
-                    onClick={() => {
-                      triggerAudio('click');
-                      changeCategoryTab?.(cat.tab || cat.name);
-                      navigateTo('collections');
-                    }}
-                    className="group cursor-pointer flex flex-col items-center text-center select-none"
-                  >
-                    <div className="w-full aspect-[148/169] overflow-hidden bg-black/5 shadow-sm relative">
-                      <img
-                        src={cat.img || getCategoryFallbackImage(cat.name || cat.id)}
-                        alt={`${cat.name} - MANISH & CO`}
-                        className="w-full h-full object-cover transition-transform duration-700 ease-out group-hover:scale-105"
-                        loading="lazy"
-                        onError={(e) => {
-                          e.currentTarget.onerror = null;
-                          e.currentTarget.src = getCategoryFallbackImage(cat.name || cat.id);
-                        }}
-                      />
-                      <div className="absolute inset-0 bg-black/0 group-hover:bg-black/10 transition-colors duration-300" />
-                    </div>
-                    <h3 className="font-sans font-semibold text-xs sm:text-[13px] tracking-[0.22em] uppercase text-[#0D2B4E] mt-3 group-hover:text-[#6B4B2E] transition-colors">
-                      {cat.name}
-                    </h3>
-                    <span className="text-[11px] sm:text-xs text-[#6F6862] group-hover:text-[#6B4B2E] group-hover:translate-x-0.5 transition-all inline-flex items-center gap-1 mt-0.5 font-normal">
-                      <span>Shop Now</span>
-                      <span className="text-xs">→</span>
+                {/* 3 Trust Features Strip */}
+                <div className="pt-4 sm:pt-6 border-t border-white/10 flex flex-wrap items-center gap-6 sm:gap-8 text-left">
+                  <div className="flex items-center gap-2.5">
+                    <Sparkles className="w-4 h-4 text-[#C5A880] shrink-0" />
+                    <span className="text-[11px] sm:text-xs font-sans text-[#E1D7C6] font-medium tracking-wide">
+                      Handcrafted Bespoke Pieces
                     </span>
                   </div>
-                ))}
+                  <div className="flex items-center gap-2.5">
+                    <Star className="w-4 h-4 text-[#C5A880] shrink-0" />
+                    <span className="text-[11px] sm:text-xs font-sans text-[#E1D7C6] font-medium tracking-wide">
+                      3D CAD Mockup
+                    </span>
+                  </div>
+                  <div className="flex items-center gap-2.5">
+                    <Shield className="w-4 h-4 text-[#C5A880] shrink-0" />
+                    <span className="text-[11px] sm:text-xs font-sans text-[#E1D7C6] font-medium tracking-wide">
+                      BIS 925 Hallmark
+                    </span>
+                  </div>
+                </div>
+
+              </div>
+
+              {/* Right Column: Artisan Workbench Sketch & Ring Image */}
+              <div className="lg:col-span-7">
+                <div className="relative rounded-xl overflow-hidden border border-[#C5A880]/30 shadow-[0_20px_50px_rgba(0,0,0,0.6)] group bg-black/40">
+                  <picture className="w-full h-full block">
+                    <source srcSet={craftYourBespokeJewelleryWebp} type="image/webp" />
+                    <img 
+                      src={craftYourBespokeJewelleryPng} 
+                      alt="Your Idea. Your Jewellery. Bespoke 925 Silver Design Process" 
+                      className="w-full h-auto object-cover transition-transform duration-700 ease-out group-hover:scale-[1.015]"
+                      loading="lazy"
+                    />
+                  </picture>
+                  <div className="absolute inset-0 bg-gradient-to-t from-black/40 via-transparent to-transparent pointer-events-none" />
+                </div>
               </div>
 
             </div>
@@ -1685,263 +1492,23 @@ export default function Home({
         )}
 
         {/* ==========================================================
-          CURATED EDITORIAL SECTIONS (For Her, For Him, Special Occasions)
-          Compact horizontal slides, 2-3 items on mobile, 3 sections total
+          SECTION: OUR STORY - MORE THAN A BRAND, A PROMISE (Edge-to-Edge)
           ========================================================== */}
-        {forHerSection && (
-          <EditorialShowcaseSection
-            id={forHerSection.id}
-            number={forHerSection.number}
-            title={forHerSection.title}
-            subtitle={forHerSection.subtitle}
-            defaultGender={forHerSection.defaultGender}
-            categories={forHerSection.categories}
-            triggerAudio={triggerAudio}
-            navigateTo={navigateTo}
-            changeCategoryTab={changeCategoryTab}
-            setGenderFilter={setGenderFilter}
-          />
-        )}
-
-        {forHimSection && (
-          <EditorialShowcaseSection
-            id={forHimSection.id}
-            number={forHimSection.number}
-            title={forHimSection.title}
-            subtitle={forHimSection.subtitle}
-            defaultGender={forHimSection.defaultGender}
-            categories={forHimSection.categories}
-            triggerAudio={triggerAudio}
-            navigateTo={navigateTo}
-            changeCategoryTab={changeCategoryTab}
-            setGenderFilter={setGenderFilter}
-          />
-        )}
-
-        {specialOccasionActive && (
-          <EditorialShowcaseSection
-            id="special-occasions"
-            number="03 / SPECIAL EDITIONS & CELEBRATIONS"
-            title={specialOccasionActive.title}
-            subtitle={specialOccasionActive.subtitle}
-            defaultGender={specialOccasionActive.defaultGender}
-            categories={specialOccasionActive.categories}
-            triggerAudio={triggerAudio}
-            navigateTo={navigateTo}
-            changeCategoryTab={changeCategoryTab}
-            setGenderFilter={setGenderFilter}
-            tabs={[
-              { id: 'for-kids', label: 'For Kids' },
-              { id: 'couples-section', label: "Couple's Suite" },
-              { id: 'gifts-collection', label: "Gift's Collection" }
-            ]}
-            activeTab={specialOccasionTab}
-            onTabChange={(tabId) => setSpecialOccasionTab(tabId)}
-          />
-        )}
-
-
-
-        {/* ==========================================================
-          FEATURE 03: BUILT ON PURITY — WHY 925 FINE SILVER?
-          (Edge-by-Edge Full-Bleed Banner)
-          ========================================================== */}
-        <section
-          id="built-on-purity"
-          className="w-full relative overflow-hidden select-none bg-[#091B2B] cursor-pointer group border-b border-white/10"
-          onClick={() => {
-            triggerAudio('click');
-            changeCategoryTab?.('Silver', 'silver', 'all');
-            if (typeof setMetalFilter === 'function') setMetalFilter('silver');
-            navigateTo('collections');
-          }}
-        >
-          <img
-            src={bannerBuiltOnPurity}
-            alt="Built on Purity - Why 925 Sterling Silver? MANISH & CO Fine Jewellery"
-            className="w-full h-auto min-h-[190px] sm:min-h-0 object-cover object-center block transition-transform duration-700 ease-out group-hover:scale-[1.008]"
-            loading="lazy"
-          />
-          {/* Subtle luxury ambient hover sheen */}
-          <div className="absolute inset-0 bg-white/0 group-hover:bg-white/[0.025] transition-colors duration-300 pointer-events-none" />
-        </section>
-
-        {/* ==========================================================
-          BRAND CAMPAIGN VIDEO
-          ========================================================== */}
-        <section className="py-20 bg-white overflow-hidden text-center">
-          <div className="max-w-[1836px] mx-auto px-6 sm:px-12 lg:px-16 text-center">
-            <div className="grid grid-cols-1 lg:grid-cols-12 gap-12 items-stretch text-center">
-
-              <motion.div
-                initial={{ opacity: 0, x: -120 }}
-                whileInView={{ opacity: 1, x: 0 }}
-                viewport={{ once: true, margin: "-100px" }}
-                transition={{ duration: 0.9, ease: [0.16, 1, 0.3, 1] }}
-                className="lg:col-span-7 text-center"
-              >
-                <div className="border-2 border-[#6B4B2E] rounded-[8px] overflow-hidden shadow-2xl bg-black aspect-video relative group transition-transform duration-500 hover:scale-[1.01] text-center border-solid">
-                  <video
-                    src="/videos/strokes_of_genius.mp4"
-                    autoPlay
-                    loop
-                    muted
-                    playsInline
-                    controls
-                    className="w-full h-full object-cover select-none"
-                  >
-                    Your browser does not support HTML5 video.
-                  </video>
-                  <div className="absolute inset-0 bg-gradient-to-t from-[#091B2B]/80 via-transparent to-transparent flex items-end p-6 text-left pointer-events-none">
-                    <p className="text-white text-xs sm:text-sm font-serif tracking-wider drop-shadow-md">
-                      Handcrafted In Pure 925 Sterling Silver • Centuries of Indian Royal Silversmithing
-                    </p>
-                  </div>
-                </div>
-              </motion.div>
-
-              <motion.div
-                initial={{ opacity: 0, x: 120 }}
-                whileInView={{ opacity: 1, x: 0 }}
-                viewport={{ once: true, margin: "-100px" }}
-                transition={{ duration: 0.9, ease: [0.16, 1, 0.3, 1] }}
-                className="lg:col-span-5 relative flex flex-col lg:flex-row items-center lg:items-stretch h-full py-6 lg:py-0"
-              >
-                <div className="absolute -left-12 right-0 h-[1.5px] bg-[#6B4B2E] top-1/2 -translate-y-1/2 z-0 hidden lg:block" />
-                <div className="lg:absolute lg:left-0 lg:bottom-1/2 lg:pl-12 lg:pb-1.5 z-10 text-center lg:text-left w-full lg:w-auto">
-                  <h3 className="serif-luxury text-4xl sm:text-5xl lg:text-[52px] font-normal tracking-wide text-[#0D2B4E] hover:scale-[1.02] transition-transform duration-300">
-                    #StrokesofGenius
-                  </h3>
-                </div>
-                <div className="w-24 h-[1.5px] bg-[#6B4B2E] mt-4 lg:hidden" />
-              </motion.div>
-
-            </div>
-          </div>
-        </section>
-
-
-
-        {/* ==========================================================
-          TAILORED SELECTION RECOMMENDED FOR YOU
-          ========================================================== */}
-        <section className="py-12 bg-white border-b border-solid border-[#E6DFD3] relative overflow-hidden text-center">
-          <div className="w-full px-4 md:px-12 space-y-10 relative group/sect text-center">
-
-            <div className="text-center space-y-2.5">
-              <span className="text-[10.5px] uppercase tracking-[0.35em] text-[#6B4B2E] font-bold font-sans">TAILORED SELECTION</span>
-              <h2 className="serif-luxury text-3xl sm:text-4xl md:text-[42px] font-semibold text-[#0D2B4E]">Recommended for You</h2>
-              <div className="w-14 h-[2px] bg-[#6B4B2E] mx-auto mt-2 rounded-full"></div>
-            </div>
-
-            <div
-              className="relative flex items-center px-0 md:px-16"
-              onMouseEnter={() => {
-                if (categoriesAutoplayRef.current) clearInterval(categoriesAutoplayRef.current);
-              }}
-              onMouseLeave={() => {
-                startCategoriesAutoplay();
-              }}
-            >
-              {/* Left Scroll button */}
-              <button
-                onClick={() => scrollCategories('left')}
-                className="absolute left-2 md:left-4 z-10 p-2.5 rounded-full border border-solid shadow-lg transition-all duration-300 -translate-x-4 opacity-0 group-hover/sect:opacity-100 group-hover/sect:translate-x-0 cursor-pointer hidden md:flex items-center justify-center bg-white/95 backdrop-blur-sm border-[#E6DFD3] text-[#0D2B4E] hover:bg-[#F5EDE4]"
-                aria-label="Scroll left"
-              >
-                <svg className="w-5 h-5 stroke-current fill-none stroke-2" viewBox="0 0 24 24">
-                  <path strokeLinecap="round" strokeLinejoin="round" d="M15 19l-7-7 7-7" />
-                </svg>
-              </button>
-
-              {/* Scroll Container */}
-              <div
-                ref={categoriesScrollRef}
-                className="flex items-center gap-6 sm:gap-8 overflow-x-auto no-scrollbar scroll-smooth snap-x pb-6 px-4 select-none w-full flex-nowrap justify-start"
-              >
-                {activeCategories.map((cat, idx) => {
-                  const handleClick = () => {
-                    triggerAudio('click');
-                    const normName = String(cat.name || '').toLowerCase();
-                    if (cat.id === 'gold-coins' || normName.includes('coin')) {
-                      navigateTo('gold-coins');
-                    } else {
-                      changeCategoryTab(cat.name);
-                      navigateTo('collections');
-                    }
-                  };
-                  const rawCatImg = cat.img || getCategoryFallbackImage(cat.name || cat.id);
-                  const catImg = (typeof rawCatImg === 'string' && rawCatImg.includes('cloudinary')) 
-                    ? getOptimizedImageUrl(rawCatImg, { width: 600, quality: 'auto:best' }) 
-                    : rawCatImg;
-
-                  return (
-                    <div
-                      key={idx}
-                      onClick={handleClick}
-                      className="flex flex-col items-center gap-3 cursor-pointer shrink-0 snap-center group text-center"
-                    >
-                      <div
-                        className="w-[115px] h-[115px] sm:w-[135px] sm:h-[135px] md:w-[150px] md:h-[150px] rounded-2xl overflow-hidden border border-solid border-[#EADBCE]/90 bg-white flex items-center justify-center transition-all duration-300 ease group-hover:scale-[1.04] group-hover:-translate-y-1.5 shadow-[0_4px_16px_rgba(0,0,0,0.06)] group-hover:shadow-[0_12px_28px_rgba(107,75,46,0.18)]"
-                      >
-                        <img
-                          src={catImg}
-                          alt={cat.name}
-                          loading="lazy"
-                          onError={(e) => {
-                            const fallback = getCategoryFallbackImage(cat.name || cat.id);
-                            if (e.currentTarget.src !== fallback) {
-                              e.currentTarget.src = fallback;
-                            }
-                          }}
-                          className="w-full h-full object-cover transition-transform duration-500 group-hover:scale-108"
-                        />
-                      </div>
-                      <span
-                        className="font-sans text-[11px] sm:text-xs tracking-wider uppercase font-semibold transition-colors duration-300 text-[#0D2B4E] group-hover:text-[#6B4B2E]"
-                      >
-                        {cat.name}
-                      </span>
-                    </div>
-                  );
-                })}
-              </div>
-
-              {/* Right Scroll button */}
-              <button
-                onClick={() => scrollCategories('right')}
-                className="absolute right-2 md:right-4 z-10 p-2.5 rounded-full border border-solid shadow-lg transition-all duration-300 translate-x-4 opacity-0 group-hover/sect:opacity-100 group-hover/sect:-translate-x-0 cursor-pointer hidden md:flex items-center justify-center bg-white/95 backdrop-blur-sm border-[#E6DFD3] text-[#0D2B4E] hover:bg-[#F5EDE4]"
-                aria-label="Scroll right"
-              >
-                <svg className="w-5 h-5 stroke-current fill-none stroke-2" viewBox="0 0 24 24">
-                  <path strokeLinecap="round" strokeLinejoin="round" d="M9 5l7 7-7 7" />
-                </svg>
-              </button>
-            </div>
-
-          </div>
-        </section>
-
-        {/* ==========================================================
-          CRAFTSMANSHIP JOURNEY — BEAUTY IS IN THE DETAILS (925 SILVER)
-          (Edge-by-Edge Full-Bleed Banner)
-          ========================================================== */}
-        <section
-          id="craftsmanship-journey-banner"
-          className="w-full relative overflow-hidden select-none bg-[#091B2B] cursor-pointer group border-y border-white/10"
+        <section 
+          id="our-story-heritage-banner"
+          className="w-full bg-[#091B2B] select-none overflow-hidden cursor-pointer group"
           onClick={() => {
             triggerAudio('click');
             navigateTo('heritage');
           }}
+          aria-label="Our Story - More Than a Brand, A Promise"
         >
-          <img
-            src={bannerCraftsmanshipJourney}
-            alt="The Jewellery Journey - Beauty Is in the Details - MANISH & CO Fine Jewellery"
-            className="w-full h-auto min-h-[190px] sm:min-h-0 object-cover object-center block transition-transform duration-700 ease-out group-hover:scale-[1.008]"
+          <img 
+            src={bannerOurStory} 
+            alt="OUR STORY - More Than a Brand, A Promise - MANISH & CO Fine Jewellery" 
+            className="w-full h-auto block object-cover group-hover:scale-[1.008] transition-transform duration-700 ease-out"
             loading="lazy"
           />
-          {/* Subtle luxury ambient hover sheen */}
-          <div className="absolute inset-0 bg-white/0 group-hover:bg-white/[0.025] transition-colors duration-300 pointer-events-none" />
         </section>
 
         {/* ==========================================================

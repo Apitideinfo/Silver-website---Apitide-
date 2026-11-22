@@ -56,6 +56,35 @@ export const DEFAULT_HERO_BANNERS = [
   }
 ];
 
+const DEFAULT_BANNER_MAP = {
+  'hero-1': { webp: heroBannerTimelessSilverWebp, png: heroBannerTimelessSilverPng, title: 'Timeless Silver Jewellery Collection', alt: 'Timeless Silver Jewellery Collection - MANISH & CO' },
+  'hero-2': { webp: heroBannerLuxuryEarringWebp, png: heroBannerLuxuryEarringPng, title: 'Luxury Navy Blue Earring Collection', alt: 'Luxury Navy Blue Earring Collection - MANISH & CO' },
+  'hero-3': { webp: heroBannerBrandPromiseWebp, png: heroBannerBrandPromisePng, title: 'Brand Promise - 925 Hallmark Purity', alt: 'Brand Promise - Pure 925 Sterling Silver - MANISH & CO' },
+  'hero-4': { webp: heroBannerDiwaliGlowWebp, png: heroBannerDiwaliGlowPng, title: 'Royal Diwali Festive Season Glow', alt: 'Royal Diwali Festive Season Glow - MANISH & CO' }
+};
+
+const sanitizeBanner = (banner, idx) => {
+  const def = DEFAULT_BANNER_MAP[banner?.id] || DEFAULT_HERO_BANNERS[idx % DEFAULT_HERO_BANNERS.length];
+  let customImg = (banner?.customImg || banner?.img || banner?.image || '').trim();
+  // Strip stale relative hashes or dead blob URLs that cause broken images
+  if (customImg.startsWith('blob:') || customImg.startsWith('/assets/') || customImg.startsWith('assets/')) {
+    customImg = '';
+  }
+  let mobileImg = (banner?.mobileImg || '').trim();
+  if (mobileImg.startsWith('blob:') || mobileImg.startsWith('/assets/') || mobileImg.startsWith('assets/')) {
+    mobileImg = '';
+  }
+
+  return {
+    ...def,
+    ...banner,
+    webp: def?.webp || banner?.webp || heroBannerTimelessSilverWebp,
+    png: def?.png || banner?.png || heroBannerTimelessSilverPng,
+    customImg,
+    mobileImg
+  };
+};
+
 const STORAGE_KEY = 'manish_hero_banners_data';
 const DELETED_KEY = 'manish_hero_banners_deleted_ids';
 const FIRESTORE_DOC_ID = 'hero_banners_carousel';
@@ -68,17 +97,7 @@ export const heroBannerService = {
     if (Array.isArray(cached) && cached.length > 0) {
       return cached
         .filter(banner => banner && banner.id && !deletedIds.includes(banner.id))
-        .map((banner, idx) => {
-          const def = DEFAULT_HERO_BANNERS[idx % DEFAULT_HERO_BANNERS.length];
-          return {
-            ...def,
-            ...banner,
-            webp: banner.webp || def.webp,
-            png: banner.png || def.png,
-            customImg: banner.customImg || banner.img || banner.image || '',
-            mobileImg: banner.mobileImg || ''
-          };
-        });
+        .map((banner, idx) => sanitizeBanner(banner, idx));
     }
 
     const isInit = StorageService.get('manish_hero_banners_initialized', false);
@@ -89,7 +108,7 @@ export const heroBannerService = {
       return initial;
     }
 
-    return [];
+    return DEFAULT_HERO_BANNERS.filter(b => !deletedIds.includes(b.id));
   },
 
   async fetchRemoteBanners() {
@@ -100,8 +119,9 @@ export const heroBannerService = {
       if (Array.isArray(config?.heroBanners)) {
         const valid = config.heroBanners.filter(b => b && b.id && !deletedIds.includes(b.id));
         if (valid.length > 0) {
-          StorageService.set(STORAGE_KEY, valid);
-          return this.getStoredBanners();
+          const sanitized = valid.map((b, idx) => sanitizeBanner(b, idx));
+          StorageService.set(STORAGE_KEY, sanitized);
+          return sanitized;
         }
       }
     } catch (_e) {
@@ -120,17 +140,7 @@ export const heroBannerService = {
           if (Array.isArray(remote.banners)) {
             const filtered = remote.banners.filter(b => b && b.id && !deletedIds.includes(b.id));
             if (filtered.length > 0) {
-              const merged = filtered.map((banner, idx) => {
-                const def = DEFAULT_HERO_BANNERS[idx % DEFAULT_HERO_BANNERS.length];
-                return {
-                  ...def,
-                  ...banner,
-                  webp: banner.webp || def.webp,
-                  png: banner.png || def.png,
-                  customImg: banner.customImg || banner.img || banner.image || '',
-                  mobileImg: banner.mobileImg || ''
-                };
-              });
+              const merged = filtered.map((banner, idx) => sanitizeBanner(banner, idx));
               StorageService.set(STORAGE_KEY, merged);
               if (typeof window !== 'undefined') {
                 window.dispatchEvent(new CustomEvent('manish_hero_banners_updated', { detail: merged }));
