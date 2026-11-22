@@ -5,7 +5,7 @@ import { useProducts } from '../hooks/useProducts';
 import Modal from '../components/Modal';
 import BookingForm from '../forms/BookingForm';
 import { getOptimizedImageUrl } from '../utils/imageOptimizer';
-import { ArrowRight, Star, Sparkles, ChevronRight, ChevronLeft, Diamond, ShieldCheck, RotateCcw, Truck, Gift } from 'lucide-react';
+import { ArrowRight, Star, Sparkles, ChevronRight, ChevronLeft, Diamond, Shield, ShieldCheck, RotateCcw, Truck, Gift } from 'lucide-react';
 
 // Category Image Fallbacks
 import solitariesImg from '../assets/solitaries.png';
