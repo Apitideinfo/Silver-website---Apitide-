@@ -578,6 +578,12 @@ export default function AdminCategories({
   const handleSaveHeroBanners = async (e) => {
     if (e) e.preventDefault();
     setSavingHeroBanners(true);
+
+    // Fail-safe unlock after 2 seconds no matter what
+    const safetyTimer = setTimeout(() => {
+      setSavingHeroBanners(false);
+    }, 2000);
+
     try {
       await heroBannerService.saveBanners(heroBanners);
       setHeroBannersSaveSuccess(true);
@@ -594,9 +600,10 @@ export default function AdminCategories({
         setAdminNotification({ message: 'Saved locally, syncing to cloud...', type: 'info' });
       }
     } finally {
+      clearTimeout(safetyTimer);
       setTimeout(() => {
         setSavingHeroBanners(false);
-      }, 350);
+      }, 200);
     }
   };
 

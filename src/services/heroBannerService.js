@@ -158,18 +158,34 @@ export const heroBannerService = {
 
   async saveBanners(banners) {
     const deletedIds = StorageService.get(DELETED_KEY, []);
-    const safeBanners = (Array.isArray(banners) ? banners : []).filter(
-      b => b && b.id && !deletedIds.includes(b.id)
-    );
+    const safeBanners = (Array.isArray(banners) ? banners : [])
+      .filter(b => b && b.id && !deletedIds.includes(b.id))
+      .map((b, idx) => sanitizeBanner(b, idx));
 
-    const payload = {
-      banners: safeBanners,
+    const cleanPayload = {
+      banners: safeBanners.map(b => ({
+        id: String(b.id || `hero-${Date.now()}`),
+        title: String(b.title || ''),
+        subtitle: String(b.subtitle || ''),
+        cta: String(b.cta || ''),
+        page: String(b.page || 'collections'),
+        category: String(b.category || 'Collections'),
+        customImg: String(b.customImg || ''),
+        mobileImg: String(b.mobileImg || ''),
+        alt: String(b.alt || b.title || '')
+      })),
       lastUpdated: new Date().toISOString()
     };
 
+    // 1. Instant local storage persistence
     StorageService.set(STORAGE_KEY, safeBanners);
 
+    // 2. Pulse for cross-tab and cross-window sync
     if (typeof window !== 'undefined') {
+      try {
+        localStorage.setItem('manish_sync_pulse', `hero_banners_${Date.now()}`);
+      } catch (_e) { /* noop */ }
+
       window.dispatchEvent(new CustomEvent('manish_hero_banners_updated', { detail: safeBanners }));
 
       if ('BroadcastChannel' in window) {
@@ -181,19 +197,23 @@ export const heroBannerService = {
       }
     }
 
-    // Await cloud sync for immediate persistence
-    try {
-      await storeSyncService.publishSection('heroBanners', safeBanners);
-    } catch (err) {
+    // 3. Background Cloud Persistence via storeSyncService (non-blocking)
+    storeSyncService.publishSection('heroBanners', cleanPayload.banners).catch(err => {
       console.warn('storeSyncService heroBanners publish error:', err);
-    }
+    });
 
+    // 4. Background Firestore sync attempt (non-blocking with merge & safe timeout)
     if (db) {
       try {
         const docRef = doc(db, FIRESTORE_COLLECTIONS.SYSTEM_CONFIGS, FIRESTORE_DOC_ID);
-        await setDoc(docRef, payload, { merge: false });
+        Promise.race([
+          setDoc(docRef, cleanPayload, { merge: true }),
+          new Promise((_, reject) => setTimeout(() => reject(new Error('timeout')), 3000))
+        ]).catch(e => {
+          console.warn('Hero banners remote sync fallback:', e.message);
+        });
       } catch (e) {
-        console.warn('Hero banners remote sync fallback:', e.message);
+        // Fallback
       }
     }
 
