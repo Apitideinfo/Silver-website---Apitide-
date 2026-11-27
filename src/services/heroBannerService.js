@@ -64,8 +64,9 @@ const DEFAULT_BANNER_MAP = {
 };
 
 const sanitizeBanner = (banner, idx) => {
-  const def = DEFAULT_BANNER_MAP[banner?.id] || DEFAULT_HERO_BANNERS[idx % DEFAULT_HERO_BANNERS.length];
-  let customImg = (banner?.customImg || banner?.img || banner?.image || '').trim();
+  const isDefaultId = ['hero-1', 'hero-2', 'hero-3', 'hero-4'].includes(banner?.id);
+  const def = isDefaultId ? (DEFAULT_BANNER_MAP[banner?.id] || DEFAULT_HERO_BANNERS[idx % DEFAULT_HERO_BANNERS.length]) : null;
+  let customImg = (banner?.customImg || banner?.img || banner?.image || (!isDefaultId ? banner?.png : '') || '').trim();
   // Strip stale relative hashes or dead blob URLs that cause broken images
   if (customImg.startsWith('blob:') || customImg.startsWith('/assets/') || customImg.startsWith('assets/')) {
     customImg = '';
@@ -75,12 +76,16 @@ const sanitizeBanner = (banner, idx) => {
     mobileImg = '';
   }
 
+  const hasCustom = Boolean(customImg);
+  const isCustom = !isDefaultId || hasCustom;
+
   return {
-    ...def,
+    ...(def || {}),
     ...banner,
-    webp: def?.webp || banner?.webp || heroBannerTimelessSilverWebp,
-    png: def?.png || banner?.png || heroBannerTimelessSilverPng,
-    customImg,
+    isCustom,
+    webp: isCustom ? '' : (banner?.webp || def?.webp || heroBannerTimelessSilverWebp),
+    png: isCustom ? (customImg || banner?.png || '') : (banner?.png || def?.png || heroBannerTimelessSilverPng),
+    customImg: isCustom ? (customImg || banner?.png || '') : '',
     mobileImg
   };
 };

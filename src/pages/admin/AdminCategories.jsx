@@ -512,7 +512,7 @@ export default function AdminCategories({
       const res = await ImageUploadService.uploadImage(file);
       if (res && res.url) {
         const next = [...heroBanners];
-        next[index] = { ...next[index], customImg: res.url };
+        next[index] = { ...next[index], customImg: res.url, png: res.url, webp: '', isCustom: true };
         setHeroBanners(next);
         await heroBannerService.saveBanners(next);
         setHeroBannerUploadProgress(`✓ Slide #${index + 1} banner uploaded and live on Homepage!`);
@@ -535,7 +535,11 @@ export default function AdminCategories({
   const handleHeroBannerFieldChange = (idx, field, val) => {
     setHeroBanners(prev => {
       const next = [...prev];
-      next[idx] = { ...next[idx], [field]: val };
+      if (field === 'customImg') {
+        next[idx] = { ...next[idx], customImg: val, png: val, webp: '', isCustom: true };
+      } else {
+        next[idx] = { ...next[idx], [field]: val };
+      }
       return next;
     });
   };
@@ -547,6 +551,7 @@ export default function AdminCategories({
       customImg: '',
       webp: '',
       png: '',
+      isCustom: true,
       alt: 'Fine Silver Jewellery - MANISH & CO',
       page: 'collections',
       category: 'Collections'

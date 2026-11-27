@@ -774,19 +774,20 @@ export default function Home({
               {(() => {
                 const banner = heroBanners[currentHeroSlide] || DEFAULT_HERO_BANNERS[0];
                 const def = DEFAULT_HERO_BANNERS[currentHeroSlide % DEFAULT_HERO_BANNERS.length] || DEFAULT_HERO_BANNERS[0];
+                const isCustom = banner.isCustom || !['hero-1', 'hero-2', 'hero-3', 'hero-4'].includes(banner?.id) || Boolean(banner.customImg && !banner.customImg.startsWith('/assets/'));
                 const bannerSrc = (banner.customImg && !banner.customImg.startsWith('/assets/')) 
                   ? banner.customImg 
-                  : (banner.png || banner.webp || def.png || def.webp);
+                  : (banner.png || (!isCustom && banner.webp) || def.png || def.webp);
                 const mobileSrc = (banner.mobileImg && !banner.mobileImg.startsWith('/assets/')) 
                   ? banner.mobileImg 
                   : bannerSrc;
 
                 return (
                   <picture className="w-full h-full block">
-                    {mobileSrc && (
+                    {mobileSrc && mobileSrc !== bannerSrc && (
                       <source media="(max-width: 767px)" srcSet={mobileSrc} />
                     )}
-                    {banner.webp && (
+                    {!isCustom && banner.webp && (
                       <source srcSet={banner.webp} type="image/webp" />
                     )}
                     <img
@@ -798,7 +799,9 @@ export default function Home({
                       decoding="async"
                       onError={(e) => {
                         e.currentTarget.onerror = null;
-                        e.currentTarget.src = def.png || def.webp;
+                        if (!isCustom) {
+                          e.currentTarget.src = def.png || def.webp;
+                        }
                       }}
                     />
                   </picture>
@@ -806,30 +809,6 @@ export default function Home({
               })()}
             </motion.div>
           </AnimatePresence>
-
-          {/* Left Navigation Arrow (Hidden on mobile swipe to avoid blocking banner text) */}
-          <button
-            onClick={(e) => {
-              e.stopPropagation();
-              prevHeroSlide();
-            }}
-            aria-label="Previous Banner"
-            className="hidden sm:flex absolute left-2 sm:left-4 lg:left-6 top-1/2 -translate-y-1/2 w-8 h-8 sm:w-11 sm:h-11 rounded-full bg-black/35 hover:bg-black/70 text-white backdrop-blur-md border border-white/20 items-center justify-center transition-all duration-300 opacity-80 hover:opacity-100 hover:scale-105 active:scale-95 cursor-pointer z-20 focus:outline-none shadow-lg"
-          >
-            <ChevronLeft className="w-5 h-5 sm:w-6 sm:h-6" />
-          </button>
-
-          {/* Right Navigation Arrow (Hidden on mobile swipe to avoid blocking banner text) */}
-          <button
-            onClick={(e) => {
-              e.stopPropagation();
-              nextHeroSlide();
-            }}
-            aria-label="Next Banner"
-            className="hidden sm:flex absolute right-2 sm:right-4 lg:right-6 top-1/2 -translate-y-1/2 w-8 h-8 sm:w-11 sm:h-11 rounded-full bg-black/35 hover:bg-black/70 text-white backdrop-blur-md border border-white/20 items-center justify-center transition-all duration-300 opacity-80 hover:opacity-100 hover:scale-105 active:scale-95 cursor-pointer z-20 focus:outline-none shadow-lg"
-          >
-            <ChevronRight className="w-5 h-5 sm:w-6 sm:h-6" />
-          </button>
 
           {/* Slide Indicator Dots */}
           <div className="absolute bottom-1 sm:bottom-3 lg:bottom-5 left-1/2 -translate-x-1/2 z-20 flex items-center gap-1 sm:gap-2 px-2 sm:px-3 py-0.5 sm:py-1 rounded-full bg-black/35 backdrop-blur-md border border-white/10">
