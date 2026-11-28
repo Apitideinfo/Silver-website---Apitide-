@@ -103,6 +103,8 @@ import bannerCraftsmanshipJourney from '../assets/craftsmanship_in_every_silver_
 import bannerStoreBanner from '../assets/banner_store_banner.png';
 import gemsCollectionBanner from '../assets/gems_collection_banner.jpg';
 import bannerOurStory from '../assets/banner_our_story.png';
+import bannerCraftsmanshipTimelessRingsWebp from '../assets/craftsmanship_behind_timeless_rings.webp';
+import bannerCraftsmanshipTimelessRingsPng from '../assets/craftsmanship_behind_timeless_rings.png';
 
 
 
@@ -929,15 +931,14 @@ export default function Home({
       <div className="bg-white text-[#0D2B4E] transition-colors duration-500 !mt-0">
 
         {/* ==========================================================
-          SECTION: SHOP BY CATEGORY ("Silver For Every Story")
+          SECTION: SHOP BY CATEGORY (Featured Categories Carousel)
           Reference Screenshot Match: 
           Rings | Stone Bracelets | Earring | Bracelets | Pendant | Necklaces
-          Theme: MANISH & CO Signature (#F8F5EC Ivory, #0D2B4E Navy, #8C6D46 Bronze, #E6DFD3 Border)
           ========================================================== */}
         <section
-          id="silver-for-every-story"
-          aria-label="Silver For Every Story - Featured Categories"
-          className="w-full bg-[#FFFFFF] pt-8 pb-7 sm:pt-10 sm:pb-9 border-b border-gray-100/60 select-none relative"
+          id="shop-by-category-cards"
+          aria-label="Shop By Category - Featured Categories"
+          className="w-full bg-[#FFFFFF] pt-6 pb-6 sm:pt-8 sm:pb-8 border-b border-gray-100/60 select-none relative"
         >
           <div className="max-w-[1536px] mx-auto px-4 sm:px-8 lg:px-12 relative">
 
@@ -987,34 +988,66 @@ export default function Home({
               </div>
             )}
 
-            {/* Reference Screenshot Exact: ♥ Silver For Every Story ♥ */}
-            <div className="max-w-4xl mx-auto flex items-center justify-center mt-6 sm:mt-10 px-2 sm:px-4">
-              <div className="flex-1 h-[1.5px] sm:h-[2.5px] bg-[#8C6D46] rounded-full" />
-              <span className="px-2.5 sm:px-6 text-[13px] xs:text-[15px] sm:text-[18px] md:text-[20px] font-serif font-bold text-[#0D2B4E] flex items-center gap-1.5 sm:gap-2.5 whitespace-nowrap tracking-wide">
-                <span className="text-[#8C6D46] text-sm sm:text-lg font-bold">♥</span>
-                <span>Silver For Every Story</span>
-                <span className="text-[#8C6D46] text-sm sm:text-lg font-bold">♥</span>
-              </span>
-              <div className="flex-1 h-[1.5px] sm:h-[2.5px] bg-[#8C6D46] rounded-full" />
-            </div>
+          </div>
+        </section>
 
-            {/* ==========================================================
-                DIWALI FESTIVE SHOWCASE & 4 COLLECTION SPOTLIGHT (Reference Screenshot Exact)
-                Left: Dynamic Spotlight Collections Grid
-                Right: MANISH & CO Royal Diwali Festive Banner
-                ========================================================== */}
-            {(() => {
-              const cards = silverStoryData?.cards || [];
-              const banner = silverStoryData?.banner;
-              const hasCards = cards.length > 0;
-              const hasBanner = banner && !banner.hidden && !banner.deleted;
+        {/* ==========================================================
+          SECTION: CRAFTSMANSHIP BEHIND TIMELESS RINGS (Edge-to-Edge Banner)
+          User Request: Add on edge to edge below this image section
+          ========================================================== */}
+        <section 
+          id="craftsmanship-timeless-rings-banner"
+          className="w-full bg-[#061220] select-none overflow-hidden cursor-pointer group"
+          onClick={() => {
+            triggerAudio('click');
+            changeCategoryTab?.('rings');
+            navigateTo('collections');
+          }}
+          aria-label="Craftsmanship Behind Timeless Rings - MANISH & CO Fine Jewellery"
+        >
+          <picture className="w-full block">
+            <source srcSet={bannerCraftsmanshipTimelessRingsWebp} type="image/webp" />
+            <img 
+              src={bannerCraftsmanshipTimelessRingsPng} 
+              alt="Craftsmanship Behind Timeless Rings - MANISH & CO Fine Jewellery" 
+              className="w-full h-auto block object-cover group-hover:scale-[1.008] transition-transform duration-700 ease-out"
+              loading="lazy"
+            />
+          </picture>
+        </section>
 
-              if (!hasCards && !hasBanner) return null;
+        {/* ==========================================================
+          SECTION: SPOTLIGHT COLLECTIONS & FESTIVE SHOWCASE
+          ========================================================== */}
+        {(() => {
+          const cards = silverStoryData?.cards || [];
+          const banner = silverStoryData?.banner;
+          const hasCards = cards.length > 0;
+          const hasBanner = banner && !banner.hidden && !banner.deleted;
 
-              const fallbackImgs = [colTennisWebp, colToeRingWebp, colPearlWebp, colStoneWebp];
-              const fallbackPngs = [colTennisPng, colToeRingPng, colPearlPng, colStonePng];
+          if (!hasCards && !hasBanner) return null;
 
-              return (
+          const fallbackImgs = [colTennisWebp, colToeRingWebp, colPearlWebp, colStoneWebp];
+          const fallbackPngs = [colTennisPng, colToeRingPng, colPearlPng, colStonePng];
+
+          return (
+            <section
+              id="silver-story-spotlight"
+              aria-label="Silver For Every Story - Spotlight Collections"
+              className="w-full bg-[#FFFFFF] pt-8 pb-7 sm:pt-10 sm:pb-9 border-b border-gray-100/60 select-none relative"
+            >
+              <div className="max-w-[1536px] mx-auto px-4 sm:px-8 lg:px-12 relative">
+                {/* Reference Screenshot Exact: ♥ Silver For Every Story ♥ */}
+                <div className="max-w-4xl mx-auto flex items-center justify-center mb-6 sm:mb-8 px-2 sm:px-4">
+                  <div className="flex-1 h-[1.5px] sm:h-[2.5px] bg-[#8C6D46] rounded-full" />
+                  <span className="px-2.5 sm:px-6 text-[13px] xs:text-[15px] sm:text-[18px] md:text-[20px] font-serif font-bold text-[#0D2B4E] flex items-center gap-1.5 sm:gap-2.5 whitespace-nowrap tracking-wide">
+                    <span className="text-[#8C6D46] text-sm sm:text-lg font-bold">♥</span>
+                    <span>Silver For Every Story</span>
+                    <span className="text-[#8C6D46] text-sm sm:text-lg font-bold">♥</span>
+                  </span>
+                  <div className="flex-1 h-[1.5px] sm:h-[2.5px] bg-[#8C6D46] rounded-full" />
+                </div>
+
                 <div className="mt-8 sm:mt-12 grid grid-cols-1 lg:grid-cols-12 gap-6 sm:gap-8 items-stretch">
                   {/* Left Column: Spotlight Collections Grid */}
                   {hasCards && (
@@ -1090,11 +1123,10 @@ export default function Home({
                     </div>
                   )}
                 </div>
-              );
-            })()}
-
-          </div>
-        </section>
+              </div>
+            </section>
+          );
+        })()}
 
         {/* ==========================================================
           01 / FOR HER — WOMEN'S JEWELLERY (Editorial Showcase)
