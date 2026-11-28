@@ -5,7 +5,7 @@ import { useProducts } from '../hooks/useProducts';
 import Modal from '../components/Modal';
 import BookingForm from '../forms/BookingForm';
 import { getOptimizedImageUrl } from '../utils/imageOptimizer';
-import { ArrowRight, Star, Sparkles, ChevronRight, ChevronLeft, Diamond, Shield, ShieldCheck, RotateCcw, Truck, Gift } from 'lucide-react';
+import { ArrowRight, Star, Sparkles, ChevronRight, ChevronLeft, Diamond, Shield, ShieldCheck, RotateCcw, Truck, Gift, Quote } from 'lucide-react';
 
 // Category Image Fallbacks
 import solitariesImg from '../assets/solitaries.png';
@@ -499,70 +499,86 @@ export default function Home({
   const categoriesAutoplayRef = useRef(null);
 
 
-  // Polaroid Testimonials Data
-  const polaroidTestimonialsData = [
+  // Patrons' Stories Testimonials Data (Modern Luxury Collection)
+  const patronTestimonialsData = [
     {
-      name: "Aarohi Sharma, 27",
-      quote: "My dream silver bridal set became a reality with MANISH & CO. The craftsmanship and royal finish are beyond expectations.",
+      name: "Aarohi Sharma",
+      city: "Jaipur, Rajasthan",
+      occasion: "Bridal Celebration",
+      product: "Pure Silver Bridal Suite",
+      quote: "My dream silver bridal set became a reality with MANISH & CO. The craftsmanship, hallmark purity, and royal finish exceeded all expectations.",
       img: testimonial1,
-      rot: "rotate-[-4deg] sm:rotate-[-8deg]",
-      top: "42px"
+      rating: 5,
+      tag: "925 Pure Silver",
+      date: "October 2024"
     },
     {
-      name: "Priya Mehta, 31",
-      quote: "The quality, finishing, and personalized service made my purchase truly memorable. A perfect luxury silver boutique experience.",
+      name: "Priya Mehta",
+      city: "Bandra, Mumbai",
+      occasion: "Anniversary Keepsake",
+      product: "Floral Solitaire Diamond Ring",
+      quote: "The quality, finishing, and personalized consultation made my purchase unforgettable. An authentic luxury fine silver boutique experience.",
       img: testimonial2,
-      rot: "rotate-[3deg] sm:rotate-[-3deg]",
-      top: "52px"
+      rating: 5,
+      tag: "Bespoke Design",
+      date: "November 2024"
     },
     {
-      name: "Neha Kapoor, 29",
-      quote: "I wear my bracelet every day and it still looks stunning. Timeless craftsmanship, 925 purity and exceptional quality.",
+      name: "Neha Kapoor",
+      city: "South Extension, Delhi",
+      occasion: "Daily Signature Luxury",
+      product: "Artisan Tennis Bracelet",
+      quote: "I wear my silver bracelet every day and it still retains its brilliant sparkle. Timeless artistry, BIS hallmark guarantee, and supreme comfort.",
       img: testimonial3,
-      rot: "rotate-[-3deg] sm:rotate-[4deg]",
-      top: "50px"
+      rating: 5,
+      tag: "Anti-Tarnish",
+      date: "September 2024"
     },
     {
-      name: "Riya Verma, 26",
-      quote: "My husband gifted me this beautiful necklace and I receive compliments everywhere. The wax seal packaging was breathtaking.",
+      name: "Riya Verma",
+      city: "Indiranagar, Bengaluru",
+      occasion: "Festive Heirloom Gift",
+      product: "Eternal Sparkle Necklace",
+      quote: "My husband gifted me this necklace and I receive compliments everywhere. The luxury wax-sealed packaging and unboxing were truly breathtaking.",
       img: testimonial4,
-      rot: "rotate-[4deg] sm:rotate-[8deg]",
-      top: "42px"
+      rating: 5,
+      tag: "Certified 925",
+      date: "August 2024"
     }
   ];
 
-  // Polaroid Testimonials Refs & Progress State
+  // Patrons' Stories Carousel Refs & State
   const testimonialsRef = useRef(null);
   const [testimonialsInView, setTestimonialsInView] = useState(false);
-  const polaroidScrollRef = useRef(null);
-  const [polaroidScrollProgress, setPolaroidScrollProgress] = useState(0);
-  const [activePolaroidIdx, setActivePolaroidIdx] = useState(0);
+  const patronScrollRef = useRef(null);
+  const [patronScrollProgress, setPatronScrollProgress] = useState(0);
+  const [activePatronIdx, setActivePatronIdx] = useState(0);
 
-  const scrollToPolaroid = (idx) => {
-    if (polaroidScrollRef.current) {
-      const container = polaroidScrollRef.current;
+  const scrollToPatron = (idx) => {
+    if (patronScrollRef.current) {
+      const container = patronScrollRef.current;
       const card = container.children[idx];
       if (card) {
         card.scrollIntoView({ behavior: 'smooth', block: 'nearest', inline: 'center' });
       }
-      setActivePolaroidIdx(idx);
+      setActivePatronIdx(idx);
     }
   };
 
-  const scrollPolaroid = (direction) => {
-    const nextIdx = direction === 'left' ? Math.max(0, activePolaroidIdx - 1) : Math.min(3, activePolaroidIdx + 1);
-    scrollToPolaroid(nextIdx);
+  const scrollPatron = (direction) => {
+    const nextIdx = direction === 'left' ? Math.max(0, activePatronIdx - 1) : Math.min(patronTestimonialsData.length - 1, activePatronIdx + 1);
+    scrollToPatron(nextIdx);
   };
 
-  const handlePolaroidScroll = () => {
-    if (polaroidScrollRef.current) {
-      const { scrollLeft, scrollWidth, clientWidth } = polaroidScrollRef.current;
+  const handlePatronScroll = () => {
+    if (patronScrollRef.current) {
+      const { scrollLeft, scrollWidth, clientWidth } = patronScrollRef.current;
       const totalScroll = scrollWidth - clientWidth;
       if (totalScroll > 0) {
-        setPolaroidScrollProgress((scrollLeft / totalScroll) * 100);
-        const cardStep = totalScroll / 3;
+        setPatronScrollProgress((scrollLeft / totalScroll) * 100);
+        const cardStep = totalScroll / Math.max(patronTestimonialsData.length - 1, 1);
         const currentIdx = Math.round(scrollLeft / Math.max(cardStep, 1));
-        setActivePolaroidIdx(Math.min(3, Math.max(0, currentIdx)));
+        setActivePatronIdx(Math.min(patronTestimonialsData.length - 1, Math.max(0, currentIdx)));
       }
     }
   };
@@ -1322,230 +1338,306 @@ export default function Home({
         </section>
 
         {/* ==========================================================
-          POLAROID TESTIMONIALS (Edge-to-Edge & Length Increased - Requirement 3)
+          MODERN LUXURY TESTIMONIALS: OUR PATRONS' STORIES
+          Palette: 70% Navy (#080F17, #0D2B4E), 20% Cream (#FBF8F3, #F5EFE6), 10% Bronze (#6B4B2E, #C5A880)
           ========================================================== */}
-        <section id="testimonials" ref={testimonialsRef}
+        <section 
+          id="testimonials" 
+          ref={testimonialsRef}
           data-inview={testimonialsInView ? "true" : "false"}
-          className="w-full py-20 sm:py-24 lg:py-28 overflow-hidden select-none border-y border-solid transition-colors duration-500 group bg-[#F8F5EC] border-[#E6DFD3] text-center"
+          className="w-full py-16 sm:py-20 lg:py-24 bg-[#FBF8F3] border-y border-[#E8DFD5] select-none overflow-hidden relative"
+          aria-label="Our Patrons' Stories"
         >
-          <div className="w-full max-w-7xl mx-auto px-4 sm:px-6 text-center space-y-3 mb-12 sm:mb-16">
-            <span className="text-[10px] sm:text-xs uppercase tracking-[0.35em] text-[#6B4B2E] font-bold font-sans block">
-              OUR PATRONS' STORIES
-            </span>
-            <h2 className="serif-luxury text-3xl sm:text-4xl lg:text-[50px] font-medium leading-none tracking-wide text-[#0D2B4E]">
-              More Than Just Jewellery
-            </h2>
-            <p className="font-sans text-xs sm:text-[16px] tracking-wide font-normal max-w-2xl mx-auto leading-relaxed text-[#657989]">
-              Every piece tells a story. Every memory shines forever in pure hallmarked silver.
-            </p>
-          </div>
+          {/* Subtle Ambient Background Gradient */}
+          <div className="absolute inset-0 bg-[radial-gradient(ellipse_at_top,_var(--tw-gradient-stops))] from-white/70 via-transparent to-[#F5EFE6]/40 pointer-events-none" />
 
-          {/* DESKTOP VIEW (1024px+): True Edge-to-Edge Hanging Clothesline with Extended Height */}
-          <div className="hidden lg:block w-full overflow-visible py-6 select-none px-4 sm:px-8 lg:px-12 xl:px-16 2xl:px-20">
-            <div className="relative w-full h-[540px] xl:h-[570px]">
-              {/* Clothesline Wire SVG - True 0 to 100 edge-to-edge */}
-              <svg className="absolute left-0 top-0 w-full h-[140px] pointer-events-none z-0" viewBox="0 0 100 140" fill="none" preserveAspectRatio="none">
-                <path
-                  d="M 0,35 Q 6,55 12.5,55 Q 25,95 37.5,55 Q 50,95 62.5,55 Q 75,95 87.5,55 Q 94,55 100,35"
-                  stroke="#D1D5DB"
-                  strokeWidth="1.2"
-                />
-              </svg>
-
-              <div className="w-full h-full flex items-start justify-between 2xl:justify-around relative z-10 px-4">
-                {polaroidTestimonialsData.map((item, idx) => (
-                  <div
-                    key={idx}
-                    style={{ marginTop: item.top }}
-                    className="shrink-0 transition-all duration-300 px-2 xl:px-4"
-                  >
-                    <div
-                      style={{ transformOrigin: "50% -20px" }}
-                      className={`w-[280px] xl:w-[310px] 2xl:w-[330px] shadow-[0_20px_45px_rgba(13,43,78,0.09),0_6px_18px_rgba(13,43,78,0.05)] rounded-xs pt-6 px-5 pb-8 relative flex flex-col items-center select-none transition-all duration-300 hover:scale-[1.03] hover:rotate-0 hover:z-40 cursor-pointer border border-solid overflow-visible bg-white border-[#E6DFD3] ${item.rot}`}
-                    >
-                      {/* Realistic Silver Clip Pin */}
-                      <div className="absolute -top-[28px] left-1/2 -translate-x-1/2 w-8 h-12 flex items-center justify-center z-20 pointer-events-none">
-                        <svg width="28" height="42" viewBox="0 0 28 42" fill="none" xmlns="http://www.w3.org/2000/svg">
-                          <defs>
-                            <linearGradient id={`metalGrad_desk_${idx}`} x1="0%" y1="0%" x2="100%" y2="100%">
-                              <stop offset="0%" stopColor="#FFFFFF" />
-                              <stop offset="40%" stopColor="#D8D9DA" />
-                              <stop offset="70%" stopColor="#9EA0A2" />
-                              <stop offset="100%" stopColor="#5C5E60" />
-                            </linearGradient>
-                          </defs>
-                          <path
-                            d="M14 2 C8 2, 7 20, 7 20 M14 2 C20 2, 21 20, 21 20"
-                            stroke="#9EA0A2"
-                            strokeWidth="1.6"
-                            strokeLinecap="round"
-                            fill="none"
-                          />
-                          <path
-                            d="M4 20 L24 20 L27 32 L1 32 Z"
-                            fill={`url(#metalGrad_desk_${idx})`}
-                            stroke="#8E9092"
-                            strokeWidth="0.8"
-                            strokeLinejoin="round"
-                          />
-                          <path d="M4 20 L24 20 L25 23 L3 23 Z" fill="#C5C6C8" />
-                          <line x1="5" y1="21" x2="23" y2="21" stroke="#FFFFFF" strokeWidth="0.6" opacity="0.8" />
-                        </svg>
-                      </div>
-
-                      {/* Polaroid Photo */}
-                      <div className="w-full aspect-square overflow-hidden rounded-xs mb-4 bg-[#F8F5EC] p-1 shadow-xs border border-solid border-[#E6DFD3] text-center">
-                        <img
-                          src={item.img}
-                          alt={item.name}
-                          loading="lazy"
-                          className="w-full h-full object-cover object-center pointer-events-none"
-                        />
-                      </div>
-
-                      {/* Verified Badge */}
-                      <div className="w-full flex items-center justify-between text-[#D4AF37] text-[10.5px] mb-2 px-0.5">
-                        <div className="flex gap-0.5">
-                          <span>★</span><span>★</span><span>★</span><span>★</span><span>★</span>
-                        </div>
-                        <span className="text-[9.5px] text-[#6B4B2E] font-medium font-sans">Verified Patron</span>
-                      </div>
-
-                      {/* Patron Name and Quote */}
-                      <div className="w-full space-y-1.5 text-left px-0.5">
-                        <h4 className="font-sans font-bold text-sm tracking-wide text-[#0D2B4E]">
-                          {item.name}
-                        </h4>
-                        <p className="font-sans text-[11.5px] leading-relaxed tracking-normal font-normal text-[#657989] italic">
-                          "{item.quote}"
-                        </p>
-                      </div>
-                    </div>
-                  </div>
-                ))}
+          <div className="relative max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            
+            {/* Header: Badge, Heading, Subtitle & Social Proof Metric */}
+            <div className="text-center max-w-3xl mx-auto mb-12 sm:mb-16">
+              
+              {/* Luxury Badge */}
+              <div className="inline-flex items-center gap-2 px-3.5 py-1.5 rounded-full bg-[#6B4B2E]/10 border border-[#6B4B2E]/20 text-[#6B4B2E] text-[11px] font-sans font-semibold tracking-[0.22em] uppercase mb-3 shadow-2xs">
+                <Sparkles className="w-3.5 h-3.5 text-[#C5A880]" />
+                <span>Our Patrons' Stories</span>
               </div>
-            </div>
-          </div>
 
-          {/* MOBILE & TABLET VIEW (< 1024px): 100% Responsive Edge-to-Edge Clothesline Carousel */}
-          <div className="block lg:hidden w-full relative px-0 sm:px-4">
-            {/* Hanging Clothesline Header Wire */}
-            <div className="w-full h-[2px] bg-[#D1D5DB] relative mb-6">
-              <div className="absolute left-1/2 -translate-x-1/2 -top-1 w-2.5 h-2.5 rounded-full bg-[#8C6D46]/40" />
+              {/* Section Heading */}
+              <h2 
+                className="text-3xl sm:text-4xl lg:text-5xl font-serif text-[#0D2B4E] font-medium tracking-tight mb-3"
+                style={{ fontFamily: "'Cormorant Garamond', 'Playfair Display', Georgia, serif" }}
+              >
+                More Than Just Jewellery
+              </h2>
+
+              {/* Subtitle */}
+              <p className="font-sans text-xs sm:text-base text-[#657989] leading-relaxed max-w-2xl mx-auto mb-4">
+                Every piece tells a story. Every memory shines forever in pure hallmarked silver.
+              </p>
+
+              {/* Star Rating Social Proof */}
+              <div className="inline-flex items-center gap-2.5 px-4 py-1.5 rounded-full bg-white/80 border border-[#E8DFD5] shadow-xs">
+                <div className="flex items-center gap-0.5 text-[#D4AF37]">
+                  {[...Array(5)].map((_, i) => (
+                    <Star key={i} className="w-3.5 h-3.5 fill-[#D4AF37] text-[#D4AF37]" />
+                  ))}
+                </div>
+                <span className="text-xs font-sans text-[#0D2B4E] font-medium tracking-wide">
+                  <strong className="font-bold text-[#6B4B2E]">4.95 / 5</strong> from 2,500+ Verified Buyers across India
+                </span>
+              </div>
+
             </div>
 
-            {/* Carousel Container */}
-            <div
-              ref={polaroidScrollRef}
-              onScroll={handlePolaroidScroll}
-              className="w-full overflow-x-auto no-scrollbar py-2 snap-x snap-mandatory flex items-start gap-4 sm:gap-6 justify-start touch-pan-x"
-              style={{ WebkitOverflowScrolling: 'touch' }}
-            >
-              {polaroidTestimonialsData.map((item, idx) => (
+            {/* DESKTOP VIEW (1024px+): 4 Modern Luxury Cards Grid */}
+            <div className="hidden lg:grid grid-cols-4 gap-6 items-stretch">
+              {patronTestimonialsData.map((item, idx) => (
                 <div
                   key={idx}
-                  className="shrink-0 snap-center w-[82vw] max-w-[290px] px-1 py-4 flex flex-col items-center"
+                  className="bg-white rounded-2xl border border-[#E8DFD5] shadow-[0_6px_24px_rgba(13,43,78,0.04)] hover:shadow-[0_20px_42px_rgba(13,43,78,0.1)] hover:-translate-y-1.5 transition-all duration-400 flex flex-col overflow-hidden group cursor-pointer"
                 >
-                  <div className="w-full shadow-[0_12px_28px_rgba(13,43,78,0.08),0_4px_12px_rgba(13,43,78,0.04)] rounded-xs pt-5 px-4 pb-6 relative flex flex-col items-center bg-white border border-solid border-[#E6DFD3]">
-                    {/* Metallic Clip */}
-                    <div className="absolute -top-[24px] left-1/2 -translate-x-1/2 w-7 h-10 flex items-center justify-center z-20 pointer-events-none">
-                      <svg width="24" height="36" viewBox="0 0 28 42" fill="none">
-                        <path d="M14 2 C8 2, 7 20, 7 20 M14 2 C20 2, 21 20, 21 20" stroke="#9EA0A2" strokeWidth="1.6" fill="none" />
-                        <path d="M4 20 L24 20 L27 32 L1 32 Z" fill="#D8D9DA" stroke="#8E9092" strokeWidth="0.8" />
-                        <path d="M4 20 L24 20 L25 23 L3 23 Z" fill="#C5C6C8" />
-                      </svg>
+                  {/* Card Media Header */}
+                  <div className="relative h-60 w-full overflow-hidden bg-[#FAF6EF]">
+                    <img
+                      src={item.img}
+                      alt={`${item.name} - ${item.product}`}
+                      loading="lazy"
+                      className="w-full h-full object-cover object-center group-hover:scale-105 transition-transform duration-700 ease-out"
+                    />
+                    {/* Scrim Gradient */}
+                    <div className="absolute inset-0 bg-gradient-to-t from-black/60 via-transparent to-transparent pointer-events-none" />
+
+                    {/* Floating Product Tag */}
+                    <div className="absolute top-3 left-3 bg-[#0D2B4E]/85 backdrop-blur-md text-white text-[10px] font-medium px-2.5 py-1 rounded-full border border-white/10 flex items-center gap-1 shadow-xs">
+                      <Sparkles className="w-3 h-3 text-[#C5A880]" />
+                      <span className="truncate max-w-[130px]">{item.product}</span>
                     </div>
 
-                    {/* Photo */}
-                    <div className="w-full aspect-square overflow-hidden rounded-xs mb-3 bg-[#F8F5EC] p-1 shadow-xs border border-solid border-[#E6DFD3]">
-                      <img
-                        src={item.img}
-                        alt={item.name}
-                        loading="lazy"
-                        className="w-full h-full object-cover object-center pointer-events-none"
-                      />
+                    {/* Hallmark Tag */}
+                    <div className="absolute top-3 right-3 bg-[#FAF6EF]/95 backdrop-blur-md text-[#6B4B2E] text-[9.5px] font-bold px-2 py-0.5 rounded-full border border-[#6B4B2E]/20 shadow-xs">
+                      {item.tag}
                     </div>
 
-                    {/* Verified Stars */}
-                    <div className="w-full flex items-center justify-between text-[#D4AF37] text-[10px] mb-1 px-0.5">
-                      <div className="flex gap-0.5">
-                        <span>★</span><span>★</span><span>★</span><span>★</span><span>★</span>
+                    {/* Occasion Label */}
+                    <div className="absolute bottom-2.5 left-3 text-[11px] text-white/90 font-sans font-medium drop-shadow-sm flex items-center gap-1">
+                      <span className="text-[#C5A880]">✦</span>
+                      <span>{item.occasion}</span>
+                    </div>
+                  </div>
+
+                  {/* Card Content */}
+                  <div className="p-5 flex-1 flex flex-col justify-between bg-white">
+                    <div>
+                      {/* Rating & Quote Icon */}
+                      <div className="flex items-center justify-between mb-3">
+                        <div className="flex items-center gap-0.5 text-[#D4AF37]">
+                          {[...Array(item.rating)].map((_, i) => (
+                            <Star key={i} className="w-3.5 h-3.5 fill-[#D4AF37] text-[#D4AF37]" />
+                          ))}
+                        </div>
+                        <Quote className="w-5 h-5 text-[#C5A880]/30 group-hover:text-[#6B4B2E]/60 transition-colors" />
                       </div>
-                      <span className="text-[9px] text-[#6B4B2E] font-medium font-sans">Verified Patron</span>
-                    </div>
 
-                    {/* Name & Quote */}
-                    <div className="w-full space-y-1 text-left px-0.5">
-                      <h4 className="font-sans font-bold text-xs sm:text-[13px] tracking-wide text-[#0D2B4E]">
-                        {item.name}
-                      </h4>
-                      <p className="font-sans text-[10.5px] leading-relaxed tracking-normal font-normal text-[#657989] italic">
+                      {/* Customer Review Quote */}
+                      <p className="text-xs text-[#334E68] leading-relaxed font-sans mb-4 italic line-clamp-4">
                         "{item.quote}"
                       </p>
+                    </div>
+
+                    {/* Patron Identity Footer */}
+                    <div className="pt-3.5 border-t border-[#F0EAE1] flex items-center justify-between mt-auto">
+                      <div>
+                        <h4 className="font-sans font-bold text-xs sm:text-[13px] text-[#0D2B4E] tracking-tight">
+                          {item.name}
+                        </h4>
+                        <span className="text-[11px] text-[#8C9BA5] font-sans">
+                          {item.city}
+                        </span>
+                      </div>
+                      <div className="flex items-center gap-1 text-[10px] font-semibold text-emerald-700 bg-emerald-50 px-2 py-0.5 rounded-full border border-emerald-200">
+                        <ShieldCheck className="w-3 h-3 text-emerald-600" />
+                        <span>Verified</span>
+                      </div>
                     </div>
                   </div>
                 </div>
               ))}
             </div>
 
-            {/* Mobile Navigation Arrows & Dots */}
-            <div className="flex items-center justify-center gap-4 mt-6">
-              <button
-                type="button"
-                onClick={() => scrollPolaroid('left')}
-                disabled={activePolaroidIdx === 0}
-                className="w-8 h-8 rounded-full border border-[#E6DFD3] bg-white flex items-center justify-center text-[#0D2B4E] disabled:opacity-30 disabled:cursor-not-allowed hover:bg-[#F5EDE4] transition-all cursor-pointer shadow-xs"
-                aria-label="Previous story"
+            {/* MOBILE & TABLET VIEW (< 1024px): Smooth Responsive Swipeable Carousel */}
+            <div className="block lg:hidden w-full relative">
+              <div
+                ref={patronScrollRef}
+                onScroll={handlePatronScroll}
+                className="w-full overflow-x-auto no-scrollbar py-2 snap-x snap-mandatory flex items-stretch gap-4 justify-start touch-pan-x px-1"
+                style={{ WebkitOverflowScrolling: 'touch' }}
               >
-                <ChevronLeft className="w-4 h-4" />
-              </button>
+                {patronTestimonialsData.map((item, idx) => (
+                  <div
+                    key={idx}
+                    className="shrink-0 snap-center w-[85vw] max-w-[320px] flex flex-col"
+                  >
+                    <div className="w-full h-full bg-white rounded-2xl border border-[#E8DFD5] shadow-[0_6px_20px_rgba(13,43,78,0.06)] flex flex-col overflow-hidden">
+                      {/* Media Header */}
+                      <div className="relative h-52 w-full overflow-hidden bg-[#FAF6EF]">
+                        <img
+                          src={item.img}
+                          alt={`${item.name} - ${item.product}`}
+                          loading="lazy"
+                          className="w-full h-full object-cover object-center"
+                        />
+                        <div className="absolute inset-0 bg-gradient-to-t from-black/60 via-transparent to-transparent pointer-events-none" />
 
-              <div className="flex items-center gap-1.5">
-                {[0, 1, 2, 3].map((dotIdx) => (
-                  <button
-                    key={dotIdx}
-                    onClick={() => scrollToPolaroid(dotIdx)}
-                    className={`h-2 rounded-full transition-all duration-300 cursor-pointer ${
-                      activePolaroidIdx === dotIdx
-                        ? 'w-6 bg-[#6B4B2E]'
-                        : 'w-2 bg-[#E6DFD3] hover:bg-[#8C6D46]/60'
-                    }`}
-                    aria-label={`Go to story ${dotIdx + 1}`}
-                  />
+                        <div className="absolute top-2.5 left-2.5 bg-[#0D2B4E]/85 backdrop-blur-md text-white text-[10px] font-medium px-2 py-0.5 rounded-full border border-white/10 flex items-center gap-1">
+                          <Sparkles className="w-3 h-3 text-[#C5A880]" />
+                          <span className="truncate max-w-[120px]">{item.product}</span>
+                        </div>
+
+                        <div className="absolute top-2.5 right-2.5 bg-[#FAF6EF]/95 backdrop-blur-md text-[#6B4B2E] text-[9px] font-bold px-2 py-0.5 rounded-full border border-[#6B4B2E]/20">
+                          {item.tag}
+                        </div>
+
+                        <div className="absolute bottom-2 left-2.5 text-[10.5px] text-white/90 font-sans font-medium flex items-center gap-1">
+                          <span className="text-[#C5A880]">✦</span>
+                          <span>{item.occasion}</span>
+                        </div>
+                      </div>
+
+                      {/* Content Area */}
+                      <div className="p-4 flex-1 flex flex-col justify-between">
+                        <div>
+                          <div className="flex items-center justify-between mb-2.5">
+                            <div className="flex items-center gap-0.5 text-[#D4AF37]">
+                              {[...Array(item.rating)].map((_, i) => (
+                                <Star key={i} className="w-3.5 h-3.5 fill-[#D4AF37] text-[#D4AF37]" />
+                              ))}
+                            </div>
+                            <Quote className="w-4 h-4 text-[#C5A880]/40" />
+                          </div>
+
+                          <p className="text-xs text-[#334E68] leading-relaxed font-sans mb-3 italic">
+                            "{item.quote}"
+                          </p>
+                        </div>
+
+                        <div className="pt-3 border-t border-[#F0EAE1] flex items-center justify-between mt-auto">
+                          <div>
+                            <h4 className="font-sans font-bold text-xs text-[#0D2B4E]">
+                              {item.name}
+                            </h4>
+                            <span className="text-[10px] text-[#8C9BA5] font-sans">
+                              {item.city}
+                            </span>
+                          </div>
+                          <div className="flex items-center gap-1 text-[9.5px] font-semibold text-emerald-700 bg-emerald-50 px-2 py-0.5 rounded-full border border-emerald-200">
+                            <ShieldCheck className="w-3 h-3 text-emerald-600" />
+                            <span>Verified</span>
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
                 ))}
               </div>
 
-              <button
-                type="button"
-                onClick={() => scrollPolaroid('right')}
-                disabled={activePolaroidIdx === 3}
-                className="w-8 h-8 rounded-full border border-[#E6DFD3] bg-white flex items-center justify-center text-[#0D2B4E] disabled:opacity-30 disabled:cursor-not-allowed hover:bg-[#F5EDE4] transition-all cursor-pointer shadow-xs"
-                aria-label="Next story"
-              >
-                <ChevronRight className="w-4 h-4" />
-              </button>
-            </div>
-          </div>
+              {/* Mobile Carousel Controls: Arrows + Indicator Dots */}
+              <div className="flex items-center justify-center gap-4 mt-6">
+                <button
+                  type="button"
+                  onClick={() => scrollPatron('left')}
+                  disabled={activePatronIdx === 0}
+                  className="w-9 h-9 rounded-full border border-[#E8DFD5] bg-white flex items-center justify-center text-[#0D2B4E] disabled:opacity-30 disabled:cursor-not-allowed hover:bg-[#FAF6EF] transition-all cursor-pointer shadow-xs active:scale-95"
+                  aria-label="Previous story"
+                >
+                  <ChevronLeft className="w-4 h-4" />
+                </button>
 
-          <div className="max-w-7xl mx-auto px-6 mt-6">
-            <div className="w-full h-[3px] rounded-full overflow-hidden bg-[#E6DFD3]">
-              <div
-                className="h-full rounded-full transition-all duration-150 bg-[#6B4B2E]"
-                style={{ width: `${Math.max(10, polaroidScrollProgress)}%` }}
-              />
+                <div className="flex items-center gap-1.5">
+                  {patronTestimonialsData.map((_, dotIdx) => (
+                    <button
+                      key={dotIdx}
+                      onClick={() => scrollToPatron(dotIdx)}
+                      className={`h-2 rounded-full transition-all duration-300 cursor-pointer ${
+                        activePatronIdx === dotIdx
+                          ? 'w-6 bg-[#6B4B2E]'
+                          : 'w-2 bg-[#D9CFBE] hover:bg-[#8C6D46]/60'
+                      }`}
+                      aria-label={`Go to story ${dotIdx + 1}`}
+                    />
+                  ))}
+                </div>
+
+                <button
+                  type="button"
+                  onClick={() => scrollPatron('right')}
+                  disabled={activePatronIdx === patronTestimonialsData.length - 1}
+                  className="w-9 h-9 rounded-full border border-[#E8DFD5] bg-white flex items-center justify-center text-[#0D2B4E] disabled:opacity-30 disabled:cursor-not-allowed hover:bg-[#FAF6EF] transition-all cursor-pointer shadow-xs active:scale-95"
+                  aria-label="Next story"
+                >
+                  <ChevronRight className="w-4 h-4" />
+                </button>
+              </div>
             </div>
 
-            <div className="flex justify-center mt-12">
+            {/* Luxury Brand Trust Pillars (4 Features) */}
+            <div className="mt-14 pt-10 border-t border-[#E8DFD5] grid grid-cols-2 md:grid-cols-4 gap-4 sm:gap-6">
+              
+              <div className="flex items-center gap-3.5 p-3 sm:p-4 rounded-xl bg-white/70 border border-[#E8DFD5] shadow-2xs">
+                <div className="w-10 h-10 rounded-full bg-[#6B4B2E]/10 flex items-center justify-center text-[#6B4B2E] shrink-0">
+                  <ShieldCheck className="w-5 h-5 text-[#6B4B2E]" />
+                </div>
+                <div>
+                  <h5 className="font-sans font-bold text-xs text-[#0D2B4E] uppercase tracking-wider">100% BIS Hallmarked</h5>
+                  <p className="font-sans text-[11px] text-[#657989]">Guaranteed 925 fine silver purity</p>
+                </div>
+              </div>
+
+              <div className="flex items-center gap-3.5 p-3 sm:p-4 rounded-xl bg-white/70 border border-[#E8DFD5] shadow-2xs">
+                <div className="w-10 h-10 rounded-full bg-[#6B4B2E]/10 flex items-center justify-center text-[#6B4B2E] shrink-0">
+                  <Truck className="w-5 h-5 text-[#6B4B2E]" />
+                </div>
+                <div>
+                  <h5 className="font-sans font-bold text-xs text-[#0D2B4E] uppercase tracking-wider">Insured Pan-India Shipping</h5>
+                  <p className="font-sans text-[11px] text-[#657989]">Discreet, tamper-proof delivery</p>
+                </div>
+              </div>
+
+              <div className="flex items-center gap-3.5 p-3 sm:p-4 rounded-xl bg-white/70 border border-[#E8DFD5] shadow-2xs">
+                <div className="w-10 h-10 rounded-full bg-[#6B4B2E]/10 flex items-center justify-center text-[#6B4B2E] shrink-0">
+                  <RotateCcw className="w-5 h-5 text-[#6B4B2E]" />
+                </div>
+                <div>
+                  <h5 className="font-sans font-bold text-xs text-[#0D2B4E] uppercase tracking-wider">15-Day Easy Returns</h5>
+                  <p className="font-sans text-[11px] text-[#657989]">No questions asked exchanges</p>
+                </div>
+              </div>
+
+              <div className="flex items-center gap-3.5 p-3 sm:p-4 rounded-xl bg-white/70 border border-[#E8DFD5] shadow-2xs">
+                <div className="w-10 h-10 rounded-full bg-[#6B4B2E]/10 flex items-center justify-center text-[#6B4B2E] shrink-0">
+                  <Sparkles className="w-5 h-5 text-[#6B4B2E]" />
+                </div>
+                <div>
+                  <h5 className="font-sans font-bold text-xs text-[#0D2B4E] uppercase tracking-wider">Lifetime Silver Care</h5>
+                  <p className="font-sans text-[11px] text-[#657989]">Free ultrasonic polish & care</p>
+                </div>
+              </div>
+
+            </div>
+
+            {/* Bottom CTA Button */}
+            <div className="flex justify-center mt-10">
               <button
                 onClick={() => {
                   triggerAudio('click');
                   navigateTo('collections');
                 }}
-                className="px-8 py-3 rounded-none text-xs font-semibold tracking-[0.2em] uppercase transition-all duration-300 border border-solid border-[#0D2B4E]/30 text-[#0D2B4E] hover:bg-[#0D2B4E] hover:text-[#F8F5EC] hover:border-transparent cursor-pointer bg-transparent"
+                className="inline-flex items-center gap-2.5 px-8 py-3.5 rounded-full text-xs font-semibold tracking-[0.2em] uppercase transition-all duration-300 bg-[#0D2B4E] text-[#F8F5EC] hover:bg-[#1A3D66] hover:shadow-lg hover:scale-[1.02] active:scale-95 cursor-pointer shadow-md"
               >
-                Explore Collection
+                <span>Explore Patrons' Favourites</span>
+                <ArrowRight className="w-4 h-4 text-[#C5A880]" />
               </button>
             </div>
+
           </div>
         </section>
 
