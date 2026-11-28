@@ -103,7 +103,6 @@ import bannerCraftsmanshipJourney from '../assets/craftsmanship_in_every_silver_
 import bannerStoreBanner from '../assets/banner_store_banner.png';
 import gemsCollectionBanner from '../assets/gems_collection_banner.jpg';
 import bannerOurStory from '../assets/banner_our_story.png';
-import bannerOurCraftsmanship from '../assets/banner_our_craftsmanship.png';
 
 
 
@@ -928,27 +927,6 @@ export default function Home({
 
       {/* Main Content Area (Clean White background) */}
       <div className="bg-white text-[#0D2B4E] transition-colors duration-500 !mt-0">
-
-        {/* ==========================================================
-          SECTION: OUR CRAFTSMANSHIP - A LEGACY OF TRUST (Edge-to-Edge)
-          User Request 2: Banner Placed ABOVE "Silver For Every Story"
-          ========================================================== */}
-        <section 
-          id="our-craftsmanship-legacy-banner"
-          className="w-full bg-[#061220] select-none overflow-hidden cursor-pointer group"
-          onClick={() => {
-            triggerAudio('click');
-            navigateTo('heritage');
-          }}
-          aria-label="Our Craftsmanship - A Legacy of Trust"
-        >
-          <img 
-            src={bannerOurCraftsmanship} 
-            alt="OUR CRAFTSMANSHIP - A Legacy of Trust - MANISH & CO Fine Jewellery" 
-            className="w-full h-auto block object-cover group-hover:scale-[1.008] transition-transform duration-700 ease-out"
-            loading="lazy"
-          />
-        </section>
 
         {/* ==========================================================
           SECTION: SHOP BY CATEGORY ("Silver For Every Story")
