@@ -102,7 +102,8 @@ import bannerBuiltOnPurity from '../assets/built_on_purity_925_fine_silver.png';
 import bannerCraftsmanshipJourney from '../assets/craftsmanship_in_every_silver_detail.png';
 import bannerStoreBanner from '../assets/banner_store_banner.png';
 import gemsCollectionBanner from '../assets/gems_collection_banner.jpg';
-import bannerOurStory from '../assets/banner_our_story.png';
+import bannerMoreThanABrandWebp from '../assets/more_than_a_brand_a_promise_hd.webp';
+import bannerMoreThanABrandPng from '../assets/more_than_a_brand_a_promise_hd.png';
 import bannerCraftsmanshipTimelessRingsWebp from '../assets/craftsmanship_behind_timeless_rings.webp';
 import bannerCraftsmanshipTimelessRingsPng from '../assets/craftsmanship_behind_timeless_rings.png';
 
@@ -1188,23 +1189,28 @@ export default function Home({
         )}
 
         {/* ==========================================================
-          SECTION: OUR STORY - MORE THAN A BRAND, A PROMISE (Edge-to-Edge)
+          SECTION: OUR STORY - MORE THAN A BRAND, A PROMISE
           ========================================================== */}
         <section 
           id="our-story-heritage-banner"
-          className="w-full bg-[#091B2B] select-none overflow-hidden cursor-pointer group"
+          className="w-full bg-gradient-to-b from-[#FFFDF9] via-[#FAF6EF] to-[#F5EFE4] border-y border-[#E8DFD5] select-none overflow-hidden cursor-pointer group py-6 sm:py-10"
           onClick={() => {
             triggerAudio('click');
             navigateTo('heritage');
           }}
           aria-label="Our Story - More Than a Brand, A Promise"
         >
-          <img 
-            src={bannerOurStory} 
-            alt="OUR STORY - More Than a Brand, A Promise - MANISH & CO Fine Jewellery" 
-            className="w-full h-auto block object-cover group-hover:scale-[1.008] transition-transform duration-700 ease-out"
-            loading="lazy"
-          />
+          <div className="max-w-[1536px] mx-auto px-4 sm:px-8 lg:px-12 flex items-center justify-center">
+            <picture className="w-full max-w-6xl block">
+              <source srcSet={bannerMoreThanABrandWebp} type="image/webp" />
+              <img 
+                src={bannerMoreThanABrandPng} 
+                alt="OUR STORY - More Than a Brand, A Promise - MANISH & CO Fine Jewellery" 
+                className="w-full h-auto block object-contain mx-auto group-hover:scale-[1.015] transition-transform duration-700 ease-out drop-shadow-xs"
+                loading="lazy"
+              />
+            </picture>
+          </div>
         </section>
 
         {/* ==========================================================
