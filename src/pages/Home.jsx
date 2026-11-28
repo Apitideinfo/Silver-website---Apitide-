@@ -104,6 +104,14 @@ import bannerStoreBanner from '../assets/banner_store_banner.png';
 import gemsCollectionBanner from '../assets/gems_collection_banner.jpg';
 import bannerMoreThanABrandWebp from '../assets/more_than_a_brand_a_promise_hd.webp';
 import bannerMoreThanABrandPng from '../assets/more_than_a_brand_a_promise_hd.png';
+import instaCard1Webp from '../assets/insta_card_1_ring.webp';
+import instaCard1Png from '../assets/insta_card_1_ring.png';
+import instaCard2Webp from '../assets/insta_card_2_necklace.webp';
+import instaCard2Png from '../assets/insta_card_2_necklace.png';
+import instaCard3Webp from '../assets/insta_card_3_bracelet.webp';
+import instaCard3Png from '../assets/insta_card_3_bracelet.png';
+import instaCard4Webp from '../assets/insta_card_4_box.webp';
+import instaCard4Png from '../assets/insta_card_4_box.png';
 import bannerCraftsmanshipTimelessRingsWebp from '../assets/craftsmanship_behind_timeless_rings.webp';
 import bannerCraftsmanshipTimelessRingsPng from '../assets/craftsmanship_behind_timeless_rings.png';
 
@@ -1189,27 +1197,127 @@ export default function Home({
         )}
 
         {/* ==========================================================
-          SECTION: OUR STORY - MORE THAN A BRAND, A PROMISE
+          SECTION: OUR STORY - MORE THAN A BRAND, A PROMISE + INSTAGRAM GALLERY
+          Reference Match: Seamless Warm Cream Tone (#F3E6D6) + 5 Instagram Cards
           ========================================================== */}
         <section 
           id="our-story-heritage-banner"
-          className="w-full bg-gradient-to-b from-[#FFFDF9] via-[#FAF6EF] to-[#F5EFE4] border-y border-[#E8DFD5] select-none overflow-hidden cursor-pointer group py-6 sm:py-10"
-          onClick={() => {
-            triggerAudio('click');
-            navigateTo('heritage');
-          }}
+          className="w-full bg-[#F3E6D6] border-y border-[#E4D5C3] select-none overflow-hidden"
           aria-label="Our Story - More Than a Brand, A Promise"
         >
-          <div className="max-w-[1536px] mx-auto px-4 sm:px-8 lg:px-12 flex items-center justify-center">
+          {/* Top Banner: Our Story */}
+          <div 
+            onClick={() => {
+              triggerAudio('click');
+              navigateTo('heritage');
+            }}
+            className="w-full max-w-[1536px] mx-auto px-4 sm:px-8 lg:px-12 pt-6 sm:pt-10 pb-4 sm:pb-6 flex items-center justify-center cursor-pointer group"
+          >
             <picture className="w-full max-w-6xl block">
               <source srcSet={bannerMoreThanABrandWebp} type="image/webp" />
               <img 
                 src={bannerMoreThanABrandPng} 
                 alt="OUR STORY - More Than a Brand, A Promise - MANISH & CO Fine Jewellery" 
-                className="w-full h-auto block object-contain mx-auto group-hover:scale-[1.015] transition-transform duration-700 ease-out drop-shadow-xs"
+                className="w-full h-auto block object-contain mx-auto group-hover:scale-[1.01] transition-transform duration-700 ease-out"
                 loading="lazy"
               />
             </picture>
+          </div>
+
+          {/* Bottom Section: Instagram Gallery matching Reference Screenshot */}
+          <div className="w-full max-w-[1536px] mx-auto px-4 sm:px-8 lg:px-12 pt-2 sm:pt-4 pb-8 sm:pb-12">
+            
+            {/* Header: — @MANISHANDCO.IN ON INSTAGRAM — */}
+            <div className="flex items-center justify-center gap-3 sm:gap-6 mb-5 sm:mb-7 max-w-2xl mx-auto">
+              <div className="flex-1 h-[1px] bg-[#6B4B2E]/40" />
+              <span className="text-[10px] sm:text-xs md:text-[13px] font-sans font-bold tracking-[0.22em] text-[#0D2B4E] uppercase whitespace-nowrap">
+                @MANISHANDCO.IN &nbsp;ON INSTAGRAM
+              </span>
+              <div className="flex-1 h-[1px] bg-[#6B4B2E]/40" />
+            </div>
+
+            {/* 5 Cards Row (Reference Image Exact Match) */}
+            <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-5 gap-3 sm:gap-4 lg:gap-5 items-stretch">
+              
+              {/* Card 1: Ring on blue velvet */}
+              <div className="relative aspect-[16/7] rounded-xl overflow-hidden shadow-xs hover:shadow-lg transition-all duration-300 group cursor-pointer border border-[#E0D3C1] hover:scale-[1.02]">
+                <picture className="w-full h-full block">
+                  <source srcSet={instaCard1Webp} type="image/webp" />
+                  <img 
+                    src={instaCard1Png} 
+                    alt="MANISH & CO Pure Silver Ring" 
+                    className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500 ease-out" 
+                    loading="lazy" 
+                  />
+                </picture>
+              </div>
+
+              {/* Card 2: Royal Diamond Necklace */}
+              <div className="relative aspect-[16/7] rounded-xl overflow-hidden shadow-xs hover:shadow-lg transition-all duration-300 group cursor-pointer border border-[#E0D3C1] hover:scale-[1.02]">
+                <picture className="w-full h-full block">
+                  <source srcSet={instaCard2Webp} type="image/webp" />
+                  <img 
+                    src={instaCard2Png} 
+                    alt="MANISH & CO Diamond Necklace" 
+                    className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500 ease-out" 
+                    loading="lazy" 
+                  />
+                </picture>
+              </div>
+
+              {/* Card 3: Handcrafted Silver Bracelet on Wrist */}
+              <div className="relative aspect-[16/7] rounded-xl overflow-hidden shadow-xs hover:shadow-lg transition-all duration-300 group cursor-pointer border border-[#E0D3C1] hover:scale-[1.02]">
+                <picture className="w-full h-full block">
+                  <source srcSet={instaCard3Webp} type="image/webp" />
+                  <img 
+                    src={instaCard3Png} 
+                    alt="MANISH & CO Handcrafted Silver Bracelet" 
+                    className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500 ease-out" 
+                    loading="lazy" 
+                  />
+                </picture>
+              </div>
+
+              {/* Card 4: MANISH & CO Luxury Box */}
+              <div className="relative aspect-[16/7] rounded-xl overflow-hidden shadow-xs hover:shadow-lg transition-all duration-300 group cursor-pointer border border-[#E0D3C1] hover:scale-[1.02]">
+                <picture className="w-full h-full block">
+                  <source srcSet={instaCard4Webp} type="image/webp" />
+                  <img 
+                    src={instaCard4Png} 
+                    alt="MANISH & CO Fine Jewellery Luxury Packaging" 
+                    className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500 ease-out" 
+                    loading="lazy" 
+                  />
+                </picture>
+              </div>
+
+              {/* Card 5: Follow Us on Instagram */}
+              <a
+                href="https://www.instagram.com/manishandco.in/"
+                target="_blank"
+                rel="noopener noreferrer"
+                onClick={() => triggerAudio('click')}
+                className="col-span-2 sm:col-span-1 relative aspect-[16/7] rounded-xl overflow-hidden bg-[#080F17] hover:bg-[#0D1826] text-white flex flex-col items-center justify-center gap-1 sm:gap-1.5 p-3 shadow-xs hover:shadow-xl transition-all duration-300 group cursor-pointer border border-white/10 hover:border-[#6B4B2E] hover:scale-[1.02]"
+                aria-label="Follow MANISH & CO on Instagram"
+              >
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.7" strokeLinecap="round" strokeLinejoin="round" className="w-5 h-5 sm:w-6 sm:h-6 text-white group-hover:text-[#C5A880] transition-colors">
+                  <rect x="2" y="2" width="20" height="20" rx="5" ry="5" />
+                  <path d="M16 11.37A4 4 0 1 1 12.63 8 4 4 0 0 1 16 11.37z" />
+                  <line x1="17.5" y1="6.5" x2="17.51" y2="6.5" />
+                </svg>
+                <span 
+                  className="text-sm sm:text-base lg:text-lg font-bold text-white tracking-wide"
+                  style={{ fontFamily: "'Cormorant Garamond', 'Playfair Display', Georgia, serif" }}
+                >
+                  Follow Us
+                </span>
+                <span className="text-[9px] sm:text-[10px] text-zinc-400 font-sans tracking-wider group-hover:text-zinc-200 transition-colors">
+                  @manishandco.in
+                </span>
+              </a>
+
+            </div>
+
           </div>
         </section>
 
