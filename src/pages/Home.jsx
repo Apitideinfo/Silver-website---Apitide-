@@ -209,7 +209,7 @@ export default function Home({
   changeCategoryTab,
   triggerAudio: triggerAudioProp,
   setMaxPriceFilter,
-  setGenderFilter = () => {},
+  setGenderFilter = () => { },
   setMetalFilter,
 }) {
   // Self-contained data from context
@@ -778,7 +778,7 @@ export default function Home({
         }}
       >
         {/* Banner Images Carousel Container - Fully responsive across mobile, tablet & desktop */}
-        <div 
+        <div
           className="relative w-full overflow-hidden bg-[#091B2B] h-[205px] xs:h-[235px] sm:h-[285px] md:h-auto md:aspect-[2200/715] flex items-center justify-center"
         >
           <AnimatePresence initial={false} mode="wait">
@@ -801,11 +801,11 @@ export default function Home({
                 const banner = heroBanners[currentHeroSlide] || DEFAULT_HERO_BANNERS[0];
                 const def = DEFAULT_HERO_BANNERS[currentHeroSlide % DEFAULT_HERO_BANNERS.length] || DEFAULT_HERO_BANNERS[0];
                 const isCustom = banner.isCustom || !['hero-1', 'hero-2', 'hero-3', 'hero-4'].includes(banner?.id) || Boolean(banner.customImg && !banner.customImg.startsWith('/assets/'));
-                const bannerSrc = (banner.customImg && !banner.customImg.startsWith('/assets/')) 
-                  ? banner.customImg 
+                const bannerSrc = (banner.customImg && !banner.customImg.startsWith('/assets/'))
+                  ? banner.customImg
                   : (banner.png || (!isCustom && banner.webp) || def.png || def.webp);
-                const mobileSrc = (banner.mobileImg && !banner.mobileImg.startsWith('/assets/')) 
-                  ? banner.mobileImg 
+                const mobileSrc = (banner.mobileImg && !banner.mobileImg.startsWith('/assets/'))
+                  ? banner.mobileImg
                   : bannerSrc;
 
                 return (
@@ -867,14 +867,14 @@ export default function Home({
           4. Free Shipping Across India
           5. Elegant Gift Packaging
           ========================================================== */}
-      <section 
+      <section
         id="hero-trust-badges-strip"
-        aria-label="Manish and Co Guarantees" 
+        aria-label="Manish and Co Guarantees"
         className="w-full bg-[#FAF7F2] border-b border-[#E6DFD3] select-none py-3.5 sm:py-5"
       >
         <div className="max-w-[1536px] mx-auto px-2 sm:px-6 lg:px-10">
           <div className="grid grid-cols-5 divide-x divide-[#E2D8CC] items-center text-center">
-            
+
             {/* 1. 925 Fine Jewellery */}
             <div className="flex flex-col items-center justify-center px-1 sm:px-4 py-1 group">
               <Diamond className="w-5 h-5 sm:w-6 sm:h-6 md:w-7 md:h-7 text-[#0D2B4E] stroke-[1.3] mb-1 sm:mb-2 group-hover:scale-110 transition-transform duration-300" />
@@ -1020,7 +1020,7 @@ export default function Home({
           SECTION: CRAFTSMANSHIP BEHIND TIMELESS RINGS (Edge-to-Edge Banner)
           User Request: Add on edge to edge below this image section
           ========================================================== */}
-        <section 
+        <section
           id="craftsmanship-timeless-rings-banner"
           className="w-full bg-[#061220] select-none overflow-hidden cursor-pointer group"
           onClick={() => {
@@ -1032,9 +1032,9 @@ export default function Home({
         >
           <picture className="w-full block">
             <source srcSet={bannerCraftsmanshipTimelessRingsWebp} type="image/webp" />
-            <img 
-              src={bannerCraftsmanshipTimelessRingsPng} 
-              alt="Craftsmanship Behind Timeless Rings - MANISH & CO Fine Jewellery" 
+            <img
+              src={bannerCraftsmanshipTimelessRingsPng}
+              alt="Craftsmanship Behind Timeless Rings - MANISH & CO Fine Jewellery"
               className="w-full h-auto block object-cover group-hover:scale-[1.008] transition-transform duration-700 ease-out"
               loading="lazy"
             />
@@ -1216,13 +1216,13 @@ export default function Home({
           SECTION: OUR STORY - MORE THAN A BRAND, A PROMISE + INSTAGRAM GALLERY
           Reference Match: Seamless Warm Cream Tone (#F3E6D6) + 5 Instagram Cards
           ========================================================== */}
-        <section 
+        <section
           id="our-story-heritage-banner"
           className="w-full bg-[#F3E6D6] border-y border-[#E4D5C3] select-none overflow-hidden"
           aria-label="Our Story - More Than a Brand, A Promise"
         >
           {/* Top Banner: Our Story */}
-          <div 
+          <div
             onClick={() => {
               triggerAudio('click');
               navigateTo('heritage');
@@ -1231,9 +1231,9 @@ export default function Home({
           >
             <picture className="w-full max-w-6xl block">
               <source srcSet={bannerMoreThanABrandWebp} type="image/webp" />
-              <img 
-                src={bannerMoreThanABrandPng} 
-                alt="OUR STORY - More Than a Brand, A Promise - MANISH & CO Fine Jewellery" 
+              <img
+                src={bannerMoreThanABrandPng}
+                alt="OUR STORY - More Than a Brand, A Promise - MANISH & CO Fine Jewellery"
                 className="w-full h-auto block object-contain mx-auto group-hover:scale-[1.01] transition-transform duration-700 ease-out"
                 loading="lazy"
               />
@@ -1242,7 +1242,7 @@ export default function Home({
 
           {/* Bottom Section: Instagram Gallery matching Reference Screenshot */}
           <div className="w-full max-w-[1536px] mx-auto px-4 sm:px-8 lg:px-12 pt-2 sm:pt-4 pb-8 sm:pb-12">
-            
+
             {/* Header: — @MANISHANDCO.IN ON INSTAGRAM — */}
             <div className="flex items-center justify-center gap-3 sm:gap-6 mb-5 sm:mb-7 max-w-2xl mx-auto">
               <div className="flex-1 h-[1px] bg-[#6B4B2E]/40" />
@@ -1254,16 +1254,16 @@ export default function Home({
 
             {/* 5 Cards Row (Reference Image Exact Match) */}
             <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-5 gap-3 sm:gap-4 lg:gap-5 items-stretch">
-              
+
               {/* Card 1: Ring on blue velvet */}
               <div className="relative aspect-[16/7] rounded-xl overflow-hidden shadow-xs hover:shadow-lg transition-all duration-300 group cursor-pointer border border-[#E0D3C1] hover:scale-[1.02]">
                 <picture className="w-full h-full block">
                   <source srcSet={instaCard1Webp} type="image/webp" />
-                  <img 
-                    src={instaCard1Png} 
-                    alt="MANISH & CO Pure Silver Ring" 
-                    className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500 ease-out" 
-                    loading="lazy" 
+                  <img
+                    src={instaCard1Png}
+                    alt="MANISH & CO Pure Silver Ring"
+                    className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500 ease-out"
+                    loading="lazy"
                   />
                 </picture>
               </div>
@@ -1272,11 +1272,11 @@ export default function Home({
               <div className="relative aspect-[16/7] rounded-xl overflow-hidden shadow-xs hover:shadow-lg transition-all duration-300 group cursor-pointer border border-[#E0D3C1] hover:scale-[1.02]">
                 <picture className="w-full h-full block">
                   <source srcSet={instaCard2Webp} type="image/webp" />
-                  <img 
-                    src={instaCard2Png} 
-                    alt="MANISH & CO Diamond Necklace" 
-                    className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500 ease-out" 
-                    loading="lazy" 
+                  <img
+                    src={instaCard2Png}
+                    alt="MANISH & CO Diamond Necklace"
+                    className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500 ease-out"
+                    loading="lazy"
                   />
                 </picture>
               </div>
@@ -1285,11 +1285,11 @@ export default function Home({
               <div className="relative aspect-[16/7] rounded-xl overflow-hidden shadow-xs hover:shadow-lg transition-all duration-300 group cursor-pointer border border-[#E0D3C1] hover:scale-[1.02]">
                 <picture className="w-full h-full block">
                   <source srcSet={instaCard3Webp} type="image/webp" />
-                  <img 
-                    src={instaCard3Png} 
-                    alt="MANISH & CO Handcrafted Silver Bracelet" 
-                    className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500 ease-out" 
-                    loading="lazy" 
+                  <img
+                    src={instaCard3Png}
+                    alt="MANISH & CO Handcrafted Silver Bracelet"
+                    className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500 ease-out"
+                    loading="lazy"
                   />
                 </picture>
               </div>
@@ -1298,11 +1298,11 @@ export default function Home({
               <div className="relative aspect-[16/7] rounded-xl overflow-hidden shadow-xs hover:shadow-lg transition-all duration-300 group cursor-pointer border border-[#E0D3C1] hover:scale-[1.02]">
                 <picture className="w-full h-full block">
                   <source srcSet={instaCard4Webp} type="image/webp" />
-                  <img 
-                    src={instaCard4Png} 
-                    alt="MANISH & CO Fine Jewellery Luxury Packaging" 
-                    className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500 ease-out" 
-                    loading="lazy" 
+                  <img
+                    src={instaCard4Png}
+                    alt="MANISH & CO Fine Jewellery Luxury Packaging"
+                    className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500 ease-out"
+                    loading="lazy"
                   />
                 </picture>
               </div>
@@ -1321,7 +1321,7 @@ export default function Home({
                   <path d="M16 11.37A4 4 0 1 1 12.63 8 4 4 0 0 1 16 11.37z" />
                   <line x1="17.5" y1="6.5" x2="17.51" y2="6.5" />
                 </svg>
-                <span 
+                <span
                   className="text-sm sm:text-base lg:text-lg font-bold text-white tracking-wide"
                   style={{ fontFamily: "'Cormorant Garamond', 'Playfair Display', Georgia, serif" }}
                 >
@@ -1341,8 +1341,8 @@ export default function Home({
           MODERN LUXURY TESTIMONIALS: OUR PATRONS' STORIES
           Palette: 70% Navy (#080F17, #0D2B4E), 20% Cream (#FBF8F3, #F5EFE6), 10% Bronze (#6B4B2E, #C5A880)
           ========================================================== */}
-        <section 
-          id="testimonials" 
+        <section
+          id="testimonials"
           ref={testimonialsRef}
           data-inview={testimonialsInView ? "true" : "false"}
           className="w-full py-16 sm:py-20 lg:py-24 bg-[#FBF8F3] border-y border-[#E8DFD5] select-none overflow-hidden relative"
@@ -1352,10 +1352,10 @@ export default function Home({
           <div className="absolute inset-0 bg-[radial-gradient(ellipse_at_top,_var(--tw-gradient-stops))] from-white/70 via-transparent to-[#F5EFE6]/40 pointer-events-none" />
 
           <div className="relative max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-            
+
             {/* Header: Badge, Heading, Subtitle & Social Proof Metric */}
             <div className="text-center max-w-3xl mx-auto mb-12 sm:mb-16">
-              
+
               {/* Luxury Badge */}
               <div className="inline-flex items-center gap-2 px-3.5 py-1.5 rounded-full bg-[#6B4B2E]/10 border border-[#6B4B2E]/20 text-[#6B4B2E] text-[11px] font-sans font-semibold tracking-[0.22em] uppercase mb-3 shadow-2xs">
                 <Sparkles className="w-3.5 h-3.5 text-[#C5A880]" />
@@ -1363,7 +1363,7 @@ export default function Home({
               </div>
 
               {/* Section Heading */}
-              <h2 
+              <h2
                 className="text-3xl sm:text-4xl lg:text-5xl font-serif text-[#0D2B4E] font-medium tracking-tight mb-3"
                 style={{ fontFamily: "'Cormorant Garamond', 'Playfair Display', Georgia, serif" }}
               >
@@ -1557,11 +1557,10 @@ export default function Home({
                     <button
                       key={dotIdx}
                       onClick={() => scrollToPatron(dotIdx)}
-                      className={`h-2 rounded-full transition-all duration-300 cursor-pointer ${
-                        activePatronIdx === dotIdx
+                      className={`h-2 rounded-full transition-all duration-300 cursor-pointer ${activePatronIdx === dotIdx
                           ? 'w-6 bg-[#6B4B2E]'
                           : 'w-2 bg-[#D9CFBE] hover:bg-[#8C6D46]/60'
-                      }`}
+                        }`}
                       aria-label={`Go to story ${dotIdx + 1}`}
                     />
                   ))}
@@ -1581,7 +1580,7 @@ export default function Home({
 
             {/* Luxury Brand Trust Pillars (4 Features) */}
             <div className="mt-14 pt-10 border-t border-[#E8DFD5] grid grid-cols-2 md:grid-cols-4 gap-4 sm:gap-6">
-              
+
               <div className="flex items-center gap-3.5 p-3 sm:p-4 rounded-xl bg-white/70 border border-[#E8DFD5] shadow-2xs">
                 <div className="w-10 h-10 rounded-full bg-[#6B4B2E]/10 flex items-center justify-center text-[#6B4B2E] shrink-0">
                   <ShieldCheck className="w-5 h-5 text-[#6B4B2E]" />
